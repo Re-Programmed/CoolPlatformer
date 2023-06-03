@@ -13,7 +13,7 @@ namespace GAME_NAME
 			glBindTexture(GL_TEXTURE_2D, m_spriteId);
 
 			glLoadIdentity();
-			glTranslatef(position.X - cameraPosition.X, position.Y - cameraPosition.Y, 0);
+			glTranslatef((position.X - cameraPosition.X) * m_resolutionScale.X, (position.Y - cameraPosition.Y) * m_resolutionScale.Y, 0);
 
 			glScalef(scale.X * m_resolutionScale.X, scale.Y * m_resolutionScale.Y, 1.f);
 
@@ -27,7 +27,7 @@ namespace GAME_NAME
 
 		void Sprite::SetResolution(Vec2 res)
 		{
-			m_resolutionScale = Vec2(TargetResolutionX / res.X, TargetResolutionY / res.Y);
+			m_resolutionScale = Vec2(res.X / TargetResolutionX, res.Y / TargetResolutionY);
 		}
 
 		std::string Sprite::ToString()
