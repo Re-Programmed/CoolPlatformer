@@ -64,6 +64,11 @@ namespace GAME_NAME
 				return Vec2(X - a, Y - a);
 			}
 
+			Vec2 operator/ (const float& a)
+			{
+				return Vec2(X / a, Y / a);
+			}
+
 			/// <summary>
 			/// Uses sqrt, use limitedly.
 			/// </summary>

@@ -66,7 +66,6 @@ namespace GAME_NAME
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-
 			free(data);
 
 			return textureBuffer;
@@ -100,19 +99,19 @@ namespace GAME_NAME
 		///Macro for converting to Chunk Coords.
 #define AsChunkPosition(x) (x >> 9)
 
-		void Renderer::Render(Camera::Camera* camera, Vec2* windowSize)
+		void Renderer::Render(Camera::Camera* camera, Vec2* windowSize, RENDER_LAYER layer, float parallax)
 		{
 			constexpr unsigned int cameraBoundsPadding = chunkSize;
 
 			//Define const variables.
-			const Vec2 cameraPosition = camera->GetPosition();
+			Vec2 cameraPosition = camera->GetPosition()/parallax;
 
 
 			if (cameraPosition.X < 0 || cameraPosition.Y < 0) { return; }
 
-			iVec2 cameraChunkPosition = AsChunkPosition(camera->GetPosition());
-			const Vec2 cameraPositionS = camera->GetPosition() - cameraBoundsPadding;
-			iVec2 cameraBoundingBox = camera->GetZoom() != 1 ? (*windowSize) * (1 / camera->GetZoom()) + (cameraBoundsPadding << 1) : (*windowSize) + cameraBoundsPadding;
+			iVec2 cameraChunkPosition = AsChunkPosition(cameraPosition);
+			const Vec2 cameraPositionS = cameraPosition - cameraBoundsPadding;
+			iVec2 cameraBoundingBox = (camera->GetZoom() != 1 ? (*windowSize) * (1 / camera->GetZoom()) + (cameraBoundsPadding << 1) : (*windowSize) + cameraBoundsPadding) + Vec2(0, chunkSize);
 
 			int cameraTopEdge = cameraChunkPosition.GetY() + AsChunkPosition(cameraBoundingBox.GetY());
 			//if (AsChunkPosition(cameraBoundingBox.GetY()) >= LEVEL_SIZE_Y * 2) { return; }
@@ -125,7 +124,7 @@ namespace GAME_NAME
 				if (m_chunks[i].GetPosition().Y < cameraTopEdge)
 				{
 					//Render a chunk if it is in the cameras bounding box.
-					m_chunks[i].Render(cameraPosition, chunkSize);
+					m_chunks[i].Render(cameraPosition, chunkSize, layer);
 
 					//Check if the chunk we just rendered is at the top of the screen.
 					if ((i % levelSizeY) == (levelSizeY - 1))
@@ -142,7 +141,24 @@ namespace GAME_NAME
 				}
 			}
 
+		}
+
+#pragma region GUIRenderer
+
+		GLuint Renderer::GUIRenderer::startIndex = NULL;
+
+		GLuint Renderer::GUIRenderer::LoadGUIElement(const char* file)
+		{
+			GLuint ret = loadImage(file);
+			if (startIndex == NULL) { startIndex = ret; }
+
+			return ret - startIndex;
 
 		}
+
+
+#pragma endregion
+
+
 	}
 }

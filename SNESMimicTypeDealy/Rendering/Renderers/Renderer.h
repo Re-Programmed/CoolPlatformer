@@ -6,6 +6,7 @@
 #include "../../Objects/Chunk.h"
 #include "../Camera/Camera.h"
 #include "../../Utils/Math/iVec2.h"
+#include "../../Objects/GUI/IGUIElement.h"
 
 namespace GAME_NAME
 {
@@ -25,8 +26,7 @@ namespace GAME_NAME
 
 			static Sprite* const GetSprite(const unsigned int spriteTexture);
 
-			static void Render(Camera::Camera* camera, Vec2* windowSize);
-
+			static void Render(Camera::Camera* camera, Vec2* windowSize, RENDER_LAYER layer, float parallax = 1.f);
 
 			/// <summary>
 			/// Begins drawing the objects in objects. CANNOT BE CALLED DURING RENDERING
@@ -49,9 +49,33 @@ namespace GAME_NAME
 
 			static Chunk m_chunks[];
 			static Sprite* const getBackground(const unsigned int bgTexture);
-
 			
+			/// <summary>
+			/// For rendering GUI elements.
+			/// </summary>
+			static class GUIRenderer
+			{
+			public:
+				/// <summary>
+				/// Load a file to the GUI texture buffer. Must be called after loading sprites and BG.
+				/// </summary>
+				/// <param name="file">The file you want to register to the buffer.</param>
+				/// <returns>The index of the texture in the buffer relative to the first GUI element registered.</returns>
+				static GLuint LoadGUIElement(const char* file);
 
+				static void Init();
+			private:
+				/// <summary>
+				/// The index of the first GUI element in the TextureBuffer.
+				/// </summary>
+				static GLuint startIndex;
+
+				static void Render(Camera::Camera* camera, Vec2* windowSize);
+
+				static std::vector<GUI::IGUIElement>* elements;
+			};
 		};
+
+
 	}
 }

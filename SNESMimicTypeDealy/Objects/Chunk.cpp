@@ -19,22 +19,29 @@ namespace GAME_NAME
 			m_objects.push_back(object);
 		}
 
-		void Chunk::Render(Vec2 cameraPosition, const int chunkSize)
-		{
-			if (m_bgSprite != nullptr)
-			{
-				m_bgSprite->Render(cameraPosition, m_position << 9, chunkSize);
-			}
-
-			for (GameObject obj : m_objects)
-			{
-				obj.Render(cameraPosition);
-			}
-		}
-
 		Vec2 Chunk::GetPosition()
 		{
 			return m_position;
+		}
+
+		void Chunk::Render(const Vec2 cameraPosition, const int chunkSize, RENDER_LAYER layer)
+		{
+			switch (layer)
+			{
+			case RENDER_LAYER_BG:
+				if (m_bgSprite != nullptr)
+				{
+					m_bgSprite->Render(cameraPosition, m_position << 9, chunkSize);
+				}
+				break;
+			case RENDER_LAYER_OBJECTS:
+				for (GameObject obj : m_objects)
+				{
+					obj.Render(cameraPosition);
+				}
+			default:
+				break;
+			}
 		}
 
 	}

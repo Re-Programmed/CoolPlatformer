@@ -14,6 +14,8 @@ namespace GAME_NAME
 
 			glScalef(scale.X, scale.Y, 1);
 
+			//Texture coords somehow for masking
+
 			glDrawArrays(GL_QUADS, 0, 4);
 		}
 

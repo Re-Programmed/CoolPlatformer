@@ -114,7 +114,8 @@ namespace GAME_NAME
 		//Draw Color
 		//glColor3f(1, 0, 0);
 
-		Renderer::Render(m_gameCamera, lastWindowSize);
+		Renderer::Render(m_gameCamera, lastWindowSize, RENDER_LAYER_BG, 2.f);
+		Renderer::Render(m_gameCamera, lastWindowSize, RENDER_LAYER_OBJECTS);
 
 		glfwSwapBuffers(this->m_glWindow);
 		glfwPollEvents();

@@ -10,6 +10,13 @@ namespace GAME_NAME
 
 	namespace Objects
 	{
+		enum RENDER_LAYER
+		{
+			RENDER_LAYER_BG, //BG IS TEXTURES SHOWN IN THE BACKGROUND AS A GRID (EX. THE SKY)
+			RENDER_LAYER_OBJECTS, //OBJECTS ARE GAME OBJECTS THAT WILL NOT MOVE, BUT CAN STILL HAVE COMPONENTS (EX. THE GROUND AND GRASS)
+			RENDER_LAYER_SPRITES //[THE SPRITE RENDER CALL IS NOT PASSED BY A CHUNK, BUT EACH GAME OBJECT] SPRITES ARE GAME OBJECTS THAT WILL BE MOVING AND CHANGING OFTEN (EX. THE PLAYER AND ENEMIES)
+		};
+
 		using namespace MathUtils;
 		class Chunk
 		{
@@ -19,8 +26,7 @@ namespace GAME_NAME
 
 			void Instantiate(GameObject object);
 
-			
-			void Render(const Vec2 cameraPosition, const int chunkSize);
+			void Render(const Vec2 cameraPosition, const int chunkSize, RENDER_LAYER layer);
 
 			Vec2 GetPosition();
 

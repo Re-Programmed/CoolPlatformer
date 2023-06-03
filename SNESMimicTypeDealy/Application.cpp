@@ -5,6 +5,7 @@
 #include "rendering/Window.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "./stbi_image/stbi_image.h"
+#include "Objects/GUI/StaticGUIElement.h"
 //#include "./Input/InputManager.h"
 
 using namespace GAME_NAME;
@@ -25,7 +26,7 @@ int main()
 	{
 		exit(EXIT_FAILURE);
 	}
-	ApplicationWindow = new Window(true);
+	ApplicationWindow = new Window(false);
 
 	glfwSwapInterval(1);
 

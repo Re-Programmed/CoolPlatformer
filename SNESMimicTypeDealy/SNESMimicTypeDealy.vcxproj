@@ -104,13 +104,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\willm\source\repos\SNESMimicTypeDealy\Dependencies\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\willm\source\repos\CoolPlatformer\Dependencies\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>C:\Users\willm\source\repos\SNESMimicTypeDealy\Dependencies\glfw\lib-vc2022\glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>C:\Users\willm\source\repos\CoolPlatformer\Dependencies\glfw\lib-vc2022\glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -135,6 +135,7 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Input\InputManager.cpp" />
+    <ClCompile Include="Objects\GUI\StaticGUIElement.cpp" />
     <ClCompile Include="Rendering\Renderers\Renderer.cpp" />
     <ClCompile Include="Utils\Math\iVec2.cpp" />
     <ClCompile Include="Objects\Chunk.cpp" />
@@ -153,6 +154,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Input\InputManager.h" />
+    <ClInclude Include="Objects\GUI\IGUIElement.h" />
+    <ClInclude Include="Objects\GUI\StaticGUIElement.h" />
     <ClInclude Include="Rendering\Renderers\Renderer.h" />
     <ClInclude Include="Utils\Math\iVec2.h" />
     <ClInclude Include="Objects\Chunk.h" />
