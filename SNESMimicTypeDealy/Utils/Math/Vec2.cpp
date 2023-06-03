@@ -18,6 +18,7 @@ namespace GAME_NAME
 		Vec2 Vec2::OneY(0, 1);
 		Vec2 Vec2::MinusOneX(-1, 0);
 		Vec2 Vec2::MinusOneY(0, -1);
+		Vec2 Vec2::One(1, 1);
 
 		Vec2::Vec2(float x, float y)
 		{

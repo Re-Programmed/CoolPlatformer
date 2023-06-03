@@ -68,6 +68,8 @@ namespace GAME_NAME
 
 		windowSizeCallback(m_glWindow, width, height);
 
+		Sprite::SetResolution(Vec2(width, height));
+
 		//glMatrixMode(GL_PROJECTION);
 		//glOrtho(0, width, 0, height, 0, 100);
 		//glMatrixMode(GL_MODELVIEW);
@@ -143,6 +145,7 @@ namespace GAME_NAME
 	{
 		glClearColor(color.X, color.Y, color.Z, color.W);
 	}
+
 
 	void Window::update()
 	{

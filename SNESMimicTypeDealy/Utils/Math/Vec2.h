@@ -21,6 +21,7 @@ namespace GAME_NAME
 			static Vec2 OneX;
 			static Vec2 MinusOneY;
 			static Vec2 OneY;
+			static Vec2 One;
 
 			/// <summary>
 			/// Clamps the X and Y to a maximum and minimum value.

@@ -7,6 +7,7 @@
 
 namespace GAME_NAME
 {
+	constexpr float TargetResolutionX = 1920.f, TargetResolutionY = 1080.f;
 
 	namespace Rendering
 	{
@@ -20,7 +21,11 @@ namespace GAME_NAME
 			//DEBUG
 			std::string ToString();
 
+			static void SetResolution(Vec2 res);
+
 		private:
+			static Vec2 m_resolutionScale;
+
 			const unsigned int m_spriteId;
 		};
 	}

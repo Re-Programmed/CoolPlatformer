@@ -9,7 +9,6 @@
 
 namespace GAME_NAME
 {
-
 	using namespace Rendering;
 	using namespace MathUtils;
 	class Window
@@ -34,6 +33,7 @@ namespace GAME_NAME
 		/// Sets the clear color for the window.
 		/// </summary>
 		void SetClearColor(Vec4 color);
+
 
 	private:
 		GLFWwindow* m_glWindow;
