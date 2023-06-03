@@ -137,6 +137,9 @@
     <ClCompile Include="Input\InputManager.cpp" />
     <ClCompile Include="Objects\GUI\StaticGUIElement.cpp" />
     <ClCompile Include="Rendering\Renderers\Renderer.cpp" />
+    <ClCompile Include="Utils\IUpdateable.h" />
+    <ClCompile Include="Utils\RemoveableUpdateable.cpp" />
+    <ClCompile Include="Utils\UpdateManager.cpp" />
     <ClCompile Include="Utils\Math\iVec2.cpp" />
     <ClCompile Include="Objects\Chunk.cpp" />
     <ClCompile Include="Objects\GameObject.cpp" />
@@ -151,12 +154,16 @@
     <ClCompile Include="Utils\Math\Vec2.cpp" />
     <ClCompile Include="Utils\Math\Vec3.cpp" />
     <ClCompile Include="Utils\Math\Vec4.cpp" />
+    <ClCompile Include="Utils\Time\GameTime.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Debug\DebugLog.h" />
     <ClInclude Include="Input\InputManager.h" />
     <ClInclude Include="Objects\GUI\IGUIElement.h" />
     <ClInclude Include="Objects\GUI\StaticGUIElement.h" />
     <ClInclude Include="Rendering\Renderers\Renderer.h" />
+    <ClInclude Include="Utils\ConstUpdateable.h" />
+    <ClInclude Include="Utils\RemoveableUpdateable.h" />
     <ClInclude Include="Utils\Math\iVec2.h" />
     <ClInclude Include="Objects\Chunk.h" />
     <ClInclude Include="Objects\GameObject.h" />
@@ -173,6 +180,8 @@
     <ClInclude Include="Utils\Math\Vec2.h" />
     <ClInclude Include="Utils\Math\Vec3.h" />
     <ClInclude Include="Utils\Math\Vec4.h" />
+    <ClInclude Include="Utils\Time\GameTime.h" />
+    <ClInclude Include="Utils\UpdateManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\testing\bg\1_test.png" />

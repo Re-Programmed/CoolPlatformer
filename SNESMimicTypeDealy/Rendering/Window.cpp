@@ -7,6 +7,7 @@
 #include "../Objects/GameObject.h"
 #include "../Resources/AssetManager.h"
 #include "../Input/InputManager.h"
+#include "../Utils/UpdateManager.h"
 
 namespace GAME_NAME
 {
@@ -149,7 +150,7 @@ namespace GAME_NAME
 
 	void Window::update()
 	{
-		m_gameCamera->Update(m_glWindow);
+		GAME_NAME::Utils::UpdateManager::Update(m_glWindow);
 	}
 
 	void Window::lateUpdate()
