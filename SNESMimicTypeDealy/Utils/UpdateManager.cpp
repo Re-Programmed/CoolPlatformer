@@ -25,9 +25,9 @@ namespace GAME_NAME
 			return m_updateables.size() - 1;
 		}
 
-		void UpdateManager::RemoveUpdateable(int index)
+		void UpdateManager::RemoveUpdateable(UpdateIndex index)
 		{
-			m_updateables.erase(m_updateables.begin()+index);
+			m_updateables.erase(m_updateables.begin() + index);
 		}
 	}
 }

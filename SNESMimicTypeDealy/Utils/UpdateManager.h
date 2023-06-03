@@ -29,7 +29,7 @@ namespace GAME_NAME
 			/// Removes an IUpdateable from getting updated.
 			/// </summary>
 			/// <param name="index">The index of the IUpdateable to remove.</param>
-			static void RemoveUpdateable(int index);
+			static void RemoveUpdateable(UpdateIndex index);
 		private:
 			/// <summary>
 			/// INFO: 

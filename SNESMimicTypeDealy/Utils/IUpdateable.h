@@ -8,6 +8,7 @@ namespace GAME_NAME
 {
 	namespace Utils
 	{
+		typedef int UpdateIndex;
 		/// <summary>
 		/// INFO: 
 		/// STATIC UPDATEABLES MUST BE ADDED TO THE m_updateables ARRAY IN UPDATE MANAGER.

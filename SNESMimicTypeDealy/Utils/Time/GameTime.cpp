@@ -41,7 +41,6 @@ namespace GAME_NAME
 
 			void GameTime::Update(GLFWwindow* window)
 			{
-				std::cout << DeltaTime::GetDeltaTime() << std::endl;
 				DeltaTime::Update();
 			}
 		}

@@ -3,7 +3,6 @@
  
 namespace GAME_NAME
 {
-
 	namespace MathUtils
 	{
 		class Vec2

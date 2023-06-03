@@ -32,7 +32,7 @@ namespace GAME_NAME
 				return true;
 			}
 		private:
-			int m_index;
+			UpdateIndex m_index;
 		};
 	}
 }

@@ -11,6 +11,9 @@ namespace GAME_NAME
 {
 	using namespace Rendering;
 	using namespace MathUtils;
+	
+	typedef Vec4 Color;
+
 	class Window
 	{
 	public:
@@ -32,7 +35,7 @@ namespace GAME_NAME
 		/// <summary>
 		/// Sets the clear color for the window.
 		/// </summary>
-		void SetClearColor(Vec4 color);
+		void SetClearColor(Color color);
 
 
 	private:

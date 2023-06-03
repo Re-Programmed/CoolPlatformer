@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\SoLoud-wav.2020.2.7.2\build\native\SoLoud-wav.props" Condition="Exists('..\packages\SoLoud-wav.2020.2.7.2\build\native\SoLoud-wav.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -134,6 +135,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Audio\MusicManager.cpp" />
+    <ClCompile Include="Audio\SoundTypes\MusicTrack.cpp" />
     <ClCompile Include="Input\InputManager.cpp" />
     <ClCompile Include="Objects\GUI\StaticGUIElement.cpp" />
     <ClCompile Include="Rendering\Renderers\Renderer.cpp" />
@@ -157,6 +160,8 @@
     <ClCompile Include="Utils\Time\GameTime.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Audio\MusicManager.h" />
+    <ClInclude Include="Audio\SoundTypes\MusicTrack.h" />
     <ClInclude Include="Debug\DebugLog.h" />
     <ClInclude Include="Input\InputManager.h" />
     <ClInclude Include="Objects\GUI\IGUIElement.h" />
@@ -190,8 +195,17 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\testing\chunk.pk" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Assets\testing\music\0_test.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\SoLoud-wav.2020.2.7.2\build\native\SoLoud-wav.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SoLoud-wav.2020.2.7.2\build\native\SoLoud-wav.props'))" />
+  </Target>
 </Project>

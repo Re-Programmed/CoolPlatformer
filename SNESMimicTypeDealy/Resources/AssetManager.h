@@ -9,6 +9,8 @@ constexpr const char* BGSubfolder = "/bg";
 
 constexpr const char* ChunkFileName = "/chunk.pk";
 
+constexpr const char* MusicFilePath = "/music";
+
 ///Max number of assets to store at one time.
 #define ASSET_LIMIT 50
 
@@ -32,6 +34,7 @@ namespace GAME_NAME
 			/// Subfolder is the directory within the Assets folder to load.
 			/// </summary>
 			static void LoadTextures(const char* subfolder, TEXTURE_LOAD textureLoad = ALL_TEXTURES, bool reloadTextures = false);
+			static void LoadMusic(const char* subfolder, bool reloadMusic = false);
 
 			static std::vector<int> GetChunkData(const char* subfolder);
 		};

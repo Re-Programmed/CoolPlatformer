@@ -14,7 +14,7 @@ namespace DEBUG
 		/// </summary>
 		/// <param name="warning">The warning to show.</param>
 		/// <param name="showTime">If true, shows the time elasped when the message was displayed.</param>
-		/// <param name="additionalStyle">Any ASCII codes to add to the text. Must start with a ";".</param>
+		/// <param name="additionalStyle">Any ANSI codes to add to the text. Must start with a ";".</param>
 		static void LogWarning(std::string warning, bool showTime = true, std::string additionalStyle = "")
 		{
 			std::string ou = "\033[33" + additionalStyle + "m" + (showTime ? ("[" + std::to_string(glfwGetTime()) + "]") : "") + " [WARNING] " + warning + "\033[0m\n";
@@ -27,7 +27,7 @@ namespace DEBUG
 		/// </summary>
 		/// <param name="log">The text to show.</param>
 		/// <param name="showTime">If true, shows the time elasped when the message was displayed.</param>
-		/// <param name="additionalStyle">Any ASCII codes to add to the text. Must start with a ";".</param>
+		/// <param name="additionalStyle">Any ANSI codes to add to the text. Must start with a ";".</param>
 		static void Log(std::string log, bool showTime = true, std::string additionalStyle = "")
 		{
 			std::string ou = "\033[37" + additionalStyle + "m" + (showTime ? ("[" + std::to_string(glfwGetTime()) + "]") : "") + " [LOG] " + log + "\033[0m\n";
@@ -51,7 +51,7 @@ namespace DEBUG
 		/// </summary>
 		/// <param name="log">The text to show.</param>
 		/// <param name="showTime">If true, shows the time elasped when the message was displayed.</param>
-		/// <param name="additionalStyle">Any ASCII codes to add to the text. Must start with a ";".</param>
+		/// <param name="additionalStyle">Any ANSI codes to add to the text. Must start with a ";".</param>
 		static void LogPlain(std::string log, std::string additionalStyle = "")
 		{
 			std::string ou = "\033[0" + additionalStyle + "m" + log + "\033[0m\n";

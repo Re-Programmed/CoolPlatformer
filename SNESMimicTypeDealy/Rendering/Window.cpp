@@ -8,6 +8,10 @@
 #include "../Resources/AssetManager.h"
 #include "../Input/InputManager.h"
 #include "../Utils/UpdateManager.h"
+#if _DEBUG
+#include "../Debug/DebugLog.h"
+#endif
+#include "../Audio/MusicManager.h"
 
 namespace GAME_NAME
 {
@@ -22,6 +26,8 @@ namespace GAME_NAME
 		glMatrixMode(GL_MODELVIEW);
 
 		lastWindowSize = new Vec2(width, height);
+
+		Sprite::SetResolution(Vec2(width, height));
 	}
 
 	GLFWwindow* Window::GetWindow()
@@ -36,6 +42,10 @@ namespace GAME_NAME
 
 	Window::Window(bool fullscreen) : m_fullscreen(fullscreen), m_gameCamera(new Camera::MoveableCamera())
 	{
+		/*----------------------
+			ADD INITABLES
+		------------------------*/
+
 		GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
 
 		int width, height;
@@ -46,7 +56,11 @@ namespace GAME_NAME
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
-		this->m_glWindow = glfwCreateWindow(width, height, "SMW platformer type game", fullscreen ? primaryMonitor : NULL, NULL);
+		std::string title = "SMW platformer type game";
+		this->m_glWindow = glfwCreateWindow(width, height, title.c_str(), fullscreen ? primaryMonitor : NULL, NULL);
+		#if _DEBUG
+		DEBUG::DebugLog::Log("Created Window: " + title + "\n", true, ";1;4");
+		#endif
 
 		if (!this->m_glWindow)
 		{
@@ -69,8 +83,6 @@ namespace GAME_NAME
 
 		windowSizeCallback(m_glWindow, width, height);
 
-		Sprite::SetResolution(Vec2(width, height));
-
 		//glMatrixMode(GL_PROJECTION);
 		//glOrtho(0, width, 0, height, 0, 100);
 		//glMatrixMode(GL_MODELVIEW);
@@ -79,6 +91,7 @@ namespace GAME_NAME
 
 		InputManager::Init(m_glWindow);
 
+		Audio::MusicManager::Init();
 
 		//TEST?
 
@@ -90,6 +103,9 @@ namespace GAME_NAME
 		m_gameCamera = new Camera::MoveableCamera(m_glWindow, Vec2::Zero, 1.f, 10.f);
 
 		Resources::AssetManager::LoadTextures("/testing");
+		Resources::AssetManager::LoadMusic("/testing");
+
+		Audio::MusicManager::Play(0);
 
 		GameObject obj[2];
 
@@ -105,6 +121,8 @@ namespace GAME_NAME
 
 	Window::~Window()
 	{
+		Audio::MusicManager::DeInit();
+
 		glfwDestroyWindow(this->m_glWindow);
 	}
 
@@ -142,7 +160,7 @@ namespace GAME_NAME
 		windowSizeCallback(m_glWindow, mode->width, mode->height);
 	}
 
-	void Window::SetClearColor(Vec4 color)
+	void Window::SetClearColor(Color color)
 	{
 		glClearColor(color.X, color.Y, color.Z, color.W);
 	}

@@ -6,6 +6,10 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "./stbi_image/stbi_image.h"
 #include "Objects/GUI/StaticGUIElement.h"
+#if _DEBUG
+#include "./Debug/DebugLog.h"
+#endif
+#include "Audio/MusicManager.h"
 //#include "./Input/InputManager.h"
 
 using namespace GAME_NAME;
@@ -20,6 +24,10 @@ void errorCallback(int error, const char* description)
 
 int main()
 {
+#if _DEBUG
+	DEBUG::DebugLog::LogPlain("Started Application", ";1;36;42");
+#endif
+
 	glfwSetErrorCallback(errorCallback);
 
 	if (!glfwInit())
