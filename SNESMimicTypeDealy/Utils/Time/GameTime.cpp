@@ -19,6 +19,11 @@ namespace GAME_NAME
 				return m_deltaTime;
 			}
 
+			double GameTime::GetScaledDeltaTime()
+			{
+				return DeltaTime::GetDeltaTime() * m_timeScale;
+			}
+
 			void GameTime::DeltaTime::Update()
 			{
 				double time = glfwGetTime();

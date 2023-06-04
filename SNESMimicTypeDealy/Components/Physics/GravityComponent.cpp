@@ -1,4 +1,5 @@
 #include "GravityComponent.h"
+#include "../../Utils/Time/GameTime.h"
 
 namespace GAME_NAME
 {
@@ -13,7 +14,7 @@ namespace GAME_NAME
 					m_gravitationalVelocity -= GravityStrength;
 				}
 
-				object->Translate(Vec2(0, m_gravitationalVelocity));
+				object->Translate(Vec2(0, m_gravitationalVelocity * GAME_NAME::Utils::Time::GameTime::GetScaledDeltaTime()));
 			}
 
 			void GravityComponent::Init(Objects::GameObject* object)

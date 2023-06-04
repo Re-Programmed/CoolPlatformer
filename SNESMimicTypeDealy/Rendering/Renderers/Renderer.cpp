@@ -98,14 +98,8 @@ namespace GAME_NAME
 
 		void Renderer::LoadObject(GameObject* object)
 		{
-			int x = object->GetPosition().X;
-			int y = object->GetPosition().Y;
-
-			int chunkX = AsChunkPosition(x) * levelSizeY;
-			int chunkY = AsChunkPosition(y);
-
-			std::cout << "ChunkX: " + std::to_string(chunkX);
-			std::cout << "ChunkY: " + std::to_string(chunkY);
+			int chunkX = AsChunkPosition(static_cast<int>(object->GetPosition().X)) * levelSizeY;
+			int chunkY = AsChunkPosition(static_cast<int>(object->GetPosition().Y));
 
 			Renderer::m_chunks[chunkX + chunkY].Instantiate(object);
 		}
@@ -131,25 +125,30 @@ namespace GAME_NAME
 
 			//Define const variables.
 			Vec2 cameraPosition = camera->GetPosition()/parallax;
+			iVec2 cameraBoundingBox = (camera->GetZoom() != 1 ? (*windowSize) * (1 / camera->GetZoom()) + (cameraBoundsPadding << 1) : (*windowSize) + cameraBoundsPadding) + Vec2(0, chunkSize);
+
+			if (layer == RENDER_LAYER_ACTIVE_OBJECTS)
+			{
+				Vec2 cameraPositionPadding = cameraPosition - cameraBoundsPadding / 2.f;
+				//Render active objects if they are on screen.
+				for (GameObject* obj : m_activeGameObjects)
+				{
+					if (Utils::CollisionDetection::PointWithinBoxBL(obj->GetPosition(), cameraPositionPadding, cameraBoundingBox))
+					{
+						obj->Update(window);
+						obj->Render(cameraPosition);
+					}
+				}
+
+				return;
+			}
 
 			iVec2 cameraChunkPosition = AsChunkPosition(cameraPosition);
 			const Vec2 cameraPositionS = cameraPosition - cameraBoundsPadding;
-			iVec2 cameraBoundingBox = (camera->GetZoom() != 1 ? (*windowSize) * (1 / camera->GetZoom()) + (cameraBoundsPadding << 1) : (*windowSize) + cameraBoundsPadding) + Vec2(0, chunkSize);
 
 			int cameraTopEdge = cameraChunkPosition.GetY() + AsChunkPosition(cameraBoundingBox.GetY());
 			//if (AsChunkPosition(cameraBoundingBox.GetY()) >= LEVEL_SIZE_Y * 2) { return; }
 
-			Vec2 cameraPositionPadding = cameraPosition - cameraBoundsPadding / 2.f;
-
-			//Render active objects if they are on screen.
-			for (GameObject* obj : m_activeGameObjects)
-			{
-				if (Utils::CollisionDetection::PointWithinBoxBL(obj->GetPosition(), cameraPositionPadding, cameraBoundingBox))
-				{
-					obj->Update(window);
-					obj->Render(cameraPosition);
-				}
-			}
 
 			//delete cameraPositionPadding;
 

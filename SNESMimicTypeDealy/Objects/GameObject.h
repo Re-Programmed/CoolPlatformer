@@ -5,6 +5,10 @@
 namespace GAME_NAME
 {
 
+#define LAYER_COUNT 3
+
+	typedef int Layer;
+
 	namespace Objects
 	{
 		using namespace MathUtils;
@@ -21,7 +25,8 @@ namespace GAME_NAME
 
 			Rendering::Sprite* GetSprite();
 
-			GameObject(Vec2 position, Vec2 scale, Rendering::Sprite* sprite) : m_position(position), m_sprite(sprite), m_scale(scale) {};
+			GameObject(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, Layer m_layer) : m_position(position), m_sprite(sprite), m_scale(scale) {};
+			GameObject(Vec2 position, Vec2 scale, Rendering::Sprite* sprite) : m_position(position), m_sprite(sprite), m_scale(scale), m_layer(1) {};
 			GameObject();
 
 			void Render(const Vec2 cameraPosition);
@@ -36,10 +41,17 @@ namespace GAME_NAME
 				return false;
 			}
 
+			Layer GetLayer()
+			{
+				return m_layer;
+			}
+
 		private:
 			Vec2 m_position;
 			Vec2 m_scale;
 			Rendering::Sprite* m_sprite;
+
+			Layer m_layer;
 		};
 		/*
 		class GameObjectMapping

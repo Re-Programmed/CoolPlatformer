@@ -7,7 +7,7 @@ namespace GAME_NAME
 	{
 		namespace Physics
 		{
-			constexpr const float GravityStrength = 1.f;
+			constexpr const float GravityStrength = 0.2f;
 			constexpr const float TerminalVelocity = 60.f;
 
 			using namespace MathUtils;

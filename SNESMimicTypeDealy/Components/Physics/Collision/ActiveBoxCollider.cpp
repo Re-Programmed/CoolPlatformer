@@ -17,6 +17,11 @@ namespace GAME_NAME
 
 				void ActiveBoxCollider::CheckStaticCollisionShapes(StaticCollider* collider)
 				{
+					if (m_beforeUpdate != nullptr)
+					{
+						m_beforeUpdate(m_object);
+					}
+
 					if (instanceof<StaticBoxCollider>(collider))
 					{
 						Vec2 push = Vec2::Zero;
@@ -30,7 +35,6 @@ namespace GAME_NAME
 							}
 						}
 					}
-
 				}
 
 				void ActiveBoxCollider::CheckActiveCollisionShapes(ActiveCollider* collider)

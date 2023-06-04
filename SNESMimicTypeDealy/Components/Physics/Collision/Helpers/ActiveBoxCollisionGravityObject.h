@@ -26,6 +26,7 @@ namespace GAME_NAME
 						m_boxCollider->Init(this);
 						m_gravity->Init(this);
 						m_boxCollider->SetOnCollision(onCollision);
+						m_boxCollider->SetBeforeUpdate(beforeUpdate);
 					}
 
 					~ActiveBoxCollisionGravityObject()
@@ -41,7 +42,7 @@ namespace GAME_NAME
 					
 					void Update(GLFWwindow* window)
 					{
-						m_gravity->Update(window, this);
+
 					}
 
 					void SetGravity(const float gVelocity)
@@ -58,6 +59,10 @@ namespace GAME_NAME
 						if (push.Y > 0) { ((ActiveBoxCollisionGravityObject*)obj)->SetGravity(0.f); }
 					}
 
+					static void beforeUpdate(Objects::GameObject* obj)
+					{
+						((ActiveBoxCollisionGravityObject*)obj)->m_gravity->Update(nullptr, obj);
+					}
 				};
 
 			}

@@ -44,6 +44,11 @@ namespace GAME_NAME
 						m_onCollision = onCollision;
 					}
 
+					void SetBeforeUpdate(void(*beforeUpdate)(Objects::GameObject*))
+					{
+						m_beforeUpdate = beforeUpdate;
+					}
+
 					Objects::GameObject* GetObject()
 					{
 						return m_object;
@@ -52,6 +57,7 @@ namespace GAME_NAME
 				protected:
 					Objects::GameObject* m_object;
 					void(*m_onCollision)(GAME_NAME::MathUtils::Vec2 push, Objects::GameObject*);
+					void(*m_beforeUpdate)(Objects::GameObject*);
 				};
 			}
 		}

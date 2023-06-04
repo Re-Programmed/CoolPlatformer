@@ -25,8 +25,10 @@ namespace GAME_NAME
 
 				};
 
-				float GetTimeScale();
-				void SetTimeScale(float timeScale);
+				static double GetScaledDeltaTime();
+
+				static float GetTimeScale();
+				static void SetTimeScale(float timeScale);
 
 				void Update(GLFWwindow* window);
 			private:
