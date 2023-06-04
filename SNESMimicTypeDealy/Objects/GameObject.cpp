@@ -50,5 +50,6 @@ namespace GAME_NAME
         {
             m_sprite->Render(cameraPosition, m_position, m_scale);
         }
+
     }
 }

@@ -248,6 +248,9 @@
     <ClInclude Include="Components\Physics\Collision\Helpers\StaticBoxCollisionObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Components\Physics\Collision\PixelPerfectCollider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\testing\sprite\1_player.png">

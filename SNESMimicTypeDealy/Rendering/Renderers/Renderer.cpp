@@ -14,7 +14,7 @@ namespace GAME_NAME
 
 		Chunk Renderer::m_chunks[levelSizeX * levelSizeY];
 
-		std::vector<GameObject*> Renderer::m_activeGameObjects;
+		std::vector<GameObject*> Renderer::m_activeGameObjects[MICRO_RENDER_LAYER_COUNT];
 
 		GLuint Renderer::LoadSprite(const char* file)
 		{
@@ -104,17 +104,17 @@ namespace GAME_NAME
 			Renderer::m_chunks[chunkX + chunkY].Instantiate(object);
 		}
 
-		void Renderer::LoadActiveObjects(GameObject* objects[], const unsigned int size)
+		void Renderer::LoadActiveObjects(GameObject* objects[], const unsigned int size, int layer)
 		{
 			for (unsigned int i = 0; i < size; i++)
 			{
-				LoadActiveObject(objects[i]);
+				LoadActiveObject(objects[i], layer);
 			}
 		}
 
-		void Renderer::LoadActiveObject(GameObject* object)
+		void Renderer::LoadActiveObject(GameObject* object, int layer)
 		{
-			m_activeGameObjects.push_back(object);
+			m_activeGameObjects[layer].push_back(object);
 		}
 
 		///Macro for converting to Chunk Coords.
@@ -130,13 +130,16 @@ namespace GAME_NAME
 			if (layer == RENDER_LAYER_ACTIVE_OBJECTS)
 			{
 				Vec2 cameraPositionPadding = cameraPosition - cameraBoundsPadding / 2.f;
-				//Render active objects if they are on screen.
-				for (GameObject* obj : m_activeGameObjects)
+				//Render active objects if they are on screen. Renders in order of layers from greatest to least.
+				for (int i = MICRO_RENDER_LAYER_COUNT; i > 0; i--)
 				{
-					if (Utils::CollisionDetection::PointWithinBoxBL(obj->GetPosition(), cameraPositionPadding, cameraBoundingBox))
+					for (GameObject* obj : m_activeGameObjects[i])
 					{
-						obj->Update(window);
-						obj->Render(cameraPosition);
+						if (Utils::CollisionDetection::PointWithinBoxBL(obj->GetPosition(), cameraPositionPadding, cameraBoundingBox))
+						{
+							obj->Update(window);
+							obj->Render(cameraPosition);
+						}
 					}
 				}
 

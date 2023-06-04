@@ -180,6 +180,7 @@
     <ClInclude Include="Components\Physics\Collision\ActiveBoxCollider.h" />
     <ClInclude Include="Components\Physics\Collision\ActiveCollider.h" />
     <ClInclude Include="Components\Physics\Collision\CollisionManager.h" />
+    <ClInclude Include="Components\Physics\Collision\PixelPerfectCollider.h" />
     <ClInclude Include="Components\Physics\Collision\StaticBoxCollider.h" />
     <ClInclude Include="Components\Physics\Collision\StaticCollider.h" />
     <ClInclude Include="Components\Physics\Collision\Helpers\StaticBoxCollisionObject.h" />

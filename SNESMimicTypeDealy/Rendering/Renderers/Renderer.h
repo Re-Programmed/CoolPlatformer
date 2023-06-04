@@ -12,6 +12,9 @@ namespace GAME_NAME
 {
 	namespace Rendering
 	{
+#define MICRO_RENDER_LAYER_COUNT 3
+
+
 		using namespace Objects;
 		class Renderer
 		{
@@ -41,8 +44,8 @@ namespace GAME_NAME
 			/// <param name="size"></param>
 			static void LoadObject(GameObject* object);
 
-			static void LoadActiveObjects(GameObject* objects[], const unsigned int size);
-			static void LoadActiveObject(GameObject* object);
+			static void LoadActiveObjects(GameObject* objects[], const unsigned int size, int layer = 1);
+			static void LoadActiveObject(GameObject* object, int layer = 1);
 
 			/// <summary>
 			/// Must be called before the creation of any objects.
@@ -58,7 +61,7 @@ namespace GAME_NAME
 			/// <summary>
 			/// Objects that need updated no matter where they are in game.
 			/// </summary>
-			static std::vector<GameObject*> m_activeGameObjects;
+			static std::vector<GameObject*> m_activeGameObjects[MICRO_RENDER_LAYER_COUNT];
 
 			static Chunk m_chunks[];
 			static Sprite* const getBackground(const unsigned int bgTexture);
