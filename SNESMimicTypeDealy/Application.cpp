@@ -9,7 +9,7 @@
 #if _DEBUG
 #include "./Debug/DebugLog.h"
 #endif
-#include "Audio/MusicManager.h"
+#include "!TestGame/TestGame.h"
 //#include "./Input/InputManager.h"
 
 using namespace GAME_NAME;
@@ -34,7 +34,7 @@ int main()
 	{
 		exit(EXIT_FAILURE);
 	}
-	ApplicationWindow = new Window(false);
+	ApplicationWindow = new Window(false, new TestGame());
 
 	glfwSwapInterval(1);
 

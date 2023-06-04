@@ -2,12 +2,14 @@
 #include "../glad/include/glad/glad.h"
 #include <iostream>
 #include <filesystem>
+#include "../Objects/Levels/Data/LevelDataParser.h"
 
 constexpr const char* AssetPath = "./Assets";
 constexpr const char* SpriteSubfolder = "/sprite";
 constexpr const char* BGSubfolder = "/bg";
 
 constexpr const char* ChunkFileName = "/chunk.pk";
+constexpr const char* LevelFileName = "/level.dat";
 
 constexpr const char* MusicFilePath = "/music";
 
@@ -35,7 +37,8 @@ namespace GAME_NAME
 			/// </summary>
 			static void LoadTextures(const char* subfolder, TEXTURE_LOAD textureLoad = ALL_TEXTURES, bool reloadTextures = false);
 			static void LoadMusic(const char* subfolder, bool reloadMusic = false);
-
+			
+			static void GetLevelData(const char* subfolder, std::string data[Objects::Levels::LevelDataSize]);
 			static std::vector<int> GetChunkData(const char* subfolder);
 		};
 	}

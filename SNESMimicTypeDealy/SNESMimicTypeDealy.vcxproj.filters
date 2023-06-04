@@ -87,6 +87,15 @@
     <ClCompile Include="Audio\SoundTypes\MusicTrack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Objects\Levels\Data\LevelDataParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="!TestGame\TestGame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glad\include\glad\glad.h">
@@ -170,6 +179,18 @@
     <ClInclude Include="Audio\SoundTypes\MusicTrack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Objects\Levels\Data\LevelDataParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Level.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="!TestGame\TestGame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\testing\sprite\1_player.png">
@@ -185,6 +206,7 @@
   <ItemGroup>
     <None Include="Assets\testing\chunk.pk" />
     <None Include="packages.config" />
+    <None Include="Assets\testing\level.dat" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Assets\testing\music\0_test.wav">

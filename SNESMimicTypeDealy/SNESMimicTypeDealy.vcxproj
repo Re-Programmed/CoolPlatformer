@@ -134,11 +134,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="!TestGame\TestGame.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Audio\MusicManager.cpp" />
     <ClCompile Include="Audio\SoundTypes\MusicTrack.cpp" />
+    <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Input\InputManager.cpp" />
     <ClCompile Include="Objects\GUI\StaticGUIElement.cpp" />
+    <ClCompile Include="Objects\Levels\Data\LevelDataParser.cpp" />
     <ClCompile Include="Rendering\Renderers\Renderer.cpp" />
     <ClCompile Include="Utils\IUpdateable.h" />
     <ClCompile Include="Utils\RemoveableUpdateable.cpp" />
@@ -160,12 +163,16 @@
     <ClCompile Include="Utils\Time\GameTime.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="!TestGame\TestGame.h" />
     <ClInclude Include="Audio\MusicManager.h" />
     <ClInclude Include="Audio\SoundTypes\MusicTrack.h" />
     <ClInclude Include="Debug\DebugLog.h" />
+    <ClInclude Include="Game\Game.h" />
+    <ClInclude Include="Game\Level.h" />
     <ClInclude Include="Input\InputManager.h" />
     <ClInclude Include="Objects\GUI\IGUIElement.h" />
     <ClInclude Include="Objects\GUI\StaticGUIElement.h" />
+    <ClInclude Include="Objects\Levels\Data\LevelDataParser.h" />
     <ClInclude Include="Rendering\Renderers\Renderer.h" />
     <ClInclude Include="Utils\ConstUpdateable.h" />
     <ClInclude Include="Utils\RemoveableUpdateable.h" />
@@ -195,6 +202,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\testing\chunk.pk" />
+    <None Include="Assets\testing\level.dat">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

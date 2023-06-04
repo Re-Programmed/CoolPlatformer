@@ -6,12 +6,13 @@
 #include <GLFW/glfw3.h>
 #include "Camera/Camera.h"
 #include "Camera/MoveableCamera.h"
+#include "../Game/Game.h"
 
 namespace GAME_NAME
 {
 	using namespace Rendering;
 	using namespace MathUtils;
-	
+
 	typedef Vec4 Color;
 
 	class Window
@@ -20,7 +21,7 @@ namespace GAME_NAME
 		GLFWwindow* GetWindow();
 		Camera::Camera* GetCamera();
 
-		Window(bool fullscreen);
+		Window(bool fullscreen, GAME_NAME::Game::Game* game);
 		~Window();
 
 		void Render();
@@ -39,8 +40,9 @@ namespace GAME_NAME
 
 
 	private:
+		GAME_NAME::Game::Game* const m_game;
+
 		GLFWwindow* m_glWindow;
-		GAME_NAME::Rendering::Camera::Camera* m_gameCamera;
 
 		bool m_fullscreen;
 

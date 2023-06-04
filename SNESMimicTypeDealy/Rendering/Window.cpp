@@ -37,10 +37,10 @@ namespace GAME_NAME
 
 	Camera::Camera* Window::GetCamera()
 	{
-		return m_gameCamera;
+		return m_game->GetCamera();
 	}
 
-	Window::Window(bool fullscreen) : m_fullscreen(fullscreen), m_gameCamera(new Camera::MoveableCamera())
+	Window::Window(bool fullscreen, GAME_NAME::Game::Game* game) : m_game(game), m_fullscreen(fullscreen)
 	{
 		/*----------------------
 			ADD INITABLES
@@ -96,26 +96,7 @@ namespace GAME_NAME
 		//TEST?
 
 		///CHUNK DATA HAS BACKGROUND INFO (THIS NEEDS CHANGED BECAUSE THE CHUNKS OBJECTS NEED PARALLAX!)
-		std::vector<int> cd = Resources::AssetManager::GetChunkData("/testing");
 		
-		Renderer::InitChunks(cd);
-
-		m_gameCamera = new Camera::MoveableCamera(m_glWindow, Vec2::Zero, 1.f, 10.f);
-
-		Resources::AssetManager::LoadTextures("/testing");
-		Resources::AssetManager::LoadMusic("/testing");
-
-		Audio::MusicManager::Play(0);
-
-		GameObject obj[2];
-
-		///CHUNK OBJECTS ARE STATIC OBJECTS
-		obj[0] = GameObject(Vec2::Zero, Vec2(100, 100), Renderer::GetSprite(1));
-		obj[1] = GameObject(Vec2(550, 550), Vec2(100, 100), Renderer::GetSprite(2));
-
-		Renderer::LoadObjects(obj, 2);
-
-
 		///WHAT ABOUT MOVING OBJECTS THAT EXCEED CHUNKS LIKE ENEMIES AND THE PLAYER!!!!! (WE CANT KEEP UPDATING WHAT CHUNK THEY ARE IN, WE NEED TO SPECIFICALLY CHECK THEIR POSITION)
 	}
 
@@ -135,8 +116,8 @@ namespace GAME_NAME
 		//Draw Color
 		//glColor3f(1, 0, 0);
 
-		Renderer::Render(m_gameCamera, lastWindowSize, RENDER_LAYER_BG, 2.f);
-		Renderer::Render(m_gameCamera, lastWindowSize, RENDER_LAYER_OBJECTS);
+		Renderer::Render(m_game->GetCamera(), lastWindowSize, RENDER_LAYER_BG, 2.f);
+		Renderer::Render(m_game->GetCamera(), lastWindowSize, RENDER_LAYER_OBJECTS);
 
 		glfwSwapBuffers(this->m_glWindow);
 		glfwPollEvents();

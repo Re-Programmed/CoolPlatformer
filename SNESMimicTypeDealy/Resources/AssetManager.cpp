@@ -88,6 +88,24 @@ namespace GAME_NAME
 #endif
 		}
 
+		void AssetManager::GetLevelData(const char* subfolder, std::string data[Objects::Levels::LevelDataSize])
+		{
+			std::string filePath = AssetPath;
+			filePath += subfolder;
+			filePath += LevelFileName;
+
+			std::ifstream LevelFile(filePath);
+
+			int8_t i = 0;
+			std::string text;
+			while (std::getline(LevelFile, text, '\n'))
+			{
+				data[i] = text;
+				i++;
+			}
+
+		}
+
 		std::vector<int> AssetManager::GetChunkData(const char* subfolder)
 		{
 			std::string filePath = AssetPath;
