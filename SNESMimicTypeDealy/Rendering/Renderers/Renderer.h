@@ -41,6 +41,9 @@ namespace GAME_NAME
 			/// <param name="size"></param>
 			static void LoadObject(GameObject* object);
 
+			static void LoadActiveObjects(GameObject* objects[], const unsigned int size);
+			static void LoadActiveObject(GameObject* object);
+
 			/// <summary>
 			/// Must be called before the creation of any objects.
 			/// </summary>
@@ -52,10 +55,16 @@ namespace GAME_NAME
 			/// <returns>The buffer loaded to.</returns>
 			static GLuint loadImage(const char* file);
 
+			/// <summary>
+			/// Objects that need updated no matter where they are in game.
+			/// </summary>
+			static std::vector<GameObject*> m_activeGameObjects;
 
 			static Chunk m_chunks[];
 			static Sprite* const getBackground(const unsigned int bgTexture);
-			
+
+
+
 			/// <summary>
 			/// For rendering GUI elements.
 			/// </summary>
@@ -79,6 +88,7 @@ namespace GAME_NAME
 				static void Render(Camera::Camera* camera, Vec2* windowSize);
 
 				static std::vector<GUI::IGUIElement>* elements;
+
 			};
 		};
 

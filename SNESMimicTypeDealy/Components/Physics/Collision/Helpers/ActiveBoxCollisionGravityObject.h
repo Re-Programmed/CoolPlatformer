@@ -34,6 +34,10 @@ namespace GAME_NAME
 						delete m_gravity;
 					}
 
+					bool GetActive()
+					{
+						return true;
+					}
 					
 					void Update(GLFWwindow* window)
 					{

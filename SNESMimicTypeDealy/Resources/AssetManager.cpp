@@ -151,7 +151,19 @@ namespace GAME_NAME
 					c++; //C++ AHHAHAHAHAHAHH Like the language :)L::):)
 				}
 
-				Renderer::LoadObject((*mapping)(v));
+				GameObject* g = (*mapping)(v);
+
+				if (g->GetActive())
+				{
+#if _DEBUG
+					DEBUG::DebugLog::Log("[MAPPER] >>> Loading    L WAS ACTIVE", true, ";35");
+#endif
+					Renderer::LoadActiveObject(g);
+				}
+				else {
+					Renderer::LoadObject(g);
+				}
+
 				//delete mapping;
 			}
 		}

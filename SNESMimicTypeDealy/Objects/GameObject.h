@@ -30,7 +30,11 @@ namespace GAME_NAME
 			{
 
 			}
-
+			
+			virtual bool GetActive()
+			{
+				return false;
+			}
 
 		private:
 			Vec2 m_position;

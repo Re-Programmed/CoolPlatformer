@@ -1,5 +1,6 @@
 #include "Renderer.h"
 #include <iostream>
+#include "../../Utils/CollisionDetection.h"
 
 namespace GAME_NAME
 {
@@ -12,6 +13,8 @@ namespace GAME_NAME
 		unsigned int spriteCount, bgCount;
 
 		Chunk Renderer::m_chunks[levelSizeX * levelSizeY];
+
+		std::vector<GameObject*> Renderer::m_activeGameObjects;
 
 		GLuint Renderer::LoadSprite(const char* file)
 		{
@@ -91,17 +94,36 @@ namespace GAME_NAME
 				LoadObject(objects[i]);
 			}
 		}
+#define AsChunkPosition(x) (x >> 9)
 
 		void Renderer::LoadObject(GameObject* object)
 		{
 			int x = object->GetPosition().X;
 			int y = object->GetPosition().Y;
 
-			Renderer::m_chunks[(x / chunkSize) + (y * static_cast<int>(levelSizeY) / chunkSize)].Instantiate(object);
+			int chunkX = AsChunkPosition(x) * levelSizeY;
+			int chunkY = AsChunkPosition(y);
+
+			std::cout << "ChunkX: " + std::to_string(chunkX);
+			std::cout << "ChunkY: " + std::to_string(chunkY);
+
+			Renderer::m_chunks[chunkX + chunkY].Instantiate(object);
+		}
+
+		void Renderer::LoadActiveObjects(GameObject* objects[], const unsigned int size)
+		{
+			for (unsigned int i = 0; i < size; i++)
+			{
+				LoadActiveObject(objects[i]);
+			}
+		}
+
+		void Renderer::LoadActiveObject(GameObject* object)
+		{
+			m_activeGameObjects.push_back(object);
 		}
 
 		///Macro for converting to Chunk Coords.
-#define AsChunkPosition(x) (x >> 9)
 
 		void Renderer::Render(Camera::Camera* camera, Vec2* windowSize, RENDER_LAYER layer, GLFWwindow* window, float parallax)
 		{
@@ -117,6 +139,19 @@ namespace GAME_NAME
 			int cameraTopEdge = cameraChunkPosition.GetY() + AsChunkPosition(cameraBoundingBox.GetY());
 			//if (AsChunkPosition(cameraBoundingBox.GetY()) >= LEVEL_SIZE_Y * 2) { return; }
 
+			Vec2 cameraPositionPadding = cameraPosition - cameraBoundsPadding / 2.f;
+
+			//Render active objects if they are on screen.
+			for (GameObject* obj : m_activeGameObjects)
+			{
+				if (Utils::CollisionDetection::PointWithinBoxBL(obj->GetPosition(), cameraPositionPadding, cameraBoundingBox))
+				{
+					obj->Update(window);
+					obj->Render(cameraPosition);
+				}
+			}
+
+			//delete cameraPositionPadding;
 
 			//Loop over chunks that are before the right edge of the camera.
 			for (int i = cameraChunkPosition.GetX() * levelSizeY + cameraChunkPosition.GetY(); i < AsChunkPosition((int)cameraPosition.X + cameraBoundingBox.GetX()) * levelSizeY; i++)
