@@ -10,7 +10,7 @@ namespace GAME_NAME
 	{
 		namespace Levels
 		{
-			constexpr const int LevelDataSize = 3;
+			constexpr const int LevelDataSize = 4;
 
 			class LevelDataParser
 			{

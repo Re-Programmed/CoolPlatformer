@@ -125,6 +125,38 @@ namespace GAME_NAME
 			return data;
 		}
 
+		void AssetManager::LoadObjectData(const char* subfolder, std::function<GameObject* (std::vector<std::string>)> mappings[], bool reloadObjects)
+		{
+			std::string filePath = AssetPath;
+			filePath += subfolder;
+			filePath += ObjectFileName;
+
+			std::ifstream ObjectFile(filePath);
+			std::string line;
+
+			while (std::getline(ObjectFile, line, '\n'))
+			{
+				std::stringstream linestream(line);
+				std::string component;
+				
+				std::function<GameObject* (std::vector<std::string>)>* mapping{};
+
+				std::vector <std::string> v;
+
+				int c = 0;
+				while (std::getline(linestream, component, ','))
+				{
+					if (c == 0) { mapping = &mappings[std::stoi(component)]; }
+					else { v.push_back(component); }
+					c++; //C++ AHHAHAHAHAHAHH Like the language :)L::):)
+				}
+
+				Renderer::LoadObject((*mapping)(v));
+				//delete mapping;
+			}
+		}
+
+
 		
 	}
 }

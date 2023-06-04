@@ -34,7 +34,7 @@ int main()
 	{
 		exit(EXIT_FAILURE);
 	}
-	ApplicationWindow = new Window(false, new TestGame());
+	ApplicationWindow = new Window(true, new TestGame());
 
 	glfwSwapInterval(1);
 

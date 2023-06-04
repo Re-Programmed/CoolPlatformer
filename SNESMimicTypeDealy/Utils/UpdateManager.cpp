@@ -1,12 +1,14 @@
 #include "UpdateManager.h"
 #include "Time/GameTime.h"
+#include "../Components/Physics/Collision/CollisionManager.h"
 
 namespace GAME_NAME
 {
 	namespace Utils
 	{
-		std::vector<IUpdateable*> UpdateManager::m_updateables {
-			new Time::GameTime()
+		std::vector<IUpdateable*> UpdateManager::m_updateables{
+			new Time::GameTime(),
+			new Components::Physics::Collision::CollisionManager()
 		};
 
 

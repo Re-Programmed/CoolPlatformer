@@ -14,7 +14,7 @@ namespace GAME_NAME
 		/// <summary>
 		/// (Cannot be called during rendering) Adds object to chunk renderer.
 		/// </summary>
-		void Chunk::Instantiate(GameObject object)
+		void Chunk::Instantiate(GameObject* object)
 		{
 			m_objects.push_back(object);
 		}
@@ -24,7 +24,7 @@ namespace GAME_NAME
 			return m_position;
 		}
 
-		void Chunk::Render(const Vec2 cameraPosition, const int chunkSize, RENDER_LAYER layer)
+		void Chunk::Render(const Vec2 cameraPosition, const int chunkSize, RENDER_LAYER layer, GLFWwindow* window)
 		{
 			switch (layer)
 			{
@@ -35,9 +35,10 @@ namespace GAME_NAME
 				}
 				break;
 			case RENDER_LAYER_OBJECTS:
-				for (GameObject obj : m_objects)
+				for (GameObject* obj : m_objects)
 				{
-					obj.Render(cameraPosition);
+					obj->Update(window);
+					obj->Render(cameraPosition);
 				}
 			default:
 				break;

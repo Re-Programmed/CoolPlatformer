@@ -43,7 +43,7 @@ namespace GAME_NAME
 	Window::Window(bool fullscreen, GAME_NAME::Game::Game* game) : m_game(game), m_fullscreen(fullscreen)
 	{
 		/*----------------------
-			ADD INITABLES
+			ADD INITS
 		------------------------*/
 
 		GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
@@ -55,6 +55,7 @@ namespace GAME_NAME
 
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); //DISABLE RESIZING
 
 		std::string title = "SMW platformer type game";
 		this->m_glWindow = glfwCreateWindow(width, height, title.c_str(), fullscreen ? primaryMonitor : NULL, NULL);
@@ -93,6 +94,8 @@ namespace GAME_NAME
 
 		Audio::MusicManager::Init();
 
+		m_game->Init(m_glWindow); //INITILIZE GAME LAST
+
 		//TEST?
 
 		///CHUNK DATA HAS BACKGROUND INFO (THIS NEEDS CHANGED BECAUSE THE CHUNKS OBJECTS NEED PARALLAX!)
@@ -116,8 +119,8 @@ namespace GAME_NAME
 		//Draw Color
 		//glColor3f(1, 0, 0);
 
-		Renderer::Render(m_game->GetCamera(), lastWindowSize, RENDER_LAYER_BG, 2.f);
-		Renderer::Render(m_game->GetCamera(), lastWindowSize, RENDER_LAYER_OBJECTS);
+		Renderer::Render(m_game->GetCamera(), lastWindowSize, RENDER_LAYER_BG, m_glWindow, 1.f);
+		Renderer::Render(m_game->GetCamera(), lastWindowSize, RENDER_LAYER_OBJECTS, m_glWindow);
 
 		glfwSwapBuffers(this->m_glWindow);
 		glfwPollEvents();

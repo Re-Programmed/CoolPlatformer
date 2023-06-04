@@ -96,6 +96,30 @@
     <ClCompile Include="!TestGame\TestGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Components\IComponent.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="!TestGame\Mappings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Physics\PhysicsComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Physics\GravityComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Physics\Collision\StaticBoxCollider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Physics\Collision\CollisionManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Physics\Collision\ActiveBoxCollider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Physics\Collision\Helpers\ActiveBoxCollisionGravityObject.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glad\include\glad\glad.h">
@@ -191,6 +215,39 @@
     <ClInclude Include="!TestGame\TestGame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="!TestGame\Objects\DebugObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Physics\Collision\StaticBoxCollider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\ComponentObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="!TestGame\Mappings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Physics\PhysicsComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Physics\GravityComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Physics\Collision\CollisionManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Physics\Collision\StaticCollider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Physics\Collision\ActiveCollider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Physics\Collision\ActiveBoxCollider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Physics\Collision\Helpers\StaticBoxCollisionObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\testing\sprite\1_player.png">
@@ -202,15 +259,20 @@
     <Image Include="Assets\testing\bg\1_test.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Assets\testing\sprite\3_grass.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\testing\chunk.pk" />
     <None Include="packages.config" />
     <None Include="Assets\testing\level.dat" />
+    <None Include="Assets\testing\object.pk" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Assets\testing\music\0_test.wav">
       <Filter>Resource Files</Filter>
     </Media>
+    <Media Include="Assets\testing\music\1_idk.mp3" />
   </ItemGroup>
 </Project>

@@ -1,5 +1,9 @@
 #pragma once
 
+#define GLFW_INCLUDE_NONE
+#include "../Resources/AssetManager.h"
+#include "../Objects/Levels/Data/LevelDataParser.h"
+#include "../Rendering/Renderers/Renderer.h"
 #include "../Utils/ConstUpdateable.h"
 #include "Level.h"
 #include "../Rendering/Camera/Camera.h"
@@ -12,6 +16,15 @@ namespace GAME_NAME
 	{
 		class Game : ConstUpdateable
 		{
+			
+
+		public:
+			virtual void Update(GLFWwindow* window) = 0;
+			virtual void Init(GLFWwindow* window) = 0;
+			virtual void LateUpdate(GLFWwindow* window) = 0;
+
+			Rendering::Camera::Camera* GetCamera();
+		protected:
 			enum LEVEL_DATA
 			{
 				/// <summary>
@@ -43,14 +56,6 @@ namespace GAME_NAME
 				/// </summary>
 				LEVEL_DATA_DATA_LEVEL = 0xF0000
 			};
-
-		public:
-			virtual void Update(GLFWwindow* window) = 0;
-			virtual void Init(GLFWwindow* window) = 0;
-			virtual void LateUpdate(GLFWwindow* window) = 0;
-
-			Rendering::Camera::Camera* GetCamera();
-		protected:
 			/// <summary>
 			/// Load a level from the <u>Assets folder</u>.
 			/// 
@@ -65,7 +70,7 @@ namespace GAME_NAME
 			/// <param name="reload"> -- If the loaded data should be deleted before its loaded.
 			/// (ex. Delete all the current music loaded and populate the AudioPlayer with new music.)
 			/// [Does not apply if using <b>LEVEL_DATA_ALL</b>, which must reload]</param>
-			void loadLevel(const char* levelPath, LEVEL_DATA data, bool reload);
+			void loadLevel(const char* levelPath, LEVEL_DATA data, bool reload = false);
 
 			Rendering::Camera::Camera* m_camera;
 		private:

@@ -1,14 +1,15 @@
 #include "Game.h"
-#define GLFW_INCLUDE_NONE
-#include "../Resources/AssetManager.h"
-#include "../Objects/Levels/Data/LevelDataParser.h"
-#include "../Rendering/Renderers/Renderer.h"
+
+
+#if _DEBUG
+#include "../Debug/DebugLog.h"
+#endif
 
 namespace GAME_NAME
 {
 	namespace Game
 	{
-		void Game::loadLevel(const char* levelPath, LEVEL_DATA dataToLoad, bool reload = false)
+		void Game::loadLevel(const char* levelPath, LEVEL_DATA dataToLoad, bool reload)
 		{
 			using namespace Resources;
 			using namespace Objects;
@@ -50,10 +51,14 @@ namespace GAME_NAME
 
 				LevelDataParser* ldp = new LevelDataParser(data, m_level);
 
-				delete data;
 				delete ldp;
-			}
 
+#if _DEBUG
+				DEBUG::DebugLog::Log("Loaded Level: " + m_level.Name, true, ";39;41;1;4");
+				std::string start = "ID: " + std::to_string(m_level.ID.World);
+				DEBUG::DebugLog::Log(start + "-" + std::to_string(m_level.ID.Level), true, ";39;41;1;4");
+#endif
+			}
 
 		}
 

@@ -13,6 +13,8 @@ namespace GAME_NAME
 		public:
 			void SetPosition(Vec2 position);
 			Vec2 GetPosition();
+			void Translate(Vec2 translate);
+			void Translate(float x, float y);
 
 			void SetScale(Vec2 scale);
 			Vec2 GetScale();
@@ -23,10 +25,27 @@ namespace GAME_NAME
 			GameObject();
 
 			void Render(const Vec2 cameraPosition);
+
+			virtual void Update(GLFWwindow* window)
+			{
+
+			}
+
+
 		private:
 			Vec2 m_position;
 			Vec2 m_scale;
 			Rendering::Sprite* m_sprite;
 		};
+		/*
+		class GameObjectMapping
+			: public IObjectComponentMapping
+		{
+		public:
+			Objects::GameObject* FromMapping(std::vector<std::string> inputs)
+			{
+				return new GameObject(Vec2(std::stoi(inputs[1]), std::stoi(inputs[2])), Vec2(std::stoi(inputs[3]), std::stoi(inputs[4])), new Sprite(std::stoi(inputs[5])));
+			}
+		};*/
 	}
 }

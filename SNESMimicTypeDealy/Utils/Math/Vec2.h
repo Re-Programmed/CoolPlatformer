@@ -69,6 +69,12 @@ namespace GAME_NAME
 				return Vec2(X / a, Y / a);
 			}
 
+			void operator+= (const Vec2& v)
+			{
+				this->X += v.X;
+				this->Y += v.Y;
+			}
+
 			/// <summary>
 			/// Uses sqrt, use limitedly.
 			/// </summary>

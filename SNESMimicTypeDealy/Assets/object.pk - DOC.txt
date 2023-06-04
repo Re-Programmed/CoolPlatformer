@@ -1,0 +1,40 @@
+FORMAT FOR object.pk:
+
+Each line is 1 object.
+
+4,700,1000,100,100,1
+^  First number represents the mapping to use from the Mappings provided.
+
+4,700,1000,100,100,1
+   ^    ^   ^   ^  ^  Every other digit gets passed to the object map as a paramater. 
+
+
+
+---DEFAULT MAPPING---
+
+0,700,1000,100,100,1
+   ^   ^  Second and third number represent the position of the object in the default mapping.
+
+0,700,1000,100,100,1
+            ^   ^  Fourth and fifth number represent the scale of the object in the default mapping.
+
+0,700,1000,100,100,1
+                   ^  Last number represents the sprite for the object.
+
+
+
+---COMPONENT MAPPING---
+
+1,700,1000,100,100,1,2,5|16|32
+^  ^   ^    ^   ^  ^  First numbers are the same as the default mapping. 
+
+1,700,1000,100,100,1,2,5|16|32
+                     ^  Each additional number represents a component added. 
+                        (ex. The 2 here adds the second component from the ComponentMap)
+
+1,700,1000,100,100,1,2,5|16|32
+                       ^  (ex. This 5 adds the fifth component from the component ComponentMap)
+
+1,700,1000,100,100,1,2,5|16|32
+                          ^  ^  Each number within the commas but separated by "|" will be passed to
+                                the component map as a paramater.

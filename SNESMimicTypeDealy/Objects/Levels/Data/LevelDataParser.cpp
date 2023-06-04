@@ -14,7 +14,8 @@ namespace GAME_NAME
 		{
 			const std::function<void(std::string,Game::Level&)> LevelDataParser::m_ops[LevelDataSize] {
 					[](std::string title,Game::Level& level) { level.Name = title; },
-					[](std::string id,Game::Level& level) { level.ID.World = id[0] + id[1]; level.ID.Level = id[2] + id[3]; },
+					[](std::string id,Game::Level& level) { level.ID.World = std::stoi(id); },
+					[](std::string id,Game::Level& level) { level.ID.Level = std::stoi(id); },
 					[](std::string song,Game::Level& level) { level.CurrentBGMusic = Audio::MusicManager::Play(std::stoi(song)); }
 			};
 

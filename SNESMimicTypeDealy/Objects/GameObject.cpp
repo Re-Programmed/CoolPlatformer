@@ -15,6 +15,17 @@ namespace GAME_NAME
             return m_position;
         }
 
+        void GameObject::Translate(Vec2 translate)
+        {
+            SetPosition(m_position + translate);
+        }
+
+        void GameObject::Translate(float x, float y)
+        {
+            m_position.X = x;
+            m_position.Y = y;
+        }
+
         void GameObject::SetScale(Vec2 scale)
         {
             m_scale = scale;

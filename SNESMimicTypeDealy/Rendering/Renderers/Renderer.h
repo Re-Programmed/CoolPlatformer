@@ -26,14 +26,20 @@ namespace GAME_NAME
 
 			static Sprite* const GetSprite(const unsigned int spriteTexture);
 
-			static void Render(Camera::Camera* camera, Vec2* windowSize, RENDER_LAYER layer, float parallax = 1.f);
+			static void Render(Camera::Camera* camera, Vec2* windowSize, RENDER_LAYER layer, GLFWwindow* window, float parallax = 1.f);
 
 			/// <summary>
 			/// Begins drawing the objects in objects. CANNOT BE CALLED DURING RENDERING
 			/// </summary>
 			/// <param name="objects"></param>
 			/// <param name="size"></param>
-			static void LoadObjects(GameObject objects[], const unsigned int size);
+			static void LoadObjects(GameObject* objects[], const unsigned int size);
+			/// <summary>
+			/// Begins drawing the object. CANNOT BE CALLED DURING RENDERING
+			/// </summary>
+			/// <param name="objects"></param>
+			/// <param name="size"></param>
+			static void LoadObject(GameObject* object);
 
 			/// <summary>
 			/// Must be called before the creation of any objects.

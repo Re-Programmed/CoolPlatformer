@@ -84,30 +84,31 @@ namespace GAME_NAME
 			}
 		}
 
-		void Renderer::LoadObjects(GameObject objects[], const unsigned int size)
+		void Renderer::LoadObjects(GameObject* objects[], const unsigned int size)
 		{
 			for (unsigned int i = 0; i < size; i++)
 			{
-				int x = objects[i].GetPosition().X;
-				int y = objects[i].GetPosition().Y;
-
-				Renderer::m_chunks[(x / chunkSize) + (y * static_cast<int>(levelSizeY) / chunkSize)].Instantiate(objects[i]);
+				LoadObject(objects[i]);
 			}
 		}
 
+		void Renderer::LoadObject(GameObject* object)
+		{
+			int x = object->GetPosition().X;
+			int y = object->GetPosition().Y;
+
+			Renderer::m_chunks[(x / chunkSize) + (y * static_cast<int>(levelSizeY) / chunkSize)].Instantiate(object);
+		}
 
 		///Macro for converting to Chunk Coords.
 #define AsChunkPosition(x) (x >> 9)
 
-		void Renderer::Render(Camera::Camera* camera, Vec2* windowSize, RENDER_LAYER layer, float parallax)
+		void Renderer::Render(Camera::Camera* camera, Vec2* windowSize, RENDER_LAYER layer, GLFWwindow* window, float parallax)
 		{
 			constexpr unsigned int cameraBoundsPadding = chunkSize;
 
 			//Define const variables.
 			Vec2 cameraPosition = camera->GetPosition()/parallax;
-
-
-			if (cameraPosition.X < 0 || cameraPosition.Y < 0) { return; }
 
 			iVec2 cameraChunkPosition = AsChunkPosition(cameraPosition);
 			const Vec2 cameraPositionS = cameraPosition - cameraBoundsPadding;
@@ -124,7 +125,7 @@ namespace GAME_NAME
 				if (m_chunks[i].GetPosition().Y < cameraTopEdge)
 				{
 					//Render a chunk if it is in the cameras bounding box.
-					m_chunks[i].Render(cameraPosition, chunkSize, layer);
+					m_chunks[i].Render(cameraPosition, chunkSize, layer, window);
 
 					//Check if the chunk we just rendered is at the top of the screen.
 					if ((i % levelSizeY) == (levelSizeY - 1))

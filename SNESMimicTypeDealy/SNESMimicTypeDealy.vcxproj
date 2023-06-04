@@ -134,10 +134,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="!TestGame\Mappings.cpp" />
     <ClCompile Include="!TestGame\TestGame.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Audio\MusicManager.cpp" />
     <ClCompile Include="Audio\SoundTypes\MusicTrack.cpp" />
+    <ClCompile Include="Components\IComponent.h" />
+    <ClCompile Include="Components\Physics\Collision\ActiveBoxCollider.cpp" />
+    <ClCompile Include="Components\Physics\Collision\Helpers\ActiveBoxCollisionGravityObject.h" />
+    <ClCompile Include="Components\Physics\Collision\CollisionManager.cpp" />
+    <ClCompile Include="Components\Physics\Collision\StaticBoxCollider.cpp" />
+    <ClCompile Include="Components\Physics\GravityComponent.cpp" />
+    <ClCompile Include="Components\Physics\PhysicsComponent.cpp" />
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Input\InputManager.cpp" />
     <ClCompile Include="Objects\GUI\StaticGUIElement.cpp" />
@@ -163,9 +171,20 @@
     <ClCompile Include="Utils\Time\GameTime.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="!TestGame\Mappings.h" />
+    <ClInclude Include="!TestGame\Objects\DebugObject.h" />
     <ClInclude Include="!TestGame\TestGame.h" />
     <ClInclude Include="Audio\MusicManager.h" />
     <ClInclude Include="Audio\SoundTypes\MusicTrack.h" />
+    <ClInclude Include="Components\ComponentObject.h" />
+    <ClInclude Include="Components\Physics\Collision\ActiveBoxCollider.h" />
+    <ClInclude Include="Components\Physics\Collision\ActiveCollider.h" />
+    <ClInclude Include="Components\Physics\Collision\CollisionManager.h" />
+    <ClInclude Include="Components\Physics\Collision\StaticBoxCollider.h" />
+    <ClInclude Include="Components\Physics\Collision\StaticCollider.h" />
+    <ClInclude Include="Components\Physics\Collision\Helpers\StaticBoxCollisionObject.h" />
+    <ClInclude Include="Components\Physics\GravityComponent.h" />
+    <ClInclude Include="Components\Physics\PhysicsComponent.h" />
     <ClInclude Include="Debug\DebugLog.h" />
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Game\Level.h" />
@@ -199,16 +218,25 @@
     <Image Include="Assets\testing\bg\1_test.png" />
     <Image Include="Assets\testing\sprite\2_panel_cross_hatch.png" />
     <Image Include="Assets\testing\sprite\1_player.png" />
+    <Image Include="Assets\testing\sprite\3_grass.png">
+      <DeploymentContent>false</DeploymentContent>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\testing\chunk.pk" />
     <None Include="Assets\testing\level.dat">
       <DeploymentContent>true</DeploymentContent>
     </None>
+    <None Include="Assets\testing\object.pk">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Assets\testing\music\0_test.wav" />
+    <Media Include="Assets\testing\music\1_idk.mp3">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

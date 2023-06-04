@@ -24,14 +24,14 @@ namespace GAME_NAME
 			Chunk();
 			Chunk(Vec2 position, Sprite* bgSprite) : m_position(position), m_bgSprite(bgSprite) {};
 
-			void Instantiate(GameObject object);
+			void Instantiate(GameObject* object);
 
-			void Render(const Vec2 cameraPosition, const int chunkSize, RENDER_LAYER layer);
+			void Render(const Vec2 cameraPosition, const int chunkSize, RENDER_LAYER layer, GLFWwindow* window);
 
 			Vec2 GetPosition();
 
 		private:
-			std::vector<GameObject> m_objects;
+			std::vector<GameObject*> m_objects;
 
 			Vec2 m_position;
 
