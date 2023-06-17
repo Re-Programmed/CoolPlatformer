@@ -1,0 +1,12 @@
+--TODO--
+
+Jumping + On Ground Detection
+Cutscene Based Camera
+Pixel Perfect Collisions
+GUI
+GUI ELEMENTS
+
+Texture Coordinate Rendering
+
+DRAWING RESOURCES
+WRITING MUSIC

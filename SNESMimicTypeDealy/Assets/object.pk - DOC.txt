@@ -38,3 +38,7 @@ Each line is 1 object.
 1,700,1000,100,100,1,2,5|16|32
                           ^  ^  Each number within the commas but separated by "|" will be passed to
                                 the component map as a paramater.
+
+
+---ADDING T---
+Putting T on any vec2s or parameters specified in the mapping will multiply the scale of the value inputted by the size of a tile on a Genesis.

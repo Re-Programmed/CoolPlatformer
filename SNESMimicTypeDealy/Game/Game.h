@@ -6,7 +6,11 @@
 #include "../Rendering/Renderers/Renderer.h"
 #include "../Utils/ConstUpdateable.h"
 #include "Level.h"
-#include "../Rendering/Camera/Camera.h"
+#include "../!TestGame/Camera/GameCamera.h"
+
+#if _DEBUG
+#include "../Debug/DebugLog.h"
+#endif
 
 namespace GAME_NAME
 {
@@ -14,17 +18,34 @@ namespace GAME_NAME
 
 	namespace Game
 	{
+		//Stores everything that should happen in Update,Init,LoadLevel,and Late Update.
 		class Game : ConstUpdateable
 		{
 			
 
 		public:
-			virtual void Update(GLFWwindow* window) = 0;
-			virtual void Init(GLFWwindow* window) = 0;
-			virtual void LateUpdate(GLFWwindow* window) = 0;
+			bool RenderFront = false;	//If true, this will draw the front layer of sprites. Kind of like sprite priority on the Genesis, sprites can be in the front or the middle, front sprites are invisible if this is false.
+
+			//Please make sure to call Update() from game if you override it.
+			virtual void Update(GLFWwindow* window)
+			{
+				LateUpdate(window);
+			}
+			virtual void Init(GLFWwindow* window) = 0;			//Called on game load.
+			virtual void LateUpdate(GLFWwindow* window) = 0;	//Called after rendering.
+
+			/// <summary>
+			/// Called when a level is loaded.
+			/// </summary>
+			/// <param name="level">The level that was loaded.</param>
+			virtual void InitLevel(Level level) = 0;
 
 			Rendering::Camera::Camera* GetCamera();
+
 		protected:
+			/// <summary>
+			/// Used when loading levels to determine what parts of levels to load. Can be combined with BITWISE OR.
+			/// </summary>
 			enum LEVEL_DATA
 			{
 				/// <summary>
@@ -74,7 +95,7 @@ namespace GAME_NAME
 
 			Rendering::Camera::Camera* m_camera;
 		private:
-			Level m_level;
+			Level m_level; //The current level.
 		};
 	}
 }

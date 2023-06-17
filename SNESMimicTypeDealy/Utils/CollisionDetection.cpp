@@ -24,7 +24,7 @@ bool GAME_NAME::Utils::CollisionDetection::BoxWithinBox(Vec2 box1BottomLeft, Vec
 		return true;
 	if (PointWithinBoxBL(box1BottomLeft, box2BottomLeft, box2Size))
 		return true;
-	if (PointWithinBoxBL(box1BottomLeft + Vec2(box1Size.X, 0), box2BottomLeft, box2Size))
+	if (PointWithinBoxBL(box1BottomLeft + Vec2(0, box1Size.Y), box2BottomLeft, box2Size))
 		return true;
 
 	return false;

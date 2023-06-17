@@ -6,17 +6,17 @@
 #include "../Objects/GameObject.h"
 #include <functional>
 
-constexpr const char* AssetPath = "./Assets";
-constexpr const char* SpriteSubfolder = "/sprite";
-constexpr const char* BGSubfolder = "/bg";
+constexpr const char* AssetPath = "./Assets";			//Path to the Asset folder that contains all level data.
+constexpr const char* SpriteSubfolder = "/sprite";		//Path within a level to its sprites.
+constexpr const char* BGSubfolder = "/bg";				//Path within a level to its background sprites.
 
-constexpr const char* ChunkFileName = "/chunk.pk";
-constexpr const char* LevelFileName = "/level.dat";
-constexpr const char* ObjectFileName = "/object.pk";
+constexpr const char* ChunkFileName = "/chunk.pk";		//Path within a level to its chunk.pk file.
+constexpr const char* LevelFileName = "/level.dat";		//Path within a level to its level.dat file.
+constexpr const char* ObjectFileName = "/object.pk";	//Path within a level to its object.pk file.
 
-constexpr const char* MusicFilePath = "/music";
+constexpr const char* MusicFilePath = "/music";			//Path within a level to its music folder.
 
-///Max number of assets to store at one time.
+///!Max number of texture assets to store at one time. [------- CURRENTLY NOT USED; HOWEVER, MAYBE USE A RENDER LIMIT OF 80 SPRITES WITH 20 ON EACH SCANLINE FOR RETRONESS. -------]
 #define ASSET_LIMIT 50
 
 enum TEXTURE_LOAD
@@ -31,6 +31,7 @@ namespace GAME_NAME
 
 	namespace Resources
 	{
+		//Loads files to buffers and arrays for use in rendering, playing music, etc.
 		class AssetManager
 		{
 		public:
@@ -68,7 +69,7 @@ namespace GAME_NAME
 			/// <param name="mappings">The mappings to use for initilizing objects. Each mapping should convert a string array to some game object.
 			/// The mapping to use is specified by putting the index of the mapping in the mappings array as the first item of each line in the object file.</param>
 			/// <param name="reloadObjects">If true, all objects currently loaded will be deleted before loading the new objects. (Should not be called during rendering.)</param>
-			static void LoadObjectData(const char* subfolder, std::function<Objects::GameObject*(std::vector<std::string>)> mappings[], bool reloadObjects = false);
+			static void LoadObjectData(const char* subfolder, std::function<void(std::vector<std::string>)> mappings[], bool reloadObjects = false);
 		};
 	}
 }

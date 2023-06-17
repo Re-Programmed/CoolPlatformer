@@ -25,7 +25,8 @@ namespace GAME_NAME
 			void Camera::SetPosition(Vec2 pos)
 			{
 #if LIMIT_CAMERA_NEGATIVE
-				if (pos.X >= 0 && pos.Y >= 0) { m_position = pos; }
+				if (pos.X >= 0) { m_position.X = pos.X; }
+				if (pos.Y >= 0) { m_position.Y = pos.Y; }
 #else
 				m_position = pos;
 #endif

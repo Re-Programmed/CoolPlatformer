@@ -81,10 +81,10 @@
     <ClCompile Include="Utils\RemoveableUpdateable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Audio\MusicManager.cpp">
+    <ClCompile Include="Audio\SoundManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Audio\SoundTypes\MusicTrack.cpp">
+    <ClCompile Include="Audio\SoundTypes\Sound.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Objects\Levels\Data\LevelDataParser.cpp">
@@ -118,6 +118,24 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Components\Physics\Collision\Helpers\ActiveBoxCollisionGravityObject.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="!TestGame\Objects\Player\Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Physics\Collision\Helpers\ActiveBoxCollisionGravityObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Animation\AnimatorComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="!TestGame\Objects\Environment\Water.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\DynamicSprite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="!TestGame\Camera\GameCamera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -197,10 +215,10 @@
     <ClInclude Include="Debug\DebugLog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Audio\MusicManager.h">
+    <ClInclude Include="Audio\SoundManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Audio\SoundTypes\MusicTrack.h">
+    <ClInclude Include="Audio\SoundTypes\Sound.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Objects\Levels\Data\LevelDataParser.h">
@@ -213,9 +231,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="!TestGame\TestGame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="!TestGame\Objects\DebugObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Components\Physics\Collision\StaticBoxCollider.h">
@@ -251,6 +266,24 @@
     <ClInclude Include="Components\Physics\Collision\PixelPerfectCollider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="!TestGame\Objects\Player\Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Animation\AnimatorComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Animation\Animation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="!TestGame\Objects\Environment\Water.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\DynamicSprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="!TestGame\Camera\GameCamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\testing\sprite\1_player.png">
@@ -263,6 +296,12 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Assets\testing\sprite\3_grass.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\testing\sprite\4_player_hands_up.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\testing\sprite\5_test_water.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

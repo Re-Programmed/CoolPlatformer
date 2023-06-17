@@ -7,26 +7,28 @@
 
 namespace GAME_NAME
 {
-	constexpr float TargetResolutionX = 1920.f, TargetResolutionY = 1080.f;
+	constexpr float TargetResolutionX = 320.f, TargetResolutionY = 180.f; //Resolution to scale sprites by.
 
 	namespace Rendering
 	{
 		using namespace MathUtils;
-		class Sprite
+		class Sprite	//Something drawn to the screen.
 		{
 		public:
-			Sprite(const unsigned int spriteId) : m_spriteId(spriteId) {};
-			void Render(const Vec2 cameraPosition, Vec2 position, Vec2 scale);
+			Sprite(const unsigned int spriteId) : m_spriteId(spriteId) {};								//spriteId should be the sprites buffer id. Sprites are loaded based on their position in the sprites directory.
+			virtual void Render(const Vec2 cameraPosition, Vec2 position, Vec2 scale, float rotation = 0.f);	//Render should be called to render a sprite to the screen.
 
 			//DEBUG
-			std::string ToString();
+			inline std::string ToString();																//DEBUGGING
 
-			static void SetResolution(Vec2 res);
+			static void SetResolution(Vec2 res);														//Sets the resolution scale of all sprites. This determines how to scale the sprites based on the resizing of the window. [Maintains scale no matter your resolution]
 
-		private:
-			static Vec2 m_resolutionScale;
+			const unsigned int GetSpriteId();															//Returns the sprite buffer index currently used.
 
-			const unsigned int m_spriteId;
+		protected:
+			static Vec2 m_resolutionScale;																//Resolution scale of all sprites.
+
+			const unsigned int m_spriteId;																//Current sprite buffer ID.
 		};
 	}
 }

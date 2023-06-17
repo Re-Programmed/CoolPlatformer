@@ -15,11 +15,10 @@ namespace GAME_NAME
 
 	typedef Vec4 Color;
 
-	class Window
+	class Window	//The game window.
 	{
 	public:
 		GLFWwindow* GetWindow();
-		Camera::Camera* GetCamera();
 
 		Window(bool fullscreen, GAME_NAME::Game::Game* game);
 		~Window();
@@ -40,11 +39,11 @@ namespace GAME_NAME
 
 
 	private:
-		GAME_NAME::Game::Game* const m_game;
+		GAME_NAME::Game::Game* const m_game;	//The current game.
 
-		GLFWwindow* m_glWindow;
+		GLFWwindow* m_glWindow;					//The current GLFW window.
 
-		bool m_fullscreen;
+		bool m_fullscreen;						//Is the window fullscreen?
 
 		void update();
 		void lateUpdate();

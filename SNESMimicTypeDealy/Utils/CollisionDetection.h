@@ -5,6 +5,7 @@ namespace GAME_NAME
 	using namespace MathUtils;
 	namespace Utils
 	{
+		//Useful functions for collision.
 		class CollisionDetection
 		{
 

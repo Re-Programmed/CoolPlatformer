@@ -1,6 +1,5 @@
 #include "ActiveBoxCollider.h"
-#include "../../../Utils/CollisionDetection.h" 
-
+#include "../../../Utils/CollisionDetection.h"
 
 namespace GAME_NAME
 {
@@ -17,11 +16,6 @@ namespace GAME_NAME
 
 				void ActiveBoxCollider::CheckStaticCollisionShapes(StaticCollider* collider)
 				{
-					if (m_beforeUpdate != nullptr)
-					{
-						m_beforeUpdate(m_object);
-					}
-
 					if (instanceof<StaticBoxCollider>(collider))
 					{
 						Vec2 push = Vec2::Zero;

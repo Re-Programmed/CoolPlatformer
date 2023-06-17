@@ -2,12 +2,18 @@
 
 0: Default object (map,positionX,positionY,scaleX,scaleY,sprite)
     - An object with no attributes.
+
 1: Component object (map,positionX,positionY,scaleX,scaleY,sprite,[component1|componentMapArg1|componentMapArg2...])
     - An object with components. (The first digit after the comma is the mapping, each value after each "|" is an argument to give the mapping)
+
 2: StaticBoxCollisionObject (map,positionX,positionY,scaleX,scaleY,sprite)
     - An object that has a static box collider.
+
 3: ActiveBoxCollisionGravityObject (map,positionX,positionY,scaleX,scaleY,sprite)
     - An object that has gravity and an active box collider.
+
+4: Water (map,positionX,positionY,scaleX,scaleY)
+    - A water tile object.
 
 
 --COMPONENT MAPS--

@@ -4,13 +4,32 @@
 #include "../Components/Physics/Collision/Helpers/ActiveBoxCollisionGravityObject.h"
 #include "../Components/Physics/Collision/Helpers/StaticBoxCollisionObject.h"
 #include "../Components/Physics/Collision/ActiveBoxCollider.h"
-#include "Objects/DebugObject.h"
+#include "../!TestGame/Objects/Environment/Water.h"
+
 #if _DEBUG
 #include "../Debug/DebugLog.h"
 #define DebugMapper(x) {std::string s = "[MAPPER] ";DEBUG::DebugLog::Log(s + x, true, ";35");}
 #endif
 
-#define STOIVEC(x, y) (GAME_NAME::MathUtils::Vec2(std::stoi(x), std::stoi(y)))
+constexpr int8_t GenesisTileSize = 8;
+
+Vec2 STOIVEC(std::string x, std::string y)
+{
+	float xcoord, ycoord;
+	if (x.ends_with("t"))
+	{
+		xcoord = std::stoi(x.erase(x.length() - 1)) * GenesisTileSize;
+	}
+	else { xcoord = std::stoi(x); }
+
+	if (y.ends_with("t"))
+	{
+		ycoord = std::stoi(y.erase(y.length() - 1)) * GenesisTileSize;
+	}
+	else { ycoord = std::stoi(y); }
+
+	return GAME_NAME::MathUtils::Vec2(xcoord, ycoord);
+}
 
 using namespace GAME_NAME;
 
@@ -29,9 +48,9 @@ const std::function<Components::IComponent* (std::vector<std::string>)> Mappings
 };
 
 /// <summary>
-/// Takes in a string vector and returns a GameObject.
+/// Takes in a string vector and spawns a GameObject.
 /// </summary>
-std::function<Objects::GameObject* (std::vector<std::string>)> Mappings::m_mappings[MAPPINGS_SIZE]
+std::function<void (std::vector<std::string>)> Mappings::m_mappings[MAPPINGS_SIZE]
 {
 	//Basic Object
 	[](std::vector<std::string> data) {
@@ -39,7 +58,7 @@ std::function<Objects::GameObject* (std::vector<std::string>)> Mappings::m_mappi
 #if _DEBUG
 		DebugMapper(">>> Loading Basic Object");
 #endif
-		return new Objects::GameObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])));
+		Renderer::LoadObject(new Objects::GameObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4]))));
 	},
 
 	//Component Object
@@ -63,7 +82,7 @@ std::function<Objects::GameObject* (std::vector<std::string>)> Mappings::m_mappi
 			components.push_back(m_componentMappings[std::stoi(out[0])](out));
 		}
 
-		return new Components::ComponentObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), components);
+		Renderer::LoadObject(new Components::ComponentObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), components));
 	},
 
 	//StaticBoxCollisionObject
@@ -72,7 +91,7 @@ std::function<Objects::GameObject* (std::vector<std::string>)> Mappings::m_mappi
 #if _DEBUG
 		DebugMapper(">>> Loading StaticBoxCollisionObject");
 #endif
-		return new GAME_NAME::Components::Physics::Collision::StaticBoxCollisionObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])));
+		Renderer::LoadObject(new GAME_NAME::Components::Physics::Collision::StaticBoxCollisionObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4]))));
 	},
 
 	//ActiveBoxCollisionGravityObject
@@ -81,7 +100,16 @@ std::function<Objects::GameObject* (std::vector<std::string>)> Mappings::m_mappi
 #if _DEBUG
 		DebugMapper(">>> Loading ActiveBoxCollisionGravityObject");
 #endif
-		return new GAME_NAME::Components::Physics::Collision::ActiveBoxCollisionGravityObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])));
+		Renderer::LoadActiveObject(new GAME_NAME::Components::Physics::Collision::ActiveBoxCollisionGravityObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4]))));
+	},
+
+	//Water
+	[](std::vector<std::string> data) {
+
+#if _DEBUG
+		DebugMapper(">>> Loading Water");
+#endif
+		Renderer::LoadActiveObject(new GAME_NAME::Objects::Environment::Water(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3])), 0);
 	}
 };
 

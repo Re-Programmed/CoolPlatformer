@@ -14,34 +14,42 @@ namespace GAME_NAME
 			{
 				using namespace Utils;
 
-				StaticCollider* CollisionManager::m_staticColliders[STATIC_COLLIDER_LIMIT];
-				ActiveCollider* CollisionManager::m_activeColliders[ACTIVE_COLLIDER_LIMIT];
+				std::vector <StaticCollider*> CollisionManager::m_staticColliders;
+				std::vector <ActiveCollider*> CollisionManager::m_activeColliders;
 
-				unsigned int CollisionManager::m_staticColliderCount(0);
-				unsigned int CollisionManager::m_activeColliderCount(0);
-
-				void CollisionManager::Update(GLFWwindow* window)
+				void CollisionManager::UpdateAndClearBuffers()
 				{
-					for (int i = 0; i < m_activeColliderCount; i++)
+					for (ActiveCollider* activeCollider : m_activeColliders)
 					{
-						for (int x = 0; x < m_staticColliderCount; x++)
+						activeCollider->BeforeUpdate();
+						/*for (ActiveCollider* activeCollider2 : m_activeColliders)
 						{
-							m_activeColliders[i]->CheckStaticCollisionShapes(m_staticColliders[x]);
+							if (activeCollider != activeCollider2)
+							{
+								activeCollider->CheckActiveCollisionShapes(activeCollider2);
+							}
+						}*/
+
+						for (StaticCollider* staticCollider : m_staticColliders)
+						{
+							activeCollider->CheckStaticCollisionShapes(staticCollider);
 						}
 					}
+
+					m_staticColliders.clear();
+					m_activeColliders.clear();
 				}
 
-				void CollisionManager::InitStaticCollider(StaticCollider* staticCollider)
+				void CollisionManager::RegisterStaticColliderToBuffer(StaticCollider* staticCollider)
 				{
-					m_staticColliders[m_staticColliderCount] = staticCollider;
-					m_staticColliderCount++;
+					m_staticColliders.push_back(staticCollider);
 				}
 
-				void CollisionManager::InitActiveCollider(ActiveCollider* activeCollider)
+				void CollisionManager::RegisterActiveColliderToBuffer(ActiveCollider* activeCollider)
 				{
-					m_activeColliders[m_activeColliderCount] = activeCollider;
-					m_activeColliderCount++;
+					m_activeColliders.push_back(activeCollider);
 				}
+
 			}
 		}
 	}

@@ -14,25 +14,24 @@ namespace GAME_NAME
 
 
 
-				class ActiveBoxCollisionGravityObject
+				class ActiveBoxCollisionGravityObject	//An object that has a box collider, and is affected by gravity.
 					: public Objects::GameObject
 				{
 				public:
 
 					ActiveBoxCollisionGravityObject(Vec2 position, Vec2 scale, GAME_NAME::Rendering::Sprite* sprite)
-						: GameObject(position, scale, sprite), m_boxCollider(new ActiveBoxCollider()), m_gravity(new GravityComponent())
+						: GameObject(position, scale, sprite), m_boxCollider(new ActiveBoxCollider()), m_physics(new GravityComponent())
 					{
-						CollisionManager::InitActiveCollider(m_boxCollider);
 						m_boxCollider->Init(this);
-						m_gravity->Init(this);
+						m_physics->Init(this);
 						m_boxCollider->SetOnCollision(onCollision);
 						m_boxCollider->SetBeforeUpdate(beforeUpdate);
 					}
 
 					~ActiveBoxCollisionGravityObject()
 					{
-						delete m_boxCollider;
-						delete m_gravity;
+						//delete m_boxCollider;
+						//delete m_physics;
 					}
 
 					bool GetActive()
@@ -42,26 +41,49 @@ namespace GAME_NAME
 					
 					void Update(GLFWwindow* window)
 					{
-
+						CollisionManager::RegisterActiveColliderToBuffer(m_boxCollider);
 					}
 
 					void SetGravity(const float gVelocity)
 					{
-						m_gravity->SetGravitationalVelocity(gVelocity);
+						m_physics->SetGravitationalVelocity(gVelocity);
 					}
 
-				private:
+				protected:
 					ActiveBoxCollider* const m_boxCollider;
-					GravityComponent* const m_gravity;
+					GravityComponent* const m_physics;			//Used for gravity and velocity.
 
 					static void onCollision(Vec2 push, Objects::GameObject* obj)
 					{
-						if (push.Y > 0) { ((ActiveBoxCollisionGravityObject*)obj)->SetGravity(0.f); }
+						ActiveBoxCollisionGravityObject* acgo = ((ActiveBoxCollisionGravityObject*)obj);
+						acgo->onCollision(push);
+						if (push.Y > 0) { acgo->SetGravity(0.f); }		//Resets the gravity to 0.
+						else if (push.X != 0) { acgo->m_physics->SetVelocityX(0.f); }	//If you hit the side of an object, set the X velocity to 0.
 					}
 
+					/// <summary>
+					/// Override to run code on collision.
+					/// </summary>
+					/// <param name="push">The direction the object is getting pushed to process the collision.</param>
+					virtual void onCollision(Vec2 push)
+					{
+
+					}
+
+					/// <summary>
+					/// Called before collision checks.
+					/// </summary>
+					virtual void beforeCollision()
+					{
+
+					}
+
+					//Ensures to update the physics before updating the collisions.
 					static void beforeUpdate(Objects::GameObject* obj)
 					{
-						((ActiveBoxCollisionGravityObject*)obj)->m_gravity->Update(nullptr, obj);
+						ActiveBoxCollisionGravityObject* acgo = ((ActiveBoxCollisionGravityObject*)obj);
+						acgo->beforeCollision();
+						acgo->m_physics->Update(nullptr, obj);
 					}
 				};
 

@@ -9,15 +9,14 @@ namespace GAME_NAME
 		{
 			namespace Collision
 			{
-				/// <summary>
-				/// A collider that will not move or change.
-				/// </summary>
+				//A collision object that will not be affected by collisions. (eg. The ground, it still collides but it does nothing when it collides.)
 				class StaticCollider
 					: public IComponent
 
 				{
 				public:
 					StaticCollider() {};
+					int ID;
 
 					virtual void Update(GLFWwindow* window, Objects::GameObject* object) = 0;
 					virtual void Init(Objects::GameObject* object) final

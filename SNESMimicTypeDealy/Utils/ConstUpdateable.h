@@ -9,6 +9,7 @@ namespace GAME_NAME
 {
 	namespace Utils
 	{
+		//An updateable is a class that can be extended to use the Update() method that is called each frame. [CONST updateables will always update and cannot be destroyed.]
 		class ConstUpdateable : public IUpdateable
 		{
 		public:

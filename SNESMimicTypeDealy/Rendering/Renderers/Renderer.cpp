@@ -6,7 +6,7 @@ namespace GAME_NAME
 {
 	namespace Rendering
 	{
-		constexpr int chunkSize = 0x200;
+		constexpr int chunkSize = 0x40;
 
 		constexpr int levelSizeX = 30;
 		constexpr int levelSizeY = 5;
@@ -87,21 +87,21 @@ namespace GAME_NAME
 			}
 		}
 
-		void Renderer::LoadObjects(GameObject* objects[], const unsigned int size)
+		void Renderer::LoadObjects(GameObject* objects[], const unsigned int size, bool front)
 		{
 			for (unsigned int i = 0; i < size; i++)
 			{
-				LoadObject(objects[i]);
+				LoadObject(objects[i], front);
 			}
 		}
-#define AsChunkPosition(x) (x >> 9)
+#define AsChunkPosition(x) (x >> ChunkShift)
 
-		void Renderer::LoadObject(GameObject* object)
+		void Renderer::LoadObject(GameObject* object, bool front)
 		{
 			int chunkX = AsChunkPosition(static_cast<int>(object->GetPosition().X)) * levelSizeY;
 			int chunkY = AsChunkPosition(static_cast<int>(object->GetPosition().Y));
 
-			Renderer::m_chunks[chunkX + chunkY].Instantiate(object);
+			Renderer::m_chunks[chunkX + chunkY].Instantiate(object, front);
 		}
 
 		void Renderer::LoadActiveObjects(GameObject* objects[], const unsigned int size, int layer)
@@ -118,24 +118,43 @@ namespace GAME_NAME
 		}
 
 		///Macro for converting to Chunk Coords.
+		int renderCalls = 0;
+		float tAlloc = 0;
+		float m_curr = 0;
 
 		void Renderer::Render(Camera::Camera* camera, Vec2* windowSize, RENDER_LAYER layer, GLFWwindow* window, float parallax)
 		{
+			{
+				renderCalls++;
+				float t = glfwGetTime();
+				tAlloc += t - m_curr;
+				m_curr = t;
+
+				if (tAlloc > 1.f)
+				{
+					tAlloc = 0.f;
+					std::cout << "RENDERS IN LAST SECOND: " << renderCalls << std::endl;
+					renderCalls = 0;
+				}
+			}
+
 			constexpr unsigned int cameraBoundsPadding = chunkSize;
 
 			//Define const variables.
+
 			Vec2 cameraPosition = camera->GetPosition()/parallax;
 			iVec2 cameraBoundingBox = (camera->GetZoom() != 1 ? (*windowSize) * (1 / camera->GetZoom()) + (cameraBoundsPadding << 1) : (*windowSize) + cameraBoundsPadding) + Vec2(0, chunkSize);
 
 			if (layer == RENDER_LAYER_ACTIVE_OBJECTS)
 			{
 				Vec2 cameraPositionPadding = cameraPosition - cameraBoundsPadding / 2.f;
+				Vec2 cameraBounds = Vec2(cameraBoundingBox.GetX(), cameraBoundingBox.GetY());
 				//Render active objects if they are on screen. Renders in order of layers from greatest to least.
-				for (int i = MICRO_RENDER_LAYER_COUNT; i > 0; i--)
+				for (int i = MICRO_RENDER_LAYER_COUNT; i >= 0; i--)
 				{
 					for (GameObject* obj : m_activeGameObjects[i])
 					{
-						if (Utils::CollisionDetection::PointWithinBoxBL(obj->GetPosition(), cameraPositionPadding, cameraBoundingBox))
+						if (Utils::CollisionDetection::BoxWithinBox(obj->GetPosition(), obj->GetScale(), cameraPositionPadding, cameraBounds))
 						{
 							obj->Update(window);
 							obj->Render(cameraPosition);
@@ -155,8 +174,11 @@ namespace GAME_NAME
 
 			//delete cameraPositionPadding;
 
+			const int iterInit = cameraChunkPosition.GetX() * levelSizeY + cameraChunkPosition.GetY();
+			const int iterEnd = AsChunkPosition((int)cameraPosition.X + cameraBoundingBox.GetX()) * levelSizeY;
+
 			//Loop over chunks that are before the right edge of the camera.
-			for (int i = cameraChunkPosition.GetX() * levelSizeY + cameraChunkPosition.GetY(); i < AsChunkPosition((int)cameraPosition.X + cameraBoundingBox.GetX()) * levelSizeY; i++)
+			for (int i = iterInit; i < iterEnd; i++)
 			{
 				//Check if a chunk is within the bounding box of the camera. (MAY NEED BUGFIXED FOR WHEN CAMERA CHANGES ZOOM!!!!!)
 				if (m_chunks[i].GetPosition().Y < cameraTopEdge)
@@ -179,6 +201,113 @@ namespace GAME_NAME
 				}
 			}
 
+		}
+
+		std::vector<GameObject*> Renderer::GetAllObjectsInArea(Vec2 bottomLeft, Vec2 scale, int8_t layer)
+		{
+			std::vector<GameObject*> ret;
+			if (layer != -1)
+			{
+				for (GameObject* obj : m_activeGameObjects[layer])
+				{
+					if (Utils::CollisionDetection::PointWithinBoxBL(obj->GetPosition(), bottomLeft, scale))
+					{
+						ret.push_back(obj);
+					}
+				}
+			}
+			else {
+				for (int i = MICRO_RENDER_LAYER_COUNT; i > 0; i--)
+				{
+					for (GameObject* obj : m_activeGameObjects[i])
+					{
+						if (Utils::CollisionDetection::PointWithinBoxBL(obj->GetPosition(), bottomLeft, scale))
+						{
+							ret.push_back(obj);
+						}
+					}
+				}
+			}
+
+			iVec2 chunkPos = AsChunkPosition(bottomLeft);
+			iVec2 chunkScale = AsChunkPosition(scale);
+
+			const int8_t start = chunkPos.GetX() * levelSizeY + chunkPos.GetY();
+			const int8_t endX = chunkScale.GetX();
+			const int8_t endY = chunkScale.GetY();
+
+			for (int8_t x = 0; x < endX; x++)
+			{
+				for (int8_t y = 0; y < endY; y++)
+				{
+					for (GameObject* add : m_chunks[start + (x * levelSizeY) + y].GetObjects())
+					{
+						ret.push_back(add);
+					}
+				}
+			}
+
+			return ret;
+		}
+
+		std::vector<GameObject*> Renderer::GetAllChunkObjectsInArea(Vec2 bottomLeft, Vec2 scale)
+		{
+
+			std::vector<GameObject*> ret;
+			iVec2 chunkPos = AsChunkPosition(bottomLeft);
+			iVec2 chunkScale = AsChunkPosition(scale) + 1;
+
+			const int8_t start = chunkPos.GetX() * levelSizeY + chunkPos.GetY();
+			const int8_t endX = chunkScale.GetX();
+			const int8_t endY = chunkScale.GetY();
+
+			for (int8_t x = 0; x < endX; x++)
+			{
+				for (int8_t y = 0; y < endY; y++)
+				{
+					for (GameObject* add : m_chunks[start + (x * levelSizeY) + y].GetObjects())
+					{
+						if (Utils::CollisionDetection::BoxWithinBox(add->GetPosition(), add->GetScale(), bottomLeft, scale))
+						{
+							ret.push_back(add);
+						}
+					}
+				}
+			}
+
+			return ret;
+		}
+
+		std::vector<GameObject*> Renderer::GetAllActiveObjectsInArea(Vec2 bottomLeft, Vec2 scale, int8_t layer)
+		{
+			std::vector<GameObject*> ret;
+			if (layer != -1)
+			{
+				for (GameObject* obj : m_activeGameObjects[layer])
+				{
+					if (Utils::CollisionDetection::BoxWithinBox(obj->GetPosition(), obj->GetScale(), bottomLeft, scale))
+					{
+						
+						ret.push_back(obj);
+					}
+				}
+
+				return ret;
+			}
+			else {
+				for (int i = 0; i < MICRO_RENDER_LAYER_COUNT; i++)
+				{
+					for (GameObject* obj : m_activeGameObjects[i])
+					{
+						if (Utils::CollisionDetection::BoxWithinBox(obj->GetPosition(), obj->GetScale(), bottomLeft, scale))
+						{
+							ret.push_back(obj);
+						}
+					}
+				}
+
+				return ret;
+			}
 		}
 
 #pragma region GUIRenderer

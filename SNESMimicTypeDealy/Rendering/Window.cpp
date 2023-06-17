@@ -11,7 +11,7 @@
 #if _DEBUG
 #include "../Debug/DebugLog.h"
 #endif
-#include "../Audio/MusicManager.h"
+#include "../Audio/SoundManager.h"
 
 namespace GAME_NAME
 {
@@ -35,10 +35,6 @@ namespace GAME_NAME
 		return m_glWindow;
 	}
 
-	Camera::Camera* Window::GetCamera()
-	{
-		return m_game->GetCamera();
-	}
 
 	Window::Window(bool fullscreen, GAME_NAME::Game::Game* game) : m_game(game), m_fullscreen(fullscreen)
 	{
@@ -49,7 +45,7 @@ namespace GAME_NAME
 		GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
 
 		int width, height;
-		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		const GLFWvidmode* mode = glfwGetVideoMode(primaryMonitor);
 		width = mode->width;
 		height = mode->height;
 
@@ -92,7 +88,7 @@ namespace GAME_NAME
 
 		InputManager::Init(m_glWindow);
 
-		Audio::MusicManager::Init();
+		Audio::SoundManager::Init();
 
 		m_game->Init(m_glWindow); //INITILIZE GAME LAST
 
@@ -105,7 +101,7 @@ namespace GAME_NAME
 
 	Window::~Window()
 	{
-		Audio::MusicManager::DeInit();
+		Audio::SoundManager::DeInit();
 
 		glfwDestroyWindow(this->m_glWindow);
 	}
@@ -122,6 +118,11 @@ namespace GAME_NAME
 		Renderer::Render(m_game->GetCamera(), lastWindowSize, RENDER_LAYER_BG, m_glWindow, 2.f);
 		Renderer::Render(m_game->GetCamera(), lastWindowSize, RENDER_LAYER_OBJECTS, m_glWindow);
 		Renderer::Render(m_game->GetCamera(), lastWindowSize, RENDER_LAYER_ACTIVE_OBJECTS, m_glWindow);
+
+		if (m_game->RenderFront)
+		{
+			Renderer::Render(m_game->GetCamera(), lastWindowSize, RENDER_LAYER_OBJECTS_FRONT, m_glWindow);
+		}
 
 		glfwSwapBuffers(this->m_glWindow);
 		glfwPollEvents();

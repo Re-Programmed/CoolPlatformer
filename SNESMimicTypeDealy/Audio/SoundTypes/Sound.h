@@ -1,17 +1,16 @@
 #pragma once
 #include <soloud.h>
 #include <soloud_wavstream.h>
-#include "../MusicManager.h"
 
 namespace GAME_NAME
 {
 	namespace Audio
 	{
-		class MusicTrack
+		class Sound		//Stores a WAV file for SoundManager.
 			: public SoLoud::WavStream
 		{
 		public:
-			MusicTrack(const char* file);
+			Sound(const char* file);	//Takes in a path to a file.
 		};
 	}
 }

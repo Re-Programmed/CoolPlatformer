@@ -7,8 +7,7 @@ namespace GAME_NAME
 	namespace Utils
 	{
 		std::vector<IUpdateable*> UpdateManager::m_updateables{
-			new Time::GameTime(),
-			new Components::Physics::Collision::CollisionManager()
+			new Time::GameTime()
 		};
 
 

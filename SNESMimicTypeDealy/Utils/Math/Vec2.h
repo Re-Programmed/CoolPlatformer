@@ -33,6 +33,10 @@ namespace GAME_NAME
 			/// </summary>
 			void Clamp(const float minX, const float maxX, const float minY, const float maxY);
 
+			Vec2 operator- (const Vec2& a)
+			{
+				return Vec2(this->X - a.X, this->Y - a.Y);
+			}
 
 			Vec2 operator+ (const Vec2& a)
 			{
@@ -73,6 +77,12 @@ namespace GAME_NAME
 			{
 				this->X += v.X;
 				this->Y += v.Y;
+			}
+
+			void operator-= (const Vec2& v)
+			{
+				this->X -= v.X;
+				this->Y -= v.Y;
 			}
 
 			/// <summary>

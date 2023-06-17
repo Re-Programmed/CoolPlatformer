@@ -2,8 +2,8 @@
 #include "../Rendering/Renderers/Renderer.h"
 #include <string>
 #include <fstream>
-#include "../Audio/MusicManager.h"
-#include "../Audio/SoundTypes/MusicTrack.h"
+#include "../Audio/SoundManager.h"
+#include "../Audio/SoundTypes/Sound.h"
 
 #if _DEBUG
 #include "../Debug/DebugLog.h"
@@ -67,7 +67,7 @@ namespace GAME_NAME
 			filePath += subfolder;
 			filePath += MusicFilePath;
 
-			if (reloadMusic) { Audio::MusicManager::ClearSources(); }
+			if (reloadMusic) { Audio::SoundManager::ClearSources(); }
 
 			unsigned int i = 0;
 			using recursive_directory_iterator = std::filesystem::recursive_directory_iterator;
@@ -76,16 +76,13 @@ namespace GAME_NAME
 			{
 				if (file.is_regular_file())
 				{
-					Audio::MusicManager::RegisterAudioSource(new Audio::MusicTrack(file.path().string().c_str()));
+					Audio::SoundManager::RegisterAudioSource(std::make_shared<GAME_NAME::Audio::Sound>(file.path().string().c_str()));
 #if _DEBUG
 					DEBUG::DebugLog::Log(file.path().string(), false, ";33;2");
 #endif
 				}
 			}
 
-#if _DEBUG
-			DebugHeader("", ";2;33");
-#endif
 		}
 
 		void AssetManager::GetLevelData(const char* subfolder, std::string data[Objects::Levels::LevelDataSize])
@@ -125,7 +122,7 @@ namespace GAME_NAME
 			return data;
 		}
 
-		void AssetManager::LoadObjectData(const char* subfolder, std::function<GameObject* (std::vector<std::string>)> mappings[], bool reloadObjects)
+		void AssetManager::LoadObjectData(const char* subfolder, std::function<void (std::vector<std::string>)> mappings[], bool reloadObjects)
 		{
 			std::string filePath = AssetPath;
 			filePath += subfolder;
@@ -139,7 +136,7 @@ namespace GAME_NAME
 				std::stringstream linestream(line);
 				std::string component;
 				
-				std::function<GameObject* (std::vector<std::string>)>* mapping{};
+				std::function<void (std::vector<std::string>)>* mapping{};
 
 				std::vector <std::string> v;
 
@@ -151,18 +148,7 @@ namespace GAME_NAME
 					c++; //C++ AHHAHAHAHAHAHH Like the language :)L::):)
 				}
 
-				GameObject* g = (*mapping)(v);
-
-				if (g->GetActive())
-				{
-#if _DEBUG
-					DEBUG::DebugLog::Log("[MAPPER] >>> Loading    L WAS ACTIVE", true, ";35");
-#endif
-					Renderer::LoadActiveObject(g);
-				}
-				else {
-					Renderer::LoadObject(g);
-				}
+				(*mapping)(v);
 
 				//delete mapping;
 			}

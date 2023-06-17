@@ -21,7 +21,7 @@ void errorCallback(int error, const char* description)
 	fprintf(stderr, "Error: %s\n", description);
 }
 
-
+//I'm not sure but I think this function is where the program starts. I'll have to check...
 int main()
 {
 #if _DEBUG
@@ -32,8 +32,9 @@ int main()
 
 	if (!glfwInit())
 	{
-		exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE); //		:(
 	}
+
 	ApplicationWindow = new Window(true, new TestGame());
 
 	glfwSwapInterval(1);

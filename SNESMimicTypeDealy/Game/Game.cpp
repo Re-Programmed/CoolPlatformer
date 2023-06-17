@@ -58,11 +58,13 @@ namespace GAME_NAME
 				std::string start = "ID: " + std::to_string(m_level.ID.World);
 				DEBUG::DebugLog::Log(start + "-" + std::to_string(m_level.ID.Level), true, ";39;41;1;4");
 #endif
+				InitLevel(m_level);
 			}
 
 		}
 
-		Camera::Camera* Game::GetCamera()
+
+		Rendering::Camera::Camera* Game::GetCamera()
 		{
 			return m_camera;
 		}

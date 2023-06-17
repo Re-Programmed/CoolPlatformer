@@ -10,11 +10,12 @@ namespace GAME_NAME
 	{
 		namespace Time
 		{
+			//Used for getting the amount of time that has passed in each frame, and the time scale that can be used to slow down everything.
 			static class GameTime : public IUpdateable
 			{
 			public:
 				
-				static class DeltaTime
+				static class DeltaTime	//Multiply DeltaTime by all your variables that deal with input to prevent weird stuff.
 				{
 				public:
 					static void Update();

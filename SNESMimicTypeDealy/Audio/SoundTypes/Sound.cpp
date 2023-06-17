@@ -1,10 +1,10 @@
-#include "MusicTrack.h"
+#include "Sound.h"
 
 namespace GAME_NAME
 {
 	namespace Audio
 	{
-		MusicTrack::MusicTrack(const char* file)
+		Sound::Sound(const char* file)
 			: SoLoud::WavStream()
 		{
 			this->load(file);

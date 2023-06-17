@@ -11,20 +11,24 @@ namespace GAME_NAME
 			{
 				using namespace MathUtils;
 
-				class StaticBoxCollisionObject
+				class StaticBoxCollisionObject		//A collision object that will not be affected by collisions. (ex. The ground, it still collides but it does nothing when it collides.)
 					: public Objects::GameObject
 				{
 				public:
 					StaticBoxCollisionObject(Vec2 position, Vec2 scale, GAME_NAME::Rendering::Sprite* sprite)
 						: GameObject(position, scale, sprite), m_boxCollider(new StaticBoxCollider())
 					{
-						CollisionManager::InitStaticCollider(m_boxCollider);
 						m_boxCollider->Init(this);
 					}
 
 					~StaticBoxCollisionObject()
 					{
 						delete m_boxCollider;
+					}
+
+					void Update(GLFWwindow* window)
+					{
+						CollisionManager::RegisterStaticColliderToBuffer(m_boxCollider);
 					}
 
 				private:

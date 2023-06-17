@@ -36,5 +36,11 @@ namespace GAME_NAME
 		m_keys[1] = GLFW_KEY_S;
 		m_keys[2] = GLFW_KEY_A;
 		m_keys[3] = GLFW_KEY_D;
+
+		m_keys[PLAYER_JUMP] = GLFW_KEY_SPACE;
+
+#if _DEBUG
+		m_keys[PLAYER_DEBUG] = GLFW_KEY_P;
+#endif
 	}
 }

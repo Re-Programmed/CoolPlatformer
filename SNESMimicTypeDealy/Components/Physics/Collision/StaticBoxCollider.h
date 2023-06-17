@@ -9,9 +9,7 @@ namespace GAME_NAME
 		{
 			namespace Collision
 			{
-				/// <summary>
-				/// A collider that will not move or change.
-				/// </summary>
+				//A collision object that will not be affected by collisions. (ie. The ground, it still collides but it does nothing when it collides.)
 				class StaticBoxCollider final
 					: public StaticCollider
 					

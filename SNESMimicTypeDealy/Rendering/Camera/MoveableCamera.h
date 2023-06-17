@@ -13,7 +13,7 @@ namespace GAME_NAME
 		namespace Camera
 		{
 			/// <summary>
-			/// Not for game use, just testing.
+			/// Not for game use, just testing!
 			/// </summary>
 			class MoveableCamera :
 				public Camera, public GAME_NAME::Utils::ConstUpdateable

@@ -8,7 +8,7 @@
 constexpr float minimumCameraZoom = 0.3f;
 constexpr float maximumCameraZoom = 2.f;
 
-#define LIMIT_CAMERA_NEGATIVE true
+#define LIMIT_CAMERA_NEGATIVE true	//Should the camera be allowed to move into negative X and Y coords?
 
 namespace GAME_NAME
 {
@@ -18,6 +18,7 @@ namespace GAME_NAME
 		namespace Camera
 		{
 			using namespace MathUtils;
+			//A camera stores a offset position and zoom to apply to all objects. (ex. A projection matrix.)
 			class Camera
 			{
 			public:
@@ -43,7 +44,7 @@ namespace GAME_NAME
 
 			
 				
-			private:
+			protected:
 				Vec2 m_position;
 				float m_zoom = 1.f;
 

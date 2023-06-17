@@ -1,5 +1,6 @@
 #include "Chunk.h"
 #include "../glad/include/glad/glad.h"
+#include "../Rendering/Renderers/Renderer.h"
 namespace GAME_NAME
 {
 
@@ -14,14 +15,24 @@ namespace GAME_NAME
 		/// <summary>
 		/// (Cannot be called during rendering) Adds object to chunk renderer.
 		/// </summary>
-		void Chunk::Instantiate(GameObject* object)
+		void Chunk::Instantiate(GameObject* object, bool front)
 		{
-			m_objects.push_back(object);
+			if (front)
+			{
+				m_frontObjects.push_back(object);
+			} else {
+				m_objects.push_back(object);
+			}
 		}
 
 		Vec2 Chunk::GetPosition()
 		{
 			return m_position;
+		}
+
+		std::vector<GameObject*> Chunk::GetObjects()
+		{
+			return m_objects;
 		}
 
 		void Chunk::Render(const Vec2 cameraPosition, const int chunkSize, RENDER_LAYER layer, GLFWwindow* window)
@@ -31,7 +42,7 @@ namespace GAME_NAME
 			case RENDER_LAYER_BG:
 				if (m_bgSprite != nullptr)
 				{
-					m_bgSprite->Render(cameraPosition, m_position << 9, chunkSize);
+					m_bgSprite->Render(cameraPosition, m_position << ChunkShift, chunkSize);
 				}
 				break;
 			case RENDER_LAYER_OBJECTS:
@@ -40,6 +51,14 @@ namespace GAME_NAME
 					obj->Update(window);
 					obj->Render(cameraPosition);
 				}
+				break;
+			case RENDER_LAYER_OBJECTS_FRONT:
+				for (GameObject* obj : m_frontObjects)
+				{
+					obj->Update(window);
+					obj->Render(cameraPosition);
+				}
+				break;
 			default:
 				break;
 			}
