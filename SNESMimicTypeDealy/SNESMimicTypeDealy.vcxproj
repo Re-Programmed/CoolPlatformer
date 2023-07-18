@@ -136,6 +136,7 @@
   <ItemGroup>
     <ClCompile Include="!TestGame\Mappings.cpp" />
     <ClCompile Include="!TestGame\Camera\GameCamera.cpp" />
+    <ClCompile Include="!TestGame\Objects\Environment\CloudGenerator.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Water.cpp" />
     <ClCompile Include="!TestGame\Objects\Player\Player.cpp" />
     <ClCompile Include="!TestGame\TestGame.cpp" />
@@ -148,6 +149,7 @@
     <ClCompile Include="Components\Physics\Collision\Helpers\ActiveBoxCollisionGravityObject.cpp" />
     <ClCompile Include="Components\Physics\Collision\Helpers\ActiveBoxCollisionGravityObject.h" />
     <ClCompile Include="Components\Physics\Collision\CollisionManager.cpp" />
+    <ClCompile Include="Components\Physics\Collision\PixelPerfectCollider.cpp" />
     <ClCompile Include="Components\Physics\Collision\StaticBoxCollider.cpp" />
     <ClCompile Include="Components\Physics\GravityComponent.cpp" />
     <ClCompile Include="Components\Physics\PhysicsComponent.cpp" />
@@ -179,6 +181,7 @@
   <ItemGroup>
     <ClInclude Include="!TestGame\Mappings.h" />
     <ClInclude Include="!TestGame\Camera\GameCamera.h" />
+    <ClInclude Include="!TestGame\Objects\Environment\CloudGenerator.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Water.h" />
     <ClInclude Include="!TestGame\Objects\Player\Player.h" />
     <ClInclude Include="!TestGame\TestGame.h" />
@@ -190,6 +193,7 @@
     <ClInclude Include="Components\Physics\Collision\ActiveBoxCollider.h" />
     <ClInclude Include="Components\Physics\Collision\ActiveCollider.h" />
     <ClInclude Include="Components\Physics\Collision\CollisionManager.h" />
+    <ClInclude Include="Components\Physics\Collision\Helpers\PixelPerfectColliderStaticObject.h" />
     <ClInclude Include="Components\Physics\Collision\PixelPerfectCollider.h" />
     <ClInclude Include="Components\Physics\Collision\StaticBoxCollider.h" />
     <ClInclude Include="Components\Physics\Collision\StaticCollider.h" />
@@ -235,8 +239,16 @@
     </Image>
     <Image Include="Assets\testing\sprite\4_player_hands_up.png" />
     <Image Include="Assets\testing\sprite\5_test_water.png" />
+    <Image Include="Assets\testing\sprite\6_dirt.png" />
+    <Image Include="Assets\testing\sprite\7_slope_test.png" />
+    <Image Include="Assets\town_1\bg\1_test.png" />
+    <Image Include="Assets\town_1\sprite\1_player.png" />
+    <Image Include="Assets\town_1\sprite\2_player_hands_up.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\town_1\chunk.pk" />
+    <None Include="Assets\town_1\level.dat" />
+    <None Include="Assets\town_1\object.pk" />
     <None Include="Assets\testing\chunk.pk" />
     <None Include="Assets\testing\level.dat">
       <DeploymentContent>true</DeploymentContent>
@@ -251,6 +263,8 @@
     <Media Include="Assets\testing\music\1_idk.mp3">
       <DeploymentContent>true</DeploymentContent>
     </Media>
+    <Media Include="Assets\town_1\music\0_test.wav" />
+    <Media Include="Assets\town_1\music\1_test.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

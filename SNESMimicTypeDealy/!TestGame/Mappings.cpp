@@ -11,9 +11,11 @@
 #define DebugMapper(x) {std::string s = "[MAPPER] ";DEBUG::DebugLog::Log(s + x, true, ";35");}
 #endif
 
+#include "../Components/Physics/Collision/Helpers/PixelPerfectColliderStaticObject.h"
+
 constexpr int8_t GenesisTileSize = 8;
 
-Vec2 STOIVEC(std::string x, std::string y)
+inline Vec2 STOIVEC(std::string x, std::string y)
 {
 	float xcoord, ycoord;
 	if (x.ends_with("t"))
@@ -110,6 +112,45 @@ std::function<void (std::vector<std::string>)> Mappings::m_mappings[MAPPINGS_SIZ
 		DebugMapper(">>> Loading Water");
 #endif
 		Renderer::LoadActiveObject(new GAME_NAME::Objects::Environment::Water(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3])), 0);
+	},
+
+	[](std::vector<std::string> data) 
+	{
+
+#if _DEBUG
+		DebugMapper(">>> Loading PixelColliderOPbject");
+#endif
+	    using namespace GAME_NAME::Components::Physics::Collision;
+		using namespace GAME_NAME::Components::Physics::Collision::Helpers;
+		
+		constexpr PixelPerfectCollider::PIXEL_COLLISION_FACE n = PixelPerfectCollider::PIXEL_COLLISION_FACE_NONE;
+		constexpr PixelPerfectCollider::PIXEL_COLLISION_FACE t = PixelPerfectCollider::PIXEL_COLLISION_FACE_TOP;
+		constexpr PixelPerfectCollider::PIXEL_COLLISION_FACE l = PixelPerfectCollider::PIXEL_COLLISION_FACE_LEFT;
+		constexpr PixelPerfectCollider::PIXEL_COLLISION_FACE b = PixelPerfectCollider::PIXEL_COLLISION_FACE_BOTTOM;
+
+		PixelPerfectCollider::PIXEL_COLLISION_FACE collisionFaces[PixelColliderSize * PixelColliderSize] {
+			l,b,b,b,b,b,b,b,b,b,b,b,b,b,t,t,
+			l,l,b,b,b,b,b,b,b,b,b,t,t,t,t,n,
+			l,l,l,b,b,b,b,b,b,b,t,t,t,t,n,n,
+			l,l,l,l,b,b,b,b,b,t,t,t,t,n,n,n,
+			l,l,l,l,l,b,b,t,t,t,t,t,n,n,n,n,
+			l,l,l,l,l,t,t,t,t,t,t,n,n,n,n,n,
+			l,l,l,l,l,t,t,t,t,t,n,n,n,n,n,n,
+			l,l,l,l,t,t,t,t,t,n,n,n,n,n,n,n,
+			l,l,l,l,t,t,t,t,n,n,n,n,n,n,n,n,
+			l,l,l,t,t,t,t,n,n,n,n,n,n,n,n,n,
+			l,l,t,t,t,t,n,n,n,n,n,n,n,n,n,n,
+			l,t,t,t,t,n,n,n,n,n,n,n,n,n,n,n,
+			t,t,t,t,n,n,n,n,n,n,n,n,n,n,n,n,
+			t,t,t,n,n,n,n,n,n,n,n,n,n,n,n,n,
+			t,t,n,n,n,n,n,n,n,n,n,n,n,n,n,n,
+			t,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n
+		};
+
+		PixelPerfectColliderStaticObject* ppcso = new PixelPerfectColliderStaticObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), collisionFaces);
+
+		Renderer::LoadObject(ppcso, false);
+
 	}
 };
 

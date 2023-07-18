@@ -27,7 +27,11 @@ namespace GAME_NAME
 		/// <summary>
 		/// Returns if the window should close.
 		/// </summary>
-		bool ShouldClose();
+		inline bool ShouldClose() const
+		{
+			return glfwWindowShouldClose(this->m_glWindow);
+		}
+
 		/// <summary>
 		/// Sets if the window should be displayed in fullscreen or windowed mode.
 		/// </summary>

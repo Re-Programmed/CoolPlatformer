@@ -43,6 +43,11 @@ namespace GAME_NAME
 				return Vec2(this->X + a.X, this->Y + a.Y);
 			}
 
+			Vec2 operator/ (const Vec2& a)
+			{
+				return Vec2(this->X / a.X, this->Y / a.Y);
+			}
+
 			Vec2 operator* (const Vec2& a)
 			{
 				return Vec2(this->X * a.X, this->Y * a.Y);

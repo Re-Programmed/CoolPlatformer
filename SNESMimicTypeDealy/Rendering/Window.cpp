@@ -130,10 +130,6 @@ namespace GAME_NAME
 		lateUpdate();
 	}
 
-	bool Window::ShouldClose()
-	{
-		return glfwWindowShouldClose(this->m_glWindow);
-	}
 
 
 	void Window::SetFullscreen(bool fullscreen)

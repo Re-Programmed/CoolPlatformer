@@ -70,7 +70,7 @@ namespace  GAME_NAME
 				{
 					Audio::AudioPlayer* player = Audio::SoundManager::GetAudioPlayer();
 
-					Audio::TimeSeconds ts = player->getStreamPosition(Audio::SoundManager::BGMusic);
+					Audio::TimeSeconds ts = player->getStreamTime(Audio::SoundManager::BGMusic);
 					player->setPause(Audio::SoundManager::BGMusic, true);
 
 					player->seek(Audio::SoundManager::WaterMusic, ts);
@@ -81,7 +81,7 @@ namespace  GAME_NAME
 				{
 					Audio::AudioPlayer* player = Audio::SoundManager::GetAudioPlayer();
 
-					Audio::TimeSeconds ts = player->getStreamPosition(Audio::SoundManager::WaterMusic);
+					Audio::TimeSeconds ts = player->getStreamTime(Audio::SoundManager::WaterMusic);
 					player->setPause(Audio::SoundManager::WaterMusic, true);
 
 					player->seek(Audio::SoundManager::BGMusic, ts);

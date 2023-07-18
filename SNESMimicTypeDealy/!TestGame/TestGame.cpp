@@ -5,6 +5,7 @@
 #include "../Components/IComponent.h"
 #include "./Mappings.h"
 #include "./Camera/GameCamera.h"
+#include "./Objects/Environment/CloudGenerator.h"
 
 namespace GAME_NAME
 {
@@ -44,7 +45,10 @@ namespace GAME_NAME
 	{
 		ThePlayer = std::make_shared<Objects::Player::Player>(level.PlayerStartPosition);
 		Rendering::Renderer::LoadActiveObject(ThePlayer.get());
+		std::srand(ThePlayer->GetPosition().X + ThePlayer->GetPosition().Y + static_cast<int>(glfwGetTime()));
 		//Play Music
+
+		//Environment::CloudGenerator::GenerateClouds(50);
 	}
 
 }

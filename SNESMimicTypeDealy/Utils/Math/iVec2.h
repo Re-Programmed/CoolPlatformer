@@ -18,6 +18,16 @@ namespace GAME_NAME
 
 			}
 
+			iVec2 operator/ (const iVec2& b)
+			{
+				return iVec2(m_X / b.m_X, m_Y / b.m_Y);
+			}
+
+			iVec2 operator= (const iVec2& b)
+			{
+				return iVec2(b.m_X, b.m_Y);
+			}
+
 			iVec2(Vec2 v);
 
 			const int GetX()

@@ -10,6 +10,8 @@
 #include "../../../Input/InputManager.h"
 #include "../../../Rendering/DynamicSprite.h"
 
+#define DEFAULT_PLAYER_SPRITE 1
+
 namespace  GAME_NAME
 {
 	namespace  Objects
@@ -27,10 +29,12 @@ namespace  GAME_NAME
 
 				//INIT WATER MUSIC
 				Audio::SoundManager::WaterMusic = Audio::SoundManager::Play(Audio::UnderwaterMusicID, Audio::SoundManager::BGMusic, -1.0F, 0.0F, true);
-
-				AnimData data;
-				data.Sprites.push_back(Renderer::GetSprite(1));
-				data.Sprites.push_back(Renderer::GetSprite(4));
+				
+				
+				//ANIMATIONS
+				AnimData data;	
+				data.Sprites.push_back(Renderer::GetSprite(DEFAULT_PLAYER_SPRITE));			//TEST ANIM
+				data.Sprites.push_back(Renderer::GetSprite(DEFAULT_PLAYER_SPRITE + 3));
 				std::shared_ptr<GAME_NAME::Components::Animation::Animation> anim(new GAME_NAME::Components::Animation::Animation(data, 0.5f));
 
 				std::vector<std::shared_ptr<GAME_NAME::Components::Animation::Animation>> anims{ anim };

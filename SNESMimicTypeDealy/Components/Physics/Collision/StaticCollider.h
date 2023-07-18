@@ -15,7 +15,6 @@ namespace GAME_NAME
 
 				{
 				public:
-					StaticCollider() {};
 					int ID;
 
 					virtual void Update(GLFWwindow* window, Objects::GameObject* object) = 0;
