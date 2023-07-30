@@ -144,6 +144,18 @@
     <ClCompile Include="!TestGame\Objects\Environment\CloudGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="!TestGame\Objects\Environment\BackgroundObjects.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Settings\AppDataFileManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Settings\SettingsGlobals.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MusicSync\MusicSync.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glad\include\glad\glad.h">
@@ -296,6 +308,21 @@
     <ClInclude Include="Components\Physics\Collision\Helpers\PixelPerfectColliderStaticObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="!TestGame\Objects\Environment\BackgroundObjects.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="!TestGame\Objects\Environment\BGParallax.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Settings\AppDataFileManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Settings\SettingsGlobals.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MusicSync\MusicSync.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\testing\sprite\1_player.png">
@@ -319,16 +346,55 @@
     <Image Include="Assets\town_1\bg\1_test.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Assets\town_1\sprite\1_player.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Assets\town_1\sprite\2_player_hands_up.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="Assets\testing\sprite\6_dirt.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Assets\testing\sprite\7_slope_test.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1001_player.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1002_player_hands_up.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1003_1_cloud.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1004_2_cloud.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1005_3_cloud.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1006_grass.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1007_grass.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1008_grass.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1009_grass.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1010_bg_hill.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\bg\1001_test.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\bg\1002_sky_empty.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\bg\1003_sky_cloud_low.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\bg\1004_sky_cloud_middle.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\bg\1005_sky_cloud_top.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

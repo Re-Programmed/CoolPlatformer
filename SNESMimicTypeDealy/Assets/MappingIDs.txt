@@ -18,6 +18,9 @@
 5: PixelPerfectColliderStaticObject (map,positionX,positionY,scaleX,scaleY,sprite)
     - A pixel perfect collider.
 
+6: BGParallaxObject (map,positionX,positionY,scaleX,scaleY,sprite,parallax * 100)
+    - A parallaxing sprite. (The parallax param should be an integer 100 times the expected parallax)
+
 --COMPONENT MAPS--
 
 0: CURRENTLY TEMPLATE (StaticBoxCollider)

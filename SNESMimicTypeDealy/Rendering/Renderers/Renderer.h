@@ -12,7 +12,7 @@ namespace GAME_NAME
 {
 	namespace Rendering
 	{
-#define MICRO_RENDER_LAYER_COUNT 3
+#define MICRO_RENDER_LAYER_COUNT 4
 		constexpr int ChunkShift = 6;
 
 		using namespace Objects;
@@ -73,13 +73,18 @@ namespace GAME_NAME
 			/// </summary>
 			/// <param name="objects"></param>
 			/// <param name="size"></param>
-			static void LoadObjects(GameObject* objects[], const unsigned int size, bool front = false);
+			static void LoadObjects(GameObject* objects[], const unsigned int size, uint8_t layer = 1, bool front = false);
 			/// <summary>
 			/// Begins drawing the object. CANNOT BE CALLED DURING RENDERING
 			/// </summary>
 			/// <param name="objects"></param>
 			/// <param name="size"></param>
-			static void LoadObject(GameObject* object, bool front = false);
+			static void LoadObject(GameObject* object, uint8_t layer = 1, bool front = false);
+
+			static inline void InstantiateObject(GameObject* object)
+			{
+				m_instantiations.push_back(object);
+			}
 
 			static void LoadActiveObjects(GameObject* objects[], const unsigned int size, int layer = 1);
 			static void LoadActiveObject(GameObject* object, int layer = 1);
@@ -103,6 +108,7 @@ namespace GAME_NAME
 			static Chunk m_chunks[];
 			static Sprite* const getBackground(const unsigned int bgTexture);
 
+			static std::vector<GameObject*> m_instantiations;
 
 
 			/// <summary>

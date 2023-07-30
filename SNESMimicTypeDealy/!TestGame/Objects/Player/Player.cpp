@@ -10,6 +10,8 @@
 #include "../../../Input/InputManager.h"
 #include "../../../Rendering/DynamicSprite.h"
 
+#include <thread>
+
 #define DEFAULT_PLAYER_SPRITE 1
 
 namespace  GAME_NAME
@@ -56,7 +58,9 @@ namespace  GAME_NAME
 			float m_curr = 0;
 			void Player::Update(GLFWwindow* window)
 			{
-				m_animator->Update(window, this);
+				std::thread playerInput([this] { readKeys(); });
+
+				std::thread animationUpdate([this, window] { m_animator->Update(window, this); });
 
 #if _DEBUG
 				if (!m_debug)
@@ -66,7 +70,6 @@ namespace  GAME_NAME
 #else
 				CollisionManager::RegisterActiveColliderToBuffer(m_boxCollider);
 #endif
-				readKeys();
 
 	
 				{
@@ -81,6 +84,16 @@ namespace  GAME_NAME
 						std::cout << "PLAYER IN LAST SECOND: " << renderCalls << std::endl;
 						renderCalls = 0;
 					}
+				}
+
+				if (playerInput.joinable())
+				{
+					playerInput.join();
+				}
+
+				if (animationUpdate.joinable())
+				{
+					animationUpdate.join();
 				}
 			}
 

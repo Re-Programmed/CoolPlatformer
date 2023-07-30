@@ -15,13 +15,13 @@ namespace GAME_NAME
 		/// <summary>
 		/// (Cannot be called during rendering) Adds object to chunk renderer.
 		/// </summary>
-		void Chunk::Instantiate(GameObject* object, bool front)
+		void Chunk::Instantiate(GameObject* object, uint8_t layer, bool front)
 		{
 			if (front)
 			{
 				m_frontObjects.push_back(object);
 			} else {
-				m_objects.push_back(object);
+				m_objects[layer].push_back(object);
 			}
 		}
 
@@ -30,7 +30,7 @@ namespace GAME_NAME
 			return m_position;
 		}
 
-		std::vector<GameObject*> Chunk::GetObjects()
+		std::vector<GameObject*>* Chunk::GetObjects()
 		{
 			return m_objects;
 		}
@@ -46,10 +46,13 @@ namespace GAME_NAME
 				}
 				break;
 			case RENDER_LAYER_OBJECTS:
-				for (GameObject* obj : m_objects)
+				for (int i = 0; i < CHUNK_OBJECT_RENDER_LAYER_COUNT; i++)
 				{
-					obj->Update(window);
-					obj->Render(cameraPosition);
+					for (GameObject* obj : m_objects[i])
+					{
+						obj->Update(window);
+						obj->Render(cameraPosition);
+					}
 				}
 				break;
 			case RENDER_LAYER_OBJECTS_FRONT:

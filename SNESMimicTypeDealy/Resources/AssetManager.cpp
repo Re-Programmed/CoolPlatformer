@@ -4,6 +4,7 @@
 #include <fstream>
 #include "../Audio/SoundManager.h"
 #include "../Audio/SoundTypes/Sound.h"
+#include "../Settings/SettingsGlobals.h"
 
 #if _DEBUG
 #include "../Debug/DebugLog.h"
@@ -122,6 +123,29 @@ namespace GAME_NAME
 			return data;
 		}
 
+		void loadObjectDataThread(std::string line, std::function<void(std::vector<std::string>)> mappings[])
+		{
+			std::stringstream linestream(line);
+			std::string component;
+
+			std::function<void(std::vector<std::string>)>* mapping{};
+
+			std::vector <std::string> v;
+
+			int c = 0;
+			while (std::getline(linestream, component, ','))
+			{
+				if (c == 0) { mapping = &mappings[std::stoi(component)]; }
+				else { v.push_back(component); }
+				c++; //C++ AHHAHAHAHAHAHH Like the language :)L::):)
+			}
+
+			(*mapping)(v);
+
+			//delete mapping;	
+
+		}
+
 		void AssetManager::LoadObjectData(const char* subfolder, std::function<void (std::vector<std::string>)> mappings[], bool reloadObjects)
 		{
 			std::string filePath = AssetPath;
@@ -131,26 +155,34 @@ namespace GAME_NAME
 			std::ifstream ObjectFile(filePath);
 			std::string line;
 
+			std::vector<std::thread*> threads;
+			int thCurr = 0;
+
 			while (std::getline(ObjectFile, line, '\n'))
 			{
-				std::stringstream linestream(line);
-				std::string component;
-				
-				std::function<void (std::vector<std::string>)>* mapping{};
+				threads.push_back(new std::thread(loadObjectDataThread, line, mappings));
+				thCurr++;
 
-				std::vector <std::string> v;
-
-				int c = 0;
-				while (std::getline(linestream, component, ','))
+				if (thCurr == AppData::Settings::SettingsGlobals::MaxThreads.Value)
 				{
-					if (c == 0) { mapping = &mappings[std::stoi(component)]; }
-					else { v.push_back(component); }
-					c++; //C++ AHHAHAHAHAHAHH Like the language :)L::):)
+					for (int i = 0; i < thCurr; i++)
+					{
+						if (threads[i] != nullptr)
+						{
+							threads[i]->join();
+						}
+					}
+
+					thCurr = 0;
 				}
+			}
 
-				(*mapping)(v);
-
-				//delete mapping;
+			for (int i = 0; i < thCurr; i++)
+			{
+				if (threads[i] != nullptr)
+				{
+					threads[i]->join();
+				}
 			}
 		}
 

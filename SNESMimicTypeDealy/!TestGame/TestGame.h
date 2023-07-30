@@ -24,6 +24,8 @@ namespace GAME_NAME
 
 		void InitLevel(GAME_NAME::Game::Level level);				//Called when a new level loads.
 
+		static GLFWwindow* FirstWindow;
+
 	private:
 		GAME_NAME::Camera::GameCamera* m_gameCamera;				//Pointer to the camera.
 	};

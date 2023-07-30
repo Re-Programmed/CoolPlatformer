@@ -12,6 +12,8 @@
 #include "!TestGame/TestGame.h"
 //#include "./Input/InputManager.h"
 
+#define THREAD_LIMIT 128
+
 using namespace GAME_NAME;
 
 Window* ApplicationWindow;

@@ -16,7 +16,17 @@ namespace GAME_NAME
 					[](std::string title,Game::Level& level) { level.Name = title; },
 					[](std::string id,Game::Level& level) { level.ID.World = std::stoi(id); },
 					[](std::string id,Game::Level& level) { level.ID.Level = std::stoi(id); },
-					[](std::string song,Game::Level& level) { int snd = std::stoi(song); if (snd != -1) { Audio::AudioVoice voice = Audio::SoundManager::Play(snd, Audio::SoundManager::BGMusic); level.CurrentBGMusic = voice; Audio::SoundManager::BGMusic = voice; } },
+
+					[](std::string song,Game::Level& level)
+					{
+						int snd = std::stoi(song);
+						if (snd != -1) 
+						{ 
+							Audio::AudioVoice voice = Audio::SoundManager::Play(snd, Audio::SoundManager::BGMusic);
+							level.CurrentBGMusic = voice;
+							Audio::SoundManager::BGMusic = voice;
+						}
+					},
 
 					[](std::string playerX,Game::Level& level) { level.PlayerStartPosition.X = std::stoi(playerX); },
 					[](std::string playerY,Game::Level& level) { level.PlayerStartPosition.Y = std::stoi(playerY); }

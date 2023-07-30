@@ -1,6 +1,8 @@
 #include "Renderer.h"
 #include <iostream>
 #include "../../Utils/CollisionDetection.h"
+#include <thread>
+#include "../../Settings/SettingsGlobals.h"
 
 namespace GAME_NAME
 {
@@ -15,6 +17,8 @@ namespace GAME_NAME
 		Chunk Renderer::m_chunks[levelSizeX * levelSizeY];
 
 		std::vector<GameObject*> Renderer::m_activeGameObjects[MICRO_RENDER_LAYER_COUNT];
+
+		std::vector<GameObject*> Renderer::m_instantiations;
 
 		GLuint Renderer::LoadSprite(const char* file)
 		{
@@ -69,6 +73,8 @@ namespace GAME_NAME
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
+			std::cout << "GLBUFFERLOAD: " << textureBuffer << std::endl;
+
 			free(data);
 
 			return textureBuffer;
@@ -87,21 +93,21 @@ namespace GAME_NAME
 			}
 		}
 
-		void Renderer::LoadObjects(GameObject* objects[], const unsigned int size, bool front)
+		void Renderer::LoadObjects(GameObject* objects[], const unsigned int size, uint8_t layer, bool front)
 		{
 			for (unsigned int i = 0; i < size; i++)
 			{
-				LoadObject(objects[i], front);
+				LoadObject(objects[i], layer, front);
 			}
 		}
 #define AsChunkPosition(x) (x >> ChunkShift)
 
-		void Renderer::LoadObject(GameObject* object, bool front)
+		void Renderer::LoadObject(GameObject* object, uint8_t layer, bool front)
 		{
 			int chunkX = AsChunkPosition(static_cast<int>(object->GetPosition().X)) * levelSizeY;
 			int chunkY = AsChunkPosition(static_cast<int>(object->GetPosition().Y));
 
-			Renderer::m_chunks[chunkX + chunkY].Instantiate(object, front);
+			Renderer::m_chunks[chunkX + chunkY].Instantiate(object, layer, front);
 		}
 
 		void Renderer::LoadActiveObjects(GameObject* objects[], const unsigned int size, int layer)
@@ -124,6 +130,21 @@ namespace GAME_NAME
 
 		void Renderer::Render(Camera::Camera* camera, Vec2* windowSize, RENDER_LAYER layer, GLFWwindow* window, float parallax)
 		{
+			//REMOVE POSSIBLY
+			/*
+			{
+				if (m_instantiations.size() > 0)
+				{
+					for (GameObject* obj : m_instantiations)
+					{
+						LoadObject(obj);
+					}
+
+					m_instantiations.clear();
+				}
+			}
+			*/
+
 			{
 				renderCalls++;
 				float t = glfwGetTime();
@@ -149,8 +170,8 @@ namespace GAME_NAME
 			{
 				Vec2 cameraPositionPadding = cameraPosition - cameraBoundsPadding / 2.f;
 				Vec2 cameraBounds = Vec2(cameraBoundingBox.GetX(), cameraBoundingBox.GetY());
-				//Render active objects if they are on screen. Renders in order of layers from greatest to least.
-				for (int i = MICRO_RENDER_LAYER_COUNT; i >= 0; i--)
+				//Render active objects if they are on screen. Renders in order of layers from least to greatest.
+				for (int i = 1; i < MICRO_RENDER_LAYER_COUNT; i++)
 				{
 					for (GameObject* obj : m_activeGameObjects[i])
 					{
@@ -177,6 +198,7 @@ namespace GAME_NAME
 			const int iterInit = cameraChunkPosition.GetX() * levelSizeY + cameraChunkPosition.GetY();
 			const int iterEnd = AsChunkPosition((int)cameraPosition.X + cameraBoundingBox.GetX()) * levelSizeY;
 
+
 			//Loop over chunks that are before the right edge of the camera.
 			for (int i = iterInit; i < iterEnd; i++)
 			{
@@ -186,6 +208,7 @@ namespace GAME_NAME
 					//Render a chunk if it is in the cameras bounding box.
 					m_chunks[i].Render(cameraPosition, chunkSize, layer, window);
 
+					
 					//Check if the chunk we just rendered is at the top of the screen.
 					if ((i % levelSizeY) == (levelSizeY - 1))
 					{
@@ -201,25 +224,25 @@ namespace GAME_NAME
 				}
 			}
 
+			if (layer == RENDER_LAYER_BG)
+			{
+				for (GameObject* bg2Object : m_activeGameObjects[0])
+				{
+					bg2Object->Update(window);
+					bg2Object->Render(cameraPosition);
+				}
+			}
+
 		}
 
 		std::vector<GameObject*> Renderer::GetAllObjectsInArea(Vec2 bottomLeft, Vec2 scale, int8_t layer)
 		{
 			std::vector<GameObject*> ret;
-			if (layer != -1)
-			{
-				for (GameObject* obj : m_activeGameObjects[layer])
+			
+			std::thread activeObjectCheck([layer, bottomLeft, scale](std::vector<GameObject*>& ret) {
+				if (layer != -1)
 				{
-					if (Utils::CollisionDetection::PointWithinBoxBL(obj->GetPosition(), bottomLeft, scale))
-					{
-						ret.push_back(obj);
-					}
-				}
-			}
-			else {
-				for (int i = MICRO_RENDER_LAYER_COUNT; i > 0; i--)
-				{
-					for (GameObject* obj : m_activeGameObjects[i])
+					for (GameObject* obj : m_activeGameObjects[layer])
 					{
 						if (Utils::CollisionDetection::PointWithinBoxBL(obj->GetPosition(), bottomLeft, scale))
 						{
@@ -227,7 +250,19 @@ namespace GAME_NAME
 						}
 					}
 				}
-			}
+				else {
+					for (int i = MICRO_RENDER_LAYER_COUNT; i > 0; i--)
+					{
+						for (GameObject* obj : m_activeGameObjects[i])
+						{
+							if (Utils::CollisionDetection::PointWithinBoxBL(obj->GetPosition(), bottomLeft, scale))
+							{
+								ret.push_back(obj);
+							}
+						}
+					}
+				}
+			}, std::ref(ret));
 
 			iVec2 chunkPos = AsChunkPosition(bottomLeft);
 			iVec2 chunkScale = AsChunkPosition(scale);
@@ -240,12 +275,17 @@ namespace GAME_NAME
 			{
 				for (int8_t y = 0; y < endY; y++)
 				{
-					for (GameObject* add : m_chunks[start + (x * levelSizeY) + y].GetObjects())
+					for (int i = 0; i < CHUNK_OBJECT_RENDER_LAYER_COUNT; i++)
 					{
-						ret.push_back(add);
+						for (GameObject* add : m_chunks[start + (x * levelSizeY) + y].GetObjects()[i])
+						{
+							ret.push_back(add);
+						}
 					}
 				}
 			}
+
+			if (activeObjectCheck.joinable()) { activeObjectCheck.join(); }
 
 			return ret;
 		}
@@ -265,11 +305,14 @@ namespace GAME_NAME
 			{
 				for (int8_t y = 0; y < endY; y++)
 				{
-					for (GameObject* add : m_chunks[start + (x * levelSizeY) + y].GetObjects())
+					for (int i = 0; i < CHUNK_OBJECT_RENDER_LAYER_COUNT; i++)
 					{
-						if (Utils::CollisionDetection::BoxWithinBox(add->GetPosition(), add->GetScale(), bottomLeft, scale))
+						for (GameObject* add : m_chunks[start + (x * levelSizeY) + y].GetObjects()[i])
 						{
-							ret.push_back(add);
+							if (Utils::CollisionDetection::BoxWithinBox(add->GetPosition(), add->GetScale(), bottomLeft, scale))
+							{
+								ret.push_back(add);
+							}
 						}
 					}
 				}

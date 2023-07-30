@@ -5,6 +5,7 @@
 #include "../Components/Physics/Collision/Helpers/StaticBoxCollisionObject.h"
 #include "../Components/Physics/Collision/ActiveBoxCollider.h"
 #include "../!TestGame/Objects/Environment/Water.h"
+#include "../!TestGame/Objects/Environment/BGParallax.h"
 
 #if _DEBUG
 #include "../Debug/DebugLog.h"
@@ -93,6 +94,7 @@ std::function<void (std::vector<std::string>)> Mappings::m_mappings[MAPPINGS_SIZ
 #if _DEBUG
 		DebugMapper(">>> Loading StaticBoxCollisionObject");
 #endif
+		std::cout << "GOT: " << std::stoi(data[4]) << std::endl;
 		Renderer::LoadObject(new GAME_NAME::Components::Physics::Collision::StaticBoxCollisionObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4]))));
 	},
 
@@ -151,6 +153,16 @@ std::function<void (std::vector<std::string>)> Mappings::m_mappings[MAPPINGS_SIZ
 
 		Renderer::LoadObject(ppcso, false);
 
+	},
+
+	//GAME
+	//BGParallaxObject
+	[](std::vector<std::string> data) {
+
+#if _DEBUG
+		DebugMapper(">>> Loading ParallaxBGObject");
+#endif
+		Renderer::LoadActiveObject(new GAME_NAME::Objects::Environment::BGParallax(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), static_cast<float>(std::stoi(data[5])/100.f)), 0);
 	}
 };
 
