@@ -17,6 +17,7 @@ namespace GAME_NAME
 		Chunk Renderer::m_chunks[levelSizeX * levelSizeY];
 
 		std::vector<GameObject*> Renderer::m_activeGameObjects[MICRO_RENDER_LAYER_COUNT];
+		std::vector<GameObject*> Renderer::m_guiGameObjects[MICRO_GUI_LAYER_COUNT];
 
 		std::vector<GameObject*> Renderer::m_instantiations;
 
@@ -130,40 +131,25 @@ namespace GAME_NAME
 
 		void Renderer::Render(Camera::Camera* camera, Vec2* windowSize, RENDER_LAYER layer, GLFWwindow* window, float parallax)
 		{
-			//REMOVE POSSIBLY
-			/*
+			Vec2 cameraPosition = camera->GetPosition() / parallax;
+
+			if (layer == RENDER_LAYER_GUI)
 			{
-				if (m_instantiations.size() > 0)
+				for (uint8_t currLayer = 0; currLayer < MICRO_GUI_LAYER_COUNT; currLayer++)
 				{
-					for (GameObject* obj : m_instantiations)
+					for (GameObject* guiObject : m_guiGameObjects[currLayer])
 					{
-						LoadObject(obj);
+						guiObject->Render(camera->GetPosition());
 					}
-
-					m_instantiations.clear();
 				}
-			}
-			*/
 
-			{
-				renderCalls++;
-				float t = glfwGetTime();
-				tAlloc += t - m_curr;
-				m_curr = t;
-
-				if (tAlloc > 1.f)
-				{
-					tAlloc = 0.f;
-					std::cout << "RENDERS IN LAST SECOND: " << renderCalls << std::endl;
-					renderCalls = 0;
-				}
+				return;
 			}
 
 			constexpr unsigned int cameraBoundsPadding = chunkSize;
 
 			//Define const variables.
 
-			Vec2 cameraPosition = camera->GetPosition()/parallax;
 			iVec2 cameraBoundingBox = (camera->GetZoom() != 1 ? (*windowSize) * (1 / camera->GetZoom()) + (cameraBoundsPadding << 1) : (*windowSize) + cameraBoundsPadding) + Vec2(0, chunkSize);
 
 			if (layer == RENDER_LAYER_ACTIVE_OBJECTS)
@@ -352,22 +338,6 @@ namespace GAME_NAME
 				return ret;
 			}
 		}
-
-#pragma region GUIRenderer
-
-		GLuint Renderer::GUIRenderer::startIndex = NULL;
-
-		GLuint Renderer::GUIRenderer::LoadGUIElement(const char* file)
-		{
-			GLuint ret = loadImage(file);
-			if (startIndex == NULL) { startIndex = ret; }
-
-			return ret - startIndex;
-
-		}
-
-
-#pragma endregion
 
 
 	}

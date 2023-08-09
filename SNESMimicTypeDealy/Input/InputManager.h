@@ -30,6 +30,12 @@ namespace GAME_NAME
 #endif
 	};
 
+	enum joyAxis
+	{
+		JOY_AXIS_X,
+		JOY_AXIS_Y
+	};
+
 
 	//Deals with input. Input buttons can be changed using the m_keys array allowing for adjustable inputs.
 	class InputManager
@@ -37,7 +43,6 @@ namespace GAME_NAME
 	public:
 		static void Init(GLFWwindow* window);			//Must be called on program start.
 		static const unsigned int GetKey(keyRef key);	//Gets if a key is down.
-
 	private:
 
 		static int m_keys[KEY_ARRAY_SIZE];				//Determines what button each keyRef refers to.
@@ -45,7 +50,6 @@ namespace GAME_NAME
 		static void loadDefaultKeys();					//Loads the default inputs for keyboard.
 
 		static GLFWwindow* m_window;					//Window pointer. :)
-
 	};
 
 }

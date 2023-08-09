@@ -190,6 +190,9 @@ namespace  GAME_NAME
 				}
 #endif
 
+				//int joyAxesCount;		JOYSTICK INPUT
+				//const float* joyAxes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &joyAxesCount);
+
 				if (InputManager::GetKey(PLAYER_MOVE_RIGHT))
 				{
 
@@ -204,7 +207,7 @@ namespace  GAME_NAME
 					if (m_physics->GetVelocity().X < PlayerSpeedCap)
 					{
 						m_physics->SetFrictionDrag(0);
-						m_physics->AddVelocity(Vec2((PlayerSpeedCap - m_physics->GetVelocity().X) * PlayerSpeed, 0.f));
+						m_physics->AddVelocity(Vec2((PlayerSpeedCap - m_physics->GetVelocity().X) * (PlayerSpeed), 0.f));
 					}
 				}
 
@@ -221,7 +224,7 @@ namespace  GAME_NAME
 					if (m_physics->GetVelocity().X > -PlayerSpeedCap)
 					{
 						m_physics->SetFrictionDrag(0);
-						m_physics->AddVelocity(Vec2((PlayerSpeedCap - m_physics->GetVelocity().X) * -PlayerSpeed, 0.f));
+						m_physics->AddVelocity(Vec2((PlayerSpeedCap - m_physics->GetVelocity().X) * (-PlayerSpeed), 0.f));
 					}
 				}
 

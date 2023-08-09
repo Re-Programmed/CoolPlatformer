@@ -124,6 +124,8 @@ namespace GAME_NAME
 			Renderer::Render(m_game->GetCamera(), lastWindowSize, RENDER_LAYER_OBJECTS_FRONT, m_glWindow);
 		}
 
+		Renderer::Render(m_game->GetCamera(), lastWindowSize, RENDER_LAYER_GUI, m_glWindow);
+
 		glfwSwapBuffers(this->m_glWindow);
 		glfwPollEvents();
 

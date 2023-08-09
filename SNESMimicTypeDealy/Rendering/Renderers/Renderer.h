@@ -13,6 +13,7 @@ namespace GAME_NAME
 	namespace Rendering
 	{
 #define MICRO_RENDER_LAYER_COUNT 4
+#define MICRO_GUI_LAYER_COUNT 3
 		constexpr int ChunkShift = 6;
 
 		using namespace Objects;
@@ -105,37 +106,13 @@ namespace GAME_NAME
 			/// </summary>
 			static std::vector<GameObject*> m_activeGameObjects[MICRO_RENDER_LAYER_COUNT];
 
+			static std::vector<GameObject*> m_guiGameObjects[MICRO_GUI_LAYER_COUNT];
+
 			static Chunk m_chunks[];
 			static Sprite* const getBackground(const unsigned int bgTexture);
 
 			static std::vector<GameObject*> m_instantiations;
 
-
-			/// <summary>
-			/// For rendering GUI elements. UNFINISHED
-			/// </summary>
-			static class GUIRenderer
-			{
-			public:
-				/// <summary>
-				/// Load a file to the GUI texture buffer. Must be called after loading sprites and BG.
-				/// </summary>
-				/// <param name="file">The file you want to register to the buffer.</param>
-				/// <returns>The index of the texture in the buffer relative to the first GUI element registered.</returns>
-				static GLuint LoadGUIElement(const char* file);
-
-				static void Init();
-			private:
-				/// <summary>
-				/// The index of the first GUI element in the TextureBuffer.
-				/// </summary>
-				static GLuint startIndex;
-
-				static void Render(Camera::Camera* camera, Vec2* windowSize);
-
-				static std::vector<GUI::IGUIElement>* elements;
-
-			};
 		};
 
 
