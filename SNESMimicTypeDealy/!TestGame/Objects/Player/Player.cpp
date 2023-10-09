@@ -4,15 +4,17 @@
 #include "../../../Debug/DebugLog.h"
 
 #define PlayerLogger(x) (DEBUG::DebugLog::Log(x, true, ";34;44;1"))
+
+#include "../../../Debug/LevelBuilder/LevelBuilder.h"
 #endif
 
 #include "../../../Utils/Time/GameTime.h"
 #include "../../../Input/InputManager.h"
 #include "../../../Rendering/DynamicSprite.h"
 
-#include <thread>
+#include "../../TestGame.h"
 
-#define DEFAULT_PLAYER_SPRITE 1
+#include <thread>
 
 namespace  GAME_NAME
 {
@@ -35,11 +37,11 @@ namespace  GAME_NAME
 				
 				//ANIMATIONS
 				AnimData data;	
-				data.Sprites.push_back(Renderer::GetSprite(DEFAULT_PLAYER_SPRITE));			//TEST ANIM
-				data.Sprites.push_back(Renderer::GetSprite(DEFAULT_PLAYER_SPRITE + 3));
-				std::shared_ptr<GAME_NAME::Components::Animation::Animation> anim(new GAME_NAME::Components::Animation::Animation(data, 0.5f));
+				//data.Sprites.push_back(Renderer::GetSprite(DefaultPlayerSprite));			//TEST ANIM
+				//data.Sprites.push_back(Renderer::GetSprite(DefaultPlayerSprite + 1));
+				//std::shared_ptr<GAME_NAME::Components::Animation::Animation> anim(new GAME_NAME::Components::Animation::Animation(data, 0.5f));
 
-				std::vector<std::shared_ptr<GAME_NAME::Components::Animation::Animation>> anims{ anim };
+				std::vector<std::shared_ptr<GAME_NAME::Components::Animation::Animation>> anims{ };
 
 				m_animator = new AnimatorComponent(anims);
 				m_physics->SetGravityStrength(DefaultPlayerGravity);
@@ -135,9 +137,15 @@ namespace  GAME_NAME
 					DynamicSprite(m_sprite->GetSpriteId(), vertices).Render(cameraPosition, m_position + m_scale, m_scale, m_rotation + 180.f);
 				}
 				else {
-					m_sprite->Render(cameraPosition, m_position, m_scale, m_rotation);
+					m_sprite->Render(cameraPosition, m_position + (m_textureFlipped ? (m_scale * Vec2::OneX) : 0), m_scale * (m_textureFlipped ? Vec2::MinusOneXOneY : 1), m_rotation);
 				}
 				
+#if _DEBUG
+				if (m_debug)
+				{
+					Debug::LevelBuilder::LevelBuilder::Render();
+				}
+#endif
 			}
 
 			void Player::onCollision(Vec2 push)
@@ -177,10 +185,14 @@ namespace  GAME_NAME
 
 						if (m_debug)
 						{
+							Debug::LevelBuilder::LevelBuilder::InitLevelBuilder(TestGame::INSTANCE);
 							m_boxCollider->SetBeforeUpdate(nullptr);
+							((GAME_NAME::Camera::GameCamera*)TestGame::INSTANCE->GetCamera())->SetFollowPlayerExact(true);
 						}
 						else {
+							Debug::LevelBuilder::LevelBuilder::DestroyLevelBuilder();
 							m_boxCollider->SetBeforeUpdate(beforeUpdate);
+							((GAME_NAME::Camera::GameCamera*)TestGame::INSTANCE->GetCamera())->SetFollowPlayerExact(false);
 						}
 					}
 				}
@@ -195,7 +207,6 @@ namespace  GAME_NAME
 
 				if (InputManager::GetKey(PLAYER_MOVE_RIGHT))
 				{
-
 #if _DEBUG
 					if (m_debug)
 					{
@@ -203,11 +214,16 @@ namespace  GAME_NAME
 						return;
 					}
 #endif
-
 					if (m_physics->GetVelocity().X < PlayerSpeedCap)
 					{
 						m_physics->SetFrictionDrag(0);
 						m_physics->AddVelocity(Vec2((PlayerSpeedCap - m_physics->GetVelocity().X) * (PlayerSpeed), 0.f));
+						
+						//Check if the player has begun to move to the right, play a sliding animation if slowing down, flip the sprite if moving right.
+						if (m_physics->GetVelocity().X > 0)
+						{
+							m_textureFlipped = true;
+						}
 					}
 				}
 
@@ -220,11 +236,16 @@ namespace  GAME_NAME
 						return;
 					}
 #endif
-
 					if (m_physics->GetVelocity().X > -PlayerSpeedCap)
 					{
 						m_physics->SetFrictionDrag(0);
 						m_physics->AddVelocity(Vec2((PlayerSpeedCap - m_physics->GetVelocity().X) * (-PlayerSpeed), 0.f));
+					}
+
+					//Check if the player has begun to move to the left, play a sliding animation if slowing down, flip the sprite if moving left.
+					if (m_physics->GetVelocity().X < 0)
+					{
+						m_textureFlipped = false;
 					}
 				}
 

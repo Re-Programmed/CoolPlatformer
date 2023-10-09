@@ -17,6 +17,7 @@ namespace GAME_NAME
 
 			static Vec2 Zero;
 			static Vec2 MinusOneX;
+			static Vec2 MinusOneXOneY;
 			static Vec2 OneX;
 			static Vec2 MinusOneY;
 			static Vec2 OneY;

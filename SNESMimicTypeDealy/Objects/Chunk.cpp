@@ -48,7 +48,7 @@ namespace GAME_NAME
 			case RENDER_LAYER_OBJECTS:
 				for (int i = 0; i < CHUNK_OBJECT_RENDER_LAYER_COUNT; i++)
 				{
-					for (GameObject* obj : m_objects[i])
+  					for (GameObject* obj : m_objects[i])
 					{
 						obj->Update(window);
 						obj->Render(cameraPosition);

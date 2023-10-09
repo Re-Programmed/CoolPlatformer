@@ -26,7 +26,7 @@ namespace GAME_NAME
 				inline void SetCurrentAnimation(int8_t animation);						//Sets what animation the object is currently using. The animation param is the index of the animation to use in the array that was initially provided.
 			private:
 				std::vector<std::shared_ptr<Animation>> m_animations;					//List of all possible animations this object can have.
-				int8_t m_currentAnimation = 0;											//Current animation to use.
+				int8_t m_currentAnimation = -1;											//Current animation to use.
 
 				float m_tick = 0.f;														//Storage for when to advance to the next frame.
 			};

@@ -23,13 +23,13 @@ namespace GAME_NAME
 			/// </summary>
 			/// <param name="updateable">The IUpdateable to be called each frame.</param>
 			/// <returns>The index of the IUpdateable in the updateables vector.</returns>
-			static int RegisterUpdateable(IUpdateable* updateable);
+			static UpdateIndex RegisterUpdateable(IUpdateable* updateable);
 
 			/// <summary>
 			/// Removes an IUpdateable from getting updated.
 			/// </summary>
 			/// <param name="index">The index of the IUpdateable to remove.</param>
-			static void RemoveUpdateable(UpdateIndex index);
+			static void RemoveUpdateable(const UpdateIndex index);
 		private:
 			/// <summary>
 			/// INFO: 

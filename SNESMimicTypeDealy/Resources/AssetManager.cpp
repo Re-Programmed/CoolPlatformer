@@ -36,6 +36,8 @@ namespace GAME_NAME
 				filePath += (textureLoad == SPRITES ? SpriteSubfolder : BGSubfolder);
 			}
 
+			
+
 			unsigned int i = 0;
 			using recursive_directory_iterator = std::filesystem::recursive_directory_iterator;
 			for (const auto& file : recursive_directory_iterator(filePath))
@@ -47,11 +49,24 @@ namespace GAME_NAME
 #endif
 					if (textureLoad == SPRITES || textureLoad == ALL_TEXTURES)
 					{
+						i++;
 						Rendering::Renderer::LoadSprite(file.path().string().c_str());
 					}
 					else {
 						Rendering::Renderer::LoadBG(file.path().string().c_str());
 					}
+				}
+			}
+
+			if (textureLoad == SPRITES || textureLoad == ALL_TEXTURES)
+			{
+				if (Renderer::GetLastFileOffest() == -1)
+				{
+					Renderer::SetLastFileOffset(0);
+				}
+				else
+				{
+					Renderer::SetLastFileOffset(Renderer::GetSpriteCount() - i);
 				}
 			}
 #if _DEBUG
@@ -70,7 +85,6 @@ namespace GAME_NAME
 
 			if (reloadMusic) { Audio::SoundManager::ClearSources(); }
 
-			unsigned int i = 0;
 			using recursive_directory_iterator = std::filesystem::recursive_directory_iterator;
 
 			for (const auto& file : recursive_directory_iterator(filePath))

@@ -25,6 +25,15 @@ namespace GAME_NAME
 
 			Rendering::Sprite* GetSprite();
 			void SetSprite(Rendering::Sprite* sprite);
+			
+			/// <summary>
+			/// Flips the texture accross the Y axis.
+			/// </summary>
+			/// <param name="textureFlipped"></param>
+			inline void SetTextureFlipped(bool textureFlipped)
+			{
+				m_textureFlipped = textureFlipped;
+			}
 
 			GameObject(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, float rotation = 0.f) : m_position(position), m_sprite(sprite), m_scale(scale), m_rotation(rotation) {};
 			GameObject();
@@ -43,6 +52,8 @@ namespace GAME_NAME
 			Vec2 m_scale;
 			Rendering::Sprite* m_sprite;
 			float m_rotation;
+
+			bool m_textureFlipped;
 		};
 		/*
 		class GameObjectMapping

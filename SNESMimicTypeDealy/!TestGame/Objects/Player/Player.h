@@ -8,10 +8,10 @@
 #ifndef _PLAYERDEF
 #define _PLAYERDEF
 
-constexpr float DefaultPlayerScaleX = 17.f;	//The default size for the player.
-constexpr float DefaultPlayerScaleY = 17.f;	//The default size for the player.
+constexpr float DefaultPlayerScaleX = 16.f;	//The default size for the player.
+constexpr float DefaultPlayerScaleY = 26.f;	//The default size for the player.
 
-constexpr int DefaultPlayerSprite = 1;		//The default sprite to use for the player.
+constexpr int DefaultPlayerSprite = 0;		//The default sprite to use for the player.
 
 constexpr float PlayerSpeed = .04f;			//The amount of velocity to add for each frame the player is moving.
 constexpr float PlayerSpeedCap = 200.f;		//The maximum amount of velocity the player can accelerate at (ignoring gravity).

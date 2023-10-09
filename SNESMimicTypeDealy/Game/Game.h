@@ -42,7 +42,6 @@ namespace GAME_NAME
 
 			Rendering::Camera::Camera* GetCamera();
 
-		protected:
 			/// <summary>
 			/// Used when loading levels to determine what parts of levels to load. Can be combined with BITWISE OR.
 			/// </summary>
@@ -77,6 +76,7 @@ namespace GAME_NAME
 				/// </summary>
 				LEVEL_DATA_DATA_LEVEL = 0xF0000
 			};
+
 			/// <summary>
 			/// Load a level from the <u>Assets folder</u>.
 			/// 
@@ -91,8 +91,8 @@ namespace GAME_NAME
 			/// <param name="reload"> -- If the loaded data should be deleted before its loaded.
 			/// (ex. Delete all the current music loaded and populate the AudioPlayer with new music.)
 			/// [Does not apply if using <b>LEVEL_DATA_ALL</b>, which must reload]</param>
-			void loadLevel(const char* levelPath, LEVEL_DATA data, bool reload = false);
-
+			void LoadLevel(const char* path, LEVEL_DATA data, bool reload = false);
+		protected:
 			Rendering::Camera::Camera* m_camera;
 		private:
 			Level m_level; //The current level.

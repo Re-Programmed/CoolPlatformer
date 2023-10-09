@@ -156,6 +156,9 @@
     <ClCompile Include="MusicSync\MusicSync.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Debug\LevelBuilder\LevelBuilder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glad\include\glad\glad.h">
@@ -323,6 +326,9 @@
     <ClInclude Include="MusicSync\MusicSync.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Debug\LevelBuilder\LevelBuilder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\testing\sprite\1_player.png">
@@ -397,6 +403,9 @@
     <Image Include="Assets\town_1\bg\1005_sky_cloud_top.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Assets\global_assets\sprite\standing_idle.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\testing\chunk.pk" />
@@ -406,6 +415,9 @@
     <None Include="Assets\town_1\object.pk" />
     <None Include="Assets\town_1\chunk.pk" />
     <None Include="Assets\town_1\level.dat" />
+    <None Include="Assets\house_1_1\object.pk" />
+    <None Include="Assets\house_1_1\chunk.pk" />
+    <None Include="Assets\house_1_1\level.dat" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Assets\testing\music\0_test.wav">

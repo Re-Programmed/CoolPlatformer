@@ -42,8 +42,9 @@ namespace GAME_NAME
 			ADD INITS
 		------------------------*/
 
-		GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
-
+		int count;
+		GLFWmonitor* primaryMonitor = glfwGetMonitors(&count)[count - 1]; //Change later to choose a monitor.
+		
 		int width, height;
 		const GLFWvidmode* mode = glfwGetVideoMode(primaryMonitor);
 		width = mode->width;

@@ -20,6 +20,7 @@ namespace GAME_NAME
 
 			void AnimatorComponent::Update(GLFWwindow* window, Objects::GameObject* object)
 			{
+				if (m_currentAnimation == -1) { return; }
 				m_tick += GAME_NAME::Utils::Time::GameTime::GetScaledDeltaTime();
 
 				if (m_tick >= m_animations[m_currentAnimation]->GetSpeed())

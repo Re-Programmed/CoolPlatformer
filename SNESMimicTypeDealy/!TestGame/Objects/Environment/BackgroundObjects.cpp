@@ -22,7 +22,7 @@ namespace GAME_NAME
 
 					newObject->SetPosition(i * newObject->GetScale().X);
 
-					Rendering::Renderer::InstantiateObject(newObject);
+					Rendering::Renderer::InstantiateObject(Rendering::Renderer::InstantiateGameObject(newObject, false, 1, false));
 				}
 			}
 		}

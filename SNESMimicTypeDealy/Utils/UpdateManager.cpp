@@ -20,13 +20,13 @@ namespace GAME_NAME
 
 		}
 
-		int UpdateManager::RegisterUpdateable(IUpdateable* updateable)
+		UpdateIndex UpdateManager::RegisterUpdateable(IUpdateable* updateable)
 		{
 			m_updateables.push_back(updateable);
 			return m_updateables.size() - 1;
 		}
 
-		void UpdateManager::RemoveUpdateable(UpdateIndex index)
+		void UpdateManager::RemoveUpdateable(const UpdateIndex index)
 		{
 			m_updateables.erase(m_updateables.begin() + index);
 		}

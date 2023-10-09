@@ -31,10 +31,7 @@ namespace GAME_NAME
 			return m_spriteId;
 		}
 
-		std::string Sprite::ToString()
-		{
-			return "Sprite {" + std::to_string(this->m_spriteId) + "}";
-		}
+		
 
 	}
 }

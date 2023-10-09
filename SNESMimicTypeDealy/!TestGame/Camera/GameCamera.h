@@ -24,7 +24,17 @@ namespace GAME_NAME
 			/// </summary>
 			/// <param name="playerPos"></param>
 			void Update(Vec2 playerPos);
+
+			/// <summary>
+			/// If set true, the camera will lock to the player rather than using a smooth follow.
+			/// </summary>
+			/// <param name="followPlayerExact"></param>
+			inline void SetFollowPlayerExact(bool followPlayerExact)
+			{
+				m_followPlayerExact = followPlayerExact;
+			}
 		private:
+			bool m_followPlayerExact;
 		};
 	}
 }

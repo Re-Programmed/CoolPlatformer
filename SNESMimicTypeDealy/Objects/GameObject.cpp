@@ -70,7 +70,7 @@ namespace GAME_NAME
 
         void GameObject::Render(const Vec2 cameraPosition)
         {
-            m_sprite->Render(cameraPosition, m_position, m_scale, m_rotation);
+            m_sprite->Render(cameraPosition, m_position + (m_textureFlipped ? (m_scale * Vec2::OneX) : 0), m_scale * (m_textureFlipped ? Vec2::MinusOneX : 1), m_rotation);
         }
 
     }

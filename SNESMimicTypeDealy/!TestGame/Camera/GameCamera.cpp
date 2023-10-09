@@ -17,6 +17,11 @@ namespace GAME_NAME
 
 		void GameCamera::Update(Vec2 playerPos)
 		{
+			if (m_followPlayerExact)
+			{
+				SetPosition(Vec2(playerPos.X - HalfTResX, playerPos.Y - HalfTResY));
+			}
+
 			const double sdt = GAME_NAME::Utils::Time::GameTime::GetScaledDeltaTime();
 
 			Vec2 l = Vec2(std::lerp(m_position.X + HalfTResX, playerPos.X, CameraSpeed * sdt) - HalfTResX, std::lerp(m_position.Y + HalfTResY, playerPos.Y, CameraSpeed * sdt) - HalfTResY);

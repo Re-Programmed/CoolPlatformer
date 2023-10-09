@@ -49,7 +49,11 @@ namespace GAME_NAME
 
 		m_camera = m_gameCamera;
 
-		loadLevel("/town_1", LEVEL_DATA_ALL);
+		LoadLevel("/town_1", LEVEL_DATA_TEXTURES_BACKGROUND);
+
+		LoadLevel("/global_assets", LEVEL_DATA_TEXTURES_SPRITES);
+
+		LoadLevel("/town_1", (GAME_NAME::Game::Game::LEVEL_DATA)(LEVEL_DATA_TEXTURES_BACKGROUND xor LEVEL_DATA_ALL));
 
 		Mappings::LoadObjectsWithDefaultMapping("/town_1");
 		RenderFront = true;

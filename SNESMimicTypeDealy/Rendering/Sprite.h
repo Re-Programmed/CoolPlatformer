@@ -18,8 +18,13 @@ namespace GAME_NAME
 			Sprite(const unsigned int spriteId) : m_spriteId(spriteId) {};								//spriteId should be the sprites buffer id. Sprites are loaded based on their position in the sprites directory.
 			virtual void Render(const Vec2 cameraPosition, Vec2 position, Vec2 scale, float rotation = 0.f);	//Render should be called to render a sprite to the screen.
 
+#if _DEBUG
 			//DEBUG
-			inline std::string ToString();																//DEBUGGING
+			inline std::string ToString()																//DEBUGGING
+			{
+				return "Sprite {" + std::to_string(this->m_spriteId) + "}";
+			}
+#endif
 
 			static void SetResolution(Vec2 res);														//Sets the resolution scale of all sprites. This determines how to scale the sprites based on the resizing of the window. [Maintains scale no matter your resolution]
 

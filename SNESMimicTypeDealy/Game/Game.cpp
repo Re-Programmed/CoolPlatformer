@@ -9,7 +9,7 @@ namespace GAME_NAME
 {
 	namespace Game
 	{
-		void Game::loadLevel(const char* levelPath, LEVEL_DATA dataToLoad, bool reload)
+		void Game::LoadLevel(const char* levelPath, LEVEL_DATA dataToLoad, bool reload)
 		{
 			using namespace Resources;
 			using namespace Objects;

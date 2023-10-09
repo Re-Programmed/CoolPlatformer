@@ -46,12 +46,20 @@ namespace GAME_NAME
 			//delete[] m_textureColor;
 		}
 
-		void DynamicSprite::UpdateVertices(Vec2 verts[4])
+		void DynamicSprite::UpdateVertices(const Vec2 verts[4])
 		{
 			m_vertices[0] = verts[0];
 			m_vertices[1] = verts[1];
 			m_vertices[2] = verts[2];
 			m_vertices[3] = verts[3];
+		}
+
+		void DynamicSprite::UpdateTextureColor(const Vec4 textureColor[4])
+		{
+			m_textureColor[0] = textureColor[0];
+			m_textureColor[1] = textureColor[1];
+			m_textureColor[2] = textureColor[2];
+			m_textureColor[3] = textureColor[3];
 		}
 
 #pragma endregion

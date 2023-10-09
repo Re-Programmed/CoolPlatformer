@@ -12,14 +12,18 @@ namespace GAME_NAME
 
 		constexpr int levelSizeX = 30;
 		constexpr int levelSizeY = 5;
-		unsigned int spriteCount, bgCount;
+		unsigned int Renderer::spriteCount = 0, bgCount;
+
+		int Renderer::lastFileOff = -1;
 
 		Chunk Renderer::m_chunks[levelSizeX * levelSizeY];
 
 		std::vector<GameObject*> Renderer::m_activeGameObjects[MICRO_RENDER_LAYER_COUNT];
 		std::vector<GameObject*> Renderer::m_guiGameObjects[MICRO_GUI_LAYER_COUNT];
 
-		std::vector<GameObject*> Renderer::m_instantiations;
+		std::vector<GameObject*> Renderer::m_destroyQueue;
+
+		std::vector<Renderer::InstantiateGameObject> Renderer::m_instantiations;
 
 		GLuint Renderer::LoadSprite(const char* file)
 		{
@@ -30,14 +34,16 @@ namespace GAME_NAME
 		GLuint Renderer::LoadBG(const char* file)
 		{
 			///DEBUGGING
+#if _DEBUG
 			if (spriteCount > 0) { std::cout << "LOAD ALL BACKGROUND CONTENT BEFORE LOADING SPRITES." << std::endl; return NULL; }
+#endif
 			bgCount++;
 			return loadImage(file);
 		}
 
 		Sprite* const Renderer::GetSprite(const unsigned int spriteTexture)
 		{
-			return new Sprite(spriteTexture + bgCount);
+			return new Sprite(spriteTexture + bgCount + lastFileOff);
 		}
 
 		Sprite* const Renderer::getBackground(const unsigned int bgTexture)
@@ -45,8 +51,58 @@ namespace GAME_NAME
 			return new Sprite(bgTexture);
 		}
 
+		void Renderer::updateObjectQueues()
+		{
+			//Check if any obejects need to be created.
+			for (InstantiateGameObject obj : m_instantiations)
+			{
+				if (obj.Active)
+				{
+					LoadActiveObject(new GameObject(*obj.MyObject), obj.Layer);
+					delete obj.MyObject;
+					continue;
+				}
+
+				LoadObject(new GameObject(*obj.MyObject), obj.Layer, obj.Front);
+				delete obj.MyObject;
+			}
+
+			m_instantiations.clear();
+
+			//Check if any objects need to be destroyed.
+			for (GameObject* des : m_destroyQueue)
+			{
+				for (int cI = 0; cI < levelSizeX * levelSizeY; cI++)	//Loop over each chunk.
+				{
+					for (int i = 0; i < CHUNK_OBJECT_RENDER_LAYER_COUNT; i++)	//Loop over layers in each chunk.
+					{
+						int index = 0;
+						std::vector<GameObject*>* objs = &m_chunks[cI].GetObjects()[i];
+						for (GameObject* obj : *objs)	//Loop over objects in each layer.
+						{
+							if (obj == des)	//If obj (current object to check) and des (target to destroy) point to the same GameObject, delete it.
+							{
+								objs->erase(objs->begin() + index);	//Remove the object from the chunk.
+								goto foundDes;	//Break from loops apart from the destroyQueue loop.
+								break;
+							}
+							index++;
+						}
+
+						//delete objs;
+					}
+				}
+
+			foundDes:
+				continue;
+			}
+
+			m_destroyQueue.clear();
+		}
+
 		void Renderer::ClearTextures()
 		{
+			lastFileOff = -1;
 			for (unsigned int i = 0; i < spriteCount + bgCount; i++)
 			{
 				glDeleteTextures(1, (const GLuint*)i);
@@ -94,6 +150,7 @@ namespace GAME_NAME
 			}
 		}
 
+
 		void Renderer::LoadObjects(GameObject* objects[], const unsigned int size, uint8_t layer, bool front)
 		{
 			for (unsigned int i = 0; i < size; i++)
@@ -131,6 +188,10 @@ namespace GAME_NAME
 
 		void Renderer::Render(Camera::Camera* camera, Vec2* windowSize, RENDER_LAYER layer, GLFWwindow* window, float parallax)
 		{
+			//Update objects before rendering them.
+			updateObjectQueues();
+
+
 			Vec2 cameraPosition = camera->GetPosition() / parallax;
 
 			if (layer == RENDER_LAYER_GUI)

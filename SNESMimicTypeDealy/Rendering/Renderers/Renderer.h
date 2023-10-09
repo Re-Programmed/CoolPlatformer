@@ -46,6 +46,11 @@ namespace GAME_NAME
 			//Create a sprite from its texture.
 			static Sprite* const GetSprite(const unsigned int spriteTexture);
 
+			static inline unsigned int GetSpriteCount()
+			{
+				return spriteCount;
+			}
+
 			/// <summary>
 			/// Render is called every frame to draw everything to the screen.
 			/// </summary>
@@ -81,10 +86,26 @@ namespace GAME_NAME
 			/// <param name="objects"></param>
 			/// <param name="size"></param>
 			static void LoadObject(GameObject* object, uint8_t layer = 1, bool front = false);
+			
+			/// <summary>
+			/// Used for specifying params when instantiating an object.
+			/// </summary>
+			typedef struct InstantiateGameObject {
+				GameObject* MyObject; //The object to spawn.
+				const bool Active; //If it's an active object.
+				const int Layer; //The layer to load it on.
+				const bool Front; //If it's a front chunk object.
+			};
 
-			static inline void InstantiateObject(GameObject* object)
+			static inline void InstantiateObject(InstantiateGameObject object)
 			{
+
 				m_instantiations.push_back(object);
+			}
+
+			static inline void DestroyObject(GameObject* object)
+			{
+				m_destroyQueue.push_back(object);
 			}
 
 			static void LoadActiveObjects(GameObject* objects[], const unsigned int size, int layer = 1);
@@ -94,7 +115,31 @@ namespace GAME_NAME
 			/// Must be called before the creation of any objects.
 			/// </summary>
 			static void InitChunks(std::vector<int> chunkData);
+
+			/// <summary>
+			/// Sets a constant to add to all sprite texture indices. (For loading multiple levels at once. The last loaded level will always use positive indices with other levels having negative values.)
+			/// </summary>
+			/// <param name="fileOffset"></param>
+			inline static void SetLastFileOffset(int fileOffset)
+			{
+				lastFileOff = fileOffset;
+			}
+
+			/// <summary>
+			/// Returns the constant added to all sprite texture indices.
+			/// </summary>
+			/// <returns></returns>
+			inline static int GetLastFileOffest()
+			{
+				return lastFileOff;
+			}
 		private:
+			//A constant added to all sprite indices.
+			static int lastFileOff;
+
+			//The number of sprites loaded.
+			static unsigned int spriteCount;
+
 			/// <summary>
 			/// Loads a texture to a buffer.
 			/// </summary>
@@ -111,7 +156,14 @@ namespace GAME_NAME
 			static Chunk m_chunks[];
 			static Sprite* const getBackground(const unsigned int bgTexture);
 
-			static std::vector<GameObject*> m_instantiations;
+			static std::vector<GameObject*> m_destroyQueue;
+
+			static std::vector<InstantiateGameObject> m_instantiations;
+
+			/// <summary>
+			/// Destroys objects in the destroy queue and instantiates all the objects in m_instantiations.
+			/// </summary>
+			static void updateObjectQueues();
 
 		};
 
