@@ -12,6 +12,7 @@
 #define DebugHeader(x, y) { std::string s = x; DEBUG::DebugLog::LogPlain("------------------" + s + "------------------", y); }
 #endif
 
+
 namespace GAME_NAME
 {
 
@@ -45,16 +46,28 @@ namespace GAME_NAME
 				if (file.is_regular_file())
 				{
 #if _DEBUG
-					DEBUG::DebugLog::Log(file.path().string(), false, ";34;2");
+					GLuint myLoaded = 0;
 #endif
 					if (textureLoad == SPRITES || textureLoad == ALL_TEXTURES)
 					{
 						i++;
+#if _DEBUG
+						myLoaded = Rendering::Renderer::LoadSprite(file.path().string().c_str());
+#else
 						Rendering::Renderer::LoadSprite(file.path().string().c_str());
+#endif
 					}
 					else {
+#if _DEBUG
+						myLoaded = Rendering::Renderer::LoadBG(file.path().string().c_str());
+#else
 						Rendering::Renderer::LoadBG(file.path().string().c_str());
+#endif
 					}
+
+#if _DEBUG
+					DEBUG::DebugLog::Log(std::to_string(myLoaded) + ":: " + file.path().string(), false, ";34;2");
+#endif
 				}
 			}
 
@@ -174,6 +187,8 @@ namespace GAME_NAME
 
 			while (std::getline(ObjectFile, line, '\n'))
 			{
+				if (line.empty() || line.starts_with(";")) { continue; } //For line breaks or lines beginning with a ";" do nothing. (useful for comments etc.)
+
 				threads.push_back(new std::thread(loadObjectDataThread, line, mappings));
 				thCurr++;
 

@@ -19,7 +19,8 @@ namespace GAME_NAME
 		{
 			if (m_followPlayerExact)
 			{
-				SetPosition(Vec2(playerPos.X - HalfTResX, playerPos.Y - HalfTResY));
+				//SetPosition(Vec2(playerPos.X - HalfTResX, playerPos.Y - HalfTResY));
+				//return;
 			}
 
 			const double sdt = GAME_NAME::Utils::Time::GameTime::GetScaledDeltaTime();

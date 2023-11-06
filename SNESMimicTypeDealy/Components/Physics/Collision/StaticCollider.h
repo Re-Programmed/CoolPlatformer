@@ -15,6 +15,11 @@ namespace GAME_NAME
 
 				{
 				public:
+					StaticCollider()
+					{
+						OnCollision = nullptr;
+					};
+
 					int ID;
 
 					virtual void Update(GLFWwindow* window, Objects::GameObject* object) = 0;
@@ -28,8 +33,17 @@ namespace GAME_NAME
 						return m_object;
 					}
 
+					inline void SetOnCollision(bool(*onCollision)(GAME_NAME::MathUtils::Vec2 push, Objects::GameObject*, Objects::GameObject*))
+					{
+						OnCollision = onCollision;
+					}
+
+					//OnCollision is called when a collision occurs. It should return false if the collision occuring should be canceled. (push = how the object is being moved out of the collider.) (GameObject = this object)
+					bool(*OnCollision)(GAME_NAME::MathUtils::Vec2 push, Objects::GameObject*, Objects::GameObject*);
 				protected:
 					Objects::GameObject* m_object;
+
+
 				};
 			}
 		}

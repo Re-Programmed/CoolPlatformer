@@ -3,13 +3,14 @@
 #include "../Utils/Math/Vec2.h"
 #include "../Objects/GameObject.h"
 #include "../Components/IComponent.h"
-#include "./Mappings.h"
 #include "./Camera/GameCamera.h"
 #include "./Objects/Environment/CloudGenerator.h"
 #include "./Objects/Environment/BackgroundObjects.h"
 #include "../Settings/AppDataFileManager.h"
 #include "../Settings/SettingsGlobals.h"
 #include "../MusicSync/MusicSync.h"
+#include "./Objects/Platforms/RotatingPlatform.h"
+#include "./Mappings.h"
 
 #include <thread>
 
@@ -71,6 +72,8 @@ namespace GAME_NAME
 		ThePlayer = std::make_shared<Objects::Player::Player>(level.PlayerStartPosition);
 		Rendering::Renderer::LoadActiveObject(ThePlayer.get());
 		std::srand(ThePlayer->GetPosition().X + ThePlayer->GetPosition().Y + static_cast<int>(glfwGetTime()));
+
+
 		//Play Music
 
 		//Environment::CloudGenerator::GenerateClouds(50);

@@ -23,7 +23,7 @@ namespace GAME_NAME
 				if (m_currentAnimation == -1) { return; }
 				m_tick += GAME_NAME::Utils::Time::GameTime::GetScaledDeltaTime();
 
-				if (m_tick >= m_animations[m_currentAnimation]->GetSpeed())
+				if (m_tick * m_speedMult >= m_animations[m_currentAnimation]->GetSpeed())
 				{
 					m_animations[m_currentAnimation]->IncrementFrame(object);
 					m_tick = 0;
@@ -35,10 +35,7 @@ namespace GAME_NAME
 
 			}
 
-			inline void AnimatorComponent::SetCurrentAnimation(int8_t animation)
-			{
-				m_currentAnimation = animation;
-			}
+			
 
 			
 		}

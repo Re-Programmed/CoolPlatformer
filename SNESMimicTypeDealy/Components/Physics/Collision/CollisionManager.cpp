@@ -22,6 +22,7 @@ namespace GAME_NAME
 					for (ActiveCollider* activeCollider : m_activeColliders)
 					{
 						activeCollider->BeforeUpdate();
+						//Collision for active colliders w/ eachother:
 						/*for (ActiveCollider* activeCollider2 : m_activeColliders)
 						{
 							if (activeCollider != activeCollider2)

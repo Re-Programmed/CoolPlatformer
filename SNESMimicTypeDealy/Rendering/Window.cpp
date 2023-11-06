@@ -17,13 +17,23 @@ namespace GAME_NAME
 {
 	Vec2* lastWindowSize;
 
+
 	void windowSizeCallback(GLFWwindow* window, int width, int height)
 	{
-		glViewport(0, 0, width, height);
+		if (width == 0 || height == 0) {
+			return;
+		}
 
-		glMatrixMode(GL_PROJECTION);
-		glOrtho(0, width, 0, height, 0, 100);
-		glMatrixMode(GL_MODELVIEW);
+		float adjustedWindowW = (float)height * (FORCE_WINDOW_RATIO_X / FORCE_WINDOW_RATIO_Y);
+		float adjustedWindowH = (float)width * (FORCE_WINDOW_RATIO_Y / FORCE_WINDOW_RATIO_X);
+
+		if (lastWindowSize != nullptr && lastWindowSize->X != width)
+		{
+			glfwSetWindowSize(window, width, adjustedWindowH);
+		}
+		else {
+			glfwSetWindowSize(window, adjustedWindowW, height);
+		}
 
 		lastWindowSize = new Vec2(width, height);
 
@@ -79,7 +89,14 @@ namespace GAME_NAME
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+		glViewport(0, 0, width, height);
+
+		glMatrixMode(GL_PROJECTION);
+		glOrtho(0, width, 0, height, 0, 100);
+		glMatrixMode(GL_MODELVIEW);
+
 		windowSizeCallback(m_glWindow, width, height);
+		glfwSetWindowSizeLimits(m_glWindow, 200, 200, GLFW_DONT_CARE, GLFW_DONT_CARE);
 
 		//glMatrixMode(GL_PROJECTION);
 		//glOrtho(0, width, 0, height, 0, 100);
@@ -107,6 +124,7 @@ namespace GAME_NAME
 		glfwDestroyWindow(this->m_glWindow);
 	}
 
+
 	void Window::Render()
 	{
 		update();
@@ -133,16 +151,22 @@ namespace GAME_NAME
 		lateUpdate();
 	}
 
-
-
 	void Window::SetFullscreen(bool fullscreen)
 	{
 		this->m_fullscreen = fullscreen;
 
-		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-		glfwSetWindowMonitor(m_glWindow, fullscreen ? glfwGetPrimaryMonitor() : NULL, 0, 0, mode->width, mode->height, mode->refreshRate);
+		int count;
+		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetMonitors(&count)[count - 1] /*Change later to choose a monitor.*/);
+		int mWidth, mHeight, mPosX, mPosY;
+		int wWidth = mode->width - INITIAL_WINDOW_FULLSCREEN_OFF_PADDING_X;
+		int wHeight = mode->height - INITIAL_WINDOW_FULLSCREEN_OFF_PADDING_Y;
+		glfwGetMonitorWorkarea(glfwGetMonitors(&count)[count - 1] /*Change later to choose a monitor.*/, &mPosX, &mPosY, &mWidth, &mHeight);
+		glfwSetWindowMonitor(m_glWindow, fullscreen ? glfwGetMonitors(&count)[count - 1] : NULL, mWidth/2 - wWidth/2 + mPosX, mHeight/2 - wHeight/2 + mPosY + INITIAL_WINDOW_FULLSCREEN_OFF_OFFSET_Y, wWidth, wHeight, mode->refreshRate);
 
 		windowSizeCallback(m_glWindow, mode->width, mode->height);
+
+		glfwSetWindowAttrib(m_glWindow, GLFW_RESIZABLE, m_fullscreen ? GLFW_FALSE : GLFW_TRUE);
+
 	}
 
 	void Window::SetClearColor(Color color)
@@ -150,9 +174,23 @@ namespace GAME_NAME
 		glClearColor(color.X, color.Y, color.Z, color.W);
 	}
 
-
+	bool F11press = false;
 	void Window::update()
 	{
+		if (glfwGetKey(m_glWindow, GLFW_KEY_F11))
+		{
+			if (!F11press)
+			{
+				std::cout << "UPDATING" << std::endl;
+				F11press = true;
+
+				SetFullscreen(!this->m_fullscreen);
+			}
+		}
+		else {
+			F11press = false;
+		}
+
 		GAME_NAME::Utils::UpdateManager::Update(m_glWindow);
 	}
 

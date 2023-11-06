@@ -1,6 +1,10 @@
 #include "../StaticBoxCollider.h"
 #include "../CollisionManager.h"
 
+#ifndef _STATIC_BOX_COLLISION_OBJECT
+#define _STATIC_BOX_COLLISION_OBJECT
+
+
 namespace GAME_NAME
 {
 	namespace Components
@@ -31,6 +35,11 @@ namespace GAME_NAME
 						CollisionManager::RegisterStaticColliderToBuffer(m_boxCollider);
 					}
 
+					inline void SetOnCollision(bool(*onCollision)(Vec2, Objects::GameObject*, Objects::GameObject*))
+					{
+						m_boxCollider->SetOnCollision(onCollision);
+					}
+
 				private:
 					StaticBoxCollider* const m_boxCollider;
 				};
@@ -38,3 +47,5 @@ namespace GAME_NAME
 		}
 	}
 }
+
+#endif

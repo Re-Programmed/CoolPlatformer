@@ -6,6 +6,7 @@
 #include "../Components/Physics/Collision/ActiveBoxCollider.h"
 #include "../!TestGame/Objects/Environment/Water.h"
 #include "../!TestGame/Objects/Environment/BGParallax.h"
+#include "../!TestGame/Objects/Platforms/RotatingPlatform.h"
 
 #if _DEBUG
 #include "../Debug/DebugLog.h"
@@ -61,7 +62,7 @@ std::function<void (std::vector<std::string>)> Mappings::m_mappings[MAPPINGS_SIZ
 #if _DEBUG
 		DebugMapper(">>> Loading Basic Object");
 #endif
-		Renderer::LoadObject(new Objects::GameObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4]))));
+		Renderer::LoadObject(new Objects::GameObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4]))), (data.size() > 5) ? std::stoi(data[5]) : 1U);
 	},
 
 	//Component Object
@@ -163,7 +164,25 @@ std::function<void (std::vector<std::string>)> Mappings::m_mappings[MAPPINGS_SIZ
 		DebugMapper(">>> Loading ParallaxBGObject");
 #endif
 		Renderer::LoadActiveObject(new GAME_NAME::Objects::Environment::BGParallax(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), static_cast<float>(std::stoi(data[5])/100.f)), 0);
-	}
+	},
+
+	/*
+		7: Rotating Platform (map,layer,positionX,positionY,scaleX,scaleY,sprite,originX,originY,speed*10,offset*pi/6)
+		- A platform that rotates about a fixed point.
+	*/
+		[](std::vector<std::string> data) {
+#if _DEBUG
+		DebugMapper(">>> Loading RotatingPlatform");
+#endif
+		Renderer::LoadObject(new GAME_NAME::Objects::Platforms::RotatingPlatform(
+			STOIVEC(data[1], data[2]),								//positionX,positionY
+			STOIVEC(data[3], data[4]),								//scaleX,scaleY
+			Renderer::GetSprite(std::stoi(data[5])),				//sprite
+			STOIVEC(data[6], data[7]),								//originX,originY
+			static_cast<double>(std::stoi(data[8]) / 10.0),			//speed*10
+			M_PI * static_cast<double>(std::stoi(data[9]) / 6.0)	//offset * pi/6
+			), std::stoi(data[0]));									//layer
+		}
 };
 
 void GAME_NAME::Mappings::LoadObjectsWithDefaultMapping(const char* levelPath)

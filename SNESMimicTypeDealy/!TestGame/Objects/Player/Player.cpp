@@ -35,15 +35,21 @@ namespace  GAME_NAME
 				Audio::SoundManager::WaterMusic = Audio::SoundManager::Play(Audio::UnderwaterMusicID, Audio::SoundManager::BGMusic, -1.0F, 0.0F, true);
 				
 				
-				//ANIMATIONS
+#pragma region Init Run Animation
 				AnimData data;	
-				//data.Sprites.push_back(Renderer::GetSprite(DefaultPlayerSprite));			//TEST ANIM
-				//data.Sprites.push_back(Renderer::GetSprite(DefaultPlayerSprite + 1));
-				//std::shared_ptr<GAME_NAME::Components::Animation::Animation> anim(new GAME_NAME::Components::Animation::Animation(data, 0.5f));
 
-				std::vector<std::shared_ptr<GAME_NAME::Components::Animation::Animation>> anims{ };
+				for (int i : PlayerRunAnim)
+				{
+					data.Sprites.push_back(Renderer::GetSprite(i));
+				}
+
+				std::shared_ptr<GAME_NAME::Components::Animation::Animation> run_anim(new GAME_NAME::Components::Animation::Animation(data, 0.083f));
+#pragma endregion
+
+				std::vector<std::shared_ptr<GAME_NAME::Components::Animation::Animation>> anims{ run_anim };
 
 				m_animator = new AnimatorComponent(anims);
+
 				m_physics->SetGravityStrength(DefaultPlayerGravity);
 
 			}
@@ -248,6 +254,28 @@ namespace  GAME_NAME
 						m_textureFlipped = false;
 					}
 				}
+
+				//Determines what animation to play currently. (Move to seperate function.)
+#pragma region AnimationCheck
+				{
+					float anim_momentum = std::abs(m_physics->GetVelocity().X);	//X Speed of player.
+					if (anim_momentum > 0.1f)	//Check if player is moving a certain speed.
+					{
+						m_animator->SetSpeedMult(anim_momentum / 100.f);
+						m_animator->SetCurrentAnimation(0);  //Running Animation
+						m_begunMotion = true;
+					}
+					else {
+						if (m_begunMotion)
+						{
+							m_animator->SetCurrentAnimation(-1); //No Animation
+							m_sprite = Renderer::GetSprite(DefaultPlayerSprite);
+							m_begunMotion = false;
+						}
+					
+					}
+				}
+#pragma endregion
 
 #if _DEBUG
 				if (m_debug)

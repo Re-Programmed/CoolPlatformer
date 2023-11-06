@@ -28,7 +28,13 @@ namespace GAME_NAME
 
 				Vec2 GetPosition();
 				void SetPosition(Vec2 pos);
-
+				/// <summary>
+				/// Returns the global position of an object that should be rendered as a UI element relative to the camera. 
+				/// (UI Positions are [-1, 1])
+				/// </summary>
+				/// <param name="pos"></param>
+				/// <returns></returns>
+				Vec2 UIToGlobal(Vec2 pos);
 			
 
 				float GetZoom();

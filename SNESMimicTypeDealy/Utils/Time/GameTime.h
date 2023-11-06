@@ -4,39 +4,39 @@
 #include <functional>
 #include "../IUpdateable.h"
 
-namespace GAME_NAME
+#ifndef _GAME_TIME_DEF
+#define _GAME_TIME_DEF
+
+namespace GAME_NAME::Utils::Time
 {
-	namespace Utils
+	//Used for getting the amount of time that has passed in each frame, and the time scale that can be used to slow down everything.
+	class GameTime : public IUpdateable
 	{
-		namespace Time
+	public:
+
+		class DeltaTime	//Multiply DeltaTime by all your variables that deal with things not reliant on frame rate.
 		{
-			//Used for getting the amount of time that has passed in each frame, and the time scale that can be used to slow down everything.
-			static class GameTime : public IUpdateable
-			{
-			public:
-				
-				static class DeltaTime	//Multiply DeltaTime by all your variables that deal with input to prevent weird stuff.
-				{
-				public:
-					static void Update();
-					static double GetDeltaTime();
-				private:
-					static double m_deltaTime;
-					static double m_previousTime;
+		public:
+			static void Update();
+			static double GetDeltaTime();
+		private:
+			static double m_deltaTime;
+			static double m_previousTime;
 
-				};
+		};
 
-				static double GetScaledDeltaTime();
+		static double GetScaledDeltaTime();
 
-				static float GetTimeScale();
-				static void SetTimeScale(float timeScale);
+		static float GetTimeScale();
+		static void SetTimeScale(float timeScale);
 
-				void Update(GLFWwindow* window);
-			private:
-				static float m_timeScale;
+		static double GetElapsedTime();
 
-				
-			};
-		}
-	}
+		void Update(GLFWwindow* window);
+	private:
+		static float m_timeScale;
+	};
 }
+
+
+#endif

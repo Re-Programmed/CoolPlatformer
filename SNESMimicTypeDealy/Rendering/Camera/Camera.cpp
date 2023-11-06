@@ -33,6 +33,11 @@ namespace GAME_NAME
 			}
 
 		
+			Vec2 Camera::UIToGlobal(Vec2 pos)
+			{
+				return m_position + (pos * m_zoom);
+			}
+
 			float Camera::GetZoom()
 			{
 				return m_zoom;

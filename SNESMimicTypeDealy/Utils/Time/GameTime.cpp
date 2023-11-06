@@ -46,6 +46,11 @@ namespace GAME_NAME
 				m_timeScale = timeScale;
 			}
 
+			double GameTime::GetElapsedTime()
+			{
+				return glfwGetTime();
+			}
+
 			void GameTime::Update(GLFWwindow* window)
 			{
 				DeltaTime::Update();

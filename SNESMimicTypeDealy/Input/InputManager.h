@@ -4,10 +4,11 @@
 //#include "../Rendering/Window.h"
 #include "../Utils/Math/Vec2.h"
 #include "../Rendering/Camera/Camera.h"
+#include "../Rendering/Sprite.h"
 
 ///How many inputs to check for
 #if _DEBUG
-#define KEY_ARRAY_SIZE 7
+#define KEY_ARRAY_SIZE 8
 #else
 #define KEY_ARRAY_SIZE 5
 #endif
@@ -29,7 +30,8 @@ namespace GAME_NAME
 
 #if _DEBUG
 		PLAYER_DEBUG,				//Player Enter Debug Mode [P]
-		DEBUG_EDITOR_SELECT			//Select an object in the editor [V]
+		DEBUG_EDITOR_SELECT,		//Select an object in the editor [V]
+		DEBUG_OBJECT_MENU			//Open the object menu [Tab]
 #endif
 	};
 

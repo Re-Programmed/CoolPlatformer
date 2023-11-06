@@ -159,6 +159,21 @@
     <ClCompile Include="Debug\LevelBuilder\LevelBuilder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Objects\GUI\GUIButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\GUI\GUIManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="!TestGame\Objects\Platforms\RotatingPlatform.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="!TestGame\Objects\Platforms\RotatingPlatform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Physics\Collision\Helpers\BasicMovingPlatform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glad\include\glad\glad.h">
@@ -327,6 +342,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Debug\LevelBuilder\LevelBuilder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\GUI\GUIButton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\GUI\GUIManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug\LevelBuilder\SpawnObjects.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Physics\Collision\Helpers\BasicMovingPlatform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

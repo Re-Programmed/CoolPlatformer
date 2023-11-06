@@ -9,15 +9,7 @@ namespace GAME_NAME
 			
 			void StaticGUIElement::Render()
 			{
-				glBindTexture(GL_TEXTURE_2D, m_texture);
-
-				glLoadIdentity();
-				glTranslatef(m_position.X, m_position.Y, 0.f);
-				glScalef(m_scale.X, m_scale.Y, 1.f);
-
-				//Texture coords somehow for masking
-
-				glDrawArrays(GL_QUADS, 0, 4);
+				m_sprite->Render(Vec2::Zero, m_position, m_scale, 0.0f);
 			}
 			
 		}

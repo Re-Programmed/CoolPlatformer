@@ -92,11 +92,11 @@ namespace GAME_NAME
 			}
 
 			/// <summary>
-			/// Uses sqrt, use limitedly.
+			/// Calculate distance.
 			/// </summary>
-			/// <param name="a"></param>
-			/// <param name="b"></param>
-			/// <returns></returns>
+			/// <param name="a">Vec2 1</param>
+			/// <param name="b">Vec2 2</param>
+			/// <returns>The distance between a and b.</returns>
 			static float Distance(Vec2 a, Vec2 b);
 
 		private:

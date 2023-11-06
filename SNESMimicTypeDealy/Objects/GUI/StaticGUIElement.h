@@ -1,6 +1,7 @@
 #pragma once
 #include "../../Utils/Math/Vec2.h"
 #include "../../Rendering/Sprite.h"
+#include "../../Rendering/Renderers/Renderer.h"
 #include "IGUIElement.h"
 
 namespace GAME_NAME
@@ -18,7 +19,7 @@ namespace GAME_NAME
 			{
 			public:
 				StaticGUIElement(Vec2 position, Vec2 scale, GLuint texture)
-					:m_position(position), m_scale(scale), m_texture(texture)
+					:m_position(position), m_scale(scale), m_sprite(Renderer::GetSprite(texture))
 				{
 					
 				}
@@ -46,14 +47,14 @@ namespace GAME_NAME
 					return m_scale;
 				}
 
-				inline void SetTexture(GLuint texture)
+				inline void SetSprite(Sprite* sprite)
 				{
-					m_texture = texture;
+					m_sprite = sprite;
 				}
 
-				inline GLuint GetTexture()
+				inline Sprite* GetSprite()
 				{
-					return m_texture;
+					return m_sprite;
 				}
 #pragma endregion
 
@@ -65,7 +66,7 @@ namespace GAME_NAME
 			private:
 				Vec2 m_position;
 				Vec2 m_scale;
-				GLuint m_texture;
+				Rendering::Sprite* m_sprite;
 			};
 		}
 	}

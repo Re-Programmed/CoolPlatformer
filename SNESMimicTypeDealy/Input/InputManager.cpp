@@ -37,7 +37,6 @@ namespace GAME_NAME
 
 	MathUtils::Vec2 InputManager::GetMousePosition()
 	{
-		
 		double x, y;
 		glfwGetCursorPos(m_window, &x, &y);
 		return MathUtils::Vec2(x, y);
@@ -47,14 +46,11 @@ namespace GAME_NAME
 	MathUtils::Vec2 InputManager::GetMouseWorldPosition(Rendering::Camera::Camera* camera)
 	{
 		MathUtils::Vec2 screenCoords = GetMousePosition();
-		
-		int windowWidth, windowHeight;
-		glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
-
-		MathUtils::Vec2 normalizedScreenCoords = MathUtils::Vec2((screenCoords.X / windowWidth) - 0.5, -(screenCoords.Y / windowHeight) + 0.5);
-
-		MathUtils::Vec2 cameraPos = camera->GetPosition();
-		return MathUtils::Vec2(cameraPos.X + camera->GetZoom() * normalizedScreenCoords.X, cameraPos.Y + camera->GetZoom() * normalizedScreenCoords.Y);
+		int wWidth, wHeight;
+		glfwGetWindowSize(m_window, &wWidth, &wHeight);
+		MathUtils::Vec2 normalizedScreenCoords = MathUtils::Vec2(screenCoords.X / wWidth, 1 - (screenCoords.Y) / wHeight);
+	
+		return MathUtils::Vec2(TargetResolutionX * normalizedScreenCoords.X, TargetResolutionY * normalizedScreenCoords.Y) + camera->GetPosition();
 	}
 
 	void InputManager::loadDefaultKeys()
@@ -70,6 +66,8 @@ namespace GAME_NAME
 		m_keys[PLAYER_DEBUG] = GLFW_KEY_P;
 
 		m_keys[DEBUG_EDITOR_SELECT] = GLFW_KEY_V;
+
+		m_keys[DEBUG_OBJECT_MENU] = GLFW_KEY_TAB;
 #endif
 	}
 }

@@ -11,7 +11,10 @@
 constexpr float DefaultPlayerScaleX = 16.f;	//The default size for the player.
 constexpr float DefaultPlayerScaleY = 26.f;	//The default size for the player.
 
-constexpr int DefaultPlayerSprite = 0;		//The default sprite to use for the player.
+constexpr int DefaultPlayerSprite = GLOBAL_SPRITE_BASE;		//The default sprite to use for the player.
+constexpr int PlayerRunAnim[8] = {
+	SpriteBase(1), SpriteBase(2), SpriteBase(3), SpriteBase(2), SpriteBase(1), SpriteBase(4), SpriteBase(5), SpriteBase(4)
+};
 
 constexpr float PlayerSpeed = .04f;			//The amount of velocity to add for each frame the player is moving.
 constexpr float PlayerSpeedCap = 200.f;		//The maximum amount of velocity the player can accelerate at (ignoring gravity).
@@ -57,6 +60,7 @@ namespace  GAME_NAME
 				bool m_foundCollisionInTick = false;	//Used for checking when the player leaves the ground.
 				bool m_swimming = false;				//If the player is swimming.
 				int m_jumpHeld = 0;						//Used for determining how many frames the jump button has been held after the player jumps.
+				bool m_begunMotion = false;				//Used for animation checks.
 
 				AnimatorComponent* m_animator;			//Animator for walking, jumping, etc.
 

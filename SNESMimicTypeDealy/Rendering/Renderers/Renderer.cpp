@@ -19,7 +19,7 @@ namespace GAME_NAME
 		Chunk Renderer::m_chunks[levelSizeX * levelSizeY];
 
 		std::vector<GameObject*> Renderer::m_activeGameObjects[MICRO_RENDER_LAYER_COUNT];
-		std::vector<GameObject*> Renderer::m_guiGameObjects[MICRO_GUI_LAYER_COUNT];
+		std::vector<GUI::IGUIElement*> Renderer::m_guiGameObjects[MICRO_GUI_LAYER_COUNT];
 
 		std::vector<GameObject*> Renderer::m_destroyQueue;
 
@@ -46,6 +46,11 @@ namespace GAME_NAME
 			return new Sprite(spriteTexture + bgCount + lastFileOff);
 		}
 
+		DynamicSprite* const Renderer::GetDynamicSprite(const unsigned int spriteTexture)
+		{
+			return new DynamicSprite(spriteTexture + bgCount + lastFileOff);
+		}
+
 		Sprite* const Renderer::getBackground(const unsigned int bgTexture)
 		{
 			return new Sprite(bgTexture);
@@ -58,13 +63,13 @@ namespace GAME_NAME
 			{
 				if (obj.Active)
 				{
-					LoadActiveObject(new GameObject(*obj.MyObject), obj.Layer);
-					delete obj.MyObject;
+					LoadActiveObject(obj.MyObject, obj.Layer);
+					//delete obj.MyObject;
 					continue;
 				}
 
-				LoadObject(new GameObject(*obj.MyObject), obj.Layer, obj.Front);
-				delete obj.MyObject;
+				LoadObject(obj.MyObject, obj.Layer, obj.Front);
+				//delete obj.MyObject;
 			}
 
 			m_instantiations.clear();
@@ -192,20 +197,21 @@ namespace GAME_NAME
 			updateObjectQueues();
 
 
-			Vec2 cameraPosition = camera->GetPosition() / parallax;
 
 			if (layer == RENDER_LAYER_GUI)
 			{
 				for (uint8_t currLayer = 0; currLayer < MICRO_GUI_LAYER_COUNT; currLayer++)
 				{
-					for (GameObject* guiObject : m_guiGameObjects[currLayer])
+					for (GUI::IGUIElement* guiObject : m_guiGameObjects[currLayer])
 					{
-						guiObject->Render(camera->GetPosition());
+						guiObject->Render();
 					}
 				}
 
 				return;
 			}
+
+			Vec2 cameraPosition = camera->GetPosition() / parallax;
 
 			constexpr unsigned int cameraBoundsPadding = chunkSize;
 
@@ -250,8 +256,8 @@ namespace GAME_NAME
 			for (int i = iterInit; i < iterEnd; i++)
 			{
 				//Check if a chunk is within the bounding box of the camera. (MAY NEED BUGFIXED FOR WHEN CAMERA CHANGES ZOOM!!!!!)
-				if (m_chunks[i].GetPosition().Y < cameraTopEdge)
-				{
+				//if (m_chunks[i].GetPosition().Y < cameraTopEdge)
+				//{
 					//Render a chunk if it is in the cameras bounding box.
 					m_chunks[i].Render(cameraPosition, chunkSize, layer, window);
 
@@ -263,12 +269,12 @@ namespace GAME_NAME
 						i += cameraChunkPosition.GetY();
 					}
 
-				}
-				else
-				{
+				//}
+				//else
+				//{
 					//If we tried to render a chunk and failed, skip this entire column.
-					i += cameraChunkPosition.GetY() + (levelSizeY - 1) - i % levelSizeY;
-				}
+				//	i += cameraChunkPosition.GetY() + (levelSizeY - 1) - i % levelSizeY;
+				//}
 			}
 
 			if (layer == RENDER_LAYER_BG)

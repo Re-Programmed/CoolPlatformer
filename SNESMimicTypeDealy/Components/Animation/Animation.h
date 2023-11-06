@@ -24,8 +24,8 @@ namespace GAME_NAME
 			class Animation
 			{
 			public:
-				Animation(AnimData data, const float fps)	//AnimData should contain a list of sprites for the animation, fps is how many times the frame should increment per second.
-					: m_data(data), m_speed(fps)
+				Animation(AnimData data, const float spf)	//AnimData should contain a list of sprites for the animation, spf is how many seconds pass between each frame.
+					: m_data(data), m_speed(spf)
 				{
 					
 				}
@@ -38,6 +38,7 @@ namespace GAME_NAME
 					{
 						m_currentFrame = 0;
 					}
+					std::cout << m_data.Sprites[m_currentFrame]->GetSpriteId() << std::endl;
 					object->SetSprite(m_data.Sprites[m_currentFrame]);
 				}
 
@@ -52,13 +53,13 @@ namespace GAME_NAME
 					m_data.Sprites[m_currentFrame];
 				}
 
-				const float GetSpeed()								//Returns the FPS of the animation.
+				const float GetSpeed()								//Returns the SPF of the animation.
 				{
 					return m_speed;
 				}
 
 			private:
-				const float m_speed;	//The FPS of the animation.
+				const float m_speed;	//The SPF of the animation.
 				const AnimData m_data;	//The sprites in the animation.
 
 				int m_currentFrame;		//The current frame of animation.

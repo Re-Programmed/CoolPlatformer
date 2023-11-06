@@ -10,6 +10,13 @@
 
 namespace GAME_NAME
 {
+#define INITIAL_WINDOW_FULLSCREEN_OFF_PADDING_X 50
+#define INITIAL_WINDOW_FULLSCREEN_OFF_PADDING_Y 85
+#define INITIAL_WINDOW_FULLSCREEN_OFF_OFFSET_Y 10
+
+#define FORCE_WINDOW_RATIO_X 16.f
+#define FORCE_WINDOW_RATIO_Y 9.f
+
 	using namespace Rendering;
 	using namespace MathUtils;
 
@@ -43,6 +50,8 @@ namespace GAME_NAME
 
 
 	private:
+
+
 		GAME_NAME::Game::Game* const m_game;	//The current game.
 
 		GLFWwindow* m_glWindow;					//The current GLFW window.

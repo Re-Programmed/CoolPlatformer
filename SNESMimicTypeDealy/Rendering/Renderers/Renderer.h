@@ -7,6 +7,10 @@
 #include "../Camera/Camera.h"
 #include "../../Utils/Math/iVec2.h"
 #include "../../Objects/GUI/IGUIElement.h"
+#include "../DynamicSprite.h"
+
+#define GLOBAL_SPRITE_BASE -6	//Represents the negative number of sprites in the global_sprites directory.
+#define SpriteBase(x) (GLOBAL_SPRITE_BASE+x)  //Returns the offset of a sprite from the sprite base.
 
 namespace GAME_NAME
 {
@@ -45,6 +49,7 @@ namespace GAME_NAME
 
 			//Create a sprite from its texture.
 			static Sprite* const GetSprite(const unsigned int spriteTexture);
+			static DynamicSprite* const GetDynamicSprite(const unsigned int spriteTexture);
 
 			static inline unsigned int GetSpriteCount()
 			{
@@ -88,18 +93,19 @@ namespace GAME_NAME
 			static void LoadObject(GameObject* object, uint8_t layer = 1, bool front = false);
 			
 			/// <summary>
-			/// Used for specifying params when instantiating an object.
+			/// Used for specifying params when instantiating an object. (GameObject*, bool Active, int Layer, bool Front)
 			/// </summary>
 			typedef struct InstantiateGameObject {
 				GameObject* MyObject; //The object to spawn.
 				const bool Active; //If it's an active object.
 				const int Layer; //The layer to load it on.
 				const bool Front; //If it's a front chunk object.
+
+				InstantiateGameObject(GameObject* myObject, bool active, int layer, bool front) : MyObject(myObject), Active(active), Layer(layer), Front(front) { }
 			};
 
 			static inline void InstantiateObject(InstantiateGameObject object)
 			{
-
 				m_instantiations.push_back(object);
 			}
 
@@ -110,6 +116,11 @@ namespace GAME_NAME
 
 			static void LoadActiveObjects(GameObject* objects[], const unsigned int size, int layer = 1);
 			static void LoadActiveObject(GameObject* object, int layer = 1);
+
+			static inline void LoadGUIElement(GUI::IGUIElement* element, int layer = 1)
+			{
+				m_guiGameObjects[layer].push_back(element);
+			}
 
 			/// <summary>
 			/// Must be called before the creation of any objects.
@@ -151,7 +162,7 @@ namespace GAME_NAME
 			/// </summary>
 			static std::vector<GameObject*> m_activeGameObjects[MICRO_RENDER_LAYER_COUNT];
 
-			static std::vector<GameObject*> m_guiGameObjects[MICRO_GUI_LAYER_COUNT];
+			static std::vector<GUI::IGUIElement*> m_guiGameObjects[MICRO_GUI_LAYER_COUNT];
 
 			static Chunk m_chunks[];
 			static Sprite* const getBackground(const unsigned int bgTexture);

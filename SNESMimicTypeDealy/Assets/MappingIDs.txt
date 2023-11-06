@@ -1,6 +1,6 @@
 --OBJECT MAPS--
 
-0: Default object (map,positionX,positionY,scaleX,scaleY,sprite)
+0: Default object (map,positionX,positionY,scaleX,scaleY,sprite, [OPTIONAL = 1]layer)
     - An object with no attributes.
 
 1: Component object (map,positionX,positionY,scaleX,scaleY,sprite,[component1|componentMapArg1|componentMapArg2...])
@@ -20,6 +20,9 @@
 
 6: BGParallaxObject (map,positionX,positionY,scaleX,scaleY,sprite,parallax * 100)
     - A parallaxing sprite. (The parallax param should be an integer 100 times the expected parallax)
+
+7: Rotating Platform (map,layer,positionX,positionY,scaleX,scaleY,sprite,originX,originY,speed * 10, offset * pi/6)
+    - A platform that rotates about a fixed point.
 
 --COMPONENT MAPS--
 

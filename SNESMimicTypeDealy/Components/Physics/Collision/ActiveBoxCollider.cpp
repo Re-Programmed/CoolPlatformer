@@ -23,8 +23,19 @@ namespace GAME_NAME
 						Vec2 push = Vec2::Zero;
 						if (Utils::CollisionDetection::BoxWithinBox(m_object->GetPosition(), m_object->GetScale(), collider->GetObject()->GetPosition(), collider->GetObject()->GetScale(), push))
 						{
+							//Check if the static collider has anything that needs to happen when it collides.
+							if (collider->OnCollision != nullptr)
+							{
+								if (!(collider->OnCollision)(push, collider->GetObject(), m_object))
+								{
+									return;
+								}
+							}
+
+							//Push the objects apart.
 							m_object->Translate(push);
 
+							//Check if the active collider has anything that needs to happen when it collides.
 							if (m_onCollision != nullptr)
 							{
 								(m_onCollision)(push, m_object);
@@ -74,6 +85,10 @@ namespace GAME_NAME
 							if (m_onCollision != nullptr)
 							{
 								(m_onCollision)(push, m_object);
+							}
+
+							if (collider->OnCollision != nullptr) {
+								(collider->OnCollision)(push, collider->GetObject(), m_object);
 							}
 						}
 					}

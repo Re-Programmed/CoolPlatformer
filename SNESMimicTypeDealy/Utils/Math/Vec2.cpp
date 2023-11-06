@@ -1,11 +1,5 @@
 #include "Vec2.h"
 #include <algorithm>
-
-/*
-	LOL REMEMBER POSITIONS ARE BY BOTTOM LEFT CORNER!!!!!!
-	NOT CENTER BC EASIER 4 MATH AND LAZINESS.
-*/
-
 //#define Vec2Zero() (Vec2::Zero)
 
 namespace GAME_NAME
