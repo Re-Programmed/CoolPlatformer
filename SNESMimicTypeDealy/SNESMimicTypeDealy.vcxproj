@@ -157,7 +157,9 @@
     <ClCompile Include="Components\Physics\Collision\StaticBoxCollider.cpp" />
     <ClCompile Include="Components\Physics\GravityComponent.cpp" />
     <ClCompile Include="Components\Physics\PhysicsComponent.cpp" />
-    <ClCompile Include="Debug\LevelBuilder\LevelBuilder.cpp" />
+    <ClCompile Include="Debug\LevelBuilder\LevelBuilder.cpp">
+      <DeploymentContent>false</DeploymentContent>
+    </ClCompile>
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Input\InputManager.cpp" />
     <ClCompile Include="MusicSync\MusicSync.cpp" />
@@ -214,8 +216,12 @@
     <ClInclude Include="Components\Physics\GravityComponent.h" />
     <ClInclude Include="Components\Physics\PhysicsComponent.h" />
     <ClInclude Include="Debug\DebugLog.h" />
-    <ClInclude Include="Debug\LevelBuilder\LevelBuilder.h" />
-    <ClInclude Include="Debug\LevelBuilder\SpawnObjects.h" />
+    <ClInclude Include="Debug\LevelBuilder\LevelBuilder.h">
+      <DeploymentContent>false</DeploymentContent>
+    </ClInclude>
+    <ClInclude Include="Debug\LevelBuilder\SpawnObjects.h">
+      <DeploymentContent>false</DeploymentContent>
+    </ClInclude>
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Game\Level.h" />
     <ClInclude Include="Input\InputManager.h" />
