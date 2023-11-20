@@ -45,6 +45,16 @@ namespace GAME_NAME
 			}
 
 			/// <summary>
+			/// Returns the fraction of time elapsed between the beat for every value of beats and the next beat.
+			/// </summary>
+			/// <returns></returns>
+			static inline double GetElapsedTimeWithinBeats(int beats)
+			{
+				if (m_SPB == 0 || beats == 0) { return 0; }
+				return (m_beatCounter / m_SPB + (m_currentBeat % beats))/beats;
+			}
+
+			/// <summary>
 			/// Get beats per measure.
 			/// </summary>
 			/// <returns>Beats Per Measure</returns>
@@ -83,6 +93,7 @@ namespace GAME_NAME
 
 				m_songPosition.sp_beat = 0;
 				m_songPosition.sp_measure = 0;
+				m_currentBeat = 0;
 			}
 		private:
 			static std::vector<void(*)(SongPosition songPosition)> m_subscribers;	//Functions to be updated each frame.
@@ -90,6 +101,8 @@ namespace GAME_NAME
 
 			static double m_SPB;									//Seconds Per Beat
 			static char m_BPMeasure;								//Beats Per Measure
+
+			static short int m_currentBeat;							//Total current beats that have occured the song.
 
 			static SongPosition m_songPosition;						//Current position in the current song.
 		};

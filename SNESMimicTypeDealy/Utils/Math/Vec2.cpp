@@ -51,5 +51,6 @@ namespace GAME_NAME
 
 			return sqrt(aDist * aDist + bDist * bDist);
 		}
+
 	}
 }

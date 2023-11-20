@@ -12,6 +12,14 @@ namespace GAME_NAME
 	{
 		namespace Levels
 		{
+			/// <summary>
+			/// name
+			/// world
+			/// level
+			/// song
+			/// playerX
+			/// playerY
+			/// </summary>
 			const std::function<void(std::string,Game::Level&)> LevelDataParser::m_ops[LevelDataSize] {
 					[](std::string title,Game::Level& level) { level.Name = title; },
 					[](std::string id,Game::Level& level) { level.ID.World = std::stoi(id); },
@@ -29,7 +37,38 @@ namespace GAME_NAME
 					},
 
 					[](std::string playerX,Game::Level& level) { level.PlayerStartPosition.X = std::stoi(playerX); },
-					[](std::string playerY,Game::Level& level) { level.PlayerStartPosition.Y = std::stoi(playerY); }
+					[](std::string playerY,Game::Level& level) { level.PlayerStartPosition.Y = std::stoi(playerY); },
+					[](std::string levelColor, Game::Level& level) {
+						std::stringstream read(levelColor);
+						std::string component;
+						Vec3 color;
+						uint8_t i = 0;
+
+						while (std::getline(read, component, ','))
+						{
+							switch (i)
+							{
+							case 0:
+								color.X = static_cast<float>(std::stoi(component)) / 255.f;
+								break;
+							case 1:
+								color.Y = static_cast<float>(std::stoi(component)) / 255.f;
+								break;
+							case 2:
+								color.Z = static_cast<float>(std::stoi(component)) / 255.f;
+								break;
+#if _DEBUG
+							default:
+								DEBUG::DebugLog::LogWarning("[LEVEL DATA PARSER] expected 3 components for a level color, got " + std::to_string(i + 1) + ".");
+								break;
+#endif
+							}
+
+							i++;
+						}
+
+						level.BackgroundColor = color;
+					}
 			};
 
 			LevelDataParser::LevelDataParser(std::string data[LevelDataSize], Game::Level& level)

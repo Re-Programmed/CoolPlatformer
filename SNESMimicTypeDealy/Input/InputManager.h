@@ -8,7 +8,7 @@
 
 ///How many inputs to check for
 #if _DEBUG
-#define KEY_ARRAY_SIZE 8
+#define KEY_ARRAY_SIZE 11
 #else
 #define KEY_ARRAY_SIZE 5
 #endif
@@ -24,14 +24,17 @@ namespace GAME_NAME
 		PLAYER_MOVE_LEFT = 2,		//Player Move Left [A]
 		PLAYER_MOVE_RIGHT = 3,		//Player Move Right [D]
 		PLAYER_JUMP,				//Player Jump [Space]
-
+		PLAYER_FORCE_WALK,			//Player Walk [Shift]
 
 
 
 #if _DEBUG
 		PLAYER_DEBUG,				//Player Enter Debug Mode [P]
 		DEBUG_EDITOR_SELECT,		//Select an object in the editor [V]
-		DEBUG_OBJECT_MENU			//Open the object menu [Tab]
+		DEBUG_OBJECT_MENU,			//Open the object menu [Tab]
+		PLAYER_DEBUG_ADD_SPEED,		//Make the player move faster while flying around [Shift]
+		DEBUG_SET_OBJECT_X,			//Pressed to set the X position of an object by typing [X]
+		DEBUG_SET_OBJECT_Y			//Pressed to set the Y position of an object by typing [Y]
 #endif
 	};
 
@@ -50,6 +53,8 @@ namespace GAME_NAME
 		static const unsigned int GetKey(keyRef key);	//Gets if a key is down using its alias.
 		static const unsigned int GetKey(int key);	//Gets if a key is down using its GLFW key code.
 
+		static const float GetJoystick();
+
 		//Gets the current state of a mouse button.
 		static inline const int GetMouseButton(int button)
 		{
@@ -58,6 +63,10 @@ namespace GAME_NAME
 
 		//Gets the mouse position in screen coordinates.
 		static MathUtils::Vec2 GetMousePosition();
+
+		//Gets the mouse position in world coordinates.
+		static MathUtils::Vec2 GetMouseScreenPosition();
+
 		//Gets the mouse position in world coordinates with respect to the given camera.
 		static MathUtils::Vec2 GetMouseWorldPosition(Rendering::Camera::Camera* camera);
 

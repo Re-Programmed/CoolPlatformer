@@ -35,6 +35,11 @@ namespace GAME_NAME
 			return m_objects;
 		}
 
+		std::vector<GameObject*>* Chunk::GetFrontObjects()
+		{
+			return &m_frontObjects;
+		}
+
 		void Chunk::Render(const Vec2 cameraPosition, const int chunkSize, RENDER_LAYER layer, GLFWwindow* window)
 		{
 			switch (layer)
@@ -42,7 +47,7 @@ namespace GAME_NAME
 			case RENDER_LAYER_BG:
 				if (m_bgSprite != nullptr)
 				{
-					m_bgSprite->Render(cameraPosition, m_position << ChunkShift, chunkSize);
+					m_bgSprite->Render(cameraPosition, m_position << ChunkShift, Vec2(-chunkSize, chunkSize));
 				}
 				break;
 			case RENDER_LAYER_OBJECTS:

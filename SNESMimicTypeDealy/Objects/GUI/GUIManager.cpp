@@ -16,7 +16,7 @@ namespace GAME_NAME
 				{
 					if (Utils::CollisionDetection::PointWithinBoxBL(position, gb->GetPosition(), gb->GetScale()))
 					{
-						gb->OnClick();
+						gb->OnClick(gb->GetButtonId());
 					}
 				}
 			}

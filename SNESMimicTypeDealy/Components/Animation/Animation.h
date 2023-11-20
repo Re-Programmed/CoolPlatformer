@@ -11,6 +11,10 @@ namespace GAME_NAME
 	{
 		namespace Animation
 		{
+#define ANIM_12_SPF 0.083f /*12... FPS*/
+#define ANIM_16_SPF 0.0625f /*16 FPS*/
+
+
 			struct AnimData						//Stores the data used for sprites in an animation.
 			{
 				std::vector<Sprite*> Sprites;	//A list of pointers to the sprites that will be used in the animation.

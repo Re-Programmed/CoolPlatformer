@@ -99,6 +99,17 @@ namespace GAME_NAME
 			/// <returns>The distance between a and b.</returns>
 			static float Distance(Vec2 a, Vec2 b);
 
+			//Returns the normalized X coord of this vector.
+			inline float NormalizeX()
+			{
+				return X == 0 ? 0.f : (X < 0 ? -1.f : 1.f);
+			}
+
+			//Returns the normalized Y coord of this vector.
+			inline float NormalizeY()
+			{
+				return Y == 0 ? 0.f : (Y < 0 ? -1.f : 1.f);
+			}
 		private:
 
 		};

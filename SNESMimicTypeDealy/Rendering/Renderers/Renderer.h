@@ -9,7 +9,7 @@
 #include "../../Objects/GUI/IGUIElement.h"
 #include "../DynamicSprite.h"
 
-#define GLOBAL_SPRITE_BASE -6	//Represents the negative number of sprites in the global_sprites directory.
+#define GLOBAL_SPRITE_BASE -25	//Represents the negative number of sprites in the global_sprites directory.
 #define SpriteBase(x) (GLOBAL_SPRITE_BASE+x)  //Returns the offset of a sprite from the sprite base.
 
 namespace GAME_NAME
@@ -43,9 +43,9 @@ namespace GAME_NAME
 			static GLuint LoadBG(const char* file);
 
 			/// <summary>
-			/// Removes all loaded buffers.
+			/// Removes all loaded buffers after the given index.
 			/// </summary>
-			static void ClearTextures();
+			static void ClearTextures(const unsigned int startIndex = 0);
 
 			//Create a sprite from its texture.
 			static Sprite* const GetSprite(const unsigned int spriteTexture);
@@ -54,6 +54,11 @@ namespace GAME_NAME
 			static inline unsigned int GetSpriteCount()
 			{
 				return spriteCount;
+			}
+
+			static inline unsigned int GetBackgroundSpriteCount()
+			{
+				return bgCount;
 			}
 
 			/// <summary>
@@ -149,7 +154,7 @@ namespace GAME_NAME
 			static int lastFileOff;
 
 			//The number of sprites loaded.
-			static unsigned int spriteCount;
+			static unsigned int spriteCount, bgCount, imageCount;
 
 			/// <summary>
 			/// Loads a texture to a buffer.

@@ -16,15 +16,18 @@
 
 #include <thread>
 
+#define PLAYER_ANIMATION_RUN_WALK_SWITCH 180.f //When the player should switch from the walking to running animation.
+
 namespace  GAME_NAME
 {
 	namespace  Objects
 	{
 		namespace Player
 		{
+
 			using namespace Utils;
 
-			Player::Player(Vec2 position) 
+			Player::Player(Vec2 position)
 				: ActiveBoxCollisionGravityObject(position, Vec2(DefaultPlayerScaleX, DefaultPlayerScaleY), Rendering::Renderer::GetSprite(DefaultPlayerSprite))
 			{
 #if _DEBUG
@@ -33,20 +36,45 @@ namespace  GAME_NAME
 
 				//INIT WATER MUSIC
 				Audio::SoundManager::WaterMusic = Audio::SoundManager::Play(Audio::UnderwaterMusicID, Audio::SoundManager::BGMusic, -1.0F, 0.0F, true);
-				
-				
+
+
 #pragma region Init Run Animation
-				AnimData data;	
+				AnimData walk_data, run_data, fall_data, jump_data, skid_data;
+
+				for (int i : PlayerWalkAnim)
+				{
+					walk_data.Sprites.push_back(Renderer::GetSprite(i));
+				}
 
 				for (int i : PlayerRunAnim)
 				{
-					data.Sprites.push_back(Renderer::GetSprite(i));
+					run_data.Sprites.push_back(Renderer::GetSprite(i));
 				}
 
-				std::shared_ptr<GAME_NAME::Components::Animation::Animation> run_anim(new GAME_NAME::Components::Animation::Animation(data, 0.083f));
+				for (int i : PlayerFallAnim)
+				{
+					fall_data.Sprites.push_back(Renderer::GetSprite(i));
+				}
+
+				for (int i : PlayerJumpAnim)
+				{
+					jump_data.Sprites.push_back(Renderer::GetSprite(i));
+				}
+
+				for (int i : PlayerSkidAnim)
+				{
+					skid_data.Sprites.push_back(Renderer::GetSprite(i));
+				}
+
+				std::shared_ptr<GAME_NAME::Components::Animation::Animation> walk_anim(new GAME_NAME::Components::Animation::Animation(walk_data, ANIM_12_SPF));
+				std::shared_ptr<GAME_NAME::Components::Animation::Animation> run_anim(new GAME_NAME::Components::Animation::Animation(run_data, ANIM_16_SPF));
+				std::shared_ptr<GAME_NAME::Components::Animation::Animation> fall_anim(new GAME_NAME::Components::Animation::Animation(fall_data, ANIM_12_SPF));
+				std::shared_ptr<GAME_NAME::Components::Animation::Animation> jump_anim(new GAME_NAME::Components::Animation::Animation(jump_data, ANIM_12_SPF));
+				std::shared_ptr<GAME_NAME::Components::Animation::Animation> skid_anim(new GAME_NAME::Components::Animation::Animation(skid_data, ANIM_12_SPF));
+
 #pragma endregion
 
-				std::vector<std::shared_ptr<GAME_NAME::Components::Animation::Animation>> anims{ run_anim };
+				std::vector<std::shared_ptr<GAME_NAME::Components::Animation::Animation>> anims{ walk_anim, run_anim, fall_anim, jump_anim, skid_anim };
 
 				m_animator = new AnimatorComponent(anims);
 
@@ -79,7 +107,7 @@ namespace  GAME_NAME
 				CollisionManager::RegisterActiveColliderToBuffer(m_boxCollider);
 #endif
 
-	
+			//DEBUGGING [REMOVE]
 				{
 					renderCalls++;
 					float t = glfwGetTime();
@@ -207,6 +235,7 @@ namespace  GAME_NAME
 					m_debugKey = false;
 				}
 #endif
+				bool playerIsSkidding = false;
 
 				//int joyAxesCount;		JOYSTICK INPUT
 				//const float* joyAxes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &joyAxesCount);
@@ -216,7 +245,7 @@ namespace  GAME_NAME
 #if _DEBUG
 					if (m_debug)
 					{
-						m_position += Vec2(1.4f, 0.f);
+						m_position += Vec2(InputManager::GetKey(PLAYER_DEBUG_ADD_SPEED) ? 3.0f : 1.4f, 0.f);
 						return;
 					}
 #endif
@@ -230,6 +259,10 @@ namespace  GAME_NAME
 						{
 							m_textureFlipped = true;
 						}
+						else
+						{
+							playerIsSkidding = true;
+						}
 					}
 				}
 
@@ -238,7 +271,7 @@ namespace  GAME_NAME
 #if _DEBUG
 					if (m_debug)
 					{
-						m_position += Vec2(-1.4f, 0.f);
+						m_position += Vec2(InputManager::GetKey(PLAYER_DEBUG_ADD_SPEED) ? -3.0f : -1.4f, 0.f);
 						return;
 					}
 #endif
@@ -253,45 +286,45 @@ namespace  GAME_NAME
 					{
 						m_textureFlipped = false;
 					}
+					else
+					{
+						playerIsSkidding = true;
+					}
 				}
 
-				//Determines what animation to play currently. (Move to seperate function.)
-#pragma region AnimationCheck
+
 				{
-					float anim_momentum = std::abs(m_physics->GetVelocity().X);	//X Speed of player.
-					if (anim_momentum > 0.1f)	//Check if player is moving a certain speed.
-					{
-						m_animator->SetSpeedMult(anim_momentum / 100.f);
-						m_animator->SetCurrentAnimation(0);  //Running Animation
-						m_begunMotion = true;
-					}
-					else {
-						if (m_begunMotion)
-						{
-							m_animator->SetCurrentAnimation(-1); //No Animation
-							m_sprite = Renderer::GetSprite(DefaultPlayerSprite);
-							m_begunMotion = false;
-						}
 					
+//Determines what animation to play currently. (Move to seperate function. USE RETURNS INSTEAD OF ELSES)
+					float anim_momentum;
+					setAnimations(playerIsSkidding, anim_momentum);
+
+					//Check if the user is holding the FORCE_WALK [Left Shift] key and damps the player's speed to 1/2 walking speed.
+					if (InputManager::GetKey(PLAYER_FORCE_WALK))
+					{
+						if (anim_momentum > (PLAYER_ANIMATION_RUN_WALK_SWITCH/2))
+						{
+							m_physics->AddVelocity(Vec2(-m_physics->GetVelocity().NormalizeX() * (anim_momentum - (PLAYER_ANIMATION_RUN_WALK_SWITCH/2.f)) / 4.f, 0));
+						}
 					}
 				}
-#pragma endregion
 
 #if _DEBUG
 				if (m_debug)
 				{
 					if (InputManager::GetKey(PLAYER_MOVE_UP))
 					{
-						m_position += Vec2(0.f, 1.4f);
+						m_position += Vec2(0.f, InputManager::GetKey(PLAYER_DEBUG_ADD_SPEED) ? 3.0f : 1.4f);
 					}
 
 					if (InputManager::GetKey(PLAYER_MOVE_DOWN))
 					{
-						m_position += Vec2(0.f, -1.4f);
+						m_position += Vec2(0.f, InputManager::GetKey(PLAYER_DEBUG_ADD_SPEED) ? -3.0f : -1.4f);
 					}
 				}
 #endif
 
+				//Check if player is jumping.
 				if (InputManager::GetKey(PLAYER_JUMP))
 				{
 					if (m_jumpHeld != 0 && m_jumpHeld < PlayerJumpHoldLength || m_swimming)
@@ -314,6 +347,61 @@ namespace  GAME_NAME
 					m_jumpHeld = 0;
 				}
 				
+
+
+			}
+			void Player::setAnimations(bool playerIsSkidding, float& anim_momentum)
+			{
+				anim_momentum = std::abs(m_physics->GetVelocity().X);	//X Speed of player.
+
+				if (m_onGround)
+				{
+					if (playerIsSkidding && anim_momentum > 60.f)
+					{
+						m_animator->SetCurrentAnimation(4); //Skidding Animation
+						return;
+					}
+
+					if (anim_momentum > 0.1f && m_onGround && !m_swimming)	//Check if player is moving a certain speed, is on the ground, and is not swimming.
+					{
+						m_animator->SetSpeedMult(anim_momentum / 100.f);
+						if (anim_momentum > PLAYER_ANIMATION_RUN_WALK_SWITCH)
+						{
+							m_animator->SetCurrentAnimation(1);  //Running Animation
+						}
+						else {
+							m_animator->SetCurrentAnimation(0);  //Walking Animation
+						}
+						m_begunMotion = true;
+						return;
+					}
+					
+					if (m_begunMotion)
+					{
+						m_animator->SetCurrentAnimation(-1); //No Animation
+						m_sprite = Renderer::GetSprite(DefaultPlayerSprite);
+						m_begunMotion = false;
+					}
+					return;
+				}
+
+
+				m_animator->SetSpeedMult(1.f);
+				float player_y_vel = m_physics->GetVelocity().Y + m_physics->GetGravitationalVelocity();
+
+				if (player_y_vel > 1.f)
+				{
+					m_animator->SetCurrentAnimation(3); //Jumping Animation
+					m_begunMotion = true;
+					return;
+				}
+				
+				if (player_y_vel < -1.f)
+				{
+					m_animator->SetCurrentAnimation(2); //Falling Animation
+					m_begunMotion = true;
+					return;
+				}
 			}
 		}
 	}

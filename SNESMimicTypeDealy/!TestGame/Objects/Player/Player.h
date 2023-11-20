@@ -12,8 +12,21 @@ constexpr float DefaultPlayerScaleX = 16.f;	//The default size for the player.
 constexpr float DefaultPlayerScaleY = 26.f;	//The default size for the player.
 
 constexpr int DefaultPlayerSprite = GLOBAL_SPRITE_BASE;		//The default sprite to use for the player.
-constexpr int PlayerRunAnim[8] = {
+constexpr int PlayerWalkAnim[8] = {
 	SpriteBase(1), SpriteBase(2), SpriteBase(3), SpriteBase(2), SpriteBase(1), SpriteBase(4), SpriteBase(5), SpriteBase(4)
+};
+constexpr int PlayerRunAnim[8] = {
+	SpriteBase(6),SpriteBase(7),SpriteBase(8),SpriteBase(9),SpriteBase(10),SpriteBase(11),SpriteBase(12),SpriteBase(13)
+};
+
+constexpr int PlayerJumpAnim[4] = {
+	SpriteBase(14),SpriteBase(15),SpriteBase(16),SpriteBase(17)
+};
+constexpr int PlayerFallAnim[4] = {
+	SpriteBase(18),SpriteBase(19),SpriteBase(20),SpriteBase(21)
+};
+constexpr int PlayerSkidAnim[4] = {
+	SpriteBase(22),SpriteBase(23),SpriteBase(24),SpriteBase(25)
 };
 
 constexpr float PlayerSpeed = .04f;			//The amount of velocity to add for each frame the player is moving.
@@ -65,6 +78,7 @@ namespace  GAME_NAME
 				AnimatorComponent* m_animator;			//Animator for walking, jumping, etc.
 
 				void readKeys();						//Called to determine what buttons are pressed and apply velocity based on those buttons.
+				void setAnimations(bool playerIsSkidding, float& anim_momentum);	//Called to determine what animation the player should be playing.
 
 #if _DEBUG
 				bool m_debug = false, m_debugKey = false;

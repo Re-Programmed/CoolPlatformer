@@ -5,6 +5,7 @@
 #include "../Audio/SoundManager.h"
 #include "../Audio/SoundTypes/Sound.h"
 #include "../Settings/SettingsGlobals.h"
+#include <regex>
 
 #if _DEBUG
 #include "../Debug/DebugLog.h"
@@ -73,11 +74,12 @@ namespace GAME_NAME
 
 			if (textureLoad == SPRITES || textureLoad == ALL_TEXTURES)
 			{
+				//Assign the first set of loaded sprites to be the fileOffset. (Negative sprite indicies)
 				if (Renderer::GetLastFileOffest() == -1)
 				{
 					Renderer::SetLastFileOffset(0);
 				}
-				else
+				else if(Renderer::GetLastFileOffest() == 0)
 				{
 					Renderer::SetLastFileOffset(Renderer::GetSpriteCount() - i);
 				}
@@ -162,8 +164,31 @@ namespace GAME_NAME
 			int c = 0;
 			while (std::getline(linestream, component, ','))
 			{
+				
 				if (c == 0) { mapping = &mappings[std::stoi(component)]; }
-				else { v.push_back(component); }
+				else {
+					//Allows for the use of "5|4+" to mean 5+4=9 and plug 9 in for that variable in object.pk.
+					int decodedComponent = 0;
+
+					if (component.ends_with("+"))
+					{
+						component.erase(component.length() - 1);
+
+						std::string decodedAddition = "";
+						while (!component.ends_with("|"))
+						{
+							decodedAddition = component.at(component.length() - 1) + decodedAddition;
+							component.erase(component.length() - 1);
+						}
+
+						component.erase(component.length() - 1);
+
+						decodedComponent = std::stoi(decodedAddition) + std::stoi(component);
+					}
+
+					v.push_back(decodedComponent != 0 ? std::to_string(decodedComponent) : component);
+				
+				}
 				c++; //C++ AHHAHAHAHAHAHH Like the language :)L::):)
 			}
 
@@ -182,16 +207,83 @@ namespace GAME_NAME
 			std::ifstream ObjectFile(filePath);
 			std::string line;
 
+			std::vector<std::string> definedMacros;	//Stores a list of strings representing the templates that macros will use.
+
 			std::vector<std::thread*> threads;
 			int thCurr = 0;
 
+			bool declaringMacro = false;
+
 			while (std::getline(ObjectFile, line, '\n'))
 			{
+#pragma region MacroDetection
+				//Check if the line is declaring a macro.
+				if (line.starts_with("-->"))
+				{
+					declaringMacro = !declaringMacro;
+					
+					if (declaringMacro)
+					{
+						definedMacros.push_back(std::regex_replace(line, std::regex("-->"), ""));
+					}
+
+					continue;
+				}
+
+				//Will continue defining a macro until another "-->" is found allowing for multi line macros.
+				if (declaringMacro)
+				{
+					definedMacros[definedMacros.size() - 1] = definedMacros[definedMacros.size() - 1] + std::regex_replace(line, std::regex(" "), "");
+					continue;
+				}
+
+				//Check if the line is using a macro.
+				if (line.starts_with("<--"))
+				{
+					std::string resultingData;
+
+					std::string s = std::regex_replace(line, std::regex("<--"), "");
+
+					std::stringstream macrostream(s);
+					std::string component;
+
+					int c = 0;
+					while (std::getline(macrostream, component, ','))
+					{
+						//First entry to the macro is which macro to use.
+						if (c == 0)
+						{
+							int macro = std::stoi(component);
+							resultingData = definedMacros[macro];
+							c = 1;
+							continue;
+						}
+
+						//Subsequent entries will be placed into the macro at %(c).
+						resultingData = std::regex_replace(resultingData, std::regex("%" + std::to_string(c)), component == "null" ? "" : component);
+						c++;
+					}
+
+					std::stringstream multiobjectmacrostream(resultingData);
+
+					//If we have multiple objects in the macro to be defined they are separated by ;.
+					while (std::getline(multiobjectmacrostream, component, ';'))
+					{
+						//Start the loading thread for the macro.
+						threads.push_back(new std::thread(loadObjectDataThread, component, mappings));
+						thCurr++;
+					}
+
+					goto checkthreads;
+				}
+#pragma endregion
+
 				if (line.empty() || line.starts_with(";")) { continue; } //For line breaks or lines beginning with a ";" do nothing. (useful for comments etc.)
 
 				threads.push_back(new std::thread(loadObjectDataThread, line, mappings));
 				thCurr++;
 
+	checkthreads:
 				if (thCurr == AppData::Settings::SettingsGlobals::MaxThreads.Value)
 				{
 					for (int i = 0; i < thCurr; i++)
@@ -213,6 +305,8 @@ namespace GAME_NAME
 					threads[i]->join();
 				}
 			}
+
+			//delete[definedMacrosCount] definedMacros;
 		}
 
 

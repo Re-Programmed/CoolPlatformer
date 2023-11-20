@@ -4,6 +4,11 @@
 #include <thread>
 #include "../../Settings/SettingsGlobals.h"
 
+#if _DEBUG
+#include "../../Debug/DebugLog.h"
+using namespace DEBUG;
+#endif
+
 namespace GAME_NAME
 {
 	namespace Rendering
@@ -12,7 +17,7 @@ namespace GAME_NAME
 
 		constexpr int levelSizeX = 30;
 		constexpr int levelSizeY = 5;
-		unsigned int Renderer::spriteCount = 0, bgCount;
+		unsigned int Renderer::spriteCount = 0, Renderer::bgCount, Renderer::imageCount = 1;
 
 		int Renderer::lastFileOff = -1;
 
@@ -20,6 +25,24 @@ namespace GAME_NAME
 
 		std::vector<GameObject*> Renderer::m_activeGameObjects[MICRO_RENDER_LAYER_COUNT];
 		std::vector<GUI::IGUIElement*> Renderer::m_guiGameObjects[MICRO_GUI_LAYER_COUNT];
+
+		/*
+	 ---RENDER ORDER---
+		 
+		[BACKGROUND] {Static.}
+		[RENDER LAYER 0] {Bound to the chunk spawned in.}
+		[RENDER LAYER 1]
+		[RENDER LAYER 2]
+		[RENDER LAYER 3]
+		[ACTIVE RENDER LAYER 0] {Rendered if visible by camera.}
+		[ACTIVE RENDER LAYER 1]
+		[ACTIVE RENDER LAYER 2]
+		[ACTIVE RENDER LAYER 3]
+		[PRIORITY OBJECTS (FRONT OBJECTS)] {Bound to the chunk spawned in.}
+		[GUI LAYER 0] {Always rendered.}
+		[GUI LAYER 1]
+		[GUI LAYER 2]
+		*/
 
 		std::vector<GameObject*> Renderer::m_destroyQueue;
 
@@ -105,13 +128,31 @@ namespace GAME_NAME
 			m_destroyQueue.clear();
 		}
 
-		void Renderer::ClearTextures()
+		void Renderer::ClearTextures(const unsigned int startIndex)
 		{
-			lastFileOff = -1;
-			for (unsigned int i = 0; i < spriteCount + bgCount; i++)
+#if _DEBUG
+			uint16_t removedSprites = 0;
+#endif
+
+			//Update last file off if any of the first sprites loaded were cleared.
+			lastFileOff = startIndex == 0 ? -1 : (startIndex > lastFileOff) ? lastFileOff : startIndex;
+			for (unsigned int i = startIndex; i < spriteCount + bgCount; i++)
 			{
+#if _DEBUG
+				removedSprites++;
+#endif
+
 				glDeleteTextures(1, (const GLuint*)i);
 			}
+			
+			//Reset all counters or decrease them by (count - startIndex).
+			bgCount = startIndex == 0 ? 0 : ((spriteCount < startIndex) ? startIndex - spriteCount : bgCount);
+			spriteCount = startIndex == 0 ? 0 : (spriteCount < startIndex) ? 0 : startIndex - bgCount;
+			imageCount = startIndex == 0 ? 1 : startIndex;
+
+#if _DEBUG
+			DebugLog::Log("Cleared " + std::to_string(removedSprites) + " sprites.", true);
+#endif
 		}
 
 		GLuint Renderer::loadImage(const char* file)
@@ -124,8 +165,8 @@ namespace GAME_NAME
 				std::cout << stbi_failure_reason() << std::endl;
 			}
 
-			GLuint textureBuffer;
-			glGenTextures(1, &textureBuffer);
+			GLuint textureBuffer = imageCount++;
+			//glGenTextures(1, &textureBuffer);
 			glBindTexture(GL_TEXTURE_2D, textureBuffer);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
@@ -135,7 +176,10 @@ namespace GAME_NAME
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
+#if _DEBUG
 			std::cout << "GLBUFFERLOAD: " << textureBuffer << std::endl;
+			std::cout << "IMAGECOUNT: " << imageCount << std::endl;
+#endif
 
 			free(data);
 
@@ -144,7 +188,7 @@ namespace GAME_NAME
 
 		void Renderer::InitChunks(std::vector<int> chunkData)
 		{
-			for (int x = 0; x < levelSizeX; x++)
+			for (int x = levelSizeX; x > 0; x--)
 			{
 				for (int y = 0; y < levelSizeY; y++)
 				{
@@ -255,6 +299,9 @@ namespace GAME_NAME
 			//Loop over chunks that are before the right edge of the camera.
 			for (int i = iterInit; i < iterEnd; i++)
 			{
+				//Check if chunk is out of level bounds.
+				if (i >= levelSizeX * levelSizeY) { continue; }
+
 				//Check if a chunk is within the bounding box of the camera. (MAY NEED BUGFIXED FOR WHEN CAMERA CHANGES ZOOM!!!!!)
 				//if (m_chunks[i].GetPosition().Y < cameraTopEdge)
 				//{
@@ -321,7 +368,7 @@ namespace GAME_NAME
 			iVec2 chunkScale = AsChunkPosition(scale);
 
 			const int8_t start = chunkPos.GetX() * levelSizeY + chunkPos.GetY();
-			const int8_t endX = chunkScale.GetX();
+			const int8_t endX = chunkScale.GetX(); 
 			const int8_t endY = chunkScale.GetY();
 
 			for (int8_t x = 0; x < endX; x++)
@@ -331,6 +378,11 @@ namespace GAME_NAME
 					for (int i = 0; i < CHUNK_OBJECT_RENDER_LAYER_COUNT; i++)
 					{
 						for (GameObject* add : m_chunks[start + (x * levelSizeY) + y].GetObjects()[i])
+						{
+							ret.push_back(add);
+						}
+
+						for (GameObject* add : *m_chunks[start + (x * levelSizeY) + y].GetFrontObjects())
 						{
 							ret.push_back(add);
 						}
@@ -384,6 +436,7 @@ namespace GAME_NAME
 					if (Utils::CollisionDetection::BoxWithinBox(obj->GetPosition(), obj->GetScale(), bottomLeft, scale))
 					{
 						
+						ret.push_back(obj);
 						ret.push_back(obj);
 					}
 				}

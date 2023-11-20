@@ -14,6 +14,8 @@ namespace GAME_NAME
 		MusicSync::SongPosition MusicSync::m_songPosition;
 		double MusicSync::m_SPB;
 
+		short int MusicSync::m_currentBeat;
+
 		void MusicSync::Subscribe(void func(MusicSync::SongPosition songPosition))
 		{
 			m_subscribers.push_back(func);
@@ -26,6 +28,7 @@ namespace GAME_NAME
 			if (m_beatCounter >= m_SPB)	//The amount of seconds in 1 beat has passed.
 			{
 				m_songPosition.sp_beat++;	//Increment the current beat.
+				m_currentBeat++;
 
 				if (m_songPosition.sp_beat == m_BPMeasure)	//If we have just reached the beat equal to the number of beats in a measure increment the measure.
 				{

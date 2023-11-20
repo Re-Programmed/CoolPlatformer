@@ -12,6 +12,10 @@
 #include "./Objects/Platforms/RotatingPlatform.h"
 #include "./Mappings.h"
 
+#if _DEBUG
+#include "../Debug/LevelBuilder/LevelBuilder.h"
+#endif
+
 #include <thread>
 
 namespace GAME_NAME
@@ -28,6 +32,8 @@ namespace GAME_NAME
 
 	void GAME_NAME::TestGame::Update(GLFWwindow* window)
 	{
+		InputManager::GetJoystick();
+
 		MusicSync::MusicSync::Update();	//Update things that sync to the beat of the current song.
 
 		m_gameCamera->Update(ThePlayer->GetPosition());
@@ -69,11 +75,18 @@ namespace GAME_NAME
 
 	void TestGame::InitLevel(GAME_NAME::Game::Level level)
 	{
+#if _DEBUG
+		Debug::LevelBuilder::LevelBuilder::InitLevelBuilderAssets(this);
+#endif
+
 		ThePlayer = std::make_shared<Objects::Player::Player>(level.PlayerStartPosition);
-		Rendering::Renderer::LoadActiveObject(ThePlayer.get());
+		Rendering::Renderer::LoadActiveObject(ThePlayer.get(), 1); //Spawn in the player on Active Layer 1.
 		std::srand(ThePlayer->GetPosition().X + ThePlayer->GetPosition().Y + static_cast<int>(glfwGetTime()));
 
+		MusicSync::MusicSync::SetCurrentSong(134, 2);
 
+		glClearColor(level.BackgroundColor.X, level.BackgroundColor.Y, level.BackgroundColor.Z, 1.f);
+		/*glColor3f(/ X / Y / Z); CREATES A REALLY COOL FOG EFFECT!*/
 		//Play Music
 
 		//Environment::CloudGenerator::GenerateClouds(50);

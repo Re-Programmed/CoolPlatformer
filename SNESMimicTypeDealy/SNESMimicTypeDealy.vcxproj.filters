@@ -433,6 +433,51 @@
     <Image Include="Assets\global_assets\sprite\standing_idle.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Assets\global_assets\sprite\10031_util_black_0.5.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\global_assets\sprite\100001_player_standing_idle.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\global_assets\sprite\100021_player_walk_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\global_assets\sprite\100022_player_walk_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\global_assets\sprite\100023_player_walk_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\global_assets\sprite\100024_player_walk_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\global_assets\sprite\100025_player_walk_4.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\global_assets\sprite\100031_player_run_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\global_assets\sprite\100032_player_run_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\global_assets\sprite\100033_player_run_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\global_assets\sprite\100034_player_run_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\global_assets\sprite\100035_player_run_4.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\global_assets\sprite\100036_player_run_5.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\global_assets\sprite\100037_player_run_6.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\global_assets\sprite\100038_player_run_7.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\testing\chunk.pk" />
@@ -445,6 +490,9 @@
     <None Include="Assets\house_1_1\object.pk" />
     <None Include="Assets\house_1_1\chunk.pk" />
     <None Include="Assets\house_1_1\level.dat" />
+    <None Include="Assets\game_gui\object.pk" />
+    <None Include="Assets\game_gui\chunk.pk" />
+    <None Include="Assets\game_gui\level.dat" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Assets\testing\music\0_test.wav">

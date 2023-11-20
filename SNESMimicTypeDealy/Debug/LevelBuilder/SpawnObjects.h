@@ -6,27 +6,24 @@
 
 namespace GAME_NAME::Debug::LevelBuilder
 {
+
 	using namespace Objects;
 	class SpawnObjects
 	{
 	public:
-		typedef struct Spawnable
-		{
-			GameObject* Object;
-			int textureId;
-		};
+		typedef Renderer::InstantiateGameObject Spawnable;
 
 	private:
 		inline static Spawnable Spawnables[LVLBUILDER_SPAWNABLE_COUNT] = {
-			 Spawnable(new GameObject(Vec2::Zero, Vec2::One * 32.f, Rendering::Renderer::GetSprite(1), 0.0f), 4) //Ground
+			 Spawnable(new GameObject(Vec2::Zero, Vec2(32,32), Rendering::Renderer::GetSprite(1), 0.0f), false, 2, false) //Ground
 		};
 
 	public:
-		static GameObject* GetSpawnable(int index)
+		static Spawnable GetSpawnable(int index)
 		{
-			GameObject* obj = new GameObject(*Spawnables[index].Object);
-			obj->SetSprite(Renderer::GetSprite(Spawnables[index].textureId));
-			return obj;
+			GameObject* obj = new GameObject(*Spawnables[index].MyObject);
+			
+			return Spawnable(obj, Spawnables[index].Active, Spawnables[index].Layer, Spawnables[index].Front);
 		}
 
 	};

@@ -16,6 +16,12 @@ namespace GAME_NAME
             {
                 Z = z;
             }
+
+            Vec3()
+                : Vec2(0,0)
+            {
+                Z = 0.f;
+            }
         };
 
     }

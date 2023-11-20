@@ -257,6 +257,21 @@
     <ClInclude Include="Utils\UpdateManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Assets\global_assets\sprite\100001_player_standing_idle.png" />
+    <Image Include="Assets\global_assets\sprite\100021_player_walk_0.png" />
+    <Image Include="Assets\global_assets\sprite\100022_player_walk_1.png" />
+    <Image Include="Assets\global_assets\sprite\100023_player_walk_2.png" />
+    <Image Include="Assets\global_assets\sprite\100024_player_walk_3.png" />
+    <Image Include="Assets\global_assets\sprite\100025_player_walk_4.png" />
+    <Image Include="Assets\global_assets\sprite\100031_player_run_0.png" />
+    <Image Include="Assets\global_assets\sprite\100032_player_run_1.png" />
+    <Image Include="Assets\global_assets\sprite\100033_player_run_2.png" />
+    <Image Include="Assets\global_assets\sprite\100034_player_run_3.png" />
+    <Image Include="Assets\global_assets\sprite\100035_player_run_4.png" />
+    <Image Include="Assets\global_assets\sprite\100036_player_run_5.png" />
+    <Image Include="Assets\global_assets\sprite\100037_player_run_6.png" />
+    <Image Include="Assets\global_assets\sprite\100038_player_run_7.png" />
+    <Image Include="Assets\global_assets\sprite\10031_util_black_0.5.png" />
     <Image Include="Assets\global_assets\sprite\standing_idle.png" />
     <Image Include="Assets\testing\bg\1_test.png" />
     <Image Include="Assets\testing\sprite\2_panel_cross_hatch.png" />
@@ -286,6 +301,15 @@
     <Image Include="Assets\town_1\sprite\1010_bg_hill.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\game_gui\chunk.pk">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="Assets\game_gui\level.dat">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="Assets\game_gui\object.pk">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
     <None Include="Assets\house_1_1\chunk.pk" />
     <None Include="Assets\house_1_1\level.dat" />
     <None Include="Assets\house_1_1\object.pk" />

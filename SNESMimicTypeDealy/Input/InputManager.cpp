@@ -35,6 +35,37 @@ namespace GAME_NAME
 		return glfwGetKey(m_window, key);
 	}
 
+	const float InputManager::GetJoystick()
+	{
+
+		/*for (int i = 0; i < 16; i++)
+		{
+			int present = glfwJoystickPresent(i);
+			if (present == GLFW_TRUE)
+			{
+				std::cout << glfwGetJoystickName(i) << std::endl;
+				continue;
+			}
+
+			break;
+		}*/
+
+		int count;
+		const float* f = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &count);
+		//std::cout << glfwGetJoystickName(0) << ": " << count << " == " << f[0] << std::endl;
+
+		for (int i = 0; i < count; i++)
+		{
+			//if (f[i] == GLFW_PRESS)
+			//{
+				//std::cout << glfwGetJoystickName(GLFW_JOYSTICK_1) << ": " << i << " == " << f[i] << std::endl;
+
+			//}
+		}
+
+		return 0.0f;
+	}
+
 	MathUtils::Vec2 InputManager::GetMousePosition()
 	{
 		double x, y;
@@ -43,14 +74,19 @@ namespace GAME_NAME
 		
 	}
 
-	MathUtils::Vec2 InputManager::GetMouseWorldPosition(Rendering::Camera::Camera* camera)
+	MathUtils::Vec2 InputManager::GetMouseScreenPosition()
 	{
 		MathUtils::Vec2 screenCoords = GetMousePosition();
 		int wWidth, wHeight;
 		glfwGetWindowSize(m_window, &wWidth, &wHeight);
 		MathUtils::Vec2 normalizedScreenCoords = MathUtils::Vec2(screenCoords.X / wWidth, 1 - (screenCoords.Y) / wHeight);
-	
-		return MathUtils::Vec2(TargetResolutionX * normalizedScreenCoords.X, TargetResolutionY * normalizedScreenCoords.Y) + camera->GetPosition();
+
+		return MathUtils::Vec2(TargetResolutionX * normalizedScreenCoords.X, TargetResolutionY * normalizedScreenCoords.Y);
+	}
+
+	MathUtils::Vec2 InputManager::GetMouseWorldPosition(Rendering::Camera::Camera* camera)
+	{
+		return GetMouseScreenPosition() + camera->GetPosition();
 	}
 
 	void InputManager::loadDefaultKeys()
@@ -62,12 +98,19 @@ namespace GAME_NAME
 
 		m_keys[PLAYER_JUMP] = GLFW_KEY_SPACE;
 
+		m_keys[PLAYER_FORCE_WALK] = GLFW_KEY_LEFT_SHIFT;
+
 #if _DEBUG
 		m_keys[PLAYER_DEBUG] = GLFW_KEY_P;
 
 		m_keys[DEBUG_EDITOR_SELECT] = GLFW_KEY_V;
 
 		m_keys[DEBUG_OBJECT_MENU] = GLFW_KEY_TAB;
+
+		m_keys[PLAYER_DEBUG_ADD_SPEED] = GLFW_KEY_LEFT_SHIFT;
+
+		m_keys[DEBUG_SET_OBJECT_X] = GLFW_KEY_X;
+		m_keys[DEBUG_SET_OBJECT_Y] = GLFW_KEY_Y;
 #endif
 	}
 }

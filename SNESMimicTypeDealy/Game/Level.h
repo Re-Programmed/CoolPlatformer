@@ -1,6 +1,8 @@
 #pragma once
 #include "../Audio/SoundManager.h"
 #include "../Utils/Math/Vec2.h"
+#include "../Utils/Math/Vec3.h"
+
 
 namespace GAME_NAME
 {
@@ -25,6 +27,8 @@ namespace GAME_NAME
 			Audio::AudioVoice CurrentBGMusic;
 
 			Vec2 PlayerStartPosition = Vec2::Zero;
+
+			Vec3 BackgroundColor = Vec3(0,0,0);
 		};
 	}
 }
