@@ -37,6 +37,8 @@ namespace GAME_NAME
 		class Renderer
 		{
 		public:
+			static bool UpdateObjects;
+
 			//Load a file to the sprite buffer.
 			static GLuint LoadSprite(const char* file);
 			//Load a file to the BG buffer.
@@ -125,6 +127,21 @@ namespace GAME_NAME
 			static inline void LoadGUIElement(GUI::IGUIElement* element, int layer = 1)
 			{
 				m_guiGameObjects[layer].push_back(element);
+			}
+
+			static void UnloadGUIElement(GUI::IGUIElement* element, int layer = 1)
+			{
+				uint16_t i = 0;
+				for (GUI::IGUIElement* g : m_guiGameObjects[layer])
+				{
+					if (g == element)
+					{
+						m_guiGameObjects[layer].erase(m_guiGameObjects[layer].begin() + i);
+						return;
+					}
+
+					i++;
+				}
 			}
 
 			/// <summary>

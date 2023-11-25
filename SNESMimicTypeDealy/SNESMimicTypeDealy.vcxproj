@@ -299,6 +299,18 @@
     <Image Include="Assets\town_1\sprite\1008_grass.png" />
     <Image Include="Assets\town_1\sprite\1009_grass.png" />
     <Image Include="Assets\town_1\sprite\1010_bg_hill.png" />
+    <Image Include="Assets\town_1\sprite\1011_gear_platform.png" />
+    <Image Include="Assets\town_1\sprite\1012_grass_top_1006.png" />
+    <Image Include="Assets\town_1\sprite\1013_grass_top_1007.png" />
+    <Image Include="Assets\town_1\sprite\1014_grass_top_1008.png" />
+    <Image Include="Assets\town_1\sprite\1015_grass_top_1009.png" />
+    <Image Include="Assets\town_1\sprite\1016_square_hill_end.png" />
+    <Image Include="Assets\town_1\sprite\1017_square_hill_mid.png" />
+    <Image Include="Assets\town_1\sprite\1018_cork_plank.png" />
+    <Image Include="Assets\town_1\sprite\1019_cork_half_plank.png" />
+    <Image Include="Assets\town_1\sprite\1020_spotted_hill_1.png" />
+    <Image Include="Assets\town_1\sprite\1021_spotted_hill_2.png" />
+    <Image Include="Assets\town_1\sprite\1022_spotted_hill_3.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\game_gui\chunk.pk">

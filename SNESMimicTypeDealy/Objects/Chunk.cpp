@@ -55,7 +55,7 @@ namespace GAME_NAME
 				{
   					for (GameObject* obj : m_objects[i])
 					{
-						obj->Update(window);
+						if(Renderer::UpdateObjects){ obj->Update(window); }
 						obj->Render(cameraPosition);
 					}
 				}
@@ -63,7 +63,7 @@ namespace GAME_NAME
 			case RENDER_LAYER_OBJECTS_FRONT:
 				for (GameObject* obj : m_frontObjects)
 				{
-					obj->Update(window);
+					if (Renderer::UpdateObjects) { obj->Update(window); }
 					obj->Render(cameraPosition);
 				}
 				break;

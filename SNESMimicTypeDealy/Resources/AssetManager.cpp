@@ -288,9 +288,10 @@ namespace GAME_NAME
 				{
 					for (int i = 0; i < thCurr; i++)
 					{
-						if (threads[i] != nullptr)
+						if (threads[i] != nullptr && threads[i]->joinable())
 						{
 							threads[i]->join();
+							//delete threads[i];
 						}
 					}
 
@@ -300,9 +301,10 @@ namespace GAME_NAME
 
 			for (int i = 0; i < thCurr; i++)
 			{
-				if (threads[i] != nullptr)
+				if (threads[i] != nullptr && threads[i]->joinable())
 				{
 					threads[i]->join();
+					//delete threads[i];
 				}
 			}
 

@@ -23,6 +23,8 @@ namespace GAME_NAME
 
 		Chunk Renderer::m_chunks[levelSizeX * levelSizeY];
 
+		bool Renderer::UpdateObjects = true;
+
 		std::vector<GameObject*> Renderer::m_activeGameObjects[MICRO_RENDER_LAYER_COUNT];
 		std::vector<GUI::IGUIElement*> Renderer::m_guiGameObjects[MICRO_GUI_LAYER_COUNT];
 
@@ -214,6 +216,14 @@ namespace GAME_NAME
 			int chunkX = AsChunkPosition(static_cast<int>(object->GetPosition().X)) * levelSizeY;
 			int chunkY = AsChunkPosition(static_cast<int>(object->GetPosition().Y));
 
+#if _DEBUG
+			std::cout << "Loaded Object in position: " + Vec2(chunkX, chunkY).ToString() << std::endl;
+			if (chunkY >= levelSizeY)
+			{
+				DebugLog::LogError("Object is outside of chunk height boundaries! WRAPPING TO NEXT CHUNK COLUMN WILL OCCUR.");
+			}
+#endif
+
 			Renderer::m_chunks[chunkX + chunkY].Instantiate(object, layer, front);
 		}
 
@@ -257,7 +267,7 @@ namespace GAME_NAME
 
 			Vec2 cameraPosition = camera->GetPosition() / parallax;
 
-			constexpr unsigned int cameraBoundsPadding = chunkSize;
+			constexpr unsigned int cameraBoundsPadding = chunkSize * (1.33f);
 
 			//Define const variables.
 
@@ -274,7 +284,10 @@ namespace GAME_NAME
 					{
 						if (Utils::CollisionDetection::BoxWithinBox(obj->GetPosition(), obj->GetScale(), cameraPositionPadding, cameraBounds))
 						{
-							obj->Update(window);
+							if (UpdateObjects)
+							{
+								obj->Update(window);
+							}
 							obj->Render(cameraPosition);
 						}
 					}
@@ -312,7 +325,8 @@ namespace GAME_NAME
 					//Check if the chunk we just rendered is at the top of the screen.
 					if ((i % levelSizeY) == (levelSizeY - 1))
 					{
-						//If the chunk just rendered is at the top of the screen, skip all chunks in the next column below the camera's position.
+						//If the chunk just rendered is at the top of the screen, skip all chunks in the next column below the camera's position. 
+
 						i += cameraChunkPosition.GetY();
 					}
 
@@ -328,7 +342,11 @@ namespace GAME_NAME
 			{
 				for (GameObject* bg2Object : m_activeGameObjects[0])
 				{
-					bg2Object->Update(window);
+					if (UpdateObjects)
+					{
+						bg2Object->Update(window);
+					}
+
 					bg2Object->Render(cameraPosition);
 				}
 			}
@@ -337,6 +355,8 @@ namespace GAME_NAME
 
 		std::vector<GameObject*> Renderer::GetAllObjectsInArea(Vec2 bottomLeft, Vec2 scale, int8_t layer)
 		{
+			std::cout << "Searchcing from: " << bottomLeft.ToString() << std::endl;
+
 			std::vector<GameObject*> ret;
 			
 			std::thread activeObjectCheck([layer, bottomLeft, scale](std::vector<GameObject*>& ret) {

@@ -12,6 +12,10 @@
 #include "../Debug/DebugLog.h"
 #endif
 #include "../Audio/SoundManager.h"
+#include "../Utils/Time/GameTime.h"
+
+//The expected amount of time that should pass between each frame.
+#define _G_EXPECTED_FRAME_OBJ_UPDATE 0.0088f
 
 namespace GAME_NAME
 {
@@ -124,9 +128,18 @@ namespace GAME_NAME
 		glfwDestroyWindow(this->m_glWindow);
 	}
 
+	//float deltaUpdate = 0.f;
 
 	void Window::Render()
 	{
+		//deltaUpdate += GAME_NAME::Utils::Time::GameTime::GetScaledDeltaTime();
+
+		//REMOVED
+		//Check if the amount of time elapsed is over the expected amount of time per frame.
+		//If it is, update all objects, otherwise just render them.
+		//if (deltaUpdate >= _G_EXPECTED_FRAME_OBJ_UPDATE) { deltaUpdate = 0.f; Renderer::UpdateObjects = true; }
+		//else { Renderer::UpdateObjects = false; }
+
 		update();
 
 		glClear(GL_COLOR_BUFFER_BIT);

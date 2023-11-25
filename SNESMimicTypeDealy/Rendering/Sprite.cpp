@@ -8,6 +8,7 @@ namespace GAME_NAME
 	{
 		Vec2 Sprite::m_resolutionScale = Vec2::One;
 
+		//This and other math related to vectors and positions needs to execute on the GPU, figure it out...
 		void Sprite::Render(const Vec2 cameraPosition, Vec2 position, Vec2 scale, float rotation)
 		{
 			glBindTexture(GL_TEXTURE_2D, m_spriteId);

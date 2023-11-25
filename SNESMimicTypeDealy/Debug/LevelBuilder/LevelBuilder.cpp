@@ -5,17 +5,17 @@
 #include "../../Input/InputManager.h"
 #include "../../!TestGame/TestGame.h"
 #include "../../Rendering/DynamicSprite.h"
-#include "../../Objects/GUI/GUIButton.h"
 #include "../../Objects/GUI/GUIManager.h"
-#include "SpawnObjects.h"
 
 //The area around the mouse that can be used to select objects.
-constexpr unsigned int MouseSelectionRadius = 100U;
+constexpr unsigned int MouseSelectionRadius = 16U;
 
 namespace GAME_NAME::Debug::LevelBuilder
 {
-	LevelBuilder* LevelBuilder::m_currentLevelBuilder;
+	LevelBuilder* LevelBuilder::sv_currentLevelBuilder;
 	bool LevelBuilder::m_objectMenuOpen = false;
+
+	GUI::GUIButton* LevelBuilder::m_addObjectButtons[LVLBUILDER_SPAWNABLE_COUNT];
 
 	const Vec4 RedTextureColor[4] = {
 		Vec4(1, 0, 0, 1),
@@ -45,19 +45,19 @@ namespace GAME_NAME::Debug::LevelBuilder
 
 	void LevelBuilder::Render()
 	{
-		if (m_currentLevelBuilder == nullptr) { return; }
+		if (sv_currentLevelBuilder == nullptr) { return; }
 
 		DrawObjectMenu();
 
 		DynamicSprite dsobj = DynamicSprite(61);
-		dsobj.Render(m_currentLevelBuilder->m_currentGame->GetCamera()->GetPosition(), InputManager::GetMouseWorldPosition(m_currentLevelBuilder->m_currentGame->GetCamera()) - Vec2(MouseSelectionRadius / 2), Vec2(MouseSelectionRadius));
+		dsobj.Render(sv_currentLevelBuilder->m_currentGame->GetCamera()->GetPosition(), InputManager::GetMouseWorldPosition(sv_currentLevelBuilder->m_currentGame->GetCamera()) - Vec2(MouseSelectionRadius / 2), Vec2(MouseSelectionRadius));
 
-		if (m_currentLevelBuilder->m_editObject != nullptr)
+		if (sv_currentLevelBuilder->m_editObject != nullptr)
 		{
 			//Render selected object.
-			DynamicSprite ds = DynamicSprite(m_currentLevelBuilder->m_editObject->GetSprite()->GetSpriteId());
+			DynamicSprite ds = DynamicSprite(sv_currentLevelBuilder->m_editObject->GetSprite()->GetSpriteId());
 			ds.UpdateTextureColor(RedTextureColor);
-			ds.Render(m_currentLevelBuilder->m_currentGame->GetCamera()->GetPosition(), m_currentLevelBuilder->m_editObject->GetPosition() + m_currentLevelBuilder->m_editObject->GetScale(), m_currentLevelBuilder->m_editObject->GetScale(), m_currentLevelBuilder->m_editObject->GetRotation() + 180.f);
+			ds.Render(sv_currentLevelBuilder->m_currentGame->GetCamera()->GetPosition(), sv_currentLevelBuilder->m_editObject->GetPosition() + sv_currentLevelBuilder->m_editObject->GetScale(), sv_currentLevelBuilder->m_editObject->GetScale(), sv_currentLevelBuilder->m_editObject->GetRotation() + 180.f);
 		}
 
 	}
@@ -65,7 +65,7 @@ namespace GAME_NAME::Debug::LevelBuilder
 	void LevelBuilder::DrawObjectMenu()
 	{
 		DynamicSprite* ds = Renderer::GetDynamicSprite(SpriteBase(-1));
-		Rendering::Camera::Camera* c = m_currentLevelBuilder->m_currentGame->GetCamera();
+		Rendering::Camera::Camera* c = sv_currentLevelBuilder->m_currentGame->GetCamera();
 		ds->Render(c->GetPosition(), c->UIToGlobal(Vec2(0, 0)), Vec2(TargetResolutionX/5.5, TargetResolutionY));
 		delete ds;
 
@@ -81,7 +81,6 @@ using namespace GUI;
 		{
 			SpawnObjects::Spawnable sObj = SpawnObjects::GetSpawnable(i);
 
-			int buttonData[1]{i};
 			GUIButton* btn = new GUIButton(Vec2(0, 0), Vec2(30, 30), sObj.MyObject->GetSprite()->GetSpriteId(), [](int spawnable) {
 				SpawnObjects::Spawnable obj = SpawnObjects::GetSpawnable(spawnable);
 				obj.MyObject->SetPosition(TestGame::ThePlayer->GetPosition());
@@ -90,7 +89,9 @@ using namespace GUI;
 				std::cout << "Spawning object: " << spawnable << ", at: " << obj.MyObject->GetPosition().ToString() << std::endl;
 				}, i);
 
-			Renderer::LoadGUIElement(btn);
+			m_addObjectButtons[i] = btn;
+
+			Renderer::LoadGUIElement(btn, LevelBuilderGuiLayer);
 			GUIManager::RegisterButton(btn);
 		}
 	}
@@ -164,11 +165,19 @@ using namespace GUI;
 	void LevelBuilder::DestroyLevelBuilder()
 	{
 
-		if (m_currentLevelBuilder != nullptr)
+		if (sv_currentLevelBuilder != nullptr)
 		{
-			UpdateManager::RemoveUpdateable(m_currentLevelBuilder->m_updateIndex);
+			UpdateManager::RemoveUpdateable(sv_currentLevelBuilder->m_updateIndex);
 
-			delete m_currentLevelBuilder;
+			for (int i = 0; i < LVLBUILDER_SPAWNABLE_COUNT; i++)
+			{
+				Renderer::UnloadGUIElement(sv_currentLevelBuilder->m_addObjectButtons[i], LevelBuilderGuiLayer);
+				GUI::GUIManager::UnregisterButton(sv_currentLevelBuilder->m_addObjectButtons[i]);
+
+				delete sv_currentLevelBuilder->m_addObjectButtons[i];
+			}
+
+			delete sv_currentLevelBuilder;
 		}
 	}
 }

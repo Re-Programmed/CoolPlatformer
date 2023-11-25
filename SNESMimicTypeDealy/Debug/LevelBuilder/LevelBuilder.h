@@ -2,6 +2,10 @@
 
 #pragma once
 #include "../../Game/Game.h"
+#include "../../Objects/GUI/GUIButton.h"
+#include "SpawnObjects.h"
+
+constexpr uint8_t LevelBuilderGuiLayer = 2U;
 
 namespace GAME_NAME::Debug::LevelBuilder
 {
@@ -20,7 +24,7 @@ namespace GAME_NAME::Debug::LevelBuilder
 		LevelBuilder(Game::Game* game, unsigned int loadedSpriteCount)
 			:m_updateIndex(UpdateManager::RegisterUpdateable(this)), m_currentGame(game), m_loadedSpriteCount(loadedSpriteCount)
 		{
-			m_currentLevelBuilder = this;
+			sv_currentLevelBuilder = this;
 		}
 
 		~LevelBuilder()
@@ -38,6 +42,7 @@ namespace GAME_NAME::Debug::LevelBuilder
 		bool m_interactKeyDown;
 
 		static bool m_objectMenuOpen;
+		static GUI::GUIButton* m_addObjectButtons[LVLBUILDER_SPAWNABLE_COUNT];
 
 		GameObject* m_editObject;
 
@@ -45,7 +50,7 @@ namespace GAME_NAME::Debug::LevelBuilder
 
 		Game::Game* m_currentGame;
 
-		static LevelBuilder* m_currentLevelBuilder;
+		static LevelBuilder* sv_currentLevelBuilder;
 	};
 }
 
