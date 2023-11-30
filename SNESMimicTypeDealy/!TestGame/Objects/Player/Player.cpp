@@ -24,6 +24,12 @@ namespace  GAME_NAME
 	{
 		namespace Player
 		{
+			typedef int8_t PlayerEmotion;
+			
+			enum PLAYER_EMOTIONS : PlayerEmotion
+			{
+				ANGRY = SpriteBase(26)
+			};
 
 			using namespace Utils;
 
@@ -80,6 +86,8 @@ namespace  GAME_NAME
 
 				m_physics->SetGravityStrength(DefaultPlayerGravity);
 
+				m_emotionsObject = new ChildGameObject(Vec2(DefaultPlayerScaleX, 12.25), Vec2(-DefaultPlayerScaleX, DefaultPlayerScaleY * 0.519230769f), Renderer::GetSprite(PLAYER_EMOTIONS::ANGRY), this);
+				//Renderer::InstantiateObject(Renderer::InstantiateGameObject(m_emotionsObject, true, 2, false));
 			}
 
 			Player::~Player()
@@ -108,7 +116,7 @@ namespace  GAME_NAME
 #endif
 
 			//DEBUGGING [REMOVE]
-				{
+				if(!m_debug){
 					renderCalls++;
 					float t = glfwGetTime();
 					tAlloc += t - m_curr;
@@ -339,7 +347,7 @@ namespace  GAME_NAME
 
 						m_jumpHeld = 1;
 						m_onGround = false;
-						m_physics->AddVelocity(Vec2(0.f, PlayerJumpHeight));
+						m_physics->AddVelocity(Vec2(0.f, PlayerJumpHeight + (std::abs(m_physics->GetVelocity().X) * PlayerXSpeedJumpMultiplier)));
 					}
 				}
 				else if (m_jumpHeld != 0)

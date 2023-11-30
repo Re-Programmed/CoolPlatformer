@@ -9,7 +9,7 @@
 #include "../../Objects/GUI/IGUIElement.h"
 #include "../DynamicSprite.h"
 
-#define GLOBAL_SPRITE_BASE -25	//Represents the negative number of sprites in the global_sprites directory.
+#define GLOBAL_SPRITE_BASE -41	//Represents the negative number of sprites in the global_sprites directory.
 #define SpriteBase(x) (GLOBAL_SPRITE_BASE+x)  //Returns the offset of a sprite from the sprite base.
 
 namespace GAME_NAME
@@ -75,8 +75,9 @@ namespace GAME_NAME
 
 			/// <summary>
 			/// Returns every GameObject in an area.
+			/// Use boxOverlap if you want all the objects overlapping the given area, otherwise this function will only return the objects with a position in the given area.
 			/// </summary>
-			static std::vector<GameObject*> GetAllObjectsInArea(Vec2 bottomLeft, Vec2 scale, int8_t layer = -1);
+			static std::vector<GameObject*> GetAllObjectsInArea(Vec2 bottomLeft, Vec2 scale, bool boxOverlap = false, int8_t layer = -1);
 			/// <summary>
 			/// Returns every chunk GameObject in an area.
 			/// </summary>

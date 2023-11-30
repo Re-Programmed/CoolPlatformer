@@ -42,7 +42,6 @@ namespace GAME_NAME
 					{
 						m_currentFrame = 0;
 					}
-					std::cout << m_data.Sprites[m_currentFrame]->GetSpriteId() << std::endl;
 					object->SetSprite(m_data.Sprites[m_currentFrame]);
 				}
 

@@ -19,7 +19,7 @@ namespace GAME_NAME
 			{
 			public:
 				StaticGUIElement(Vec2 position, Vec2 scale, GLuint texture)
-					:m_position(position), m_scale(scale), m_sprite(Renderer::GetSprite(texture))
+					:m_position(position), m_scale(scale), m_sprite(new Sprite(texture))
 				{
 					
 				}

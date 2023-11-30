@@ -4,6 +4,7 @@
 #include "../../../Rendering/Renderers/Renderer.h"
 #include "../../../Components/Animation/AnimatorComponent.h"
 #include "../../../Audio/SoundManager.h"
+#include "../../../Components/ChildGameObject.h"
 
 #ifndef _PLAYERDEF
 #define _PLAYERDEF
@@ -35,6 +36,7 @@ constexpr float PlayerSpeedCap = 200.f;		//The maximum amount of velocity the pl
 constexpr float PlayerJumpHeight = 60.f;	//The vertical velocity applied on the inital press of jump.
 constexpr float PlayerJumpBonus = 13.f;		//How vertical velocity to add for every frame the jump button is held after the inital jump.
 constexpr int8_t PlayerJumpHoldLength = 10;	//The maximum amount of frames the player can hold jump for.
+constexpr float PlayerXSpeedJumpMultiplier = 0.08f; //The multiplier for how much of the X speed is added to the players jump.
 
 constexpr float DefaultPlayerGravity = 4.5f;	//The default gravity.
 constexpr float SwimmingPlayerGravity = 0.4f;	//The default gravity while underwater.
@@ -76,6 +78,7 @@ namespace  GAME_NAME
 				bool m_begunMotion = false;				//Used for animation checks.
 
 				AnimatorComponent* m_animator;			//Animator for walking, jumping, etc.
+				Components::ChildGameObject* m_emotionsObject;	//Object overlayed on the player for expressions, etc.
 
 				void readKeys();						//Called to determine what buttons are pressed and apply velocity based on those buttons.
 				void setAnimations(bool playerIsSkidding, float& anim_momentum);	//Called to determine what animation the player should be playing.
