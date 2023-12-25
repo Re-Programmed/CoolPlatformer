@@ -6,6 +6,8 @@ namespace GAME_NAME
 	int InputManager::m_keys[KEY_ARRAY_SIZE];
 	GLFWwindow* InputManager::m_window;
 
+	bool InputManager::m_keysDown[KEY_ARRAY_SIZE];
+
 	void InputManager::Init(GLFWwindow* window)
 	{
 		//LOAD KEY INPUT SETTINGS FROM SAVE
@@ -33,6 +35,31 @@ namespace GAME_NAME
 	const unsigned int InputManager::GetKey(int key)
 	{
 		return glfwGetKey(m_window, key);
+	}
+
+
+
+	const unsigned int InputManager::GetKeyUpDown(keyRef key)
+	{
+		if (glfwGetKey(m_window, m_keys[key]))
+		{
+			if(!m_keysDown[key])
+			{
+				m_keysDown[key] = true;
+
+				return KEY_STATE_PRESSED;
+			}
+
+			return KEY_STATE_HELD;
+		}
+
+		if (m_keysDown[key])
+		{
+			m_keysDown[key] = false;
+			return KEY_STATE_RELEASED;
+		}
+
+		return KEY_STATE_NONE;
 	}
 
 	const float InputManager::GetJoystick()
@@ -111,6 +138,9 @@ namespace GAME_NAME
 
 		m_keys[DEBUG_SET_OBJECT_X] = GLFW_KEY_X;
 		m_keys[DEBUG_SET_OBJECT_Y] = GLFW_KEY_Y;
+
+		m_keys[DEBUG_REFRESH_LEVEL_FILES] = GLFW_KEY_M;
+		m_keys[PLAYER_DEBUG_TOGGLE_FLIGHT] = GLFW_KEY_V;
 #endif
 	}
 }

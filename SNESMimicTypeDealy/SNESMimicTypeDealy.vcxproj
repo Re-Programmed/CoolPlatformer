@@ -203,6 +203,7 @@
     <ClInclude Include="Audio\SoundTypes\Sound.h" />
     <ClInclude Include="Components\Animation\Animation.h" />
     <ClInclude Include="Components\Animation\AnimatorComponent.h" />
+    <ClInclude Include="Components\ChildGameObject.h" />
     <ClInclude Include="Components\ComponentObject.h" />
     <ClInclude Include="Components\Physics\Collision\ActiveBoxCollider.h" />
     <ClInclude Include="Components\Physics\Collision\ActiveCollider.h" />

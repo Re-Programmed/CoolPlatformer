@@ -10,7 +10,7 @@
 namespace GAME_NAME::Utils::Time
 {
 	//Used for getting the amount of time that has passed in each frame, and the time scale that can be used to slow down everything.
-	class GameTime : public IUpdateable
+	class GameTime
 	{
 	public:
 
@@ -32,7 +32,7 @@ namespace GAME_NAME::Utils::Time
 
 		static double GetElapsedTime();
 
-		void Update(GLFWwindow* window);
+		static void Update();
 	private:
 		static float m_timeScale;
 	};

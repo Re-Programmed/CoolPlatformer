@@ -25,6 +25,16 @@ namespace GAME_NAME
 				void AddVelocity(Vec2 velocity);
 				
 				/// <summary>
+				/// Returns the number of times the physics was updated for this component after calling Update().
+				/// (Physics is updated at a constant rate. PHYSICS_COMPONENT_TARGET_SPF)
+				/// </summary>
+				/// <returns></returns>
+				const inline unsigned char GetUpdatesThisFrame()
+				{
+					return m_physicsTicks;
+				}
+
+				/// <summary>
 				/// Sets how much the object will slow down when moving left and right on the ground.
 				/// </summary>
 				/// <param name="airResistance"></param>
@@ -32,11 +42,13 @@ namespace GAME_NAME
 
 			protected:
 				virtual void physicsTick(GLFWwindow* window, Objects::GameObject* object) = 0; //Called each physics update.
-			protected:
+
 				Vec2 m_velocity;
 				float m_frictionDrag;	//How much X velocity is subtracted each frame.
 				float m_airDrag;		//How much Y velocity is subtracted each frame.
 
+				double m_stackedPhysicsTicks = 0;
+				unsigned char m_physicsTicks = 0;
 			private:
 				void xAirDrag();		//Calculate X drag and clamp velocity.
 				void yAirDrag();		//Calculate Y drag and clamp velocity.

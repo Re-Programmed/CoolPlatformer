@@ -28,6 +28,8 @@ namespace GAME_NAME
 		std::vector<GameObject*> Renderer::m_activeGameObjects[MICRO_RENDER_LAYER_COUNT];
 		std::vector<GUI::IGUIElement*> Renderer::m_guiGameObjects[MICRO_GUI_LAYER_COUNT];
 
+		std::vector<GLuint> Renderer::m_textureIDs;
+
 		/*
 	 ---RENDER ORDER---
 		 
@@ -37,7 +39,7 @@ namespace GAME_NAME
 		[RENDER LAYER 2]
 		[RENDER LAYER 3]
 		[ACTIVE RENDER LAYER 0] {Rendered if visible by camera.}
-		[ACTIVE RENDER LAYER 1]
+		[ACTIVE RENDER LAYER 1]			(PLAYER)
 		[ACTIVE RENDER LAYER 2]
 		[ACTIVE RENDER LAYER 3]
 		[PRIORITY OBJECTS (FRONT OBJECTS)] {Bound to the chunk spawned in.}
@@ -144,7 +146,8 @@ namespace GAME_NAME
 				removedSprites++;
 #endif
 
-				glDeleteTextures(1, (const GLuint*)i);
+				const GLuint textureID = GetTextureIDFromIndex(i + 1);
+				glDeleteTextures(1, &textureID);
 			}
 			
 			//Reset all counters or decrease them by (count - startIndex).
@@ -157,6 +160,52 @@ namespace GAME_NAME
 #endif
 		}
 
+		void Renderer::ClearObjects()
+		{
+			for (int i = 0; i < MICRO_RENDER_LAYER_COUNT; i++)
+			{
+				//for (GameObject* obj : m_activeGameObjects[i])
+				//{
+				//	delete obj;
+
+				//}
+
+				m_activeGameObjects[i].clear();
+
+				for (Chunk c : m_chunks)
+				{
+					//for (GameObject* obj : c.GetObjects()[i])
+					//{
+						//delete obj;
+					//}
+
+					c.GetObjects()[i].clear();
+				}
+			}
+
+			for (Chunk c : m_chunks)
+			{
+				//for (int i = 0; i < c.GetFrontObjects()->size(); i++)
+				//{
+					//delete (*c.GetFrontObjects())[i];
+				//}
+
+				c.GetFrontObjects()->clear();
+			}
+
+			for (int i = 0; i < MICRO_GUI_LAYER_COUNT; i++)
+			{
+				//for (GUI::IGUIElement* obj : m_guiGameObjects[i])
+				//{
+					//delete obj;
+				//}
+
+				m_guiGameObjects[i].clear();
+			}
+
+			
+		}
+
 		GLuint Renderer::loadImage(const char* file)
 		{
 			int width, height, channels;
@@ -167,14 +216,22 @@ namespace GAME_NAME
 				std::cout << stbi_failure_reason() << std::endl;
 			}
 
-			GLuint textureBuffer = imageCount++;
-			//glGenTextures(1, &textureBuffer);
+			GLuint textureBuffer;
+			//Create the texture ID and assign the image to that ID.
+			glGenTextures(1, &textureBuffer);
 			glBindTexture(GL_TEXTURE_2D, textureBuffer);
+
+			//Add the texture to the list of textures.
+			m_textureIDs.push_back(textureBuffer);
+
+			//Parameters for transparency, height, width, etc.
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
+			//Smoothing function.
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST /*GL_LINEAR*/);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST /*GL_LINEAR*/);
 
+			//Wrapping.
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
@@ -185,12 +242,12 @@ namespace GAME_NAME
 
 			free(data);
 
-			return textureBuffer;
+			return m_textureIDs.size() - 1;
 		}
 
 		void Renderer::InitChunks(std::vector<int> chunkData)
 		{
-			for (int x = levelSizeX; x > 0; x--)
+			for (int x = levelSizeX - 1; x >= 0; x--)
 			{
 				for (int y = 0; y < levelSizeY; y++)
 				{
@@ -282,12 +339,13 @@ namespace GAME_NAME
 				{
 					for (GameObject* obj : m_activeGameObjects[i])
 					{
+						if (UpdateObjects)
+						{
+							obj->Update(window);
+						}
+
 						if (Utils::CollisionDetection::BoxWithinBox(obj->GetPosition(), obj->GetScale(), cameraPositionPadding, cameraBounds))
 						{
-							if (UpdateObjects)
-							{
-								obj->Update(window);
-							}
 							obj->Render(cameraPosition);
 						}
 					}
@@ -353,18 +411,18 @@ namespace GAME_NAME
 
 		}
 
-		std::vector<GameObject*> Renderer::GetAllObjectsInArea(Vec2 bottomLeft, Vec2 scale, int8_t layer)
+		std::vector<GameObject*> Renderer::GetAllObjectsInArea(Vec2 bottomLeft, Vec2 scale, bool boxOverlap, int8_t layer)
 		{
 			std::cout << "Searchcing from: " << bottomLeft.ToString() << std::endl;
 
 			std::vector<GameObject*> ret;
 			
-			std::thread activeObjectCheck([layer, bottomLeft, scale](std::vector<GameObject*>& ret) {
+			std::thread activeObjectCheck([layer, bottomLeft, scale, boxOverlap](std::vector<GameObject*>& ret) {
 				if (layer != -1)
 				{
 					for (GameObject* obj : m_activeGameObjects[layer])
 					{
-						if (Utils::CollisionDetection::PointWithinBoxBL(obj->GetPosition(), bottomLeft, scale))
+						if (boxOverlap ? Utils::CollisionDetection::BoxWithinBox(bottomLeft, scale, obj->GetPosition(), obj->GetScale()) : Utils::CollisionDetection::PointWithinBoxBL(obj->GetPosition(), bottomLeft, scale))
 						{
 							ret.push_back(obj);
 						}
@@ -375,7 +433,7 @@ namespace GAME_NAME
 					{
 						for (GameObject* obj : m_activeGameObjects[i])
 						{
-							if (Utils::CollisionDetection::PointWithinBoxBL(obj->GetPosition(), bottomLeft, scale))
+							if (boxOverlap ? Utils::CollisionDetection::BoxWithinBox(bottomLeft, scale, obj->GetPosition(), obj->GetScale()) : Utils::CollisionDetection::PointWithinBoxBL(obj->GetPosition(), bottomLeft, scale))
 							{
 								ret.push_back(obj);
 							}
@@ -387,24 +445,36 @@ namespace GAME_NAME
 			iVec2 chunkPos = AsChunkPosition(bottomLeft);
 			iVec2 chunkScale = AsChunkPosition(scale);
 
-			const int8_t start = chunkPos.GetX() * levelSizeY + chunkPos.GetY();
-			const int8_t endX = chunkScale.GetX(); 
-			const int8_t endY = chunkScale.GetY();
+			int8_t start = chunkPos.GetX() * levelSizeY + chunkPos.GetY();
 
-			for (int8_t x = 0; x < endX; x++)
+			if (boxOverlap) { start -= levelSizeY; if (start < 0) { start = 0; } }
+
+			int8_t endX = chunkScale.GetX(); 
+			int8_t endY = chunkScale.GetY();
+
+			if (boxOverlap && endX < levelSizeX) { endX += 1; }
+			if (boxOverlap && endY < levelSizeY) { endY += 1; }
+
+			for (int8_t x = 0; x <= endX; x++)
 			{
-				for (int8_t y = 0; y < endY; y++)
+				for (int8_t y = 0; y <= endY; y++)
 				{
 					for (int i = 0; i < CHUNK_OBJECT_RENDER_LAYER_COUNT; i++)
 					{
 						for (GameObject* add : m_chunks[start + (x * levelSizeY) + y].GetObjects()[i])
 						{
-							ret.push_back(add);
+							if (boxOverlap ? Utils::CollisionDetection::BoxWithinBox(bottomLeft, scale, add->GetPosition(), add->GetScale()) : Utils::CollisionDetection::PointWithinBoxBL(add->GetPosition(), bottomLeft, scale))
+							{
+								ret.push_back(add);
+							}
 						}
 
 						for (GameObject* add : *m_chunks[start + (x * levelSizeY) + y].GetFrontObjects())
 						{
-							ret.push_back(add);
+							if (boxOverlap ? Utils::CollisionDetection::BoxWithinBox(bottomLeft, scale, add->GetPosition(), add->GetScale()) : Utils::CollisionDetection::PointWithinBoxBL(add->GetPosition(), bottomLeft, scale))
+							{
+								ret.push_back(add);
+							}
 						}
 					}
 				}

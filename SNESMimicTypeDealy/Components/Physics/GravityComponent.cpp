@@ -32,7 +32,7 @@ namespace GAME_NAME
 					m_gravitationalVelocity -= m_gravityStrength;
 				}
 
-				object->Translate(Vec2(0, m_gravitationalVelocity * GAME_NAME::Utils::Time::GameTime::GetScaledDeltaTime()));
+				object->Translate(Vec2(0, m_gravitationalVelocity * 0.017f));
 			}
 
 			void GravityComponent::Init(Objects::GameObject* object)

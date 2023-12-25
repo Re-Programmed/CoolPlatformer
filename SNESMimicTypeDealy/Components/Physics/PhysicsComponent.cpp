@@ -1,20 +1,37 @@
 #include "PhysicsComponent.h"
 #include "../../Utils/Time/GameTime.h"
 
+#define PHYSICS_COMPONENT_TARGET_SPF 0.0166666	//The number of seconds per physics frame.
+#define PHYSICS_COMPONENT_VELOCITY_DAMP 0.017f	//Damps velocity each frame.
+
 namespace GAME_NAME
 {
 	namespace Components
 	{
 		namespace Physics
 		{
+			
+
 			void PhysicsComponent::Update(GLFWwindow* window, Objects::GameObject* object)
 			{
-				object->Translate(m_velocity * Utils::Time::GameTime::GetScaledDeltaTime());
+				m_physicsTicks = 0;
+				m_stackedPhysicsTicks += GAME_NAME::Utils::Time::GameTime::GetScaledDeltaTime();
 
-				xAirDrag();
-				yAirDrag();
+				if (m_stackedPhysicsTicks >= PHYSICS_COMPONENT_TARGET_SPF)
+				{
+					while (m_stackedPhysicsTicks >= PHYSICS_COMPONENT_TARGET_SPF)
+					{
+						m_physicsTicks++;
+						object->Translate(m_velocity * PHYSICS_COMPONENT_VELOCITY_DAMP);
 
-				physicsTick(window, object);
+						xAirDrag();
+						yAirDrag();
+
+						physicsTick(window, object);
+
+						m_stackedPhysicsTicks -= PHYSICS_COMPONENT_TARGET_SPF;
+					}
+				}
 			}
 
 			void PhysicsComponent::xAirDrag()

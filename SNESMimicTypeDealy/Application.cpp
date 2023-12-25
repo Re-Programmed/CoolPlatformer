@@ -39,13 +39,14 @@ int main()
 
 	ApplicationWindow = new Window(false, new TestGame());
 
-	glfwSwapInterval(1);
-
 	while(!ApplicationWindow->ShouldClose())
 	{
 		ApplicationWindow->Render();
 	}
 
+	glfwDestroyWindow(ApplicationWindow->GetWindow());
+	glfwTerminate();
+	
 	delete ApplicationWindow;
 
 	//glfwTerminate();

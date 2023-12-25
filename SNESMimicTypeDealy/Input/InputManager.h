@@ -5,12 +5,13 @@
 #include "../Utils/Math/Vec2.h"
 #include "../Rendering/Camera/Camera.h"
 #include "../Rendering/Sprite.h"
+#include <vector>
 
 ///How many inputs to check for
 #if _DEBUG
-#define KEY_ARRAY_SIZE 11
+#define KEY_ARRAY_SIZE 14
 #else
-#define KEY_ARRAY_SIZE 5
+#define KEY_ARRAY_SIZE 6
 #endif
 
 namespace GAME_NAME
@@ -34,7 +35,9 @@ namespace GAME_NAME
 		DEBUG_OBJECT_MENU,			//Open the object menu [Tab]
 		PLAYER_DEBUG_ADD_SPEED,		//Make the player move faster while flying around [Shift]
 		DEBUG_SET_OBJECT_X,			//Pressed to set the X position of an object by typing [X]
-		DEBUG_SET_OBJECT_Y			//Pressed to set the Y position of an object by typing [Y]
+		DEBUG_SET_OBJECT_Y,			//Pressed to set the Y position of an object by typing [Y]
+		DEBUG_REFRESH_LEVEL_FILES,	//Pressed to reload the current level with any updates. [M]
+		PLAYER_DEBUG_TOGGLE_FLIGHT	//Pressed to toggle flying [V]
 #endif
 	};
 
@@ -52,6 +55,17 @@ namespace GAME_NAME
 		static void Init(GLFWwindow* window);			//Must be called on program start.
 		static const unsigned int GetKey(keyRef key);	//Gets if a key is down using its alias.
 		static const unsigned int GetKey(int key);	//Gets if a key is down using its GLFW key code.
+
+		const enum KEY_STATE
+		{
+			KEY_STATE_NONE = 0b0001,
+			KEY_STATE_PRESSED = 0b0010,
+			KEY_STATE_RELEASED = 0b0100,
+			KEY_STATE_HELD = 0b1000
+		};
+
+		//Returns KEY_STATE_PRESSED if the key was just pressed, KEY_STATE_RELEASED if the key was just released, KEY_STATE_HELD if the key is held, and KEY_STATE_NONE if the key is not pressed.
+		static const unsigned int GetKeyUpDown(keyRef key);
 
 		static const float GetJoystick();
 
@@ -77,6 +91,8 @@ namespace GAME_NAME
 		static void loadDefaultKeys();					//Loads the default inputs for keyboard.
 
 		static GLFWwindow* m_window;					//Window pointer. :)
+
+		static bool m_keysDown[KEY_ARRAY_SIZE];			//Stores which keys are held.
 	};
 
 }

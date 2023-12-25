@@ -47,7 +47,14 @@ namespace GAME_NAME
 
 				static inline void UnregisterButton(GUIButton* btn)
 				{
-					m_buttons.erase(m_buttons.begin() + btn->GetButtonId());
+					for (int i = 0; i < m_buttons.size(); i++)
+					{
+						if (m_buttons[i] == btn)
+						{
+							m_buttons.erase(m_buttons.begin() + i);
+							return;
+						}
+					}
 				}
 
 			private:

@@ -24,6 +24,12 @@ namespace  GAME_NAME
 	{
 		namespace Player
 		{
+			typedef int8_t PlayerEmotion;
+			
+			enum PLAYER_EMOTIONS : PlayerEmotion
+			{
+				ANGRY = SpriteBase(26)
+			};
 
 			using namespace Utils;
 
@@ -80,6 +86,8 @@ namespace  GAME_NAME
 
 				m_physics->SetGravityStrength(DefaultPlayerGravity);
 
+				m_emotionsObject = new ChildGameObject(Vec2(DefaultPlayerScaleX, 12.25), Vec2(-DefaultPlayerScaleX, DefaultPlayerScaleY * 0.519230769f), Renderer::GetSprite(PLAYER_EMOTIONS::ANGRY), this);
+				//Renderer::InstantiateObject(Renderer::InstantiateGameObject(m_emotionsObject, true, 2, false));
 			}
 
 			Player::~Player()
@@ -99,7 +107,7 @@ namespace  GAME_NAME
 				std::thread animationUpdate([this, window] { m_animator->Update(window, this); });
 
 #if _DEBUG
-				if (!m_debug)
+				if (!m_flight)
 				{
 					CollisionManager::RegisterActiveColliderToBuffer(m_boxCollider);
 				}
@@ -107,20 +115,6 @@ namespace  GAME_NAME
 				CollisionManager::RegisterActiveColliderToBuffer(m_boxCollider);
 #endif
 
-			//DEBUGGING [REMOVE]
-				{
-					renderCalls++;
-					float t = glfwGetTime();
-					tAlloc += t - m_curr;
-					m_curr = t;
-
-					if (tAlloc > 1.f)
-					{
-						tAlloc = 0.f;
-						std::cout << "PLAYER IN LAST SECOND: " << renderCalls << std::endl;
-						renderCalls = 0;
-					}
-				}
 
 				if (playerInput.joinable())
 				{
@@ -178,9 +172,51 @@ namespace  GAME_NAME
 					DynamicSprite(m_sprite->GetSpriteId(), vertices).Render(cameraPosition, m_position + m_scale, m_scale, m_rotation + 180.f);
 					return;
 				}
-
-				m_sprite->Render(cameraPosition, m_position + (m_textureFlipped ? (m_scale * Vec2::OneX) : 0), m_scale * (m_textureFlipped ? Vec2::MinusOneXOneY : 1), m_rotation);
+				else {
+					m_sprite->Render(cameraPosition, m_position + (m_textureFlipped ? (m_scale * Vec2::OneX) : 0), m_scale * (m_textureFlipped ? Vec2::MinusOneXOneY : 1), m_rotation);
+				}
+				
+#if _DEBUG
+				if (m_debug)
+				{
+					Debug::LevelBuilder::LevelBuilder::Render();
+				}
+#endif
 			}
+
+#if _DEBUG
+			void Player::EnterDebug()
+			{
+				m_debug = !m_debug;
+
+				if (m_debug)
+				{
+					Debug::LevelBuilder::LevelBuilder::InitLevelBuilder(TestGame::INSTANCE);			
+				}
+				else
+				{
+					Debug::LevelBuilder::LevelBuilder::DestroyLevelBuilder();
+				}
+			}
+
+			void Player::ToggleFlight()
+			{
+				{
+					m_flight = !m_flight;
+
+					if (m_flight)
+					{
+						m_boxCollider->SetBeforeUpdate(nullptr);
+						((GAME_NAME::Camera::GameCamera*)TestGame::INSTANCE->GetCamera())->SetFollowPlayerExact(true);
+					}
+					else
+					{
+						m_boxCollider->SetBeforeUpdate(beforeUpdate);
+						((GAME_NAME::Camera::GameCamera*)TestGame::INSTANCE->GetCamera())->SetFollowPlayerExact(false);
+					}
+				}
+			}
+#endif
 
 			void Player::onCollision(Vec2 push)
 			{
@@ -206,6 +242,8 @@ namespace  GAME_NAME
 				m_foundCollisionInTick = false;
 			}
 
+
+
 			void Player::readKeys()
 			{
 				m_physics->SetFrictionDrag(Drag);
@@ -215,20 +253,9 @@ namespace  GAME_NAME
 				{
 					if (!m_debugKey)
 					{
-						m_debug = !m_debug;
 						m_debugKey = true;
 
-						if (m_debug)
-						{
-							Debug::LevelBuilder::LevelBuilder::InitLevelBuilder(TestGame::INSTANCE);
-							m_boxCollider->SetBeforeUpdate(nullptr);
-							((GAME_NAME::Camera::GameCamera*)TestGame::INSTANCE->GetCamera())->SetFollowPlayerExact(true);
-						}
-						else {
-							Debug::LevelBuilder::LevelBuilder::DestroyLevelBuilder();
-							m_boxCollider->SetBeforeUpdate(beforeUpdate);
-							((GAME_NAME::Camera::GameCamera*)TestGame::INSTANCE->GetCamera())->SetFollowPlayerExact(false);
-						}
+						EnterDebug();
 					}
 				}
 				else if (m_debugKey)
@@ -244,7 +271,7 @@ namespace  GAME_NAME
 				if (InputManager::GetKey(PLAYER_MOVE_RIGHT))
 				{
 #if _DEBUG
-					if (m_debug)
+					if (m_flight)
 					{
 						m_position += Vec2(InputManager::GetKey(PLAYER_DEBUG_ADD_SPEED) ? 3.0f : 1.4f, 0.f);
 						return;
@@ -253,7 +280,7 @@ namespace  GAME_NAME
 					if (m_physics->GetVelocity().X < PlayerSpeedCap)
 					{
 						m_physics->SetFrictionDrag(0);
-						m_physics->AddVelocity(Vec2((PlayerSpeedCap - m_physics->GetVelocity().X) * (PlayerSpeed), 0.f));
+						m_physics->AddVelocity(Vec2((Time::GameTime::GetScaledDeltaTime() / 0.017f) * (PlayerSpeedCap - m_physics->GetVelocity().X) * (PlayerSpeed), 0.f));
 						
 						//Check if the player has begun to move to the right, play a sliding animation if slowing down, flip the sprite if moving right.
 						if (m_physics->GetVelocity().X > 0)
@@ -270,7 +297,7 @@ namespace  GAME_NAME
 				if (InputManager::GetKey(PLAYER_MOVE_LEFT))
 				{
 #if _DEBUG
-					if (m_debug)
+					if (m_flight)
 					{
 						m_position += Vec2(InputManager::GetKey(PLAYER_DEBUG_ADD_SPEED) ? -3.0f : -1.4f, 0.f);
 						return;
@@ -279,7 +306,7 @@ namespace  GAME_NAME
 					if (m_physics->GetVelocity().X > -PlayerSpeedCap)
 					{
 						m_physics->SetFrictionDrag(0);
-						m_physics->AddVelocity(Vec2((PlayerSpeedCap - m_physics->GetVelocity().X) * (-PlayerSpeed), 0.f));
+						m_physics->AddVelocity(Vec2((Time::GameTime::GetScaledDeltaTime() / 0.017f) * (PlayerSpeedCap - m_physics->GetVelocity().X) * (-PlayerSpeed), 0.f));
 					}
 
 					//Check if the player has begun to move to the left, play a sliding animation if slowing down, flip the sprite if moving left.
@@ -311,7 +338,7 @@ namespace  GAME_NAME
 				}
 
 #if _DEBUG
-				if (m_debug)
+				if (m_flight)
 				{
 					if (InputManager::GetKey(PLAYER_MOVE_UP))
 					{
@@ -329,10 +356,15 @@ namespace  GAME_NAME
 				//Check if player is jumping.
 				if (InputManager::GetKey(PLAYER_JUMP))
 				{
-					if (m_jumpHeld != 0 && m_jumpHeld < PlayerJumpHoldLength || m_swimming)
+					unsigned char checks = m_physics->GetUpdatesThisFrame();
+					while (checks > 0)
 					{
-						m_jumpHeld++;
-						m_physics->AddVelocity(Vec2(0.f, PlayerJumpBonus));
+						if (m_jumpHeld != 0 && m_jumpHeld < PlayerJumpHoldLength || m_swimming)
+						{
+							m_jumpHeld++;
+							m_physics->AddVelocity(Vec2(0.f, PlayerJumpBonus));
+						}
+						checks--;
 					}
 
 					if (!m_swimming)
@@ -341,17 +373,10 @@ namespace  GAME_NAME
 						{
 							//Jump Sound
 
-							m_jumpHeld = 1;
-							m_onGround = false;
-							m_physics->AddVelocity(Vec2(0.f, PlayerJumpHeight));
-						}
-						else
-						{
-							//Begin Flying
-							m_isFlying = true;
-						}
+						m_jumpHeld = 1;
+						m_onGround = false;
+						m_physics->AddVelocity(Vec2(0.f, PlayerJumpHeight + (std::abs(m_physics->GetVelocity().X) * PlayerXSpeedJumpMultiplier)));
 					}
-
 				}
 				else if (m_jumpHeld != 0)
 				{

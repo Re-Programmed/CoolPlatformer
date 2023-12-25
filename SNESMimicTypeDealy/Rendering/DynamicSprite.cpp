@@ -1,4 +1,5 @@
 #include "DynamicSprite.h"
+#include "../Rendering/Renderers/Renderer.h"
 
 namespace GAME_NAME
 {
@@ -67,7 +68,7 @@ namespace GAME_NAME
 
 		void DynamicSprite::Render(const Vec2 cameraPosition, Vec2 position, Vec2 scale, float rotation)
 		{
-			glBindTexture(GL_TEXTURE_2D, m_spriteId);
+			glBindTexture(GL_TEXTURE_2D, Renderer::GetTextureIDFromIndex(m_spriteId));
 			glLoadIdentity();
 			glTranslatef((position.X - cameraPosition.X) * m_resolutionScale.X, (position.Y - cameraPosition.Y) * m_resolutionScale.Y, 0);
 
