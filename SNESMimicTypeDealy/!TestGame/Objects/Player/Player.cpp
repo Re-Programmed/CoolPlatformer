@@ -154,6 +154,13 @@ namespace  GAME_NAME
 
 			void Player::Render(const Vec2 cameraPosition)
 			{
+#if _DEBUG
+				if (m_debug)
+				{
+					Debug::LevelBuilder::LevelBuilder::Render();
+				}
+#endif
+
 				if (m_swimming)
 				{
 					const double sin = (std::sin(glfwGetTime()) / 20.0);
@@ -169,17 +176,10 @@ namespace  GAME_NAME
 					};
 					
 					DynamicSprite(m_sprite->GetSpriteId(), vertices).Render(cameraPosition, m_position + m_scale, m_scale, m_rotation + 180.f);
+					return;
 				}
-				else {
-					m_sprite->Render(cameraPosition, m_position + (m_textureFlipped ? (m_scale * Vec2::OneX) : 0), m_scale * (m_textureFlipped ? Vec2::MinusOneXOneY : 1), m_rotation);
-				}
-				
-#if _DEBUG
-				if (m_debug)
-				{
-					Debug::LevelBuilder::LevelBuilder::Render();
-				}
-#endif
+
+				m_sprite->Render(cameraPosition, m_position + (m_textureFlipped ? (m_scale * Vec2::OneX) : 0), m_scale * (m_textureFlipped ? Vec2::MinusOneXOneY : 1), m_rotation);
 			}
 
 			void Player::onCollision(Vec2 push)
@@ -188,6 +188,7 @@ namespace  GAME_NAME
 				if (m_foundCollisionInTick) { return; }
 				if (push.Y > 0)
 				{
+					m_isFlying = false;
 					m_onGround = true;
 					m_foundCollisionInTick = true;
 					m_physics->SetVelocityY(0.f);
@@ -324,6 +325,7 @@ namespace  GAME_NAME
 				}
 #endif
 
+
 				//Check if player is jumping.
 				if (InputManager::GetKey(PLAYER_JUMP))
 				{
@@ -333,14 +335,23 @@ namespace  GAME_NAME
 						m_physics->AddVelocity(Vec2(0.f, PlayerJumpBonus));
 					}
 
-					if (m_onGround && !m_swimming)
+					if (!m_swimming)
 					{
-						//Jump Sound
+						if (m_onGround)
+						{
+							//Jump Sound
 
-						m_jumpHeld = 1;
-						m_onGround = false;
-						m_physics->AddVelocity(Vec2(0.f, PlayerJumpHeight));
+							m_jumpHeld = 1;
+							m_onGround = false;
+							m_physics->AddVelocity(Vec2(0.f, PlayerJumpHeight));
+						}
+						else
+						{
+							//Begin Flying
+							m_isFlying = true;
+						}
 					}
+
 				}
 				else if (m_jumpHeld != 0)
 				{

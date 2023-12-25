@@ -75,6 +75,8 @@ namespace  GAME_NAME
 				int m_jumpHeld = 0;						//Used for determining how many frames the jump button has been held after the player jumps.
 				bool m_begunMotion = false;				//Used for animation checks.
 
+				bool m_isFlying = false;				//True if the player is currently flying.
+
 				AnimatorComponent* m_animator;			//Animator for walking, jumping, etc.
 
 				void readKeys();						//Called to determine what buttons are pressed and apply velocity based on those buttons.
