@@ -52,6 +52,11 @@ namespace GAME_NAME
 
 		void SoundManager::ClearSources()
 		{
+			for (std::shared_ptr<AudioSource> as : m_sources)
+			{
+				as->stop();
+			}
+
 			m_sources.clear();
 		}
 

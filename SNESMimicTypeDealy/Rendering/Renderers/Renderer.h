@@ -49,6 +49,11 @@ namespace GAME_NAME
 			/// </summary>
 			static void ClearTextures(const unsigned int startIndex = 0);
 
+			/// <summary>
+			/// Removes all loaded objects.
+			/// </summary>
+			static void ClearObjects();
+
 			//Create a sprite from its texture.
 			static Sprite* const GetSprite(const unsigned int spriteTexture);
 			static DynamicSprite* const GetDynamicSprite(const unsigned int spriteTexture);
@@ -167,7 +172,20 @@ namespace GAME_NAME
 			{
 				return lastFileOff;
 			}
+
+			/// <summary>
+			/// Returns the GL sprite buffer from a given sprite index.
+			/// </summary>
+			static inline const GLuint GetTextureIDFromIndex(const unsigned int index)
+			{
+				return m_textureIDs[index - 1];
+			}
 		private:
+			/// <summary>
+			/// Used to relate a sprite index back to a GL sprite buffer.
+			/// </summary>
+			static std::vector<GLuint> m_textureIDs;
+
 			//A constant added to all sprite indices.
 			static int lastFileOff;
 

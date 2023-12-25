@@ -107,7 +107,7 @@ namespace  GAME_NAME
 				std::thread animationUpdate([this, window] { m_animator->Update(window, this); });
 
 #if _DEBUG
-				if (!m_debug)
+				if (!m_flight)
 				{
 					CollisionManager::RegisterActiveColliderToBuffer(m_boxCollider);
 				}
@@ -115,20 +115,6 @@ namespace  GAME_NAME
 				CollisionManager::RegisterActiveColliderToBuffer(m_boxCollider);
 #endif
 
-			//DEBUGGING [REMOVE]
-				if(!m_debug){
-					renderCalls++;
-					float t = glfwGetTime();
-					tAlloc += t - m_curr;
-					m_curr = t;
-
-					if (tAlloc > 1.f)
-					{
-						tAlloc = 0.f;
-						std::cout << "PLAYER IN LAST SECOND: " << renderCalls << std::endl;
-						renderCalls = 0;
-					}
-				}
 
 				if (playerInput.joinable())
 				{
@@ -190,6 +176,40 @@ namespace  GAME_NAME
 #endif
 			}
 
+#if _DEBUG
+			void Player::EnterDebug()
+			{
+				m_debug = !m_debug;
+
+				if (m_debug)
+				{
+					Debug::LevelBuilder::LevelBuilder::InitLevelBuilder(TestGame::INSTANCE);			
+				}
+				else
+				{
+					Debug::LevelBuilder::LevelBuilder::DestroyLevelBuilder();
+				}
+			}
+
+			void Player::ToggleFlight()
+			{
+				{
+					m_flight = !m_flight;
+
+					if (m_flight)
+					{
+						m_boxCollider->SetBeforeUpdate(nullptr);
+						((GAME_NAME::Camera::GameCamera*)TestGame::INSTANCE->GetCamera())->SetFollowPlayerExact(true);
+					}
+					else
+					{
+						m_boxCollider->SetBeforeUpdate(beforeUpdate);
+						((GAME_NAME::Camera::GameCamera*)TestGame::INSTANCE->GetCamera())->SetFollowPlayerExact(false);
+					}
+				}
+			}
+#endif
+
 			void Player::onCollision(Vec2 push)
 			{
 				if (m_swimming) { return; }
@@ -213,6 +233,8 @@ namespace  GAME_NAME
 				m_foundCollisionInTick = false;
 			}
 
+
+
 			void Player::readKeys()
 			{
 				m_physics->SetFrictionDrag(Drag);
@@ -222,20 +244,9 @@ namespace  GAME_NAME
 				{
 					if (!m_debugKey)
 					{
-						m_debug = !m_debug;
 						m_debugKey = true;
 
-						if (m_debug)
-						{
-							Debug::LevelBuilder::LevelBuilder::InitLevelBuilder(TestGame::INSTANCE);
-							m_boxCollider->SetBeforeUpdate(nullptr);
-							((GAME_NAME::Camera::GameCamera*)TestGame::INSTANCE->GetCamera())->SetFollowPlayerExact(true);
-						}
-						else {
-							Debug::LevelBuilder::LevelBuilder::DestroyLevelBuilder();
-							m_boxCollider->SetBeforeUpdate(beforeUpdate);
-							((GAME_NAME::Camera::GameCamera*)TestGame::INSTANCE->GetCamera())->SetFollowPlayerExact(false);
-						}
+						EnterDebug();
 					}
 				}
 				else if (m_debugKey)
@@ -251,7 +262,7 @@ namespace  GAME_NAME
 				if (InputManager::GetKey(PLAYER_MOVE_RIGHT))
 				{
 #if _DEBUG
-					if (m_debug)
+					if (m_flight)
 					{
 						m_position += Vec2(InputManager::GetKey(PLAYER_DEBUG_ADD_SPEED) ? 3.0f : 1.4f, 0.f);
 						return;
@@ -260,7 +271,7 @@ namespace  GAME_NAME
 					if (m_physics->GetVelocity().X < PlayerSpeedCap)
 					{
 						m_physics->SetFrictionDrag(0);
-						m_physics->AddVelocity(Vec2((PlayerSpeedCap - m_physics->GetVelocity().X) * (PlayerSpeed), 0.f));
+						m_physics->AddVelocity(Vec2((Time::GameTime::GetScaledDeltaTime() / 0.017f) * (PlayerSpeedCap - m_physics->GetVelocity().X) * (PlayerSpeed), 0.f));
 						
 						//Check if the player has begun to move to the right, play a sliding animation if slowing down, flip the sprite if moving right.
 						if (m_physics->GetVelocity().X > 0)
@@ -277,7 +288,7 @@ namespace  GAME_NAME
 				if (InputManager::GetKey(PLAYER_MOVE_LEFT))
 				{
 #if _DEBUG
-					if (m_debug)
+					if (m_flight)
 					{
 						m_position += Vec2(InputManager::GetKey(PLAYER_DEBUG_ADD_SPEED) ? -3.0f : -1.4f, 0.f);
 						return;
@@ -286,7 +297,7 @@ namespace  GAME_NAME
 					if (m_physics->GetVelocity().X > -PlayerSpeedCap)
 					{
 						m_physics->SetFrictionDrag(0);
-						m_physics->AddVelocity(Vec2((PlayerSpeedCap - m_physics->GetVelocity().X) * (-PlayerSpeed), 0.f));
+						m_physics->AddVelocity(Vec2((Time::GameTime::GetScaledDeltaTime() / 0.017f) * (PlayerSpeedCap - m_physics->GetVelocity().X) * (-PlayerSpeed), 0.f));
 					}
 
 					//Check if the player has begun to move to the left, play a sliding animation if slowing down, flip the sprite if moving left.
@@ -318,7 +329,7 @@ namespace  GAME_NAME
 				}
 
 #if _DEBUG
-				if (m_debug)
+				if (m_flight)
 				{
 					if (InputManager::GetKey(PLAYER_MOVE_UP))
 					{
@@ -335,10 +346,15 @@ namespace  GAME_NAME
 				//Check if player is jumping.
 				if (InputManager::GetKey(PLAYER_JUMP))
 				{
-					if (m_jumpHeld != 0 && m_jumpHeld < PlayerJumpHoldLength || m_swimming)
+					unsigned char checks = m_physics->GetUpdatesThisFrame();
+					while (checks > 0)
 					{
-						m_jumpHeld++;
-						m_physics->AddVelocity(Vec2(0.f, PlayerJumpBonus));
+						if (m_jumpHeld != 0 && m_jumpHeld < PlayerJumpHoldLength || m_swimming)
+						{
+							m_jumpHeld++;
+							m_physics->AddVelocity(Vec2(0.f, PlayerJumpBonus));
+						}
+						checks--;
 					}
 
 					if (m_onGround && !m_swimming)

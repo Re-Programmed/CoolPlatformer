@@ -22,7 +22,15 @@ namespace GAME_NAME
 
 			double GameTime::GetScaledDeltaTime()
 			{
-				return DeltaTime::GetDeltaTime() * m_timeScale;
+				double _dt = DeltaTime::GetDeltaTime();
+
+				//CHECK IF REMOVE MAYBE, USED FOR IF WINDOW IS FROZEN TO NOT SHOOT PLAYER INTO THE SKY.
+				if (_dt > 0.1)
+				{
+					_dt = 0.1;
+				}
+
+				return _dt * m_timeScale;
 			}
 
 			void GameTime::DeltaTime::Update()
@@ -51,7 +59,7 @@ namespace GAME_NAME
 				return glfwGetTime();
 			}
 
-			void GameTime::Update(GLFWwindow* window)
+			void GameTime::Update()
 			{
 				DeltaTime::Update();
 			}

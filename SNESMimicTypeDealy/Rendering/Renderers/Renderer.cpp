@@ -28,6 +28,8 @@ namespace GAME_NAME
 		std::vector<GameObject*> Renderer::m_activeGameObjects[MICRO_RENDER_LAYER_COUNT];
 		std::vector<GUI::IGUIElement*> Renderer::m_guiGameObjects[MICRO_GUI_LAYER_COUNT];
 
+		std::vector<GLuint> Renderer::m_textureIDs;
+
 		/*
 	 ---RENDER ORDER---
 		 
@@ -144,7 +146,8 @@ namespace GAME_NAME
 				removedSprites++;
 #endif
 
-				glDeleteTextures(1, (const GLuint*)i);
+				const GLuint textureID = GetTextureIDFromIndex(i + 1);
+				glDeleteTextures(1, &textureID);
 			}
 			
 			//Reset all counters or decrease them by (count - startIndex).
@@ -157,6 +160,52 @@ namespace GAME_NAME
 #endif
 		}
 
+		void Renderer::ClearObjects()
+		{
+			for (int i = 0; i < MICRO_RENDER_LAYER_COUNT; i++)
+			{
+				//for (GameObject* obj : m_activeGameObjects[i])
+				//{
+				//	delete obj;
+
+				//}
+
+				m_activeGameObjects[i].clear();
+
+				for (Chunk c : m_chunks)
+				{
+					//for (GameObject* obj : c.GetObjects()[i])
+					//{
+						//delete obj;
+					//}
+
+					c.GetObjects()[i].clear();
+				}
+			}
+
+			for (Chunk c : m_chunks)
+			{
+				//for (int i = 0; i < c.GetFrontObjects()->size(); i++)
+				//{
+					//delete (*c.GetFrontObjects())[i];
+				//}
+
+				c.GetFrontObjects()->clear();
+			}
+
+			for (int i = 0; i < MICRO_GUI_LAYER_COUNT; i++)
+			{
+				//for (GUI::IGUIElement* obj : m_guiGameObjects[i])
+				//{
+					//delete obj;
+				//}
+
+				m_guiGameObjects[i].clear();
+			}
+
+			
+		}
+
 		GLuint Renderer::loadImage(const char* file)
 		{
 			int width, height, channels;
@@ -167,14 +216,22 @@ namespace GAME_NAME
 				std::cout << stbi_failure_reason() << std::endl;
 			}
 
-			GLuint textureBuffer = imageCount++;
-			//glGenTextures(1, &textureBuffer);
+			GLuint textureBuffer;
+			//Create the texture ID and assign the image to that ID.
+			glGenTextures(1, &textureBuffer);
 			glBindTexture(GL_TEXTURE_2D, textureBuffer);
+
+			//Add the texture to the list of textures.
+			m_textureIDs.push_back(textureBuffer);
+
+			//Parameters for transparency, height, width, etc.
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
+			//Smoothing function.
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST /*GL_LINEAR*/);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST /*GL_LINEAR*/);
 
+			//Wrapping.
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
@@ -185,12 +242,12 @@ namespace GAME_NAME
 
 			free(data);
 
-			return textureBuffer;
+			return m_textureIDs.size() - 1;
 		}
 
 		void Renderer::InitChunks(std::vector<int> chunkData)
 		{
-			for (int x = levelSizeX; x > 0; x--)
+			for (int x = levelSizeX - 1; x >= 0; x--)
 			{
 				for (int y = 0; y < levelSizeY; y++)
 				{

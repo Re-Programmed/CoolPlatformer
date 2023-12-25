@@ -9,6 +9,8 @@ namespace GAME_NAME
 {
 	namespace Game
 	{
+
+
 		void Game::LoadLevel(const char* levelPath, LEVEL_DATA dataToLoad, bool reload)
 		{
 			using namespace Resources;
@@ -61,6 +63,33 @@ namespace GAME_NAME
 				InitLevel(m_level);
 			}
 
+		}
+
+		void Game::ClearLevel(LEVEL_DATA data)
+		{
+			using namespace Resources;
+			using namespace Objects;
+			using namespace Levels;
+			using namespace Rendering;
+
+			if ((data & LEVEL_DATA_AUDIO_MUSIC) != 0)
+			{
+				Audio::SoundManager::ClearSources();
+			}else if ((data & LEVEL_DATA_AUDIO_SFX) != 0)
+			{
+				Audio::SoundManager::ClearSources();
+			}
+
+			if ((data & LEVEL_DATA_TEXTURES_BACKGROUND) != 0)
+			{
+				Rendering::Renderer::ClearTextures();
+				return;
+			}
+
+			if ((data & LEVEL_DATA_TEXTURES_SPRITES) != 0)
+			{
+				Rendering::Renderer::ClearTextures();
+			}
 		}
 
 

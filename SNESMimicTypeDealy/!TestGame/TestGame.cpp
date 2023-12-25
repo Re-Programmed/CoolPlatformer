@@ -38,6 +38,8 @@ namespace GAME_NAME
 
 		m_gameCamera->Update(ThePlayer->GetPosition());
 		GAME_NAME::Game::Game::Update(window); /*Must be at the bottom of update method*/
+
+		//std::cout << Time::GameTime::GetScaledDeltaTime() << std::endl;
 	}
 
 	void TestGame::Init(GLFWwindow* window)

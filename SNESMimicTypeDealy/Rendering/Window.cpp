@@ -17,20 +17,25 @@
 //The expected amount of time that should pass between each frame.
 #define _G_EXPECTED_FRAME_OBJ_UPDATE 0.0088f
 
+#define _WS_WINDOW_TITLE "Platformer"	//Window title.
+#define _WS_WINDOW_VSYNC 0				//Sync window to frame rate of monitor or OS. [ADD A SETTING TO CHANGE THIS IN GAME FOR USERS.]
+
 namespace GAME_NAME
 {
 	Vec2* lastWindowSize;
 
-
 	void windowSizeCallback(GLFWwindow* window, int width, int height)
 	{
+		//Window was minimized or has no size.
 		if (width == 0 || height == 0) {
 			return;
 		}
 
+		//Figure out what the width and height should be based off of each other.
 		float adjustedWindowW = (float)height * (FORCE_WINDOW_RATIO_X / FORCE_WINDOW_RATIO_Y);
 		float adjustedWindowH = (float)width * (FORCE_WINDOW_RATIO_Y / FORCE_WINDOW_RATIO_X);
 
+		//Update the window size that was not changed to fit the ratio.
 		if (lastWindowSize != nullptr && lastWindowSize->X != width)
 		{
 			glfwSetWindowSize(window, width, adjustedWindowH);
@@ -39,8 +44,10 @@ namespace GAME_NAME
 			glfwSetWindowSize(window, adjustedWindowW, height);
 		}
 
+		//Update the last window size to the new size.
 		lastWindowSize = new Vec2(width, height);
 
+		//Set sprite scaling. (Maintains the size of sprites and camera zoom when the window is changed.)
 		Sprite::SetResolution(Vec2(width, height));
 	}
 
@@ -57,7 +64,7 @@ namespace GAME_NAME
 		------------------------*/
 
 		int count;
-		GLFWmonitor* primaryMonitor = glfwGetMonitors(&count)[count - 1]; //Change later to choose a monitor.
+		GLFWmonitor* primaryMonitor = glfwGetMonitors(&count)[count - 1]; //Change later to choose a monitor. [FIX]
 		
 		int width, height;
 		const GLFWvidmode* mode = glfwGetVideoMode(primaryMonitor);
@@ -68,7 +75,7 @@ namespace GAME_NAME
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); //DISABLE RESIZING
 
-		std::string title = "SMW platformer type game";
+		std::string title = _WS_WINDOW_TITLE;
 		this->m_glWindow = glfwCreateWindow(width, height, title.c_str(), fullscreen ? primaryMonitor : NULL, NULL);
 		#if _DEBUG
 		DEBUG::DebugLog::Log("Created Window: " + title + "\n", true, ";1;4");
@@ -81,6 +88,9 @@ namespace GAME_NAME
 		}
 
 		glfwMakeContextCurrent(this->m_glWindow);
+		//Vysnc enabled?
+		glfwSwapInterval(_WS_WINDOW_VSYNC);
+
 		gladLoadGL();
 
 		glfwSetWindowSizeCallback(m_glWindow, windowSizeCallback);
@@ -101,10 +111,6 @@ namespace GAME_NAME
 
 		windowSizeCallback(m_glWindow, width, height);
 		glfwSetWindowSizeLimits(m_glWindow, 200, 200, GLFW_DONT_CARE, GLFW_DONT_CARE);
-
-		//glMatrixMode(GL_PROJECTION);
-		//glOrtho(0, width, 0, height, 0, 100);
-		//glMatrixMode(GL_MODELVIEW);
 
 		BufferManager::GenBuffers();
 
@@ -132,6 +138,17 @@ namespace GAME_NAME
 
 	void Window::Render()
 	{
+		Time::GameTime::Update();
+
+		bool windowIsActive = glfwGetWindowAttrib(m_glWindow, GLFW_FOCUSED)
+			&& !glfwGetWindowAttrib(m_glWindow, GLFW_ICONIFIED)
+			&& glfwGetWindowAttrib(m_glWindow, GLFW_VISIBLE);
+		if (!windowIsActive)
+		{
+			glfwPollEvents();
+			return;
+		}
+
 		//deltaUpdate += GAME_NAME::Utils::Time::GameTime::GetScaledDeltaTime();
 
 		//REMOVED

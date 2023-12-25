@@ -29,6 +29,8 @@ namespace GAME_NAME::Debug::LevelBuilder
 
 		~LevelBuilder()
 		{
+			UpdateManager::RemoveUpdateable(m_updateIndex);
+
 			//if (m_currentGame != nullptr) { delete m_currentGame; }
 			if (m_editObject != nullptr)
 			{

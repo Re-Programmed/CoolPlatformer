@@ -92,6 +92,8 @@ namespace GAME_NAME
 			/// (ex. Delete all the current music loaded and populate the AudioPlayer with new music.)
 			/// [Does not apply if using <b>LEVEL_DATA_ALL</b>, which must reload]</param>
 			void LoadLevel(const char* path, LEVEL_DATA data, bool reload = false);
+
+			void ClearLevel(LEVEL_DATA data);
 		protected:
 			Rendering::Camera::Camera* m_camera;
 		private:

@@ -4,6 +4,7 @@
 #include "../../Resources/AssetManager.h"
 #include "../../Input/InputManager.h"
 #include "../../!TestGame/TestGame.h"
+#include "../../!TestGame/Mappings.h"
 #include "../../Rendering/DynamicSprite.h"
 #include "../../Objects/GUI/GUIManager.h"
 
@@ -40,6 +41,12 @@ namespace GAME_NAME::Debug::LevelBuilder
 
 		//Create a new loaded level builder.
 		m_objectMenuOpen = false;
+
+		if (sv_currentLevelBuilder != nullptr)
+		{
+			delete sv_currentLevelBuilder;
+		}
+
 		new LevelBuilder(game, spriteCount);
 	}
 
@@ -162,8 +169,45 @@ using namespace GUI;
 		}
 	}
 
+	bool refreshingLevel = false;
+
 	void LevelBuilder::Update(GLFWwindow* window)
 	{
+		if (InputManager::GetKeyUpDown(PLAYER_DEBUG_TOGGLE_FLIGHT) == InputManager::KEY_STATE_PRESSED)
+		{
+			TestGame::ThePlayer->ToggleFlight();
+		}
+
+		if (InputManager::GetKey(DEBUG_REFRESH_LEVEL_FILES))
+		{
+			if (!refreshingLevel)
+			{
+				Vec2 storedPlayerPos = TestGame::ThePlayer->GetPosition();
+
+				refreshingLevel = true;
+				Renderer::UpdateObjects = false;
+
+				
+				TestGame::INSTANCE->ClearLevel(TestGame::LEVEL_DATA_ALL);
+				Renderer::ClearObjects();
+
+				TestGame::INSTANCE->LoadLevel("/town_1", TestGame::LEVEL_DATA_TEXTURES_BACKGROUND);
+
+				TestGame::INSTANCE->LoadLevel("/global_assets", TestGame::LEVEL_DATA_TEXTURES_SPRITES);
+
+				TestGame::INSTANCE->LoadLevel("/town_1", (GAME_NAME::Game::Game::LEVEL_DATA)(TestGame::LEVEL_DATA_TEXTURES_BACKGROUND xor TestGame::LEVEL_DATA_ALL));
+
+				GAME_NAME::Mappings::LoadObjectsWithDefaultMapping("/town_1");
+				Renderer::UpdateObjects = true;
+
+				TestGame::ThePlayer->SetPosition(storedPlayerPos);
+				TestGame::ThePlayer->EnterDebug();
+				
+			}				
+		}
+		else {
+			refreshingLevel = false;
+		}
 
 		if (InputManager::GetMouseButton(0))
 		{

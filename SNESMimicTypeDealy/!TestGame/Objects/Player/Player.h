@@ -66,6 +66,11 @@ namespace  GAME_NAME
 				void SetSwimming(bool swimming);		//Enables low gravity and swimming mode. (Sets m_swimming to true)
 
 				void Render(const Vec2 cameraPosition);	
+
+#if _DEBUG
+				void EnterDebug();
+				void ToggleFlight();
+#endif
 			protected:
 				void onCollision(Vec2 push) override;	//Called when a collision occurs.
 				void beforeCollision() override;		//Called before any collisions are calculated to allow for resetting the jump conditions.
@@ -84,7 +89,7 @@ namespace  GAME_NAME
 				void setAnimations(bool playerIsSkidding, float& anim_momentum);	//Called to determine what animation the player should be playing.
 
 #if _DEBUG
-				bool m_debug = false, m_debugKey = false;
+				bool m_debug = false, m_debugKey = false, m_flight = false;
 #endif
 				
 				inline void enableUnderwaterMusic() const	//Pauses the current level music and starts the underwater music in the same position.

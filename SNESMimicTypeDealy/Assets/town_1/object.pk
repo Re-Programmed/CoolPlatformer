@@ -50,13 +50,35 @@
 <--1,104t
 <--1,108t
 
-0,20t,21,32,32,23
-0,20t,53,32,21,6
-2,20t,72,32,1,1
+;HOUSE
 
+;TREES AND ELEVATED GROUND
+
+;MACRO_2: Macro for elevated ground parts. (xPos, yPos)
+-->
+    0,%1,%2,32,32,23
+   ;0,%1,%2|32+,32,21,6
+   ;2,%1,%2|51+,32,1,1
+   ;0,%1,%2|53+,32,4,12,3
+-->
+
+;Elevated ground part
+<--2,20t,21
+<--2,24t,21
+<--2,28t,21
 
 ; Spinning Platforms
 ;7,1,18t,8t,24,9,11,14t,8t,120,0
 ;7,1,18t,8t,24,9,11,14t,8t,120,3
 ;7,1,18t,8t,24,9,11,14t,8t,120,6
 ;7,1,18t,8t,24,9,11,14t,8t,120,9
+
+;BARRED DOOR
+
+;FIELDS
+
+;BARN 1
+
+;FARMERS
+
+;POWER LINES
