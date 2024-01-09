@@ -7,6 +7,7 @@
 #include "../../!TestGame/Mappings.h"
 #include "../../Rendering/DynamicSprite.h"
 #include "../../Objects/GUI/GUIManager.h"
+		
 
 //The area around the mouse that can be used to select objects.
 constexpr unsigned int MouseSelectionRadius = 16U;
@@ -88,7 +89,7 @@ using namespace GUI;
 		{
 			SpawnObjects::Spawnable* sObj = SpawnObjects::GetSpawnable(i);
 
-			GUIButton* btn = new GUIButton(Vec2(0, i * 30), Vec2(30, 30), sObj->Spawnables[0].MyObject->GetSprite()->GetSpriteId(), [](int spawnable) {
+			GUIButton* btn = new GUIButton(Vec2(0, i * 30), Vec2(30, 30), sObj->Spawnables[0].MyObject->GetSprite()->GetSpriteId(), new std::function([](int spawnable) {
 				SpawnObjects::Spawnable* spawnableObj = SpawnObjects::GetSpawnable(spawnable);
 
 				for (GAME_NAME::Rendering::Renderer::InstantiateGameObject obj : spawnableObj->Spawnables)
@@ -100,7 +101,7 @@ using namespace GUI;
 				}
 
 				delete spawnableObj;
-				}, i);
+				}), i);
 
 			delete sObj;
 
@@ -173,7 +174,7 @@ using namespace GUI;
 
 	void LevelBuilder::Update(GLFWwindow* window)
 	{
-		if (InputManager::GetKeyUpDown(PLAYER_DEBUG_TOGGLE_FLIGHT) == InputManager::KEY_STATE_PRESSED)
+		if (InputManager::GetKeyUpDown(PLAYER_DEBUG_TOGGLE_FLIGHT) & InputManager::KEY_STATE_PRESSED)
 		{
 			TestGame::ThePlayer->ToggleFlight();
 		}

@@ -24,6 +24,9 @@
 7: Rotating Platform (map,layer,positionX,positionY,scaleX,scaleY,sprite,originX,originY,speed * 10, offset * pi/6)
     - A platform that rotates about a fixed point.
 
+8: Floor Item (map,positionX,positionY,itemType)
+	- An item that can be picked up.
+
 --COMPONENT MAPS--
 
 0: CURRENTLY TEMPLATE (StaticBoxCollider)

@@ -9,7 +9,7 @@
 #include "../../Objects/GUI/IGUIElement.h"
 #include "../DynamicSprite.h"
 
-#define GLOBAL_SPRITE_BASE -41	//Represents the negative number of sprites in the global_sprites directory.
+#define GLOBAL_SPRITE_BASE -43	//Represents the negative number of sprites in the global_sprites directory.
 #define SpriteBase(x) (GLOBAL_SPRITE_BASE+x)  //Returns the offset of a sprite from the sprite base.
 
 namespace GAME_NAME
@@ -53,6 +53,11 @@ namespace GAME_NAME
 			/// Removes all loaded objects.
 			/// </summary>
 			static void ClearObjects();
+
+			/// <summary>
+			/// Clears all GUI objects from after a given index.
+			/// </summary>
+			static void ClearGUIObjects(uint16_t startIndex, uint8_t layer);
 
 			//Create a sprite from its texture.
 			static Sprite* const GetSprite(const unsigned int spriteTexture);
@@ -180,6 +185,8 @@ namespace GAME_NAME
 			{
 				return m_textureIDs[index - 1];
 			}
+
+
 		private:
 			/// <summary>
 			/// Used to relate a sprite index back to a GL sprite buffer.

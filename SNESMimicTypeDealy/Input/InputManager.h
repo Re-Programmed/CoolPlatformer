@@ -9,9 +9,9 @@
 
 ///How many inputs to check for
 #if _DEBUG
-#define KEY_ARRAY_SIZE 14
+#define KEY_ARRAY_SIZE 15
 #else
-#define KEY_ARRAY_SIZE 6
+#define KEY_ARRAY_SIZE 7
 #endif
 
 namespace GAME_NAME
@@ -27,7 +27,7 @@ namespace GAME_NAME
 		PLAYER_JUMP,				//Player Jump [Space]
 		PLAYER_FORCE_WALK,			//Player Walk [Shift]
 
-
+		DEFAULT_PAUSE_GAME,			//Pause Game {DEFAULT} [ESC]
 
 #if _DEBUG
 		PLAYER_DEBUG,				//Player Enter Debug Mode [P]
@@ -65,7 +65,7 @@ namespace GAME_NAME
 		};
 
 		//Returns KEY_STATE_PRESSED if the key was just pressed, KEY_STATE_RELEASED if the key was just released, KEY_STATE_HELD if the key is held, and KEY_STATE_NONE if the key is not pressed.
-		static const unsigned int GetKeyUpDown(keyRef key);
+		static const KEY_STATE GetKeyUpDown(keyRef key);
 
 		static const float GetJoystick();
 
@@ -83,7 +83,6 @@ namespace GAME_NAME
 
 		//Gets the mouse position in world coordinates with respect to the given camera.
 		static MathUtils::Vec2 GetMouseWorldPosition(Rendering::Camera::Camera* camera);
-
 	private:
 
 		static int m_keys[KEY_ARRAY_SIZE];				//Determines what button each keyRef refers to.

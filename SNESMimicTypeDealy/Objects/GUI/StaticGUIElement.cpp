@@ -1,5 +1,7 @@
 #include "StaticGUIElement.h"
 
+#include "../../!TestGame/TestGame.h"
+
 namespace GAME_NAME
 {
 	namespace Objects

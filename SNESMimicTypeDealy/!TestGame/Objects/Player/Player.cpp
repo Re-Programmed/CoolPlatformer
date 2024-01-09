@@ -11,6 +11,7 @@
 #include "../../../Utils/Time/GameTime.h"
 #include "../../../Input/InputManager.h"
 #include "../../../Rendering/DynamicSprite.h"
+#include "../../../Objects/GUI/Menus/GUIMenu.h"
 
 #include "../../TestGame.h"
 
@@ -34,7 +35,10 @@ namespace  GAME_NAME
 			using namespace Utils;
 
 			Player::Player(Vec2 position)
-				: ActiveBoxCollisionGravityObject(position, Vec2(DefaultPlayerScaleX, DefaultPlayerScaleY), Rendering::Renderer::GetSprite(DefaultPlayerSprite))
+				: ActiveBoxCollisionGravityObject(position, Vec2(DefaultPlayerScaleX, DefaultPlayerScaleY), Rendering::Renderer::GetSprite(DefaultPlayerSprite)),
+				m_healthProgressBar(new ProgressBar(
+					Vec2(10, 7), Vec2(24, 8), Renderer::GetSprite(SpriteBase(42))->GetSpriteId()
+				))
 			{
 #if _DEBUG
 				PlayerLogger("Initilized Player");
@@ -43,8 +47,12 @@ namespace  GAME_NAME
 				//INIT WATER MUSIC
 				Audio::SoundManager::WaterMusic = Audio::SoundManager::Play(Audio::UnderwaterMusicID, Audio::SoundManager::BGMusic, -1.0F, 0.0F, true);
 
+				GUI::Menus::GUIMenu::LoadMenu("/stat_overlay", nullptr);
+				Renderer::LoadGUIElement(m_healthProgressBar, 0);
 
-#pragma region Init Run Animation
+				//Register animations
+
+#pragma region Init Animation
 				AnimData walk_data, run_data, fall_data, jump_data, skid_data;
 
 				for (int i : PlayerWalkAnim)
@@ -105,6 +113,16 @@ namespace  GAME_NAME
 				std::thread playerInput([this] { readKeys(); });
 
 				std::thread animationUpdate([this, window] { m_animator->Update(window, this); });
+
+
+				//Calculate time spent in air.
+				if (!m_onGround)
+				{
+					m_airTime += Time::GameTime::GetScaledDeltaTime();
+				}
+
+				//Update the health bar display.
+				m_healthProgressBar->SetPercentage(m_stats.Health);
 
 #if _DEBUG
 				if (!m_flight)
@@ -216,7 +234,24 @@ namespace  GAME_NAME
 					}
 				}
 			}
+
 #endif
+
+			void Player::Damage(float damage)
+			{
+				m_stats.Health -= damage;
+				m_healthProgressBar->SetPercentage(m_stats.Health);
+
+				if (m_stats.Health <= 0)
+				{
+					Kill();
+				}
+			}
+
+			void Player::Kill()
+			{
+
+			}
 
 			void Player::onCollision(Vec2 push)
 			{
@@ -228,6 +263,16 @@ namespace  GAME_NAME
 					m_onGround = true;
 					m_foundCollisionInTick = true;
 					m_physics->SetVelocityY(0.f);
+
+					//Calculate fall damage.
+					if (m_airTime > 1.85f)
+					{
+						std::cout << m_airTime << std::endl;
+
+						Damage((m_airTime - 1.85f) * 10.f);
+					}
+
+					m_airTime = 0;
 				}
 				
 			}
@@ -373,18 +418,18 @@ namespace  GAME_NAME
 						{
 							//Jump Sound
 
-						m_jumpHeld = 1;
-						m_onGround = false;
-						m_physics->AddVelocity(Vec2(0.f, PlayerJumpHeight + (std::abs(m_physics->GetVelocity().X) * PlayerXSpeedJumpMultiplier)));
+							m_jumpHeld = 1;
+							m_onGround = false;
+							m_physics->AddVelocity(Vec2(0.f, PlayerJumpHeight + (std::abs(m_physics->GetVelocity().X) * PlayerXSpeedJumpMultiplier)));
+						}
 					}
-				}
-				else if (m_jumpHeld != 0)
-				{
-					m_jumpHeld = 0;
-				}
-				
+					else if (m_jumpHeld != 0)
+					{
+						m_jumpHeld = 0;
+					}
 
 
+				}
 			}
 			void Player::setAnimations(bool playerIsSkidding, float& anim_momentum)
 			{

@@ -9,7 +9,6 @@ namespace GAME_NAME
 #pragma region Constructors
 
 
-
 		DynamicSprite::DynamicSprite(Sprite& sprite)
 			: DynamicSprite(sprite.GetSpriteId())
 		{

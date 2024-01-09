@@ -20,19 +20,19 @@ namespace GAME_NAME
 
 			{
 			public:
-				GUIButton(Vec2 position, Vec2 scale, GLuint texture, std::function<void(int)> onClick)
+				GUIButton(Vec2 position, Vec2 scale, GLuint texture, std::function<void(int)>* onClick)
 					:StaticGUIElement(position, scale, texture), OnClick(onClick), m_buttonId(-1)
 				{
 
 				}
 
-				GUIButton(Vec2 position, Vec2 scale, GLuint texture, std::function<void(int)> onClick, int buttonId)
+				GUIButton(Vec2 position, Vec2 scale, GLuint texture, std::function<void(int)>* onClick, int buttonId)
 					:StaticGUIElement(position, scale, texture), OnClick(onClick), m_buttonId(buttonId)
 				{
 
 				}
 
-				std::function<void(int buttonId)> OnClick;
+				std::function<void(int buttonId)>* OnClick;
 
 				inline void SetButtonId(unsigned int id)
 				{

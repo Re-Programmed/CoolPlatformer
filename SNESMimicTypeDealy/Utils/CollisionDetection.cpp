@@ -104,6 +104,8 @@ bool GAME_NAME::Utils::CollisionDetection::BoxWithinBox(Vec2 box1BottomLeft, Vec
 	return false;
 }
 
+
+
 GAME_NAME::MathUtils::Vec2 GAME_NAME::Utils::CollisionDetection::GetSideInteresctLength(Vec2 intersectionPoint1, Vec2 intersectionPoint2)
 {
 	return Vec2(std::abs(intersectionPoint2.X - intersectionPoint1.X), std::abs(intersectionPoint2.Y - intersectionPoint1.Y));

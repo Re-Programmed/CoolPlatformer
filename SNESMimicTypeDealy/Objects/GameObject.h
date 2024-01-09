@@ -23,6 +23,12 @@ namespace GAME_NAME
 
 			float GetRotation();
 
+			/// <summary>
+			/// Rotates an object around its center point by adjusting its position.
+			/// </summary>
+			/// <param name="rotation">How much to rotate by.</param>
+			void RotateAboutCenter(float rotation);
+
 			Rendering::Sprite* GetSprite();
 			void SetSprite(Rendering::Sprite* sprite);
 			
@@ -35,7 +41,7 @@ namespace GAME_NAME
 				m_textureFlipped = textureFlipped;
 			}
 
-			GameObject(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, float rotation = 0.f) : m_position(position), m_sprite(sprite), m_scale(scale), m_rotation(rotation) {};
+			GameObject(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, float rotation = 0.f) : m_position(position), m_sprite(sprite), m_scale(scale), m_rotation(rotation), m_rotationOffset(0) {};
 			GameObject();
 
 			~GameObject();
@@ -54,6 +60,10 @@ namespace GAME_NAME
 			float m_rotation;
 
 			bool m_textureFlipped;
+
+		private:
+			Vec2 m_rotationOffset;
+
 		};
 		/*
 		class GameObjectMapping

@@ -12,7 +12,7 @@ namespace GAME_NAME
 				: public IComponent
 			{
 			public:
-				PhysicsComponent() : m_velocity(Vec2::Zero), m_frictionDrag(1.f), m_airDrag(0.02f) {}
+				PhysicsComponent() : m_velocity(Vec2::Zero), m_rotationalVelocity(0.f), m_frictionDrag(1.f), m_airDrag(0.02f), m_rotationalDrag(0.085f) {}
 				void Update(GLFWwindow* window, Objects::GameObject* object) final;
 
 				void SetVelocity(Vec2 velocity);
@@ -23,7 +23,12 @@ namespace GAME_NAME
 				Vec2 GetVelocity();
 
 				void AddVelocity(Vec2 velocity);
-				
+
+				inline void SetRotationalVelocity(float velocity) { m_rotationalVelocity = velocity; }
+				inline float GetRotationalVelocity() { return m_rotationalVelocity; }
+
+				inline void AddRotationalVelocity(float velocity) { m_rotationalVelocity += velocity; }
+
 				/// <summary>
 				/// Returns the number of times the physics was updated for this component after calling Update().
 				/// (Physics is updated at a constant rate. PHYSICS_COMPONENT_TARGET_SPF)
@@ -42,16 +47,21 @@ namespace GAME_NAME
 
 			protected:
 				virtual void physicsTick(GLFWwindow* window, Objects::GameObject* object) = 0; //Called each physics update.
+				virtual void frameTick(GLFWwindow* window, Objects::GameObject* object) = 0; //Called each frame update.
 
 				Vec2 m_velocity;
+				float m_rotationalVelocity;
 				float m_frictionDrag;	//How much X velocity is subtracted each frame.
 				float m_airDrag;		//How much Y velocity is subtracted each frame.
+				float m_rotationalDrag;	//How much rotational velocity is subtracted each frame.
 
 				double m_stackedPhysicsTicks = 0;
 				unsigned char m_physicsTicks = 0;
 			private:
 				void xAirDrag();		//Calculate X drag and clamp velocity.
 				void yAirDrag();		//Calculate Y drag and clamp velocity.
+
+				void rotAirDrag();		//Calculate Rotational drag and clamp velocity.
 			};
 		}
 	}

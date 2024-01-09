@@ -8,6 +8,8 @@
 #include "../!TestGame/Objects/Environment/BGParallax.h"
 #include "../!TestGame/Objects/Platforms/RotatingPlatform.h"
 
+#include "../!TestGame/Items/FloorItem.h"
+
 #if _DEBUG
 #include "../Debug/DebugLog.h"
 #define DebugMapper(x) {std::string s = "[MAPPER] ";DEBUG::DebugLog::Log(s + x, true, ";35");}
@@ -170,7 +172,7 @@ std::function<void (std::vector<std::string>)> Mappings::m_mappings[MAPPINGS_SIZ
 		7: Rotating Platform (map,layer,positionX,positionY,scaleX,scaleY,sprite,originX,originY,speed*10,offset*pi/6)
 		- A platform that rotates about a fixed point.
 	*/
-		[](std::vector<std::string> data) {
+	[](std::vector<std::string> data) {
 #if _DEBUG
 		DebugMapper(">>> Loading RotatingPlatform");
 #endif
@@ -182,7 +184,23 @@ std::function<void (std::vector<std::string>)> Mappings::m_mappings[MAPPINGS_SIZ
 			static_cast<double>(std::stoi(data[8]) / 10.0),			//speed*10
 			M_PI * static_cast<double>(std::stoi(data[9]) / 6.0)	//offset * pi/6
 			), std::stoi(data[0]));									//layer
-		}
+		},
+
+	/*
+		8: Floor Item (map,positionX,positionY,itemType)
+		- An item that can be picked up.
+	*/
+	[](std::vector<std::string> data)
+	{
+#if _DEBUG
+			DebugMapper(">>> Loading FloorItem(" + data[2] + ")");
+#endif
+			using namespace GAME_NAME::Items;
+			InventoryItem invItem = InventoryItem((ITEM_TYPE)std::stoi(data[2]));
+			FloorItem* newFloorItem = new FloorItem(STOIVEC(data[0], data[1]), invItem);
+
+			Renderer::LoadActiveObject(newFloorItem);
+	}
 };
 
 void GAME_NAME::Mappings::LoadObjectsWithDefaultMapping(const char* levelPath)

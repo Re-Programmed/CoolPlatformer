@@ -17,15 +17,23 @@ namespace GAME_NAME
 				m_physicsTicks = 0;
 				m_stackedPhysicsTicks += GAME_NAME::Utils::Time::GameTime::GetScaledDeltaTime();
 
+				object->Translate(m_velocity * GAME_NAME::Utils::Time::GameTime::GetScaledDeltaTime());
+				frameTick(window, object);
+
 				if (m_stackedPhysicsTicks >= PHYSICS_COMPONENT_TARGET_SPF)
 				{
 					while (m_stackedPhysicsTicks >= PHYSICS_COMPONENT_TARGET_SPF)
 					{
 						m_physicsTicks++;
-						object->Translate(m_velocity * PHYSICS_COMPONENT_VELOCITY_DAMP);
+						if (m_rotationalVelocity)
+						{
+							object->RotateAboutCenter(m_rotationalVelocity);
 
-						xAirDrag();
-						yAirDrag();
+							rotAirDrag();
+						}
+
+						if (m_velocity.X) { xAirDrag(); }
+						if (m_velocity.Y) { yAirDrag(); }
 
 						physicsTick(window, object);
 
@@ -36,8 +44,6 @@ namespace GAME_NAME
 
 			void PhysicsComponent::xAirDrag()
 			{
-				if (m_frictionDrag == 0) { return; }
-
 				if (m_velocity.X <= -m_frictionDrag)
 				{
 					m_velocity += Vec2(m_frictionDrag, 0);
@@ -53,8 +59,6 @@ namespace GAME_NAME
 
 			void PhysicsComponent::yAirDrag()
 			{
-				if (m_airDrag == 0) { return; }
-
 				if (m_velocity.Y <= -m_airDrag)
 				{
 					m_velocity += Vec2(0, m_airDrag);
@@ -65,6 +69,21 @@ namespace GAME_NAME
 				}
 				else {
 					m_velocity = Vec2(m_velocity.X, 0);
+				}
+			}
+
+			void PhysicsComponent::rotAirDrag()
+			{
+				if (m_rotationalVelocity <= -m_rotationalDrag)
+				{
+					m_rotationalVelocity += m_rotationalDrag;
+				}
+				else if (m_rotationalVelocity >= m_rotationalDrag)
+				{
+					m_rotationalVelocity -= m_rotationalDrag;
+				}
+				else {
+					m_rotationalVelocity = 0;
 				}
 			}
 

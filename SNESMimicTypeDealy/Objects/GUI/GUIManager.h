@@ -6,6 +6,7 @@
 #include <vector>
 #include "GUIButton.h"
 
+
 namespace GAME_NAME
 {
 	namespace Objects
@@ -19,6 +20,37 @@ namespace GAME_NAME
 			class GUIManager
 			{
 			public:
+#define GUIMANAGER_M_ELEMENT_CODES_LENGTH 5
+				/// <summary>
+				/// Types of GUI elements that can be created.
+				/// </summary>
+				enum GUI_ELEMENT_TYPE
+				{
+					EL_TEXT,		//Text object.
+					EL_BUTTON,		//Clickable button.
+					EL_NUM,			//Number display.
+					EL_BLANK,		//Object with texture.
+					EL_PROGRESS		//Progress Bar.
+				};
+				
+			private:
+				static inline const std::string m_elementCodes[GUIMANAGER_M_ELEMENT_CODES_LENGTH] {
+					"txt",
+					"btn",
+					"num",
+					"obj",
+					"prg"
+				};
+
+			public:
+
+				static inline bool MenuIsOpen = false;
+
+				/// <summary>
+				/// Returns the GUI element type based on the given code.
+				/// </summary>
+				static GUI_ELEMENT_TYPE GetGUIComponentFromCode(std::string code);
+
 				/// <summary>
 				/// Call this everytime a click occurs. Updates all buttons accordingly.
 				/// </summary>

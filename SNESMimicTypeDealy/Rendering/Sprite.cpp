@@ -17,9 +17,9 @@ namespace GAME_NAME
 
 			glScalef(scale.X * m_resolutionScale.X, scale.Y * m_resolutionScale.Y, 1.f);
 
-			glRotatef(rotation, 0, 0, 0);
-			glDrawArrays(GL_QUADS, 0, 4);
+			glRotatef(rotation, 0, 0, 1);
 
+			glDrawArrays(GL_QUADS, 0, 4);
 		}
 
 		void Sprite::SetResolution(Vec2 res)

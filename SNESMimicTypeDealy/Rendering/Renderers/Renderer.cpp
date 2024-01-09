@@ -68,6 +68,18 @@ namespace GAME_NAME
 			return loadImage(file);
 		}
 
+		void Renderer::ClearGUIObjects(uint16_t startIndex, uint8_t layer)
+		{
+			startIndex = m_guiGameObjects[layer].size() - startIndex;
+			size_t size = m_guiGameObjects[layer].size();
+			do {
+				size--;
+				delete m_guiGameObjects[layer][size];
+				m_guiGameObjects[layer].erase(m_guiGameObjects[layer].begin() + size);
+			}
+			while (size > startIndex);
+		}
+
 		Sprite* const Renderer::GetSprite(const unsigned int spriteTexture)
 		{
 			return new Sprite(spriteTexture + bgCount + lastFileOff);
@@ -235,6 +247,7 @@ namespace GAME_NAME
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
+			imageCount++;		//REMOVED FOR SOME REASON?
 #if _DEBUG
 			std::cout << "GLBUFFERLOAD: " << textureBuffer << std::endl;
 			std::cout << "IMAGECOUNT: " << imageCount << std::endl;
@@ -332,6 +345,8 @@ namespace GAME_NAME
 
 			if (layer == RENDER_LAYER_ACTIVE_OBJECTS)
 			{
+				std::vector<GameObject*> renderBuffer;
+
 				Vec2 cameraPositionPadding = cameraPosition - cameraBoundsPadding / 2.f;
 				Vec2 cameraBounds = Vec2(cameraBoundingBox.GetX(), cameraBoundingBox.GetY());
 				//Render active objects if they are on screen. Renders in order of layers from least to greatest.
@@ -346,9 +361,14 @@ namespace GAME_NAME
 
 						if (Utils::CollisionDetection::BoxWithinBox(obj->GetPosition(), obj->GetScale(), cameraPositionPadding, cameraBounds))
 						{
-							obj->Render(cameraPosition);
+							renderBuffer.push_back(obj);
 						}
 					}
+				}
+
+				for (int i = 0; i < renderBuffer.size(); i++)
+				{
+					renderBuffer[i]->Render(cameraPosition);
 				}
 
 				return;
@@ -398,6 +418,8 @@ namespace GAME_NAME
 
 			if (layer == RENDER_LAYER_BG)
 			{
+				std::vector<GameObject*> renderBuffer;
+
 				for (GameObject* bg2Object : m_activeGameObjects[0])
 				{
 					if (UpdateObjects)
@@ -405,7 +427,12 @@ namespace GAME_NAME
 						bg2Object->Update(window);
 					}
 
-					bg2Object->Render(cameraPosition);
+					renderBuffer.push_back(bg2Object);
+				}
+
+				for (int i = 0; i < renderBuffer.size(); i++)
+				{
+					renderBuffer[i]->Render(cameraPosition);
 				}
 			}
 

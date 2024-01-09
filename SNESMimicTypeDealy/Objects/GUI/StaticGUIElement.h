@@ -12,7 +12,7 @@ namespace GAME_NAME
 		namespace GUI
 		{
 			/// <summary>
-			/// A GUI element that will not update.
+			/// A GUI element.
 			/// </summary>
 			class StaticGUIElement : public IGUIElement
 
@@ -63,7 +63,7 @@ namespace GAME_NAME
 				/// Draw the element.
 				/// </summary>
 				void Render();
-			private:
+			protected:
 				Vec2 m_position;
 				Vec2 m_scale;
 				Rendering::Sprite* m_sprite;

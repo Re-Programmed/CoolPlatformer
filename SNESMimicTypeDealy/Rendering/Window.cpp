@@ -13,12 +13,13 @@
 #endif
 #include "../Audio/SoundManager.h"
 #include "../Utils/Time/GameTime.h"
+#include "../Objects/GUI/GUIManager.h"
 
 //The expected amount of time that should pass between each frame.
 #define _G_EXPECTED_FRAME_OBJ_UPDATE 0.0088f
 
 #define _WS_WINDOW_TITLE "Platformer"	//Window title.
-#define _WS_WINDOW_VSYNC 0				//Sync window to frame rate of monitor or OS. [ADD A SETTING TO CHANGE THIS IN GAME FOR USERS.]
+#define _WS_WINDOW_VSYNC 1				//Sync window to frame rate of monitor or OS. [ADD A SETTING TO CHANGE THIS IN GAME FOR USERS.]
 
 namespace GAME_NAME
 {
@@ -73,7 +74,7 @@ namespace GAME_NAME
 
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); //DISABLE RESIZING
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); //DISABLE RESIZING
 
 		std::string title = _WS_WINDOW_TITLE;
 		this->m_glWindow = glfwCreateWindow(width, height, title.c_str(), fullscreen ? primaryMonitor : NULL, NULL);
@@ -173,7 +174,15 @@ namespace GAME_NAME
 			Renderer::Render(m_game->GetCamera(), lastWindowSize, RENDER_LAYER_OBJECTS_FRONT, m_glWindow);
 		}
 
-		Renderer::Render(m_game->GetCamera(), lastWindowSize, RENDER_LAYER_GUI, m_glWindow);
+		if (GUI::GUIManager::MenuIsOpen)
+		{
+			Renderer::Render(m_game->GetCamera(), lastWindowSize, RENDER_LAYER_GUI, m_glWindow);
+			
+			if (InputManager::GetMouseButton(0))
+			{
+				GUI::GUIManager::ButtonClickEvent(InputManager::GetMouseScreenPosition());
+			}
+		}
 
 		glfwSwapBuffers(this->m_glWindow);
 		glfwPollEvents();

@@ -11,6 +11,7 @@
 #include "../MusicSync/MusicSync.h"
 #include "./Objects/Platforms/RotatingPlatform.h"
 #include "./Mappings.h"
+#include "../Objects/GUI/Menus/GUIMenu.h"
 
 #if _DEBUG
 #include "../Debug/LevelBuilder/LevelBuilder.h"
@@ -29,10 +30,27 @@ namespace GAME_NAME
 	std::shared_ptr<Objects::Player::Player> TestGame::ThePlayer;
 
 	GLFWwindow* TestGame::FirstWindow;
+	
+	bool TestGame::m_gamePaused = false;
+
+	unsigned int pauseMenu_buttonIdOffset = 0;
+	void pauseMenu_guiCallback(int id)
+	{
+		id -= pauseMenu_buttonIdOffset;
+		if (id == 0)
+		{
+			TestGame::INSTANCE->TogglePauseState();
+		}
+	}
 
 	void GAME_NAME::TestGame::Update(GLFWwindow* window)
 	{
 		InputManager::GetJoystick();
+
+		if (InputManager::GetKeyUpDown(DEFAULT_PAUSE_GAME) & InputManager::KEY_STATE_PRESSED)
+		{
+			TogglePauseState();
+		}
 
 		MusicSync::MusicSync::Update();	//Update things that sync to the beat of the current song.
 
@@ -99,6 +117,26 @@ namespace GAME_NAME
 
 		Environment::BackgroundObjects::TiledBGObject(hillTiles, 1, 0.5f, FirstWindow);
 		*/
+
+		//Clear the current global level data.
+		m_globalLevelData = GlobalLevelData();
+	}
+
+
+
+	void TestGame::TogglePauseState()
+	{
+		m_gamePaused = !m_gamePaused;
+		
+		if (m_gamePaused)
+		{
+			pauseMenu_buttonIdOffset = GUI::Menus::GUIMenu::LoadMenu("/pause", new std::function(pauseMenu_guiCallback));
+			Rendering::Renderer::UpdateObjects = false;
+		}
+		else {
+			GUI::Menus::GUIMenu::RemoveLastMenu();
+			Rendering::Renderer::UpdateObjects = true;
+		}
 	}
 
 }

@@ -10,9 +10,13 @@ constexpr const char* AssetPath = "./Assets";			//Path to the Asset folder that 
 constexpr const char* SpriteSubfolder = "/sprite";		//Path within a level to its sprites.
 constexpr const char* BGSubfolder = "/bg";				//Path within a level to its background sprites.
 
+constexpr const char* MenuSubfolder = "/Menus";			//Path within assets to the folder containing menus.
+
 constexpr const char* ChunkFileName = "/chunk.pk";		//Path within a level to its chunk.pk file.
 constexpr const char* LevelFileName = "/level.dat";		//Path within a level to its level.dat file.
 constexpr const char* ObjectFileName = "/object.pk";	//Path within a level to its object.pk file.
+
+constexpr const char* MenuFileExtension = ".pk";		//Extension for menu files.
 
 constexpr const char* MusicFilePath = "/music";			//Path within a level to its music folder.
 
@@ -70,6 +74,8 @@ namespace GAME_NAME
 			/// The mapping to use is specified by putting the index of the mapping in the mappings array as the first item of each line in the object file.</param>
 			/// <param name="reloadObjects">If true, all objects currently loaded will be deleted before loading the new objects. (Should not be called during rendering.)</param>
 			static void LoadObjectData(const char* subfolder, std::function<void(std::vector<std::string>)> mappings[], bool reloadObjects = false);
+
+
 		};
 	}
 }

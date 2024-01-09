@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\SoLoud-wav.2020.2.7.2\build\native\SoLoud-wav.props" Condition="Exists('..\packages\SoLoud-wav.2020.2.7.2\build\native\SoLoud-wav.props')" />
   <ItemGroup Label="ProjectConfigurations">
@@ -122,7 +122,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\willm\source\repos\SNESMimicTypeDealy\Dependencies\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Dependencies\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -130,10 +130,14 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>C:\Users\willm\source\repos\SNESMimicTypeDealy\Dependencies\glfw\lib-vc2022\glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\Dependencies\glfw\lib-vc2022\glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="!TestGame\Items\FloorItem.cpp" />
+    <ClCompile Include="!TestGame\Items\Inventory.cpp" />
+    <ClCompile Include="!TestGame\Items\InventoryItem.cpp" />
+    <ClCompile Include="!TestGame\Level\GlobalLevelData.cpp" />
     <ClCompile Include="!TestGame\Mappings.cpp" />
     <ClCompile Include="!TestGame\Camera\GameCamera.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\BackgroundObjects.cpp" />
@@ -154,6 +158,7 @@
     <ClCompile Include="Components\Physics\Collision\CollisionManager.cpp" />
     <ClCompile Include="Components\Physics\Collision\Helpers\BasicMovingPlatform.cpp" />
     <ClCompile Include="Components\Physics\Collision\PixelPerfectCollider.cpp" />
+    <ClCompile Include="Components\Physics\Collision\RotationalBoxCollider.cpp" />
     <ClCompile Include="Components\Physics\Collision\StaticBoxCollider.cpp" />
     <ClCompile Include="Components\Physics\GravityComponent.cpp" />
     <ClCompile Include="Components\Physics\PhysicsComponent.cpp" />
@@ -165,8 +170,12 @@
     <ClCompile Include="MusicSync\MusicSync.cpp" />
     <ClCompile Include="Objects\GUI\GUIButton.cpp" />
     <ClCompile Include="Objects\GUI\GUIManager.cpp" />
+    <ClCompile Include="Objects\GUI\Menus\GUIMenu.cpp" />
+    <ClCompile Include="Objects\GUI\Progress\ProgressBar.cpp" />
     <ClCompile Include="Objects\GUI\StaticGUIElement.cpp" />
+    <ClCompile Include="Objects\GUI\Text\TextRenderer.cpp" />
     <ClCompile Include="Objects\Levels\Data\LevelDataParser.cpp" />
+    <ClCompile Include="Objects\Particles\ParticleEmitter.cpp" />
     <ClCompile Include="Rendering\DynamicSprite.cpp" />
     <ClCompile Include="Rendering\Renderers\Renderer.cpp" />
     <ClCompile Include="Settings\AppDataFileManager.cpp" />
@@ -191,6 +200,11 @@
     <ClCompile Include="Utils\Time\GameTime.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="!TestGame\Items\FloorItem.h" />
+    <ClInclude Include="!TestGame\Items\Inventory.h" />
+    <ClInclude Include="!TestGame\Items\InventoryItem.h" />
+    <ClInclude Include="!TestGame\Items\ItemType.h" />
+    <ClInclude Include="!TestGame\Level\GlobalLevelData.h" />
     <ClInclude Include="!TestGame\Mappings.h" />
     <ClInclude Include="!TestGame\Camera\GameCamera.h" />
     <ClInclude Include="!TestGame\Objects\Environment\BackgroundObjects.h" />
@@ -208,14 +222,17 @@
     <ClInclude Include="Components\Physics\Collision\ActiveBoxCollider.h" />
     <ClInclude Include="Components\Physics\Collision\ActiveCollider.h" />
     <ClInclude Include="Components\Physics\Collision\CollisionManager.h" />
+    <ClInclude Include="Components\Physics\Collision\Helpers\ActiveRotationalBoxCollisionGravityObject.h" />
     <ClInclude Include="Components\Physics\Collision\Helpers\BasicMovingPlatform.h" />
     <ClInclude Include="Components\Physics\Collision\Helpers\PixelPerfectColliderStaticObject.h" />
     <ClInclude Include="Components\Physics\Collision\PixelPerfectCollider.h" />
+    <ClInclude Include="Components\Physics\Collision\RotationalBoxCollider.h" />
     <ClInclude Include="Components\Physics\Collision\StaticBoxCollider.h" />
     <ClInclude Include="Components\Physics\Collision\StaticCollider.h" />
     <ClInclude Include="Components\Physics\Collision\Helpers\StaticBoxCollisionObject.h" />
     <ClInclude Include="Components\Physics\GravityComponent.h" />
     <ClInclude Include="Components\Physics\PhysicsComponent.h" />
+    <ClInclude Include="Components\Physics\RotationalCircleCollider.h" />
     <ClInclude Include="Debug\DebugLog.h" />
     <ClInclude Include="Debug\LevelBuilder\LevelBuilder.h">
       <DeploymentContent>false</DeploymentContent>
@@ -230,13 +247,18 @@
     <ClInclude Include="Objects\GUI\GUIButton.h" />
     <ClInclude Include="Objects\GUI\GUIManager.h" />
     <ClInclude Include="Objects\GUI\IGUIElement.h" />
+    <ClInclude Include="Objects\GUI\Menus\GUIMenu.h" />
+    <ClInclude Include="Objects\GUI\Progress\ProgressBar.h" />
     <ClInclude Include="Objects\GUI\StaticGUIElement.h" />
+    <ClInclude Include="Objects\GUI\Text\TextRenderer.h" />
     <ClInclude Include="Objects\Levels\Data\LevelDataParser.h" />
+    <ClInclude Include="Objects\Particles\ParticleEmitter.h" />
     <ClInclude Include="Rendering\DynamicSprite.h" />
     <ClInclude Include="Rendering\Renderers\Renderer.h" />
     <ClInclude Include="Settings\AppDataFileManager.h" />
     <ClInclude Include="Settings\SettingsGlobals.h" />
     <ClInclude Include="Utils\ConstUpdateable.h" />
+    <ClInclude Include="Utils\Math\VMath.h" />
     <ClInclude Include="Utils\RemoveableUpdateable.h" />
     <ClInclude Include="Utils\Math\iVec2.h" />
     <ClInclude Include="Objects\Chunk.h" />
@@ -326,6 +348,8 @@
     <None Include="Assets\house_1_1\chunk.pk" />
     <None Include="Assets\house_1_1\level.dat" />
     <None Include="Assets\house_1_1\object.pk" />
+    <None Include="Assets\Menus\pause.pk" />
+    <None Include="Assets\Menus\stat_overlay.pk" />
     <None Include="Assets\town_1\chunk.pk" />
     <None Include="Assets\town_1\level.dat" />
     <None Include="Assets\town_1\object.pk" />

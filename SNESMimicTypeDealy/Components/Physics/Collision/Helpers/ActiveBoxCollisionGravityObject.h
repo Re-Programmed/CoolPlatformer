@@ -1,3 +1,5 @@
+#pragma once
+
 #include "../ActiveBoxCollider.h"
 #include "../CollisionManager.h"
 #include "../../GravityComponent.h"

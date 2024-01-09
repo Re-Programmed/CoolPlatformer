@@ -39,7 +39,7 @@ namespace GAME_NAME
 
 
 
-	const unsigned int InputManager::GetKeyUpDown(keyRef key)
+	const GAME_NAME::InputManager::KEY_STATE InputManager::GetKeyUpDown(keyRef key)
 	{
 		if (glfwGetKey(m_window, m_keys[key]))
 		{
@@ -111,6 +111,8 @@ namespace GAME_NAME
 		return MathUtils::Vec2(TargetResolutionX * normalizedScreenCoords.X, TargetResolutionY * normalizedScreenCoords.Y);
 	}
 
+
+
 	MathUtils::Vec2 InputManager::GetMouseWorldPosition(Rendering::Camera::Camera* camera)
 	{
 		return GetMouseScreenPosition() + camera->GetPosition();
@@ -142,5 +144,8 @@ namespace GAME_NAME
 		m_keys[DEBUG_REFRESH_LEVEL_FILES] = GLFW_KEY_M;
 		m_keys[PLAYER_DEBUG_TOGGLE_FLIGHT] = GLFW_KEY_V;
 #endif
+
+		//Default Keys (Cannot be changed in settings)
+		m_keys[DEFAULT_PAUSE_GAME] = GLFW_KEY_ESCAPE;
 	}
 }

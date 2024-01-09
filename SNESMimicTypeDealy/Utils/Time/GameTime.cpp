@@ -25,9 +25,9 @@ namespace GAME_NAME
 				double _dt = DeltaTime::GetDeltaTime();
 
 				//CHECK IF REMOVE MAYBE, USED FOR IF WINDOW IS FROZEN TO NOT SHOOT PLAYER INTO THE SKY.
-				if (_dt > 0.1)
+				if (_dt > 0.05)
 				{
-					_dt = 0.1;
+					_dt = 0.05;
 				}
 
 				return _dt * m_timeScale;

@@ -24,6 +24,10 @@ namespace GAME_NAME
 			void UpdateTextureColor(const Vec4 textureColor[4]);
 
 			void Render(const Vec2 cameraPosition, Vec2 position, Vec2 scale, float rotation = 0.f) override;
+
+			inline static Vec2 DefaultVerts[4] {
+				Vec2(0.0f, 0.0f), Vec2(0.0f, 1.0f), Vec2(1.0f, 1.0f), Vec2(1.0f, 0.0f)
+			};
 		private:
 			Vec2 m_vertices[4];
 			Vec2 m_textureCoords[4];

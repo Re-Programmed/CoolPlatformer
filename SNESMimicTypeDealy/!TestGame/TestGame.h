@@ -4,12 +4,14 @@
 #include "../Game/Level.h"
 #include "./Objects/Player/Player.h"
 #include "./Camera/GameCamera.h"
+#include "Level/GlobalLevelData.h"
 
 
 namespace GAME_NAME
 {
 	using namespace Objects;
 	using namespace Player;
+	using namespace Level;
 
 	class TestGame : public Game::Game
 	{
@@ -26,7 +28,36 @@ namespace GAME_NAME
 
 		static GLFWwindow* FirstWindow;
 
+		/// <summary>
+		/// Returns true if the game is paused.
+		/// </summary>
+		inline static bool GetGamePaused()
+		{
+			return m_gamePaused;
+		}
+
+		static void TogglePauseState();
+
+		/// <summary>
+		/// Retuns a reference to the current level's global level data.
+		/// </summary>
+		/// <returns></returns>
+		static inline GlobalLevelData& GetGlobalLevelData()
+		{
+			return m_globalLevelData;
+		}
 	private:
 		GAME_NAME::Camera::GameCamera* m_gameCamera;				//Pointer to the camera.
+
+		/// <summary>
+		/// Global Level Data for the current level.
+		/// </summary>
+		static GlobalLevelData m_globalLevelData;
+		
+		/// <summary>
+		/// True if the game is paused.
+		/// </summary>
+		static bool m_gamePaused;
+
 	};
 }

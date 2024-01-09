@@ -28,7 +28,10 @@ namespace GAME_NAME
 				void SetTerminalVelocity(float terminalVelocity);
 			protected:
 				float m_gravitationalVelocity;
-				void physicsTick(GLFWwindow* window, Objects::GameObject* object);	//Called each physics update.
+				void physicsTick(GLFWwindow* window, Objects::GameObject* object) override;	//Called each physics update.
+
+				void frameTick(GLFWwindow* window, Objects::GameObject* object) override; //Called each frame update.
+
 				float m_gravityStrength = 0.2f;		//How much gravitational force should be applied each frame.
 				float m_terminalVelocity = 60.f;	//The maximum amount of gravitational force to be applied.
 			};

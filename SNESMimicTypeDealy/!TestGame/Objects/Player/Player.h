@@ -5,6 +5,7 @@
 #include "../../../Components/Animation/AnimatorComponent.h"
 #include "../../../Audio/SoundManager.h"
 #include "../../../Components/ChildGameObject.h"
+#include "../../../Objects/GUI/Progress/ProgressBar.h"
 
 #ifndef _PLAYERDEF
 #define _PLAYERDEF
@@ -53,6 +54,7 @@ namespace  GAME_NAME
 			using namespace Physics;
 			using namespace Collision;
 			using namespace Animation;
+			using namespace GUI;
 
 			class Player	//The class used for the player GameObject.
 				: public ActiveBoxCollisionGravityObject
@@ -71,16 +73,27 @@ namespace  GAME_NAME
 				void EnterDebug();
 				void ToggleFlight();
 #endif
+				void Damage(float damage);
+				void Kill();
+
 			protected:
-				void onCollision(Vec2 push) override;	//Called when a collision occurs.
+				void onCollision     (Vec2 push) override;	//Called when a collision occurs.
 				void beforeCollision() override;		//Called before any collisions are calculated to allow for resetting the jump conditions.
 
 			private:
+				struct {
+					float Health = 100.f;
+				} m_stats;
+
+				ProgressBar* m_healthProgressBar;		//Progress bar for displaying health.
+
 				bool m_onGround = false;				//If the player is on the ground.
 				bool m_foundCollisionInTick = false;	//Used for checking when the player leaves the ground.
 				bool m_swimming = false;				//If the player is swimming.
 				int m_jumpHeld = 0;						//Used for determining how many frames the jump button has been held after the player jumps.
 				bool m_begunMotion = false;				//Used for animation checks.
+
+				float m_airTime = 0;					//Time the player has spent in the air. (Used to calculate fall damage)
 
 				bool m_isFlying = false;				//True if the player is currently flying.
 

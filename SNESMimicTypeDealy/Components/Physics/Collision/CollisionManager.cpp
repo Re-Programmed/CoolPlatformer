@@ -23,13 +23,13 @@ namespace GAME_NAME
 					{
 						activeCollider->BeforeUpdate();
 						//Collision for active colliders w/ eachother:
-						/*for (ActiveCollider* activeCollider2 : m_activeColliders)
+						for (ActiveCollider* activeCollider2 : m_activeColliders)
 						{
 							if (activeCollider != activeCollider2)
 							{
 								activeCollider->CheckActiveCollisionShapes(activeCollider2);
 							}
-						}*/
+						}
 
 						for (StaticCollider* staticCollider : m_staticColliders)
 						{

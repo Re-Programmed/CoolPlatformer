@@ -216,6 +216,8 @@ namespace GAME_NAME
 
 			while (std::getline(ObjectFile, line, '\n'))
 			{
+				if (line.empty() || line.starts_with(";")) { continue; } //For line breaks or lines beginning with a ";" do nothing. (useful for comments etc.)
+
 #pragma region MacroDetection
 				//Check if the line is declaring a macro.
 				if (line.starts_with("-->"))
@@ -278,7 +280,6 @@ namespace GAME_NAME
 				}
 #pragma endregion
 
-				if (line.empty() || line.starts_with(";")) { continue; } //For line breaks or lines beginning with a ";" do nothing. (useful for comments etc.)
 
 				threads.push_back(new std::thread(loadObjectDataThread, line, mappings));
 				thCurr++;
