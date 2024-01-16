@@ -174,6 +174,7 @@
     <ClCompile Include="Objects\GUI\Progress\ProgressBar.cpp" />
     <ClCompile Include="Objects\GUI\StaticGUIElement.cpp" />
     <ClCompile Include="Objects\GUI\Text\TextRenderer.cpp" />
+    <ClCompile Include="Objects\Instantiate\LevelObjectHandler.cpp" />
     <ClCompile Include="Objects\Levels\Data\LevelDataParser.cpp" />
     <ClCompile Include="Objects\Particles\ParticleEmitter.cpp" />
     <ClCompile Include="Rendering\DynamicSprite.cpp" />
@@ -251,6 +252,7 @@
     <ClInclude Include="Objects\GUI\Progress\ProgressBar.h" />
     <ClInclude Include="Objects\GUI\StaticGUIElement.h" />
     <ClInclude Include="Objects\GUI\Text\TextRenderer.h" />
+    <ClInclude Include="Objects\Instantiate\LevelObjectHandler.h" />
     <ClInclude Include="Objects\Levels\Data\LevelDataParser.h" />
     <ClInclude Include="Objects\Particles\ParticleEmitter.h" />
     <ClInclude Include="Rendering\DynamicSprite.h" />
@@ -360,6 +362,7 @@
     <None Include="Assets\testing\object.pk">
       <DeploymentContent>true</DeploymentContent>
     </None>
+    <None Include="Assets\town_1\objects\leaf_particle_objects.pk" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -152,51 +152,7 @@ namespace GAME_NAME
 			return data;
 		}
 
-		void loadObjectDataThread(std::string line, std::function<void(std::vector<std::string>)> mappings[])
-		{
-			std::stringstream linestream(line);
-			std::string component;
-
-			std::function<void(std::vector<std::string>)>* mapping{};
-
-			std::vector <std::string> v;
-
-			int c = 0;
-			while (std::getline(linestream, component, ','))
-			{
-				
-				if (c == 0) { mapping = &mappings[std::stoi(component)]; }
-				else {
-					//Allows for the use of "5|4+" to mean 5+4=9 and plug 9 in for that variable in object.pk.
-					int decodedComponent = 0;
-
-					if (component.ends_with("+"))
-					{
-						component.erase(component.length() - 1);
-
-						std::string decodedAddition = "";
-						while (!component.ends_with("|"))
-						{
-							decodedAddition = component.at(component.length() - 1) + decodedAddition;
-							component.erase(component.length() - 1);
-						}
-
-						component.erase(component.length() - 1);
-
-						decodedComponent = std::stoi(decodedAddition) + std::stoi(component);
-					}
-
-					v.push_back(decodedComponent != 0 ? std::to_string(decodedComponent) : component);
-				
-				}
-				c++; //C++ AHHAHAHAHAHAHH Like the language :)L::):)
-			}
-
-			(*mapping)(v);
-
-			//delete mapping;	
-
-		}
+		
 
 		void AssetManager::LoadObjectData(const char* subfolder, std::function<void (std::vector<std::string>)> mappings[], bool reloadObjects)
 		{

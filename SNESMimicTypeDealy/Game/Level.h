@@ -13,13 +13,13 @@ namespace GAME_NAME
 		typedef struct Level	//Stores basic data about levels.
 		{
 			/// <summary>
-			/// Name of the level.
+			/// Name/Path of the level.
 			/// </summary>
-			std::string Name;
+			std::string Name, Path;
 			/// <summary>
 			/// World and level ID.
 			/// </summary>
-			struct { char World, Level; } ID;
+			struct { int8_t World, Level; } ID;
 
 			/// <summary>
 			/// The voice of the current background track.

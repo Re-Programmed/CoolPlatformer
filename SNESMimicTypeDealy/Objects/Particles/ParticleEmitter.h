@@ -7,7 +7,7 @@ namespace GAME_NAME::Objects::Particles
 {
 	using namespace Rendering;
 
-	typedef struct Particle
+	struct Particle
 	{
 		Vec2 Position;
 		Vec2 Scale;
@@ -24,6 +24,16 @@ namespace GAME_NAME::Objects::Particles
 
 		Particle(Vec2 position, Vec2 scale, float rotation, Vec2 velocity, float rotationalVelocity, float opacity, Sprite* const sprite, float InitialLifetime = 0.f) : Position(position), Scale(scale), Rotation(rotation), Velocity(velocity),
 			RotationalVelocity(rotationalVelocity), Opacity(opacity), PSprite(sprite), Lifetime(InitialLifetime) {};
+
+		Particle(GameObject* gameObject) : Position(gameObject->GetPosition()), Scale(gameObject->GetScale()), Rotation(gameObject->GetRotation()), Velocity(Vec2::Zero), RotationalVelocity(0.f), Opacity(1.f), PSprite(gameObject->GetSprite()),
+			Lifetime(0.f) {};
+
+		Particle& operator=(const Particle& other)
+		{
+			Particle p(other.Position, other.Scale, other.Rotation, other.Velocity, other.RotationalVelocity, other.Opacity, other.PSprite, other.Lifetime);
+			
+			return p;
+		}
 	};
 
 	class ParticleEmitter 

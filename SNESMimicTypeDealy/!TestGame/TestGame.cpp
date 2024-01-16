@@ -12,6 +12,7 @@
 #include "./Objects/Platforms/RotatingPlatform.h"
 #include "./Mappings.h"
 #include "../Objects/GUI/Menus/GUIMenu.h"
+#include "../Objects/Instantiate/LevelObjectHandler.h"
 
 #if _DEBUG
 #include "../Debug/LevelBuilder/LevelBuilder.h"
@@ -32,6 +33,8 @@ namespace GAME_NAME
 	GLFWwindow* TestGame::FirstWindow;
 	
 	bool TestGame::m_gamePaused = false;
+
+	GlobalLevelData* TestGame::m_globalLevelData;
 
 	unsigned int pauseMenu_buttonIdOffset = 0;
 	void pauseMenu_guiCallback(int id)
@@ -119,7 +122,11 @@ namespace GAME_NAME
 		*/
 
 		//Clear the current global level data.
-		m_globalLevelData = GlobalLevelData();
+		delete m_globalLevelData;
+		m_globalLevelData = new GlobalLevelData(level.Path);
+
+		GameObject* leaf = Instantiate::LevelObjectHandler::GetLevelObject("leaf_particle_objects", "leaf_1");
+		leaf->SetPosition(ThePlayer->GetPosition());
 	}
 
 

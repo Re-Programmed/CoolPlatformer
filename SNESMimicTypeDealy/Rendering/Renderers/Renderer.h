@@ -110,6 +110,11 @@ namespace GAME_NAME
 			/// <param name="size"></param>
 			static void LoadObject(GameObject* object, uint8_t layer = 1, bool front = false);
 			
+			static inline GameObject* GetLastLoadedObject()
+			{
+				return m_lastLoadedObject;
+			}
+
 			/// <summary>
 			/// Used for specifying params when instantiating an object. (GameObject*, bool Active, int Layer, bool Front)
 			/// </summary>
@@ -224,6 +229,7 @@ namespace GAME_NAME
 			/// </summary>
 			static void updateObjectQueues();
 
+			static GameObject* m_lastLoadedObject;
 		};
 
 

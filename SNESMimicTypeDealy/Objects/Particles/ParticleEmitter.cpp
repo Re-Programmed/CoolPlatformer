@@ -25,14 +25,15 @@ namespace GAME_NAME::Objects::Particles
 				i--;
 			}
 		}
+		
 	}
 
 	void ParticleEmitter::SpawnParticle()
 	{
-		Particle& emit = m_particleCopy[std::rand()/(RAND_MAX/m_particleCopy.size())];
+		Particle emit(m_particleCopy[std::rand() / (RAND_MAX / m_particleCopy.size())]);
 
 		emit.Position += m_position;
 
-		m_spawned.push_back(Particle(emit));
+		m_spawned.push_back(emit);
 	}
 }

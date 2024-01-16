@@ -7,6 +7,7 @@
 #include "../!TestGame/Objects/Environment/Water.h"
 #include "../!TestGame/Objects/Environment/BGParallax.h"
 #include "../!TestGame/Objects/Platforms/RotatingPlatform.h"
+#include "../Objects/Instantiate/LevelObjectHandler.h"
 
 #include "../!TestGame/Items/FloorItem.h"
 
@@ -16,6 +17,7 @@
 #endif
 
 #include "../Components/Physics/Collision/Helpers/PixelPerfectColliderStaticObject.h"
+#include "../Objects/Particles/ParticleEmitter.h"
 
 constexpr int8_t GenesisTileSize = 8;
 
@@ -200,6 +202,26 @@ std::function<void (std::vector<std::string>)> Mappings::m_mappings[MAPPINGS_SIZ
 			FloorItem* newFloorItem = new FloorItem(STOIVEC(data[0], data[1]), invItem);
 
 			Renderer::LoadActiveObject(newFloorItem);
+	},
+
+	/*
+		9: Particle Emitter (map, positionX,positionY,particleLifetime*100,numParticles, particle_1_objparent, particle_1_objname, ...)
+	*/
+	[](std::vector<std::string> data)
+	{
+#if _DEBUG
+		DebugMapper(">>> Loading ParticleEmitter");
+#endif 
+
+		using namespace Particles;
+
+		ParticleEmitter pe = ParticleEmitter(STOIVEC(data[1], data[2]), static_cast<float>(std::stoi(data[3]))/100.f);
+
+		for (int i = 4; i < data.size(); i += 2)
+		{
+			pe.RegisterParticle(Particle(Instantiate::LevelObjectHandler::GetLevelObject(data[i], data[i + 1])));
+			Renderer::DestroyObject(Renderer::GetLastLoadedObject());
+		}
 	}
 };
 
@@ -209,4 +231,10 @@ void GAME_NAME::Mappings::LoadObjectsWithDefaultMapping(const char* levelPath)
 	DebugMapper("!=== LOADING OBJECT DATA ===!");
 #endif
 	Resources::AssetManager::LoadObjectData(levelPath, m_mappings);
+}
+
+GameObject* GAME_NAME::Mappings::LoadObjectWithDefaultMapping(std::string objectCode)
+{
+	Resources::AssetManager::loadObjectDataThread(objectCode, m_mappings);
+	return Renderer::GetLastLoadedObject();
 }

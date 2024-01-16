@@ -39,10 +39,10 @@ namespace GAME_NAME
 		static void TogglePauseState();
 
 		/// <summary>
-		/// Retuns a reference to the current level's global level data.
+		/// Retuns a pointer to the current level's global level data.
 		/// </summary>
 		/// <returns></returns>
-		static inline GlobalLevelData& GetGlobalLevelData()
+		static inline GlobalLevelData* GetGlobalLevelData()
 		{
 			return m_globalLevelData;
 		}
@@ -52,7 +52,7 @@ namespace GAME_NAME
 		/// <summary>
 		/// Global Level Data for the current level.
 		/// </summary>
-		static GlobalLevelData m_globalLevelData;
+		static GlobalLevelData* m_globalLevelData;
 		
 		/// <summary>
 		/// True if the game is paused.

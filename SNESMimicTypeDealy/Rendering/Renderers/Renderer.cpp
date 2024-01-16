@@ -30,6 +30,8 @@ namespace GAME_NAME
 
 		std::vector<GLuint> Renderer::m_textureIDs;
 
+		GameObject* Renderer::m_lastLoadedObject;
+
 		/*
 	 ---RENDER ORDER---
 		 
@@ -295,6 +297,7 @@ namespace GAME_NAME
 #endif
 
 			Renderer::m_chunks[chunkX + chunkY].Instantiate(object, layer, front);
+			m_lastLoadedObject = object;
 		}
 
 		void Renderer::LoadActiveObjects(GameObject* objects[], const unsigned int size, int layer)
@@ -308,6 +311,7 @@ namespace GAME_NAME
 		void Renderer::LoadActiveObject(GameObject* object, int layer)
 		{
 			m_activeGameObjects[layer].push_back(object);
+			m_lastLoadedObject = object;
 		}
 
 		///Macro for converting to Chunk Coords.
