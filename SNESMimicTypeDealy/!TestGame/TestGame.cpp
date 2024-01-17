@@ -65,12 +65,7 @@ namespace GAME_NAME
 
 	void TestGame::Init(GLFWwindow* window)
 	{
-		std::thread appDataThread = std::thread([]() {
-			AppData::AppDataFileManager::CreateAppDataFiles();
-
-			//Load Saved Global Settings
-			AppData::Settings::SettingsGlobals::LoadAppDataVariables();
-		});
+		AppData::Settings::SettingsGlobals::LoadAppDataVariables();
 
 		INSTANCE = this;
 		m_gameCamera = new GAME_NAME::Camera::GameCamera();
@@ -87,8 +82,6 @@ namespace GAME_NAME
 
 		Mappings::LoadObjectsWithDefaultMapping("/town_1");
 		RenderFront = true;
-
-		if (appDataThread.joinable()) { appDataThread.join(); }
 	}
 
 	void TestGame::LateUpdate(GLFWwindow* window)

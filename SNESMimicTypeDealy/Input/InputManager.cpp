@@ -1,4 +1,5 @@
 #include "InputManager.h"
+#include "../Settings/AppDataFileManager.h"
 
 namespace GAME_NAME
 {
@@ -118,31 +119,33 @@ namespace GAME_NAME
 		return GetMouseScreenPosition() + camera->GetPosition();
 	}
 
+#define LoadKey(bind, default_k) m_keys[bind] = std::stoi(AppData::AppDataFileManager::GetValue("settings\\keybinds.dat", KeybindNames[bind], std::to_string(default_k)));
+
 	void InputManager::loadDefaultKeys()
 	{
-		m_keys[0] = GLFW_KEY_W;
-		m_keys[1] = GLFW_KEY_S;
-		m_keys[2] = GLFW_KEY_A;
-		m_keys[3] = GLFW_KEY_D;
+		LoadKey(PLAYER_MOVE_UP, GLFW_KEY_W);
+		LoadKey(PLAYER_MOVE_DOWN, GLFW_KEY_S);
+		LoadKey(PLAYER_MOVE_LEFT, GLFW_KEY_A);
+		LoadKey(PLAYER_MOVE_RIGHT, GLFW_KEY_D);
 
-		m_keys[PLAYER_JUMP] = GLFW_KEY_SPACE;
+		LoadKey(PLAYER_JUMP, GLFW_KEY_SPACE);
 
-		m_keys[PLAYER_FORCE_WALK] = GLFW_KEY_LEFT_SHIFT;
+		LoadKey(PLAYER_FORCE_WALK, GLFW_KEY_LEFT_SHIFT);
 
 #if _DEBUG
-		m_keys[PLAYER_DEBUG] = GLFW_KEY_P;
+		LoadKey(PLAYER_DEBUG, GLFW_KEY_P);
 
-		m_keys[DEBUG_EDITOR_SELECT] = GLFW_KEY_V;
+		LoadKey(DEBUG_EDITOR_SELECT, GLFW_KEY_V);
 
-		m_keys[DEBUG_OBJECT_MENU] = GLFW_KEY_TAB;
+		LoadKey(DEBUG_OBJECT_MENU, GLFW_KEY_TAB);
 
-		m_keys[PLAYER_DEBUG_ADD_SPEED] = GLFW_KEY_LEFT_SHIFT;
+		LoadKey(PLAYER_DEBUG_ADD_SPEED, GLFW_KEY_LEFT_SHIFT);
 
-		m_keys[DEBUG_SET_OBJECT_X] = GLFW_KEY_X;
-		m_keys[DEBUG_SET_OBJECT_Y] = GLFW_KEY_Y;
+		LoadKey(DEBUG_SET_OBJECT_X, GLFW_KEY_X);
+		LoadKey(DEBUG_SET_OBJECT_Y, GLFW_KEY_Y);
 
-		m_keys[DEBUG_REFRESH_LEVEL_FILES] = GLFW_KEY_M;
-		m_keys[PLAYER_DEBUG_TOGGLE_FLIGHT] = GLFW_KEY_V;
+		LoadKey(DEBUG_REFRESH_LEVEL_FILES, GLFW_KEY_M);
+		LoadKey(PLAYER_DEBUG_TOGGLE_FLIGHT, GLFW_KEY_V);
 #endif
 
 		//Default Keys (Cannot be changed in settings)

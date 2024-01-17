@@ -70,7 +70,8 @@ namespace GAME_NAME
 
 		std::string AppDataFileManager::GetValue(std::string file, std::string variable, std::string defaultvalue)
 		{
-			std::filesystem::path filePath = m_appFolder.append("\\").append(file);
+			std::filesystem::path filePath = m_appFolder;
+			filePath += "\\" + file;
 			if (std::filesystem::exists(filePath))
 			{
 				std::string fullFile;

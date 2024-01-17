@@ -10,6 +10,7 @@
 #include "./Debug/DebugLog.h"
 #endif
 #include "!TestGame/TestGame.h"
+#include "Settings/AppDataFileManager.h"
 //#include "./Input/InputManager.h"
 
 #define THREAD_LIMIT 128
@@ -36,6 +37,8 @@ int main()
 	{
 		exit(EXIT_FAILURE); //		:(
 	}
+
+	AppData::AppDataFileManager::CreateAppDataFiles();
 
 	ApplicationWindow = new Window(false, new TestGame());
 

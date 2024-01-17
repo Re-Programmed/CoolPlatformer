@@ -607,6 +607,7 @@
     <None Include="Assets\Menus\pause.pk" />
     <None Include="Assets\Menus\stat_overlay.pk" />
     <None Include="Assets\town_1\objects\leaf_particle_objects.pk" />
+    <None Include="cpp.hint" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Assets\testing\music\0_test.wav">

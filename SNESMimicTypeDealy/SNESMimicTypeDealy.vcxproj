@@ -363,6 +363,7 @@
       <DeploymentContent>true</DeploymentContent>
     </None>
     <None Include="Assets\town_1\objects\leaf_particle_objects.pk" />
+    <None Include="cpp.hint" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

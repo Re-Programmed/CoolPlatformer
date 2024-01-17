@@ -253,6 +253,7 @@ namespace  GAME_NAME
 
 			}
 
+#define COLLISION_VEL_STOP_DAMPING 0.1f
 			void Player::onCollision(Vec2 push)
 			{
 				if (m_swimming) { return; }
@@ -274,7 +275,16 @@ namespace  GAME_NAME
 
 					m_airTime = 0;
 				}
-				
+
+				if (push.X > COLLISION_VEL_STOP_DAMPING || push.X < -COLLISION_VEL_STOP_DAMPING)
+				{
+					m_physics->SetVelocityX(0);
+				}
+
+				if (push.Y > COLLISION_VEL_STOP_DAMPING || push.Y < -COLLISION_VEL_STOP_DAMPING)
+				{
+					m_physics->SetVelocityY(0);
+				}
 			}
 
 			void Player::beforeCollision()
