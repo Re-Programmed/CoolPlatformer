@@ -11,7 +11,6 @@
 #endif
 #include "!TestGame/TestGame.h"
 #include "Settings/AppDataFileManager.h"
-#include "./Resources/Save/base64.h"
 //#include "./Input/InputManager.h"
 
 #define THREAD_LIMIT 128
@@ -42,9 +41,6 @@ int main()
 	AppData::AppDataFileManager::CreateAppDataFiles();
 
 	ApplicationWindow = new Window(false, new TestGame());
-
-	std::cout << Resources::B64::Encode("test");
-	std::cout << Resources::B64::Decode("dGVzdA==");
 
 	while(!ApplicationWindow->ShouldClose())
 	{

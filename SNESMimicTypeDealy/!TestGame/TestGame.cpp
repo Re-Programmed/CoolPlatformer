@@ -13,6 +13,7 @@
 #include "./Mappings.h"
 #include "../Objects/GUI/Menus/GUIMenu.h"
 #include "../Objects/Instantiate/LevelObjectHandler.h"
+#include "../Resources/Save/SaveManager.h"
 
 #if _DEBUG
 #include "../Debug/LevelBuilder/LevelBuilder.h"
@@ -82,6 +83,10 @@ namespace GAME_NAME
 
 		Mappings::LoadObjectsWithDefaultMapping("/town_1");
 		RenderFront = true;
+
+		SaveManager::SetCurrentFile("default_s");
+
+		SaveManager::SaveString("testing string", "data_0");
 	}
 
 	void TestGame::LateUpdate(GLFWwindow* window)

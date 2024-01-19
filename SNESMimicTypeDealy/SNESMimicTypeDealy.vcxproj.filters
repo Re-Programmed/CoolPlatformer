@@ -204,10 +204,13 @@
     <ClCompile Include="Objects\Particles\ParticleEmitter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Resources\Save\base64.h">
+    <ClCompile Include="Resources\base64.h">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Resources\Save\base64.cpp">
+    <ClCompile Include="Resources\base64.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\Save\SaveManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -435,6 +438,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Objects\Particles\ParticleEmitter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\Save\SaveManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

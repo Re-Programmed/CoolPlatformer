@@ -4,8 +4,9 @@
 namespace GAME_NAME::Resources
 {
 #define B64_PADDING_CHAR '='
+#define B64_CHARACTER_COUNT 65
 
-	constexpr const char base64_characters[65] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+	constexpr const char base64_characters[B64_CHARACTER_COUNT] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 	std::string B64::Encode(std::string value)
 	{
@@ -61,46 +62,46 @@ namespace GAME_NAME::Resources
 	std::string B64::Decode(std::string value)
 	{
 		std::string result = std::string();
-		result.resize(((value.length() / 4) + value.length() % 4) * 3);
+		const size_t expectedSize = ((value.length() / 4) + value.length() % 4) * 3;
+		result.resize(expectedSize);
 
-		int currResChar = 0;
+		unsigned int currResChar = 0;
 
-		for (size_t i = 0; i < value.length(); i += 4)
+		int val = 0;
+		size_t i;
+		for (i = 0; i < value.length(); i++)
 		{
-			int val = 0, loops = 0;
+			const char currentChar = value[i];
 
-			for (int charid = i; charid <= i + 3 && charid < value.size(); charid++)
+			if (currentChar != B64_PADDING_CHAR)
 			{
-				val = val << 8;
-				val = val | value[charid];
-				loops++;
-			}
-
-			int numBits = loops * 8;
-			int temp, index;
-
-			while (numBits != 0)
-			{
-				result[currResChar++] = (val >> (numBits - 8)) & 255;
-				numBits -= 8;
-/*
-				if (numBits >= 8)
+				for (uint16_t bIndex = 0; bIndex < B64_CHARACTER_COUNT; bIndex++)
 				{
-					temp = numBits - 8;
-					index = (val >> temp) & 63;
-					numBits -= 8;
+					if (currentChar == base64_characters[bIndex])
+					{
+						val = val << 6;
+						val |= bIndex & 63;
+						break;
+					}
 				}
-				else {
-					temp = 8 - numBits;
-					index = (val << temp) & 63;
-					numBits = 0;
-				}
-				*/
 			}
 
-			result[currResChar] = '\0';
+			if (val >> 18 != 0)
+			{
+				int currentBits = 16;
+				while (currentBits >= 0)
+				{
+					char rChar = (static_cast<char>((val >> currentBits) & 255));
+					result[currResChar++] = rChar;
+					currentBits -= 8;
+				}
 
-			return result;
+				val = 0;
+			}
+
 		}
+
+		result[currResChar] = '\0';
+		return result;
 	}
 }

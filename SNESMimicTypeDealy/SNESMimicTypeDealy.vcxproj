@@ -179,8 +179,9 @@
     <ClCompile Include="Objects\Particles\ParticleEmitter.cpp" />
     <ClCompile Include="Rendering\DynamicSprite.cpp" />
     <ClCompile Include="Rendering\Renderers\Renderer.cpp" />
-    <ClCompile Include="Resources\Save\base64.cpp" />
-    <ClCompile Include="Resources\Save\base64.h" />
+    <ClCompile Include="Resources\base64.cpp" />
+    <ClCompile Include="Resources\base64.h" />
+    <ClCompile Include="Resources\Save\SaveManager.cpp" />
     <ClCompile Include="Settings\AppDataFileManager.cpp" />
     <ClCompile Include="Settings\SettingsGlobals.cpp" />
     <ClCompile Include="Utils\IUpdateable.h" />
@@ -259,6 +260,7 @@
     <ClInclude Include="Objects\Particles\ParticleEmitter.h" />
     <ClInclude Include="Rendering\DynamicSprite.h" />
     <ClInclude Include="Rendering\Renderers\Renderer.h" />
+    <ClInclude Include="Resources\Save\SaveManager.h" />
     <ClInclude Include="Settings\AppDataFileManager.h" />
     <ClInclude Include="Settings\SettingsGlobals.h" />
     <ClInclude Include="Utils\ConstUpdateable.h" />
