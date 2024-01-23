@@ -7,9 +7,11 @@ namespace GAME_NAME::Resources
 #define B64_CHARACTER_COUNT 65
 
 	constexpr const char base64_characters[B64_CHARACTER_COUNT] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+	//constexpr const char base64_characters[B64_CHARACTER_COUNT] = "!@#$%^&*()-=_+789456123/\\|;:'\"[]{}<>,.?qazwsxedcrfvtgbyhnujmikol";
 
 	std::string B64::Encode(std::string value)
 	{
+		
 		std::string result = std::string();
 		result.resize(((value.length() / 3) + value.length() % 3) * 4);
 

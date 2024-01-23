@@ -11,9 +11,25 @@ namespace GAME_NAME::Resources
 	{
 	public:
 		static void SaveString(std::string data, std::string vName);
+		static void SaveBool(bool data, std::string vName)
+		{
+			SaveString(data ? "true" : "false", vName);
+		}
+
+		static void GetSaveString(std::string vName, std::string& value);
+		static void GetSaveBool(std::string vName, bool& value)
+		{
+			std::string r(value ? "true" : "false");
+			GetSaveString(vName, r);
+			value = (r == "true");
+		}
 
 		static void SetCurrentFile(std::string fileName);
 		
+		inline static std::string GetCurrentFile()
+		{
+			return m_currentSaveFile;
+		}
 	private:
 		static std::string m_currentSaveFile;
 

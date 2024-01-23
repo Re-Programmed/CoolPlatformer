@@ -142,6 +142,7 @@
     <ClCompile Include="!TestGame\Camera\GameCamera.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\BackgroundObjects.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\CloudGenerator.cpp" />
+    <ClCompile Include="!TestGame\Objects\Environment\Plants\Tree.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Water.cpp" />
     <ClCompile Include="!TestGame\Objects\Platforms\RotatingPlatform.cpp" />
     <ClCompile Include="!TestGame\Objects\Platforms\RotatingPlatform.h" />
@@ -177,6 +178,7 @@
     <ClCompile Include="Objects\Instantiate\LevelObjectHandler.cpp" />
     <ClCompile Include="Objects\Levels\Data\LevelDataParser.cpp" />
     <ClCompile Include="Objects\Particles\ParticleEmitter.cpp" />
+    <ClCompile Include="Objects\StateSaver.cpp" />
     <ClCompile Include="Rendering\DynamicSprite.cpp" />
     <ClCompile Include="Rendering\Renderers\Renderer.cpp" />
     <ClCompile Include="Resources\base64.cpp" />
@@ -214,6 +216,7 @@
     <ClInclude Include="!TestGame\Objects\Environment\BackgroundObjects.h" />
     <ClInclude Include="!TestGame\Objects\Environment\BGParallax.h" />
     <ClInclude Include="!TestGame\Objects\Environment\CloudGenerator.h" />
+    <ClInclude Include="!TestGame\Objects\Environment\Plants\Tree.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Water.h" />
     <ClInclude Include="!TestGame\Objects\Player\Player.h" />
     <ClInclude Include="!TestGame\TestGame.h" />
@@ -255,8 +258,10 @@
     <ClInclude Include="Objects\GUI\Progress\ProgressBar.h" />
     <ClInclude Include="Objects\GUI\StaticGUIElement.h" />
     <ClInclude Include="Objects\GUI\Text\TextRenderer.h" />
+    <ClInclude Include="Objects\StateSaver.h" />
     <ClInclude Include="Objects\Instantiate\LevelObjectHandler.h" />
     <ClInclude Include="Objects\Levels\Data\LevelDataParser.h" />
+    <ClInclude Include="Objects\GameObjectState.h" />
     <ClInclude Include="Objects\Particles\ParticleEmitter.h" />
     <ClInclude Include="Rendering\DynamicSprite.h" />
     <ClInclude Include="Rendering\Renderers\Renderer.h" />

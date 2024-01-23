@@ -14,6 +14,7 @@
 #include "../Objects/GUI/Menus/GUIMenu.h"
 #include "../Objects/Instantiate/LevelObjectHandler.h"
 #include "../Resources/Save/SaveManager.h"
+#include "./Objects/Environment/Plants/Tree.h"
 
 #if _DEBUG
 #include "../Debug/LevelBuilder/LevelBuilder.h"
@@ -86,7 +87,14 @@ namespace GAME_NAME
 
 		SaveManager::SetCurrentFile("default_s");
 
+		std::string data_0("null");
+		SaveManager::GetSaveString("data_0", data_0);
+		std::cout << "{{{{{" << data_0 << "}}}}}" << std::endl;
+
 		SaveManager::SaveString("testing string", "data_0");
+
+		Environment::Plants::Tree* t = new Environment::Plants::Tree(Vec2(200,50), Vec2(50, 65), Renderer::GetSprite(12));
+		Renderer::LoadObject(t, 1, false);
 	}
 
 	void TestGame::LateUpdate(GLFWwindow* window)

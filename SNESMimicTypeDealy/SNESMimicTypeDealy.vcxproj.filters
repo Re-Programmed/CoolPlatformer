@@ -213,6 +213,12 @@
     <ClCompile Include="Resources\Save\SaveManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Objects\StateSaver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="!TestGame\Objects\Environment\Plants\Tree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glad\include\glad\glad.h">
@@ -441,6 +447,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Resources\Save\SaveManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\GameObjectState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\StateSaver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="!TestGame\Objects\Environment\Plants\Tree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -41,20 +41,54 @@ namespace GAME_NAME::Resources
 			}
 
 			std::ofstream createstream(filePath);
-			createstream << B64::Encode(fullFile.append("\n") + vName + "{" + data + "}");
+			createstream << B64::Encode(decodedFile.append("\n") + vName + "{" + data);
 			createstream.close();
 		}
 		else
 		{
-			std::filesystem::create_directories(fileFolderPath);
+			std::filesystem::create_directories(filePath.parent_path());
 
 			std::ofstream createstream(filePath);
-			createstream << B64::Encode(vName + "{" + data + "}");
+			createstream << B64::Encode(vName + "{" + data);
 			createstream.close();
 
 			SaveString(data, vName);
 		}
 
+	}
+
+	void SaveManager::GetSaveString(std::string vName, std::string& defaultValue)
+	{
+		const std::filesystem::path fileFolderPath = SM_AppData + std::string(APPDATA_SUBFOLDER).append(SAVE_SUBFOLDER_NAME);
+		const std::filesystem::path filePath = std::string(fileFolderPath.string()).append("\\").append(m_currentSaveFile).append(SAVE_FILE_EXTENSION);
+		
+		if (std::filesystem::exists(filePath))
+		{
+			std::string fullFile;
+
+			std::ifstream readFile(filePath);
+
+			while (std::getline(readFile, fullFile))
+			{
+
+			}
+
+			readFile.close();
+
+			std::stringstream fileDecoded(B64::Decode(fullFile));
+
+			std::string line;
+			while (std::getline(fileDecoded, line, '\n'))
+			{
+				if (line.starts_with(vName))
+				{
+					defaultValue = line.replace(line.begin(), line.begin() + vName.length() + 1, "");
+					return;
+				}
+			}
+		}
+
+		SaveString(defaultValue, vName);
 	}
 
 	void SaveManager::SetCurrentFile(std::string fileName)
