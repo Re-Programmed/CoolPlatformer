@@ -47,6 +47,7 @@ namespace  GAME_NAME
 				//INIT WATER MUSIC
 				Audio::SoundManager::WaterMusic = Audio::SoundManager::Play(Audio::UnderwaterMusicID, Audio::SoundManager::BGMusic, -1.0F, 0.0F, true);
 
+				//Load the stat overlay menu that contains sprites for health and inventory.
 				GUI::Menus::GUIMenu::LoadMenu("/stat_overlay", nullptr);
 				Renderer::LoadGUIElement(m_healthProgressBar, 0);
 

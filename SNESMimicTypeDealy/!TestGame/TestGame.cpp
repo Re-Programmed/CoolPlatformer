@@ -76,6 +76,8 @@ namespace GAME_NAME
 
 		m_camera = m_gameCamera;
 
+		SaveManager::SetCurrentFile("default_s");
+
 		LoadLevel("/town_1", LEVEL_DATA_TEXTURES_BACKGROUND);
 
 		LoadLevel("/global_assets", LEVEL_DATA_TEXTURES_SPRITES);
@@ -85,16 +87,12 @@ namespace GAME_NAME
 		Mappings::LoadObjectsWithDefaultMapping("/town_1");
 		RenderFront = true;
 
-		SaveManager::SetCurrentFile("default_s");
-
 		std::string data_0("null");
 		SaveManager::GetSaveString("data_0", data_0);
 		std::cout << "{{{{{" << data_0 << "}}}}}" << std::endl;
 
 		SaveManager::SaveString("testing string", "data_0");
 
-		Environment::Plants::Tree* t = new Environment::Plants::Tree(Vec2(200,50), Vec2(50, 65), Renderer::GetSprite(12));
-		Renderer::LoadObject(t, 1, false);
 	}
 
 	void TestGame::LateUpdate(GLFWwindow* window)

@@ -87,6 +87,9 @@ namespace GAME_NAME::Resources
 					}
 				}
 			}
+			else {
+				val = val << 6;
+			}
 
 			if (val >> 18 != 0)
 			{
@@ -103,7 +106,14 @@ namespace GAME_NAME::Resources
 
 		}
 
-		result[currResChar] = '\0';
+		while(result.ends_with('\0'))
+		{
+			result.erase(result.begin() + result.length() - 1);
+		}
+
+		result.resize(result.length() + 1);
+
+		result[result.length() - 1] = '\0';
 		return result;
 	}
 }

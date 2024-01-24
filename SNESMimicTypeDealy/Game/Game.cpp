@@ -5,6 +5,8 @@
 #include "../Debug/DebugLog.h"
 #endif
 
+#include "../Resources/Save/SaveManager.h"
+
 namespace GAME_NAME
 {
 	namespace Game
@@ -48,6 +50,8 @@ namespace GAME_NAME
 			
 			if ((dataToLoad & LEVEL_DATA_DATA_LEVEL) != 0)
 			{
+				SaveManager::SetCurrentLevelFile(SaveManager::GetCurrentFile() + levelPath);
+
 				std::string data[LevelDataSize];
 				AssetManager::GetLevelData(levelPath, data);
 

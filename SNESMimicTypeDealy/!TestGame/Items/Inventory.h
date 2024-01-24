@@ -13,7 +13,7 @@ namespace GAME_NAME::Items
 		InventoryItem* GetItem(uint8_t slot);
 	private:
 		const std::string m_name;
-		const uint8_t m_size;
+		uint8_t m_size;
 
 		std::vector<InventoryItem*> m_items;
 	};

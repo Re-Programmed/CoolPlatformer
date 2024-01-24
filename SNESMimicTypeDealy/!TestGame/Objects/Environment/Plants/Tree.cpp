@@ -3,13 +3,11 @@
 #include "../../../../Objects/StateSaver.h"
 #include "../../../../Input/InputManager.h"
 
-#define TREE_IS_CHOPPED_ID m_objectSaveID + "_is_chopped"
-
 namespace GAME_NAME::Objects::Environment::Plants
 {
-	Tree::Tree(Vec2 position, Vec2 scale, Rendering::Sprite* sprite)
-		: GameObject(position, scale, sprite), GameObjectState(std::to_string(position.X) + "," + std::to_string(position.Y) + "tree"),
-		m_isChopped(false)
+	Tree::Tree(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, size_t saveID, Rendering::Sprite* choppedSprite)
+		: GameObject(position, scale, sprite), GameObjectState(saveID),
+		m_isChopped(false), m_choppedSprite(choppedSprite)
 	{
 		LoadState();
 
@@ -17,25 +15,48 @@ namespace GAME_NAME::Objects::Environment::Plants
 
 	void Tree::SaveState()
 	{
-		Resources::SaveManager::SaveBool(m_isChopped, TREE_IS_CHOPPED_ID);
+		Resources::SaveManager::SaveLevelString(m_isChopped ? "t" : "f", m_objectSaveID);
 	}
 
 	void Tree::LoadState()
 	{
-		Resources::SaveManager::GetSaveBool(TREE_IS_CHOPPED_ID, m_isChopped);
-		std::cout << "CHOPPED: " << m_isChopped << std::endl;
-
-		StateSaver::RegisterToBeSaved(this);
-
+		std::string result("f");
+		Resources::SaveManager::GetLevelString(result, m_objectSaveID);
+		setChopped(result.starts_with("t"));
 	}
 
 	void Tree::Update(GLFWwindow* window)
 	{
-		if (InputManager::GetKeyUpDown(PLAYER_FORCE_WALK) & InputManager::KEY_STATE_PRESSED)
+
+	}
+
+	bool Tree::Chop()
+	{
+		if (m_isChopped) { return false; }
+
+		setChopped(true);
+
+		if (!m_toBeSaved)
 		{
-			m_isChopped = true;
-			StateSaver::SaveStates();	
+			StateSaver::RegisterToBeSaved(this);
 		}
+
+		//DROP ITEMS
+	}
+
+	void Tree::setChopped(bool chopped)
+	{
+		if (m_isChopped == chopped) { return; }
+
+		m_isChopped = chopped;
+
+		//FLIP m_choppedSprite and m_sprite
+		Rendering::Sprite* spCpy = new Rendering::Sprite(m_choppedSprite->GetSpriteId());
+
+		delete m_choppedSprite;
+		this->m_choppedSprite = m_sprite;
+
+		m_sprite = spCpy;
 	}
 }
 

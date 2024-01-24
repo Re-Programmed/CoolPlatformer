@@ -154,7 +154,7 @@ namespace GAME_NAME
 
 		
 
-		void AssetManager::LoadObjectData(const char* subfolder, std::function<void (std::vector<std::string>)> mappings[], bool reloadObjects)
+		void AssetManager::LoadObjectData(const char* subfolder, std::function<void (std::vector<std::string>, size_t line)> mappings[], bool reloadObjects)
 		{
 			std::string filePath = AssetPath;
 			filePath += subfolder;
@@ -169,6 +169,8 @@ namespace GAME_NAME
 			int thCurr = 0;
 
 			bool declaringMacro = false;
+
+			size_t lineID = 0;
 
 			while (std::getline(ObjectFile, line, '\n'))
 			{
@@ -228,7 +230,7 @@ namespace GAME_NAME
 					while (std::getline(multiobjectmacrostream, component, ';'))
 					{
 						//Start the loading thread for the macro.
-						threads.push_back(new std::thread(loadObjectDataThread, component, mappings));
+						threads.push_back(new std::thread(loadObjectDataThread, component, lineID++, mappings));
 						thCurr++;
 					}
 
@@ -237,7 +239,7 @@ namespace GAME_NAME
 #pragma endregion
 
 
-				threads.push_back(new std::thread(loadObjectDataThread, line, mappings));
+				threads.push_back(new std::thread(loadObjectDataThread, line, lineID++, mappings));
 				thCurr++;
 
 	checkthreads:

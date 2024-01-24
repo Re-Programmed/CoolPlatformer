@@ -16,22 +16,35 @@ namespace GAME_NAME::Resources
 			SaveString(data ? "true" : "false", vName);
 		}
 
+		static void SaveLevelString(std::string data, size_t levelID);
+		static void GetLevelString(std::string& data, size_t levelID);
+
 		static void GetSaveString(std::string vName, std::string& value);
 		static void GetSaveBool(std::string vName, bool& value)
 		{
 			std::string r(value ? "true" : "false");
 			GetSaveString(vName, r);
-			value = (r == "true");
+			value = (r.starts_with("true"));
 		}
 
 		static void SetCurrentFile(std::string fileName);
-		
+		inline static void SetCurrentLevelFile(std::string fileName)
+		{
+			m_currentLevelSaveFile = fileName;
+		}
+
 		inline static std::string GetCurrentFile()
 		{
 			return m_currentSaveFile;
 		}
+
+		inline static std::string GetCurrentLevelFile()
+		{
+			return m_currentLevelSaveFile;
+		}
 	private:
 		static std::string m_currentSaveFile;
+		static std::string m_currentLevelSaveFile;
 
 		static inline char* getAppdataFolder()
 		{

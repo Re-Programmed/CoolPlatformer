@@ -10,6 +10,7 @@
 #include "../Objects/Instantiate/LevelObjectHandler.h"
 
 #include "../!TestGame/Items/FloorItem.h"
+#include "../!TestGame/Objects/Environment/Plants/Tree.h"
 
 #if _DEBUG
 #include "../Debug/DebugLog.h"
@@ -58,10 +59,10 @@ const std::function<Components::IComponent* (std::vector<std::string>)> Mappings
 /// <summary>
 /// Takes in a string vector and spawns a GameObject.
 /// </summary>
-std::function<void (std::vector<std::string>)> Mappings::m_mappings[MAPPINGS_SIZE]
+std::function<void (std::vector<std::string>, size_t line)> Mappings::m_mappings[MAPPINGS_SIZE]
 {
 	//Basic Object
-	[](std::vector<std::string> data) {
+	[](std::vector<std::string> data, size_t n) {
 
 #if _DEBUG
 		DebugMapper(">>> Loading Basic Object");
@@ -70,7 +71,7 @@ std::function<void (std::vector<std::string>)> Mappings::m_mappings[MAPPINGS_SIZ
 	},
 
 	//Component Object
-	[](std::vector<std::string> data)
+	[](std::vector<std::string> data, size_t n)
 	{
 #if _DEBUG
 			DebugMapper(">>> Loading Component Object");
@@ -94,7 +95,7 @@ std::function<void (std::vector<std::string>)> Mappings::m_mappings[MAPPINGS_SIZ
 	},
 
 	//StaticBoxCollisionObject
-	[](std::vector<std::string> data) {
+	[](std::vector<std::string> data, size_t n) {
 
 #if _DEBUG
 		DebugMapper(">>> Loading StaticBoxCollisionObject");
@@ -104,7 +105,7 @@ std::function<void (std::vector<std::string>)> Mappings::m_mappings[MAPPINGS_SIZ
 	},
 
 	//ActiveBoxCollisionGravityObject
-	[](std::vector<std::string> data) {
+	[](std::vector<std::string> data, size_t n) {
 
 #if _DEBUG
 		DebugMapper(">>> Loading ActiveBoxCollisionGravityObject");
@@ -113,7 +114,7 @@ std::function<void (std::vector<std::string>)> Mappings::m_mappings[MAPPINGS_SIZ
 	},
 
 	//Water
-	[](std::vector<std::string> data) {
+	[](std::vector<std::string> data, size_t n) {
 
 #if _DEBUG
 		DebugMapper(">>> Loading Water");
@@ -121,7 +122,7 @@ std::function<void (std::vector<std::string>)> Mappings::m_mappings[MAPPINGS_SIZ
 		Renderer::LoadActiveObject(new GAME_NAME::Objects::Environment::Water(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3])), 0);
 	},
 
-	[](std::vector<std::string> data) 
+	[](std::vector<std::string> data, size_t d)
 	{
 
 #if _DEBUG
@@ -162,7 +163,7 @@ std::function<void (std::vector<std::string>)> Mappings::m_mappings[MAPPINGS_SIZ
 
 	//GAME
 	//BGParallaxObject
-	[](std::vector<std::string> data) {
+	[](std::vector<std::string> data, size_t n) {
 
 #if _DEBUG
 		DebugMapper(">>> Loading ParallaxBGObject");
@@ -174,7 +175,7 @@ std::function<void (std::vector<std::string>)> Mappings::m_mappings[MAPPINGS_SIZ
 		7: Rotating Platform (map,layer,positionX,positionY,scaleX,scaleY,sprite,originX,originY,speed*10,offset*pi/6)
 		- A platform that rotates about a fixed point.
 	*/
-	[](std::vector<std::string> data) {
+	[](std::vector<std::string> data, size_t n) {
 #if _DEBUG
 		DebugMapper(">>> Loading RotatingPlatform");
 #endif
@@ -192,7 +193,7 @@ std::function<void (std::vector<std::string>)> Mappings::m_mappings[MAPPINGS_SIZ
 		8: Floor Item (map,positionX,positionY,itemType)
 		- An item that can be picked up.
 	*/
-	[](std::vector<std::string> data)
+	[](std::vector<std::string> data, size_t n)
 	{
 #if _DEBUG
 			DebugMapper(">>> Loading FloorItem(" + data[2] + ")");
@@ -207,7 +208,7 @@ std::function<void (std::vector<std::string>)> Mappings::m_mappings[MAPPINGS_SIZ
 	/*
 		9: Particle Emitter (map, positionX,positionY,particleLifetime*100,numParticles, particle_1_objparent, particle_1_objname, ...)
 	*/
-	[](std::vector<std::string> data)
+	[](std::vector<std::string> data, size_t n)
 	{
 #if _DEBUG
 		DebugMapper(">>> Loading ParticleEmitter");
@@ -222,6 +223,16 @@ std::function<void (std::vector<std::string>)> Mappings::m_mappings[MAPPINGS_SIZ
 			pe.RegisterParticle(Particle(Instantiate::LevelObjectHandler::GetLevelObject(data[i], data[i + 1])));
 			Renderer::DestroyObject(Renderer::GetLastLoadedObject());
 		}
+	},
+
+	/*
+		10: Tree (map,positionX,positionY,scaleX,scaleY,sprite,chopSprite,layer)
+	*/
+
+	[](std::vector<std::string> data, size_t n)
+	{
+		Environment::Plants::Tree* tree = new Environment::Plants::Tree(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), n, Renderer::GetSprite(std::stoi(data[5])));
+		Renderer::LoadActiveObject(tree, std::stoi(data[6]));
 	}
 };
 
@@ -235,6 +246,6 @@ void GAME_NAME::Mappings::LoadObjectsWithDefaultMapping(const char* levelPath)
 
 GameObject* GAME_NAME::Mappings::LoadObjectWithDefaultMapping(std::string objectCode)
 {
-	Resources::AssetManager::loadObjectDataThread(objectCode, m_mappings);
+	Resources::AssetManager::loadObjectDataThread(objectCode, 0, m_mappings);
 	return Renderer::GetLastLoadedObject();
 }

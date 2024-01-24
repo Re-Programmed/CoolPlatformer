@@ -9,7 +9,7 @@
 #include "../Resources/AssetManager.h"
 
 #define COMPONENT_MAPPINGS_SIZE 1	//How many component mappings there are
-#define MAPPINGS_SIZE 10			//How many object mappings there are.
+#define MAPPINGS_SIZE 11			//How many object mappings there are.
 
 namespace GAME_NAME
 {
@@ -22,6 +22,6 @@ namespace GAME_NAME
 		
 	private:
 		static const std::function<Components::IComponent* (std::vector<std::string>)> m_componentMappings[COMPONENT_MAPPINGS_SIZE];	//Stores what integers refer to what components for component objects.
-		static std::function<void (std::vector<std::string>)> m_mappings[MAPPINGS_SIZE];												//Stores a list of conversions from a string to a GameObject. The conversion called is based on the first integer in each string of an object.pk file.
+		static std::function<void (std::vector<std::string>, size_t line)> m_mappings[MAPPINGS_SIZE];									//Stores a list of conversions from a string to a GameObject. The conversion called is based on the first integer in each string of an object.pk file.
 	};
 }
