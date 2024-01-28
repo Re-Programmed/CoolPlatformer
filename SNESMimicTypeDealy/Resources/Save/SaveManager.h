@@ -5,6 +5,10 @@
 #define SAVE_FILE_EXTENSION ".00.spk"
 #define SM_AppData getAppdataFolder()
 
+#define SAVE_MNG_TRUE_STATE 't'
+#define SAVE_MNG_FALSE_STATE 'f'
+#define SAVE_MNG_STATE(x) (x ? SAVE_MNG_TRUE_STATE : SAVE_MNG_FALSE_STATE)
+
 namespace GAME_NAME::Resources
 {
 	class SaveManager

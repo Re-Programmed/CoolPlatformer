@@ -2,7 +2,7 @@
 #include "../../Components/Physics/Collision/Helpers/ActiveRotationalBoxCollisionGravityObject.h"
 #include "InventoryItem.h"
 
-#define DF_FLOOR_ITEM_SCALE 48u
+#define DF_FLOOR_ITEM_SCALE 8u
 namespace GAME_NAME
 {
 	namespace Items

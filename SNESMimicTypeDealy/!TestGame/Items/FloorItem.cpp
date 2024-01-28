@@ -12,7 +12,7 @@ namespace GAME_NAME
 				7.50f		//Gravity Rotation Effect
 			)), m_inventoryItem(InventoryItem(type))
 		{
-
+			m_physics->SetGravityStrength(m_physics->GetGravityStrength() * 7);
 		}
 
 		FloorItem::FloorItem(Vec2 position, InventoryItem &item)
@@ -22,7 +22,7 @@ namespace GAME_NAME
 				7.50f		//Gravity Rotation Effect
 			)), m_inventoryItem(item)
 		{
-			
+			m_physics->SetGravityStrength(m_physics->GetGravityStrength() * 7);
 		}
 
 		void FloorItem::Update(GLFWwindow* window)

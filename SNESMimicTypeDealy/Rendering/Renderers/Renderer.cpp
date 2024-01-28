@@ -41,8 +41,8 @@ namespace GAME_NAME
 		[RENDER LAYER 2]
 		[RENDER LAYER 3]
 		[ACTIVE RENDER LAYER 0] {Rendered if visible by camera.}
-		[ACTIVE RENDER LAYER 1]			(PLAYER)
-		[ACTIVE RENDER LAYER 2]
+		[ACTIVE RENDER LAYER 1]
+		[ACTIVE RENDER LAYER 2]			(PLAYER)
 		[ACTIVE RENDER LAYER 3]
 		[PRIORITY OBJECTS (FRONT OBJECTS)] {Bound to the chunk spawned in.}
 		[GUI LAYER 0] {Always rendered.}
@@ -82,12 +82,12 @@ namespace GAME_NAME
 			while (size > startIndex);
 		}
 
-		Sprite* const Renderer::GetSprite(const unsigned int spriteTexture)
+		Sprite* const Renderer::GetSprite(const int spriteTexture)
 		{
 			return new Sprite(spriteTexture + bgCount + lastFileOff);
 		}
 
-		DynamicSprite* const Renderer::GetDynamicSprite(const unsigned int spriteTexture)
+		DynamicSprite* const Renderer::GetDynamicSprite(const int spriteTexture)
 		{
 			return new DynamicSprite(spriteTexture + bgCount + lastFileOff);
 		}

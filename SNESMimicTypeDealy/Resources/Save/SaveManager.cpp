@@ -40,7 +40,7 @@ namespace GAME_NAME::Resources
 			}
 
 			std::ofstream createstream(filePath);
-			createstream << B64::Encode(decodedFile.append("\n") + vName + "{" + data);
+			createstream << B64::Encode(decodedFile + vName + "{" + data);
 			createstream.close();
 		}
 		else

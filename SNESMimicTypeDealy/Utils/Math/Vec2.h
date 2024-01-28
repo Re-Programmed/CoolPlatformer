@@ -110,6 +110,14 @@ namespace GAME_NAME
 			{
 				return Y == 0 ? 0.f : (Y < 0 ? -1.f : 1.f);
 			}
+
+			inline static Vec2 RandVec2(float xUpperBound, float yUpperBound)
+			{
+				float randX = (float)std::rand() / (float)RAND_MAX; randX *= xUpperBound;
+				float randY = (float)std::rand() / (float)RAND_MAX; randY *= yUpperBound;
+
+				return Vec2(randX, randY);
+			}
 		private:
 
 		};

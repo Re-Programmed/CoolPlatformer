@@ -9,9 +9,9 @@
 
 ///How many inputs to check for
 #if _DEBUG
-#define KEY_ARRAY_SIZE 15
+#define KEY_ARRAY_SIZE 16
 #else
-#define KEY_ARRAY_SIZE 7
+#define KEY_ARRAY_SIZE 8
 #endif
 
 const std::string KeybindNames[KEY_ARRAY_SIZE] {
@@ -21,6 +21,7 @@ const std::string KeybindNames[KEY_ARRAY_SIZE] {
 	"PLAYER_MOVE_RIGHT",
 	"PLAYER_JUMP",
 	"PLAYER_FORCE_WALK",
+	"PLAYER_INTERACT",
 	"DEFAULT_PAUSE_GAME",
 #if _DEBUG
 	"PLAYER_DEBUG",
@@ -46,6 +47,7 @@ namespace GAME_NAME
 		PLAYER_MOVE_RIGHT = 3,		//Player Move Right [D]
 		PLAYER_JUMP,				//Player Jump [Space]
 		PLAYER_FORCE_WALK,			//Player Walk [Shift]
+		PLAYER_INTERACT,			//Player Interact [E]
 
 		DEFAULT_PAUSE_GAME,			//Pause Game {DEFAULT} [ESC]
 

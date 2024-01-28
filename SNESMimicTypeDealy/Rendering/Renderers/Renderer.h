@@ -9,7 +9,7 @@
 #include "../../Objects/GUI/IGUIElement.h"
 #include "../DynamicSprite.h"
 
-#define GLOBAL_SPRITE_BASE -43	//Represents the negative number of sprites in the global_sprites directory.
+#define GLOBAL_SPRITE_BASE -52	//Represents the negative number of sprites in the global_sprites directory.
 #define SpriteBase(x) (GLOBAL_SPRITE_BASE+x)  //Returns the offset of a sprite from the sprite base.
 
 namespace GAME_NAME
@@ -60,8 +60,8 @@ namespace GAME_NAME
 			static void ClearGUIObjects(uint16_t startIndex, uint8_t layer);
 
 			//Create a sprite from its texture.
-			static Sprite* const GetSprite(const unsigned int spriteTexture);
-			static DynamicSprite* const GetDynamicSprite(const unsigned int spriteTexture);
+			static Sprite* const GetSprite(const int spriteTexture);
+			static DynamicSprite* const GetDynamicSprite(const int spriteTexture);
 
 			static inline unsigned int GetSpriteCount()
 			{

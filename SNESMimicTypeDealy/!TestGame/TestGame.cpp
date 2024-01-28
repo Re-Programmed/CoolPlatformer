@@ -15,6 +15,7 @@
 #include "../Objects/Instantiate/LevelObjectHandler.h"
 #include "../Resources/Save/SaveManager.h"
 #include "./Objects/Environment/Plants/Tree.h"
+#include "./InputDisplay/DisplayIconManager.h"
 
 #if _DEBUG
 #include "../Debug/LevelBuilder/LevelBuilder.h"
@@ -50,6 +51,7 @@ namespace GAME_NAME
 
 	void GAME_NAME::TestGame::Update(GLFWwindow* window)
 	{
+
 		InputManager::GetJoystick();
 
 		if (InputManager::GetKeyUpDown(DEFAULT_PAUSE_GAME) & InputManager::KEY_STATE_PRESSED)
@@ -93,10 +95,13 @@ namespace GAME_NAME
 
 		SaveManager::SaveString("testing string", "data_0");
 
+		Input::DisplayIconManager::CreateKeyDisplayObjects();
+
 	}
 
 	void TestGame::LateUpdate(GLFWwindow* window)
 	{
+		Input::DisplayIconManager::RenderAllIcons();
 		CollisionManager::UpdateAndClearBuffers();
 	}
 
@@ -107,7 +112,7 @@ namespace GAME_NAME
 #endif
 
 		ThePlayer = std::make_shared<Objects::Player::Player>(level.PlayerStartPosition);
-		Rendering::Renderer::LoadActiveObject(ThePlayer.get(), 1); //Spawn in the player on Active Layer 1.
+		Rendering::Renderer::LoadActiveObject(ThePlayer.get(), 2); //Spawn in the player on Active Layer 2.
 		std::srand(ThePlayer->GetPosition().X + ThePlayer->GetPosition().Y + static_cast<int>(glfwGetTime()));
 
 		MusicSync::MusicSync::SetCurrentSong(134, 2);

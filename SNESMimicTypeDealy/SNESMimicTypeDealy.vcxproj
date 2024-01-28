@@ -134,6 +134,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="!TestGame\InputDisplay\DisplayIconManager.cpp" />
     <ClCompile Include="!TestGame\Items\FloorItem.cpp" />
     <ClCompile Include="!TestGame\Items\Inventory.cpp" />
     <ClCompile Include="!TestGame\Items\InventoryItem.cpp" />
@@ -176,6 +177,7 @@
     <ClCompile Include="Objects\GUI\Progress\ProgressBar.cpp" />
     <ClCompile Include="Objects\GUI\StaticGUIElement.cpp" />
     <ClCompile Include="Objects\GUI\Text\TextRenderer.cpp" />
+    <ClCompile Include="Objects\Helpers\Interactable.cpp" />
     <ClCompile Include="Objects\Instantiate\LevelObjectHandler.cpp" />
     <ClCompile Include="Objects\Levels\Data\LevelDataParser.cpp" />
     <ClCompile Include="Objects\Particles\ParticleEmitter.cpp" />
@@ -207,6 +209,7 @@
     <ClCompile Include="Utils\Time\GameTime.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="!TestGame\InputDisplay\DisplayIconManager.h" />
     <ClInclude Include="!TestGame\Items\FloorItem.h" />
     <ClInclude Include="!TestGame\Items\Inventory.h" />
     <ClInclude Include="!TestGame\Items\InventoryItem.h" />
@@ -260,6 +263,7 @@
     <ClInclude Include="Objects\GUI\Progress\ProgressBar.h" />
     <ClInclude Include="Objects\GUI\StaticGUIElement.h" />
     <ClInclude Include="Objects\GUI\Text\TextRenderer.h" />
+    <ClInclude Include="Objects\Helpers\Interactable.h" />
     <ClInclude Include="Objects\StateSaver.h" />
     <ClInclude Include="Objects\Instantiate\LevelObjectHandler.h" />
     <ClInclude Include="Objects\Levels\Data\LevelDataParser.h" />
