@@ -11,20 +11,8 @@ namespace GAME_NAME::Input
 	public:
 		enum KEY_DISPLAY
 		{
-			INPUT_DISPLAY_KEY_E
+			INPUT_DISPLAY_KEY_E	//Progress 0-9
 		};
-
-		struct ScheduledIcon
-		{
-			KEY_DISPLAY KeyDisplay; Vec2 Anchor; char Progress;
-			ScheduledIcon(KEY_DISPLAY keyDisplay, Vec2 anchor, char progress = 0)
-				: KeyDisplay(keyDisplay), Anchor(anchor), Progress(progress)
-			{
-
-			}
-		};
-
-		static void RenderAllIcons();
 
 		/// <summary>
 		/// Render a key prompt with progress.
@@ -34,13 +22,19 @@ namespace GAME_NAME::Input
 		static void ShowKeyInputDisplay(KEY_DISPLAY keyDisplay, Vec2 anchor, char progress = 0);
 		
 		/// <summary>
+		/// Called each frame to destroy any icons that are no longer in use.
+		/// </summary>
+		static void AttemptHideIcons();
+
+		/// <summary>
 		/// Called on game start.
 		/// </summary>
 		static void CreateKeyDisplayObjects();
 	private:
-		static Objects::GameObject* m_keyDisplayObjects[DISPLAY_ICON_MANGER_KEY_DISPLAY_COUNT];
-		static int m_keyDisplayBaseTextures[DISPLAY_ICON_MANGER_KEY_DISPLAY_COUNT];
+		static Objects::GameObject* m_keyDisplayObjects[DISPLAY_ICON_MANGER_KEY_DISPLAY_COUNT];	//The game objects that are copied to represent each key icon.
+		static int m_keyDisplayBaseTextures[DISPLAY_ICON_MANGER_KEY_DISPLAY_COUNT];				//The texture ids for each key icon with 0 progress.
 
-		static std::vector<ScheduledIcon> m_scheduledIcons;
+		static Objects::GameObject* m_activeDisplays[DISPLAY_ICON_MANGER_KEY_DISPLAY_COUNT];	//The current active displays, nullptr if not active.
+		static bool m_wasShown[DISPLAY_ICON_MANGER_KEY_DISPLAY_COUNT];							//If the key was displayed on this frame.
 	};
 }

@@ -6,34 +6,46 @@ namespace GAME_NAME::Input
 {
 	Objects::GameObject* DisplayIconManager::m_keyDisplayObjects[DISPLAY_ICON_MANGER_KEY_DISPLAY_COUNT];
 	int DisplayIconManager::m_keyDisplayBaseTextures[DISPLAY_ICON_MANGER_KEY_DISPLAY_COUNT];
-	std::vector<DisplayIconManager::ScheduledIcon> DisplayIconManager::m_scheduledIcons;
-
-	void DisplayIconManager::RenderAllIcons()
-	{
-		for (ScheduledIcon icon : m_scheduledIcons)
-		{
-			std::cout << std::to_string(icon.Progress) << std::endl;
-			m_keyDisplayObjects[icon.KeyDisplay]->SetSprite(Renderer::GetSprite(m_keyDisplayBaseTextures[icon.KeyDisplay] + icon.Progress));
-			m_keyDisplayObjects[icon.KeyDisplay]->SetPosition(icon.Anchor);
-			m_keyDisplayObjects[icon.KeyDisplay]->Render(TestGame::INSTANCE->GetCamera()->GetPosition());
-		}
-
-		m_scheduledIcons.clear();
-	}
+	Objects::GameObject* DisplayIconManager::m_activeDisplays[DISPLAY_ICON_MANGER_KEY_DISPLAY_COUNT];
+	bool DisplayIconManager::m_wasShown[DISPLAY_ICON_MANGER_KEY_DISPLAY_COUNT];
 
 	void DisplayIconManager::ShowKeyInputDisplay(KEY_DISPLAY keyDisplay, Vec2 anchor, char progress)
 	{
-		m_scheduledIcons.push_back(ScheduledIcon(keyDisplay, anchor, progress));
+		if (m_activeDisplays[keyDisplay] == nullptr)
+		{
+			m_activeDisplays[keyDisplay] = new GameObject(*m_keyDisplayObjects[0]);
+			Renderer::InstantiateObject(Renderer::InstantiateGameObject(m_activeDisplays[keyDisplay], true, 1, true));
+		}
+
+		m_activeDisplays[keyDisplay]->SetSprite(Renderer::GetSprite(m_keyDisplayBaseTextures[keyDisplay] + progress));
+		m_activeDisplays[keyDisplay]->SetPosition(anchor);
+
+		m_wasShown[keyDisplay] = true;
+	}
+
+	void DisplayIconManager::AttemptHideIcons()
+	{
+		for (int i = 0; i < DISPLAY_ICON_MANGER_KEY_DISPLAY_COUNT; i++)
+		{
+			if (m_activeDisplays[i] != nullptr && !m_wasShown[i])
+			{
+				Renderer::DestroyActiveObject(m_activeDisplays[i]);
+				m_activeDisplays[i] = nullptr;
+			}
+
+			m_wasShown[i] = false;
+		}
 	}
 
 	void DisplayIconManager::CreateKeyDisplayObjects()
 	{
 		using namespace Objects;
 
-		GameObject* eIcon = new GameObject(Vec2(0, 0), Vec2(12), Renderer::GetSprite(SpriteBase(45)), 0.0f);
+		GameObject* eIcon = new GameObject(Vec2(0, 0), Vec2(-6, 6), Renderer::GetSprite(SpriteBase(44)), 0.0f);
 
 		m_keyDisplayObjects[0] = eIcon;
-		m_keyDisplayBaseTextures[0] = SpriteBase(45);
+		m_keyDisplayBaseTextures[0] = SpriteBase(44);
+		m_activeDisplays[0] = nullptr;
 	}
 }
 

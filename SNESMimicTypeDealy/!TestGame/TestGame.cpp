@@ -62,7 +62,6 @@ namespace GAME_NAME
 		MusicSync::MusicSync::Update();	//Update things that sync to the beat of the current song.
 
 		m_gameCamera->Update(ThePlayer->GetPosition());
-		GAME_NAME::Game::Game::Update(window); /*Must be at the bottom of update method*/
 
 		//std::cout << Time::GameTime::GetScaledDeltaTime() << std::endl;
 	}
@@ -101,8 +100,8 @@ namespace GAME_NAME
 
 	void TestGame::LateUpdate(GLFWwindow* window)
 	{
-		Input::DisplayIconManager::RenderAllIcons();
 		CollisionManager::UpdateAndClearBuffers();
+		Input::DisplayIconManager::AttemptHideIcons();
 	}
 
 	void TestGame::InitLevel(GAME_NAME::Game::Level level)

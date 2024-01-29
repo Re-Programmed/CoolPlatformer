@@ -9,12 +9,12 @@ namespace GAME_NAME
 		//An enum for the types of items in the game.
 		enum ITEM_TYPE
 		{
-			LOG,
+			LOG = 0,
 			LEAVES
 		};
 
 		//An array containing the sprite for each of the items in order of the ITEM_TYPE enum.
-		const unsigned int ITEM_TEXTURES[2]{
+		const int ITEM_TEXTURES[2]{
 			18,
 			18
 		};

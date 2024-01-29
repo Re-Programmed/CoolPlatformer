@@ -9,7 +9,7 @@
 #include "../../Objects/GUI/IGUIElement.h"
 #include "../DynamicSprite.h"
 
-#define GLOBAL_SPRITE_BASE -52	//Represents the negative number of sprites in the global_sprites directory.
+#define GLOBAL_SPRITE_BASE -54	//Represents the negative number of sprites in the global_sprites directory.
 #define SpriteBase(x) (GLOBAL_SPRITE_BASE+x)  //Returns the offset of a sprite from the sprite base.
 
 namespace GAME_NAME
@@ -132,10 +132,21 @@ namespace GAME_NAME
 				m_instantiations.push_back(object);
 			}
 
+			/*
+				Do not delete the reference to the object you are destroying, the destroy method does it for you and also takes 1 extra cycle to complete.
+			*/
+
 			static inline void DestroyObject(GameObject* object)
 			{
 				m_destroyQueue.push_back(object);
 			}
+
+			static inline void DestroyActiveObject(GameObject* object)
+			{
+				m_destroyActiveQueue.push_back(object);
+			}
+
+			static void DestroyActiveObjectImmediate(GameObject* object);
 
 			static void LoadActiveObjects(GameObject* objects[], const unsigned int size, int layer = 1);
 			static void LoadActiveObject(GameObject* object, int layer = 1);
@@ -221,6 +232,7 @@ namespace GAME_NAME
 			static Sprite* const getBackground(const unsigned int bgTexture);
 
 			static std::vector<GameObject*> m_destroyQueue;
+			static std::vector<GameObject*> m_destroyActiveQueue;
 
 			static std::vector<InstantiateGameObject> m_instantiations;
 

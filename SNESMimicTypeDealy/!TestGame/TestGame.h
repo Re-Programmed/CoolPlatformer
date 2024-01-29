@@ -20,9 +20,9 @@ namespace GAME_NAME
 
 		static TestGame* INSTANCE;									//Singleton.
 
-		void Update(GLFWwindow* window);							//Called every frame before rendering.
-		void Init(GLFWwindow* window);								//Called when the program loads.
-		void LateUpdate(GLFWwindow* window);						//Called every frame after rendering.
+		void Update(GLFWwindow* window) override;					//Called every frame before rendering.
+		void Init(GLFWwindow* window) override;						//Called when the program loads.
+		void LateUpdate(GLFWwindow* window) override;				//Called every frame after rendering.
 
 		void InitLevel(GAME_NAME::Game::Level level);				//Called when a new level loads.
 

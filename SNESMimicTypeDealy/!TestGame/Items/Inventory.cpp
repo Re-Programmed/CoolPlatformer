@@ -13,4 +13,16 @@ namespace GAME_NAME::Items
 		return m_items[slot];
 	}
 
+	int Inventory::AddItem(InventoryItem* item)
+	{
+		if (m_items.size() >= m_size)
+		{
+			return -1;
+		}
+		
+		m_items.push_back(item);
+
+		return (int)m_items.size() - 1;
+	}
+
 }

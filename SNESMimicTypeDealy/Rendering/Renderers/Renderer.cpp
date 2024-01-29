@@ -51,6 +51,7 @@ namespace GAME_NAME
 		*/
 
 		std::vector<GameObject*> Renderer::m_destroyQueue;
+		std::vector<GameObject*> Renderer::m_destroyActiveQueue;
 
 		std::vector<Renderer::InstantiateGameObject> Renderer::m_instantiations;
 
@@ -105,15 +106,38 @@ namespace GAME_NAME
 				if (obj.Active)
 				{
 					LoadActiveObject(obj.MyObject, obj.Layer);
-					//delete obj.MyObject;
 					continue;
 				}
 
 				LoadObject(obj.MyObject, obj.Layer, obj.Front);
-				//delete obj.MyObject;
 			}
 
 			m_instantiations.clear();
+
+			for (GameObject* des : m_destroyActiveQueue)
+			{
+				for (int layer = 0; layer < MICRO_RENDER_LAYER_COUNT; layer++)
+				{
+					int index = 0;
+					std::vector<GameObject*>* objs = &m_activeGameObjects[layer];
+					for (GameObject* obj : *objs)
+					{
+						if (obj == des)
+						{
+							objs->erase(objs->begin() + index);
+							delete des;
+							goto foundDesActive;
+						}
+
+						index++;
+					}
+				}
+
+			foundDesActive:
+				continue;
+			}
+
+			m_destroyActiveQueue.clear();
 
 			//Check if any objects need to be destroyed.
 			for (GameObject* des : m_destroyQueue)
@@ -129,8 +153,8 @@ namespace GAME_NAME
 							if (obj == des)	//If obj (current object to check) and des (target to destroy) point to the same GameObject, delete it.
 							{
 								objs->erase(objs->begin() + index);	//Remove the object from the chunk.
+								delete des;
 								goto foundDes;	//Break from loops apart from the destroyQueue loop.
-								break;
 							}
 							index++;
 						}
@@ -144,6 +168,25 @@ namespace GAME_NAME
 			}
 
 			m_destroyQueue.clear();
+		}
+
+		void Renderer::DestroyActiveObjectImmediate(GameObject* des)
+		{
+			for (int layer = 0; layer < MICRO_RENDER_LAYER_COUNT; layer++)
+			{
+				int index = 0;
+				std::vector<GameObject*>* objs = &m_activeGameObjects[layer];
+				for (GameObject* obj : *objs)
+				{
+					if (obj == des)
+					{
+						objs->erase(objs->begin() + index);
+						return;
+					}
+
+					index++;
+				}
+			}
 		}
 
 		void Renderer::ClearTextures(const unsigned int startIndex)

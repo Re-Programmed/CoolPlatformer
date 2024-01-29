@@ -11,7 +11,9 @@ namespace GAME_NAME::Items
 		Inventory(std::string name, uint8_t size);
 
 		InventoryItem* GetItem(uint8_t slot);
-	private:
+
+		int AddItem(InventoryItem* item);
+	protected:
 		const std::string m_name;
 		uint8_t m_size;
 

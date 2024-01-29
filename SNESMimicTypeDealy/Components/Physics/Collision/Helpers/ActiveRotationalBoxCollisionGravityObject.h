@@ -43,6 +43,8 @@ namespace GAME_NAME
 					{
 						//delete m_boxCollider;
 						//delete m_physics;
+
+						GameObject::~GameObject();
 					}
 
 					bool GetActive()

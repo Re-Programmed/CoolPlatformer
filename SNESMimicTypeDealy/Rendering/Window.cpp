@@ -235,6 +235,6 @@ namespace GAME_NAME
 
 	void Window::lateUpdate()
 	{
-
+		m_game->LateUpdate(m_glWindow);
 	}
 }

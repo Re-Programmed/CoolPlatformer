@@ -6,6 +6,7 @@
 #include "../../../Audio/SoundManager.h"
 #include "../../../Components/ChildGameObject.h"
 #include "../../../Objects/GUI/Progress/ProgressBar.h"
+#include "ScreenInventory.h"
 
 #ifndef _PLAYERDEF
 #define _PLAYERDEF
@@ -76,11 +77,26 @@ namespace  GAME_NAME
 				void Damage(float damage);
 				void Kill();
 
+				void SetHeldItem(Items::InventoryItem item);
+				inline void RemoveHeldItem()
+				{
+					m_heldItemDisplay->SetScale(Vec2(0));
+				}
+
+				inline ScreenInventory* GetInventory()
+				{
+					return m_screenInventory;
+				}
+
 			protected:
-				void onCollision     (Vec2 push) override;	//Called when a collision occurs.
+				void onCollision (Vec2 push) override;	//Called when a collision occurs.
 				void beforeCollision() override;		//Called before any collisions are calculated to allow for resetting the jump conditions.
 
 			private:
+				GameObject* m_heldItemDisplay;				//Follows the player to display the current held item.
+
+				ScreenInventory* const m_screenInventory;	//Player's three main inventory slots.
+
 				struct {
 					float Health = 100.f;
 				} m_stats;

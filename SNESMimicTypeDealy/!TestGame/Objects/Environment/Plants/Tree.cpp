@@ -83,6 +83,8 @@ namespace GAME_NAME::Objects::Environment::Plants
 
 		if (m_rustleCounter > 1.85f)
 		{
+			m_rustleCounter = 0;
+
 			m_animator->SetCurrentAnimation(-1);
 
 			if (m_rustles > 2) { return false; }
@@ -91,13 +93,12 @@ namespace GAME_NAME::Objects::Environment::Plants
 			m_rustles++;
 
 			int c = 1 + (std::rand() * 3 / RAND_MAX);
-			for (int i = 0; i < c; ++i)
+			for (int i = 0; i < c; i++)
 			{
-				Items::FloorItem* myItem = new Items::FloorItem(m_position + Vec2::RandVec2(m_scale.X, m_scale.Y), Items::LEAVES);
+				Items::FloorItem* myItem = new Items::FloorItem(m_position + Vec2::RandVec2(m_scale.X, m_scale.Y), Items::LEAVES, 2.f);
 				Renderer::InstantiateObject(Renderer::InstantiateGameObject(myItem, true, 1, false));
 			}
 
-			m_rustleCounter = 0;
 			return true;
 		}
 		
@@ -108,7 +109,7 @@ namespace GAME_NAME::Objects::Environment::Plants
 
 	void Tree::onInteract(std::shared_ptr<Player::Player> player, InputManager::KEY_STATE state)
 	{
-		Input::DisplayIconManager::ShowKeyInputDisplay(Input::DisplayIconManager::INPUT_DISPLAY_KEY_E, m_position, static_cast<int>(std::floor(m_rustleCounter / 1.85f) * 10));
+		Input::DisplayIconManager::ShowKeyInputDisplay(Input::DisplayIconManager::INPUT_DISPLAY_KEY_E, TestGame::ThePlayer->GetPosition() + Vec2(TestGame::ThePlayer->GetScale() + Vec2(3, -5)), (char)(std::floor(m_rustleCounter * 10 / 1.85f)));
 
 		if (state & InputManager::KEY_STATE_HELD)
 		{

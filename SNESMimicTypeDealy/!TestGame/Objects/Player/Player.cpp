@@ -35,7 +35,7 @@ namespace  GAME_NAME
 			using namespace Utils;
 
 			Player::Player(Vec2 position)
-				: ActiveBoxCollisionGravityObject(position, Vec2(DefaultPlayerScaleX, DefaultPlayerScaleY), Rendering::Renderer::GetSprite(DefaultPlayerSprite)),
+				: ActiveBoxCollisionGravityObject(position, Vec2(DefaultPlayerScaleX, DefaultPlayerScaleY), Rendering::Renderer::GetSprite(DefaultPlayerSprite)), m_screenInventory(new ScreenInventory()),
 				m_healthProgressBar(new ProgressBar(
 					Vec2(10, 7), Vec2(24, 8), Renderer::GetSprite(SpriteBase(42))->GetSpriteId()
 				))
@@ -97,6 +97,10 @@ namespace  GAME_NAME
 
 				m_emotionsObject = new ChildGameObject(Vec2(DefaultPlayerScaleX, 12.25), Vec2(-DefaultPlayerScaleX, DefaultPlayerScaleY * 0.519230769f), Renderer::GetSprite(PLAYER_EMOTIONS::ANGRY), this);
 				//Renderer::InstantiateObject(Renderer::InstantiateGameObject(m_emotionsObject, true, 2, false));
+
+
+				m_heldItemDisplay = new GameObject(m_position, Vec2(0), Renderer::GetSprite(0));
+				Renderer::LoadActiveObject(m_heldItemDisplay, 1);
 			}
 
 			Player::~Player()
@@ -115,6 +119,10 @@ namespace  GAME_NAME
 
 				std::thread animationUpdate([this, window] { m_animator->Update(window, this); });
 
+				if (m_heldItemDisplay->GetScale().X > 0)
+				{
+					m_heldItemDisplay->SetPosition(m_position);
+				}
 
 				//Calculate time spent in air.
 				if (!m_onGround)
@@ -144,6 +152,8 @@ namespace  GAME_NAME
 				{
 					animationUpdate.join();
 				}
+
+				m_screenInventory->Update();
 			}
 
 			void Player::SetSwimming(bool swimming)
@@ -252,6 +262,13 @@ namespace  GAME_NAME
 			void Player::Kill()
 			{
 
+			}
+
+			void Player::SetHeldItem(Items::InventoryItem item)
+			{
+				m_heldItemDisplay->SetPosition(m_position);
+				m_heldItemDisplay->SetScale(Vec2(8));
+				m_heldItemDisplay->SetSprite(Items::ITEMTYPE_GetItemTypeTexture(item.GetType()));
 			}
 
 #define COLLISION_VEL_STOP_DAMPING 0.1f
