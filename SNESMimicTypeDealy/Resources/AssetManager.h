@@ -76,6 +76,9 @@ namespace GAME_NAME
 			/// <param name="reloadObjects">If true, all objects currently loaded will be deleted before loading the new objects. (Should not be called during rendering.)</param>
 			static void LoadObjectData(const char* subfolder, std::function<void(std::vector<std::string>, size_t line)> mappings[], bool reloadObjects = false);
 
+		private:
+			static std::vector<std::string> m_loadAtEnd; //Objects that must be loaded last, like water that must bake reflections.
+		public:
 
 			static inline void loadObjectDataThread(std::string line, size_t lineId, std::function<void(std::vector<std::string>, size_t)> mappings[])
 			{
@@ -108,6 +111,11 @@ namespace GAME_NAME
 
 							component.erase(component.length() - 1);
 
+							if (component.ends_with("t"))
+							{
+								component = std::to_string(std::stoi(component) * 8);
+							}
+
 							decodedComponent = std::stoi(decodedAddition) + std::stoi(component);
 						}
 
@@ -120,7 +128,6 @@ namespace GAME_NAME
 				(*mapping)(v, lineId);
 
 				//delete mapping;	
-
 			}
 
 		};

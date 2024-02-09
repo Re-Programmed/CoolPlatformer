@@ -13,12 +13,15 @@
 #define DebugHeader(x, y) { std::string s = x; DEBUG::DebugLog::LogPlain("------------------" + s + "------------------", y); }
 #endif
 
+#define LOAD_LAST_PREFIX "_m_"
 
 namespace GAME_NAME
 {
 
 	namespace Resources
 	{
+		std::vector<std::string> AssetManager::m_loadAtEnd;
+
 		void AssetManager::LoadTextures(const char* subfolder, TEXTURE_LOAD textureLoad, bool reloadTextures)
 		{
 #if _DEBUG
@@ -172,6 +175,7 @@ namespace GAME_NAME
 
 			size_t lineID = 0;
 
+
 			while (std::getline(ObjectFile, line, '\n'))
 			{
 				if (line.empty() || line.starts_with(";")) { continue; } //For line breaks or lines beginning with a ";" do nothing. (useful for comments etc.)
@@ -239,8 +243,14 @@ namespace GAME_NAME
 #pragma endregion
 
 
-				threads.push_back(new std::thread(loadObjectDataThread, line, lineID++, mappings));
-				thCurr++;
+				if (line.starts_with(LOAD_LAST_PREFIX))
+				{
+					m_loadAtEnd.push_back(line);
+				}
+				else {
+					threads.push_back(new std::thread(loadObjectDataThread, line, lineID++, mappings));
+					thCurr++;
+				}
 
 	checkthreads:
 				if (thCurr == AppData::Settings::SettingsGlobals::MaxThreads.Value)
@@ -267,6 +277,14 @@ namespace GAME_NAME
 				}
 			}
 
+			//Load objects that must come last. (like water) (prefixed with '_m_')
+			for (std::string line : m_loadAtEnd)
+			{
+				loadObjectDataThread(line.erase(0,3), lineID++, mappings);
+			}
+
+			m_loadAtEnd.clear();
+			
 			//delete[definedMacrosCount] definedMacros;
 		}
 

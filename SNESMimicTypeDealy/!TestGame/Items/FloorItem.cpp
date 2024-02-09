@@ -52,10 +52,10 @@ namespace GAME_NAME
 		{
 			if (TestGame::ThePlayer->GetInventory()->AddItem(new InventoryItem(this->m_inventoryItem)) > 0)
 			{
+				m_pickedUp = true;
 				Renderer::DestroyActiveObjectImmediate(this);
 				//delete this;
 
-				m_pickedUp = true;
 			}
 		}
 	}

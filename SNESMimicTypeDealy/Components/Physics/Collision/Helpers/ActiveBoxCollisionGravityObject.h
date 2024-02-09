@@ -59,6 +59,7 @@ namespace GAME_NAME
 					{
 						ActiveBoxCollisionGravityObject* acgo = ((ActiveBoxCollisionGravityObject*)obj);
 						acgo->onCollision(push);
+
 						if (push.Y > 0) { acgo->SetGravity(0.f); }		//Resets the gravity to 0.
 						else if (push.X != 0) { acgo->m_physics->SetVelocityX(0.f); }	//If you hit the side of an object, set the X velocity to 0.
 					}

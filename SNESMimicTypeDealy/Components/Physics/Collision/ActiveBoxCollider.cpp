@@ -2,6 +2,11 @@
 #include "../../../Utils/CollisionDetection.h"
 #include "PixelPerfectCollider.h"
 
+//The maximum/minimum height that objects can be pushed on top of other objects when colliding with the side of eachother.
+#define DAMPING_STEP_HEIGHT_MAX 2.f		
+#define DAMPING_STEP_HEIGHT_MIN 0.1f
+#define STEP_X_PUSH_MIN 0.1f
+
 namespace GAME_NAME
 {
 	namespace Components
@@ -30,6 +35,13 @@ namespace GAME_NAME
 								{
 									return;
 								}
+							}
+
+							//Allow active objects colliding with the side of another static object to be pushed on top of the static object if they're close enough to the top edge of the static object.
+							float topEdgeDistance = collider->GetObject()->GetPosition().Y + collider->GetObject()->GetScale().Y - m_object->GetPosition().Y;
+							if (topEdgeDistance < DAMPING_STEP_HEIGHT_MAX && topEdgeDistance > DAMPING_STEP_HEIGHT_MIN && push.X > STEP_X_PUSH_MIN)
+							{
+								push.Y += topEdgeDistance;
 							}
 
 							//Push the objects apart.

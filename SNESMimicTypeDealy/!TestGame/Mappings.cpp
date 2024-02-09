@@ -67,7 +67,7 @@ std::function<void (std::vector<std::string>, size_t line)> Mappings::m_mappings
 #if _DEBUG
 		DebugMapper(">>> Loading Basic Object");
 #endif
-		Renderer::LoadObject(new Objects::GameObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4]))), (data.size() > 5) ? std::stoi(data[5]) : 1U);
+		Renderer::LoadObject(new Objects::GameObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4]))), (data.size() > 5) ? std::stoi(data[5]) : 1U, (data.size() > 6) ? std::stoi(data[6]) > 0 : false);
 	},
 
 	//Component Object
@@ -119,7 +119,7 @@ std::function<void (std::vector<std::string>, size_t line)> Mappings::m_mappings
 #if _DEBUG
 		DebugMapper(">>> Loading Water");
 #endif
-		Renderer::LoadActiveObject(new GAME_NAME::Objects::Environment::Water(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3])), 0);
+		Renderer::LoadActiveObject(new GAME_NAME::Objects::Environment::Water(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3])), 1);
 	},
 
 	[](std::vector<std::string> data, size_t d)

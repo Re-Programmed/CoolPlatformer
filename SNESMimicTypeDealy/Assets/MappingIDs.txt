@@ -1,6 +1,6 @@
 --OBJECT MAPS--
 
-0: Default object (map,positionX,positionY,scaleX,scaleY,sprite, [OPTIONAL = 1]layer)
+0: Default object (map,positionX,positionY,scaleX,scaleY,sprite, [OPTIONAL = 1]layer, [OPTIONAL = 0]isFront)
     - An object with no attributes.
 
 1: Component object (map,positionX,positionY,scaleX,scaleY,sprite,[component1|componentMapArg1|componentMapArg2...])
@@ -31,3 +31,7 @@
 
 0: CURRENTLY TEMPLATE (StaticBoxCollider)
 1:
+
+--OTHER--
+
+_m_ - Prefix for load object last.

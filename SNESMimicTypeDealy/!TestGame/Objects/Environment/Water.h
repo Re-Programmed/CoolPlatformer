@@ -18,7 +18,7 @@ namespace GAME_NAME
 				float Check;
 			};
 
-			constexpr int8_t WaterSprite = 5;	//Default sprite for water to use.
+			constexpr int8_t WaterSprite = 37;	//Default sprite for water to use.
 			/// <summary>
 			/// Water GameObjects.
 			/// </summary>

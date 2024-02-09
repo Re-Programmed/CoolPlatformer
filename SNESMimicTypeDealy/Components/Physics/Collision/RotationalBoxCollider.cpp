@@ -44,7 +44,6 @@ namespace GAME_NAME::Components::Physics::Collision
 			Vec2 push = Vec2::Zero;
 			if (Utils::CollisionDetection::BoxWithinBox(m_object->GetPosition(), m_object->GetScale(), collider->GetObject()->GetPosition(), collider->GetObject()->GetScale(), push))
 			{
-				std::cout << "CALLED ACTIVE" << m_object->GetRotation() << std::endl;
 
 				//Push the objects apart.
 				m_object->Translate(push);	
