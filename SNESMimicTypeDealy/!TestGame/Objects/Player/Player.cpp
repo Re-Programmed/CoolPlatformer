@@ -99,8 +99,7 @@ namespace  GAME_NAME
 				//Renderer::InstantiateObject(Renderer::InstantiateGameObject(m_emotionsObject, true, 2, false));
 
 
-				m_heldItemDisplay = new GameObject(m_position, Vec2(0), Renderer::GetSprite(0));
-				Renderer::LoadActiveObject(m_heldItemDisplay, 1);
+				m_heldItemDisplay = nullptr;
 			}
 
 			Player::~Player()
@@ -119,9 +118,12 @@ namespace  GAME_NAME
 
 				std::thread animationUpdate([this, window] { m_animator->Update(window, this); });
 
-				if (m_heldItemDisplay->GetScale().X > 0)
+				if (m_heldItemDisplay != nullptr && m_heldItemDisplay->GetScale().X > 0)
 				{
-					m_heldItemDisplay->SetPosition(m_position);
+					int add = m_position.X;
+					if (add % 4 == 0) { add = 2; }
+					else { add = 0; }
+					m_heldItemDisplay->SetPosition(m_position + Vec2(2, 3 + (add)));
 				}
 
 				//Calculate time spent in air.
@@ -266,7 +268,12 @@ namespace  GAME_NAME
 
 			void Player::SetHeldItem(Items::InventoryItem item)
 			{
-				m_heldItemDisplay->SetPosition(m_position);
+				if (m_heldItemDisplay == nullptr)
+				{
+					m_heldItemDisplay = new GameObject(m_position, Vec2(0), Renderer::GetSprite(0));
+					Renderer::LoadActiveObject(m_heldItemDisplay, 2);
+				}
+				m_heldItemDisplay->SetPosition(m_position + Vec2(2, 3));
 				m_heldItemDisplay->SetScale(Vec2(8));
 				m_heldItemDisplay->SetSprite(Items::ITEMTYPE_GetItemTypeTexture(item.GetType()));
 			}

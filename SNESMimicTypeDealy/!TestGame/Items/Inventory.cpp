@@ -8,12 +8,12 @@ namespace GAME_NAME::Items
 
 	}
 
-	InventoryItem* Inventory::GetItem(uint8_t slot)
+	std::unique_ptr<InventoryItem> Inventory::GetItem(uint8_t slot)
 	{
-		return m_items[slot];
+		return std::unique_ptr<InventoryItem>(&m_items[slot]);
 	}
 
-	int Inventory::AddItem(InventoryItem* item)
+	int Inventory::AddItem(InventoryItem item)
 	{
 		if (m_items.size() >= m_size)
 		{
