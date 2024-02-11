@@ -14,7 +14,7 @@ namespace GAME_NAME
 
 		void Update();
 
-		int AddItem(Items::InventoryItem* item);
+		int AddItem(Items::InventoryItem item);
 	private:
 		GUI::StaticGUIElement* m_slots[3];
 

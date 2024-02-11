@@ -157,7 +157,7 @@ namespace GAME_NAME
 
 		
 
-		void AssetManager::LoadObjectData(const char* subfolder, std::function<void (std::vector<std::string>, size_t line)> mappings[], bool reloadObjects)
+		void AssetManager::LoadObjectData(const char* subfolder, const std::function<void (std::vector<std::string>, size_t line)> mappings[], bool reloadObjects)
 		{
 			std::string filePath = AssetPath;
 			filePath += subfolder;

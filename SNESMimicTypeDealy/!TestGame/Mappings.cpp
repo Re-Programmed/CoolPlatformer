@@ -11,6 +11,7 @@
 
 #include "../!TestGame/Items/FloorItem.h"
 #include "../!TestGame/Objects/Environment/Plants/Tree.h"
+#include "../!TestGame/Items/Inventories/InventoryContainer.h"
 
 #if _DEBUG
 #include "../Debug/DebugLog.h"
@@ -45,7 +46,7 @@ using namespace GAME_NAME;
 /// <summary>
 /// Maps a string array to a component. The first value in the inputted string array is the component type so it can be ignored.
 /// </summary>
-const std::function<Components::IComponent* (std::vector<std::string>)> Mappings::m_componentMappings[COMPONENT_MAPPINGS_SIZE]
+constexpr const std::function<Components::IComponent* (std::vector<std::string>)> m_componentMappings[COMPONENT_MAPPINGS_SIZE]
 {
 	//Example template
 	[](std::vector<std::string> componentData) {
@@ -59,7 +60,7 @@ const std::function<Components::IComponent* (std::vector<std::string>)> Mappings
 /// <summary>
 /// Takes in a string vector and spawns a GameObject.
 /// </summary>
-std::function<void (std::vector<std::string>, size_t line)> Mappings::m_mappings[MAPPINGS_SIZE]
+constexpr std::function<void (std::vector<std::string>, size_t line)> m_mappings[MAPPINGS_SIZE]
 {
 	//Basic Object
 	[](std::vector<std::string> data, size_t n) {
@@ -233,6 +234,14 @@ std::function<void (std::vector<std::string>, size_t line)> Mappings::m_mappings
 	{
 		Environment::Plants::Tree* tree = new Environment::Plants::Tree(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), n, Renderer::GetSprite(std::stoi(data[5])));
 		Renderer::LoadActiveObject(tree, std::stoi(data[6]));
+	},
+
+	/*
+		11: Container Inventory (map,positionX,positionY,scaleX,scaleY,sprite,inventoryName,inventorySize,inventoryItems_Ids...)
+	*/
+	[](std::vector<std::string> data, size_t n)
+	{
+		Items::Inventories::InventoryContainer* container = new Items::Inventories::InventoryContainer(data[5], std::stoi(data[6]), STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])));
 	}
 };
 

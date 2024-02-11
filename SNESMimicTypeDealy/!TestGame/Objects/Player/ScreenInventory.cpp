@@ -42,7 +42,7 @@ namespace GAME_NAME
 		}
 	}
 
-	int ScreenInventory::AddItem(Items::InventoryItem* item)
+	int ScreenInventory::AddItem(Items::InventoryItem item)
 	{
 		int s = Inventory::AddItem(item);
 
@@ -51,7 +51,7 @@ namespace GAME_NAME
 			return -1;
 		}
 
-		Sprite* sprite = Items::ITEMTYPE_GetItemTypeTexture(item->GetType());
+		Sprite* sprite = Items::ITEMTYPE_GetItemTypeTexture(item.GetType());
 		GUI::StaticGUIElement* itemDisplay = new GUI::StaticGUIElement(m_slots[s]->GetPosition() + (INVENTORY_SLOT_PADDING/2.f), m_slots[s]->GetScale() - Vec2(INVENTORY_SLOT_PADDING), sprite->GetSpriteId());
 		delete sprite;
 		Renderer::LoadGUIElement(itemDisplay, 1);
@@ -69,9 +69,9 @@ namespace GAME_NAME
 			{
 				m_slots[i]->SetSprite(Renderer::GetSprite(SELECTED_SLOT_SPRITE));
 
-				if (m_items.size() > i && m_items[i] != nullptr)
+				if (m_items.size() > i)
 				{
-					TestGame::ThePlayer->SetHeldItem(*m_items[i]);
+					TestGame::ThePlayer->SetHeldItem(m_items[i]);
 				}
 				else {
 					TestGame::ThePlayer->RemoveHeldItem();

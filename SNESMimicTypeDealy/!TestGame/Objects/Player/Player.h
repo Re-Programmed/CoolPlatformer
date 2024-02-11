@@ -80,7 +80,10 @@ namespace  GAME_NAME
 				void SetHeldItem(Items::InventoryItem item);
 				inline void RemoveHeldItem()
 				{
-					m_heldItemDisplay->SetScale(Vec2(0));
+					if (m_heldItemDisplay != nullptr)
+					{
+						m_heldItemDisplay->SetScale(Vec2(0));
+					}
 				}
 
 				inline ScreenInventory* GetInventory()

@@ -9,7 +9,7 @@
 #include "../Resources/AssetManager.h"
 
 #define COMPONENT_MAPPINGS_SIZE 1	//How many component mappings there are
-#define MAPPINGS_SIZE 11			//How many object mappings there are.
+#define MAPPINGS_SIZE 12			//How many object mappings there are.
 
 namespace GAME_NAME
 {
@@ -18,10 +18,5 @@ namespace GAME_NAME
 	public:
 		static void LoadObjectsWithDefaultMapping(const char* levelPath);	//Used to map each part of an object.pk file to a GameObject.
 		static GameObject* LoadObjectWithDefaultMapping(std::string objectCode);	//Loads a single object based on its object code (0,0,0,01,5,02).
-
-		
-	private:
-		static const std::function<Components::IComponent* (std::vector<std::string>)> m_componentMappings[COMPONENT_MAPPINGS_SIZE];	//Stores what integers refer to what components for component objects.
-		static std::function<void (std::vector<std::string>, size_t line)> m_mappings[MAPPINGS_SIZE];									//Stores a list of conversions from a string to a GameObject. The conversion called is based on the first integer in each string of an object.pk file.
 	};
 }
