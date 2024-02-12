@@ -231,6 +231,7 @@
     <ClInclude Include="!TestGame\TestGame.h" />
     <ClInclude Include="Audio\SoundManager.h" />
     <ClInclude Include="Audio\SoundTypes\Sound.h" />
+    <ClInclude Include="EngineCompileOptions.h" />
     <ClInclude Include="Components\Animation\Animation.h" />
     <ClInclude Include="Components\Animation\AnimatorComponent.h" />
     <ClInclude Include="Components\ChildGameObject.h" />

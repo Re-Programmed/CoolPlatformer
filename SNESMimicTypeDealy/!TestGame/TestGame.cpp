@@ -17,6 +17,8 @@
 #include "./Objects/Environment/Plants/Tree.h"
 #include "./InputDisplay/DisplayIconManager.h"
 
+#include "../Objects/GUI/Text/TextRenderer.h"
+
 #if _DEBUG
 #include "../Debug/LevelBuilder/LevelBuilder.h"
 #endif
@@ -135,6 +137,9 @@ namespace GAME_NAME
 
 		GameObject* leaf = Instantiate::LevelObjectHandler::GetLevelObject("leaf_particle_objects", "leaf_1");
 		leaf->SetPosition(ThePlayer->GetPosition());
+
+		Vec2 digitPosition(15);
+		Text::TextRenderer::RenderNumber(123, digitPosition, 1.f, 5.f);
 	}
 
 

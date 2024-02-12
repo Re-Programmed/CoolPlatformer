@@ -1,10 +1,12 @@
 #include "../Inventory.h"
 #include "../../../Objects/GameObject.h"
+#include "../../../Objects/Helpers/Interactable.h"
+#include "../../Objects/Player/Player.h"
 
 namespace GAME_NAME::Items::Inventories
 {
 	class InventoryContainer
-		: public Inventory, public GameObject
+		: public Inventory, public Interactable
 	{
 	public:
 		InventoryContainer(std::string name, size_t size, Vec2 position, Vec2 scale, Rendering::Sprite* sprite, float rotation = 0.f);
@@ -12,6 +14,8 @@ namespace GAME_NAME::Items::Inventories
 
 		void OpenGUI();
 		void CloseGUI();
+
+		void onInteract(std::shared_ptr<GAME_NAME::Objects::Player::Player> player, InputManager::KEY_STATE state) override;
 
 		inline bool GetOpen()
 		{

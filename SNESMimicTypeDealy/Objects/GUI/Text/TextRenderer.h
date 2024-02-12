@@ -3,6 +3,8 @@
 #include <string>
 #include "../../../Utils/Math/Vec2.h"
 #include "../../../Rendering/Sprite.h"
+#include <vector>
+#include "../../../Objects/GUI/StaticGUIElement.h"
 
 #define DREND_FILE_PREFIX "/gui_text"
 
@@ -15,18 +17,17 @@ namespace GAME_NAME::Objects::GUI::Text
 	public:
 		typedef unsigned char digit;
 
-		static void RenderDigit(digit digit, Vec2& position, Vec2& scale);
+		typedef std::vector<StaticGUIElement*> RenderedDigit;
 
 		/// <summary>
-		/// Assign a digit to a sprite, must be called before rendering any digits.
+		/// Draws a digit to the screen at the given position with the given scale.
 		/// </summary>
-		/// <param name="sprite">The sprite to give this digit.</param>
-		/// <param name="d">Which digit to assign this sprite to.</param>
-		inline static void AssignDigitSprite(Rendering::Sprite* sprite, digit d)
-		{
-			m_digitSprites[d] = sprite;
-		}
-	private:
-		static Rendering::Sprite* m_digitSprites[10];
+		/// <param name="digit">Digit must be less than 10.</param>
+		/// <param name="position">The position to draw the digit.</param>
+		/// <param name="scale">The scale to draw the digit.</param>
+		/// <returns></returns>
+		static StaticGUIElement* RenderDigit(digit digit, Vec2& position, const float scale);
+
+		static RenderedDigit RenderNumber(uint16_t number, Vec2& firstDigitPosition, const float scale, const float digitPadding);
 	};
 }

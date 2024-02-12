@@ -46,7 +46,7 @@ using namespace GAME_NAME;
 /// <summary>
 /// Maps a string array to a component. The first value in the inputted string array is the component type so it can be ignored.
 /// </summary>
-constexpr const std::function<Components::IComponent* (std::vector<std::string>)> m_componentMappings[COMPONENT_MAPPINGS_SIZE]
+std::function<Components::IComponent* (std::vector<std::string>)> m_componentMappings[COMPONENT_MAPPINGS_SIZE]
 {
 	//Example template
 	[](std::vector<std::string> componentData) {
@@ -60,7 +60,7 @@ constexpr const std::function<Components::IComponent* (std::vector<std::string>)
 /// <summary>
 /// Takes in a string vector and spawns a GameObject.
 /// </summary>
-constexpr std::function<void (std::vector<std::string>, size_t line)> m_mappings[MAPPINGS_SIZE]
+std::function<void (std::vector<std::string>, size_t line)> m_mappings[MAPPINGS_SIZE]
 {
 	//Basic Object
 	[](std::vector<std::string> data, size_t n) {
@@ -237,11 +237,19 @@ constexpr std::function<void (std::vector<std::string>, size_t line)> m_mappings
 	},
 
 	/*
-		11: Container Inventory (map,positionX,positionY,scaleX,scaleY,sprite,inventoryName,inventorySize,inventoryItems_Ids...)
+		11: Container Inventory (map,positionX,positionY,scaleX,scaleY,sprite,inventoryName,inventorySize,layer,inventoryItems_Ids...)
 	*/
 	[](std::vector<std::string> data, size_t n)
 	{
 		Items::Inventories::InventoryContainer* container = new Items::Inventories::InventoryContainer(data[5], std::stoi(data[6]), STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])));
+
+		for (int i = 8; i < data.size(); i++)
+		{
+			Items::InventoryItem ii = Items::InventoryItem::InventoryItem(static_cast<Items::ITEM_TYPE>(i));
+			container->AddItem(ii);
+		}
+
+		Renderer::LoadActiveObject(container, std::stoi(data[7]));
 	}
 };
 

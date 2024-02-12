@@ -50,7 +50,7 @@ namespace GAME_NAME
 
 		void FloorItem::pickup()
 		{
-			if (TestGame::ThePlayer->GetInventory()->AddItem(new InventoryItem(this->m_inventoryItem)) > 0)
+			if (TestGame::ThePlayer->GetInventory()->AddItem(InventoryItem(this->m_inventoryItem)) > 0)
 			{
 				m_pickedUp = true;
 				Renderer::DestroyActiveObjectImmediate(this);

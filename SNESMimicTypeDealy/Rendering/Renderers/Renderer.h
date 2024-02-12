@@ -9,7 +9,8 @@
 #include "../../Objects/GUI/IGUIElement.h"
 #include "../DynamicSprite.h"
 
-#define GLOBAL_SPRITE_BASE -54	//Represents the negative number of sprites in the global_sprites directory.
+#include "../../EngineCompileOptions.h"
+
 #define SpriteBase(x) (GLOBAL_SPRITE_BASE+x)  //Returns the offset of a sprite from the sprite base.
 
 namespace GAME_NAME

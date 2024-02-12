@@ -85,7 +85,7 @@ namespace GAME_NAME
 				std::stringstream linestream(line);
 				std::string component;
 
-				std::function<void(std::vector<std::string>, size_t line)>* mapping{};
+				const std::function<void(std::vector<std::string>, size_t line)>* mapping{};
 
 				std::vector <std::string> v;
 
