@@ -8,7 +8,8 @@ namespace GAME_NAME::Objects::GUI::Text
 {
 	StaticGUIElement* TextRenderer::RenderDigit(digit digit, Vec2& position, const float scale)
 	{
-		StaticGUIElement* go = new StaticGUIElement(position, Vec2(TEXT_RENDERER_DIGIT_SIZE_X * scale, TEXT_RENDERER_DIGIT_SIZE_Y * scale), TEXT_RENDERER_ZERO_DIGIT_SPRITE_ID + digit);
+		int texture = TEXT_RENDERER_ZERO_DIGIT_SPRITE_ID + (int)digit;
+		StaticGUIElement* go = new StaticGUIElement(position, Vec2(-TEXT_RENDERER_DIGIT_SIZE_X * scale, TEXT_RENDERER_DIGIT_SIZE_Y * scale), Renderer::GetSprite(texture)->GetSpriteId());
 
 		Renderer::LoadGUIElement(go, 1);
 

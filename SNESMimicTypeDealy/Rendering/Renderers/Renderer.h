@@ -13,6 +13,10 @@
 
 #define SpriteBase(x) (GLOBAL_SPRITE_BASE+x)  //Returns the offset of a sprite from the sprite base.
 
+#if _DEBUG
+#include "../../Debug/DebugLog.h"
+#endif
+
 namespace GAME_NAME
 {
 	namespace Rendering
@@ -200,6 +204,13 @@ namespace GAME_NAME
 			/// </summary>
 			static inline const GLuint GetTextureIDFromIndex(const unsigned int index)
 			{
+#if _DEBUG
+				if (m_textureIDs.size() <= index)
+				{
+					DEBUG::DebugLog::LogError("[Renderer.h:206] Attempted to get non existant texture ID. (" + std::to_string(index) + ")");
+					return 0;
+				}
+#endif
 				return m_textureIDs[index - 1];
 			}
 

@@ -8,9 +8,11 @@ namespace GAME_NAME::Items
 
 	}
 
-	std::unique_ptr<InventoryItem> Inventory::GetItem(uint8_t slot)
+	Inventory::ReturnItem Inventory::GetItem(uint8_t slot)
 	{
-		return std::unique_ptr<InventoryItem>(&m_items[slot]);
+		if (m_items.size() <= slot) { return { m_items[0], true }; }
+
+		return { m_items[slot], false };
 	}
 
 	int Inventory::AddItem(InventoryItem item)

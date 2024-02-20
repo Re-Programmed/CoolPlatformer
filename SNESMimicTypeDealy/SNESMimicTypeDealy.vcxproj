@@ -137,6 +137,7 @@
     <ClCompile Include="!TestGame\InputDisplay\DisplayIconManager.cpp" />
     <ClCompile Include="!TestGame\Items\FloorItem.cpp" />
     <ClCompile Include="!TestGame\Items\Inventories\InventoryContainer.cpp" />
+    <ClCompile Include="!TestGame\Items\Inventories\InventoryContainerRenderer.cpp" />
     <ClCompile Include="!TestGame\Items\Inventory.cpp" />
     <ClCompile Include="!TestGame\Items\InventoryItem.cpp" />
     <ClCompile Include="!TestGame\Level\GlobalLevelData.cpp" />
@@ -214,6 +215,7 @@
     <ClInclude Include="!TestGame\InputDisplay\DisplayIconManager.h" />
     <ClInclude Include="!TestGame\Items\FloorItem.h" />
     <ClInclude Include="!TestGame\Items\Inventories\InventoryContainer.h" />
+    <ClInclude Include="!TestGame\Items\Inventories\InventoryContainerRenderer.h" />
     <ClInclude Include="!TestGame\Items\Inventory.h" />
     <ClInclude Include="!TestGame\Items\InventoryItem.h" />
     <ClInclude Include="!TestGame\Items\ItemType.h" />
@@ -231,6 +233,7 @@
     <ClInclude Include="!TestGame\TestGame.h" />
     <ClInclude Include="Audio\SoundManager.h" />
     <ClInclude Include="Audio\SoundTypes\Sound.h" />
+    <ClInclude Include="CustomCompileOptions.h" />
     <ClInclude Include="EngineCompileOptions.h" />
     <ClInclude Include="Components\Animation\Animation.h" />
     <ClInclude Include="Components\Animation\AnimatorComponent.h" />

@@ -10,11 +10,16 @@ namespace GAME_NAME::Items
 	public:
 		Inventory(std::string name, uint8_t size);
 		
+		struct ReturnItem {
+			InventoryItem& ri_Item;
+			bool ri_IsNull;
+		};
 		/// <summary>
 		/// Returns a pointer to the item in the given slot.
 		/// </summary>
 		/// <param name="slot">The slot of the inventory to access the item from.</param>
-		std::unique_ptr<InventoryItem> GetItem(uint8_t slot);
+		/// 
+		ReturnItem GetItem(uint8_t slot);
 
 		/// <summary>
 		/// Adds an item to the inventory at the last slot.
@@ -22,6 +27,11 @@ namespace GAME_NAME::Items
 		/// <param name="item">The item to add.</param>
 		/// <returns>The slot the item was added to. (-1 if the inventory is full)</returns>
 		int AddItem(InventoryItem item);
+
+		inline uint8_t GetSize()
+		{
+			return m_size;
+		}
 	protected:
 		/// <summary>
 		/// The name of the inventory, useful for rendering a graphical display of the inventory.

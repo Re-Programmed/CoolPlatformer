@@ -2,8 +2,7 @@
 #include "../../../Input/InputManager.h"
 #include "../../TestGame.h"
 
-#define UNSELECTED_SLOT_SPRITE SpriteBase(53)
-#define SELECTED_SLOT_SPRITE SpriteBase(54)
+#include "../../../CustomCompileOptions.h"
 
 #define INVENTORY_SLOT_PADDING 5.f
 
@@ -13,9 +12,9 @@ namespace GAME_NAME
 	ScreenInventory::ScreenInventory()
 		: Inventory("Screen Inventory", 3)
 	{
-		m_slots[0] = new GUI::StaticGUIElement(Vec2(4, 20), Vec2(16, 16), Renderer::GetSprite(SELECTED_SLOT_SPRITE)->GetSpriteId());
-		m_slots[1] = new GUI::StaticGUIElement(Vec2(24, 20), Vec2(16, 16), Renderer::GetSprite(UNSELECTED_SLOT_SPRITE)->GetSpriteId());
-		m_slots[2] = new GUI::StaticGUIElement(Vec2(44, 20), Vec2(16, 16), Renderer::GetSprite(UNSELECTED_SLOT_SPRITE)->GetSpriteId());
+		m_slots[0] = new GUI::StaticGUIElement(Vec2(4, 20), Vec2(16, 16), Renderer::GetSprite(INVENTORY_SELECTED_SLOT_SPRITE)->GetSpriteId());
+		m_slots[1] = new GUI::StaticGUIElement(Vec2(24, 20), Vec2(16, 16), Renderer::GetSprite(INVENTORY_UNSELECTED_SLOT_SPRITE)->GetSpriteId());
+		m_slots[2] = new GUI::StaticGUIElement(Vec2(44, 20), Vec2(16, 16), Renderer::GetSprite(INVENTORY_UNSELECTED_SLOT_SPRITE)->GetSpriteId());
 
 		Renderer::LoadGUIElement(m_slots[0]);
 		Renderer::LoadGUIElement(m_slots[1]);
@@ -67,7 +66,7 @@ namespace GAME_NAME
 		{
 			if (slot == i)
 			{
-				m_slots[i]->SetSprite(Renderer::GetSprite(SELECTED_SLOT_SPRITE));
+				m_slots[i]->SetSprite(Renderer::GetSprite(INVENTORY_SELECTED_SLOT_SPRITE));
 
 				if (m_items.size() > i)
 				{
@@ -80,7 +79,7 @@ namespace GAME_NAME
 				continue;
 			}
 
-			m_slots[i]->SetSprite(Renderer::GetSprite(UNSELECTED_SLOT_SPRITE));
+			m_slots[i]->SetSprite(Renderer::GetSprite(INVENTORY_UNSELECTED_SLOT_SPRITE));
 		}
 	}
 }

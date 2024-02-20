@@ -1,7 +1,11 @@
+#pragma once
+
 #include "../Inventory.h"
 #include "../../../Objects/GameObject.h"
 #include "../../../Objects/Helpers/Interactable.h"
 #include "../../Objects/Player/Player.h"
+
+#define OPEN_INVENTORY_CONTAINER_KEY keyRef::PLAYER_INTERACT
 
 namespace GAME_NAME::Items::Inventories
 {
@@ -14,6 +18,8 @@ namespace GAME_NAME::Items::Inventories
 
 		void OpenGUI();
 		void CloseGUI();
+
+		void Update(GLFWwindow* window) override;
 
 		void onInteract(std::shared_ptr<GAME_NAME::Objects::Player::Player> player, InputManager::KEY_STATE state) override;
 

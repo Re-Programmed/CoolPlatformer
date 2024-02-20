@@ -91,11 +91,26 @@ namespace  GAME_NAME
 					return m_screenInventory;
 				}
 
+				/// <summary>
+				/// Sets an object to freeze the player.
+				/// </summary>
+				/// <param name="frozen">Freeze the player?</param>
+				inline void SetFrozen(bool frozen)
+				{
+					m_frozen += frozen ? 1 : -1;
+				}
+
 			protected:
 				void onCollision (Vec2 push) override;	//Called when a collision occurs.
 				void beforeCollision() override;		//Called before any collisions are calculated to allow for resetting the jump conditions.
 
 			private:
+				/// <summary>
+				/// If the player is frozen they cannot move but can still be affected by gravity or other objects.
+				/// The value of frozen can go above 1, that way if multiple objects are currently freezing the player, the player will remain frozen until all objects have stopped freezing the player.
+				/// </summary>
+				int8_t m_frozen = 0;
+
 				GameObject* m_heldItemDisplay;				//Follows the player to display the current held item.
 
 				ScreenInventory* const m_screenInventory;	//Player's three main inventory slots.

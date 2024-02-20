@@ -348,24 +348,54 @@ namespace  GAME_NAME
 				//int joyAxesCount;		JOYSTICK INPUT
 				//const float* joyAxes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &joyAxesCount);
 
-				if (InputManager::GetKey(PLAYER_MOVE_RIGHT))
+				//If the player is frozen, do not check any key presses.
+				if (m_frozen <= 0) 
 				{
+					if (InputManager::GetKey(PLAYER_MOVE_RIGHT))
+					{
 #if _DEBUG
-					if (m_flight)
-					{
-						m_position += Vec2(InputManager::GetKey(PLAYER_DEBUG_ADD_SPEED) ? 3.0f : 1.4f, 0.f);
-						return;
-					}
-#endif
-					if (m_physics->GetVelocity().X < PlayerSpeedCap)
-					{
-						m_physics->SetFrictionDrag(0);
-						m_physics->AddVelocity(Vec2((Time::GameTime::GetScaledDeltaTime() / 0.017f) * (PlayerSpeedCap - m_physics->GetVelocity().X) * (PlayerSpeed), 0.f));
-						
-						//Check if the player has begun to move to the right, play a sliding animation if slowing down, flip the sprite if moving right.
-						if (m_physics->GetVelocity().X > 0)
+						if (m_flight)
 						{
-							m_textureFlipped = true;
+							m_position += Vec2(InputManager::GetKey(PLAYER_DEBUG_ADD_SPEED) ? 3.0f : 1.4f, 0.f);
+							return;
+						}
+#endif
+						if (m_physics->GetVelocity().X < PlayerSpeedCap)
+						{
+							m_physics->SetFrictionDrag(0);
+							m_physics->AddVelocity(Vec2((Time::GameTime::GetScaledDeltaTime() / 0.017f) * (PlayerSpeedCap - m_physics->GetVelocity().X) * (PlayerSpeed), 0.f));
+
+							//Check if the player has begun to move to the right, play a sliding animation if slowing down, flip the sprite if moving right.
+							if (m_physics->GetVelocity().X > 0)
+							{
+								m_textureFlipped = true;
+							}
+							else
+							{
+								playerIsSkidding = true;
+							}
+						}
+					}
+
+					if (InputManager::GetKey(PLAYER_MOVE_LEFT))
+					{
+#if _DEBUG
+						if (m_flight)
+						{
+							m_position += Vec2(InputManager::GetKey(PLAYER_DEBUG_ADD_SPEED) ? -3.0f : -1.4f, 0.f);
+							return;
+						}
+#endif
+						if (m_physics->GetVelocity().X > -PlayerSpeedCap)
+						{
+							m_physics->SetFrictionDrag(0);
+							m_physics->AddVelocity(Vec2((Time::GameTime::GetScaledDeltaTime() / 0.017f) * (PlayerSpeedCap - m_physics->GetVelocity().X) * (-PlayerSpeed), 0.f));
+						}
+
+						//Check if the player has begun to move to the left, play a sliding animation if slowing down, flip the sprite if moving left.
+						if (m_physics->GetVelocity().X < 0)
+						{
+							m_textureFlipped = false;
 						}
 						else
 						{
@@ -374,36 +404,9 @@ namespace  GAME_NAME
 					}
 				}
 
-				if (InputManager::GetKey(PLAYER_MOVE_LEFT))
-				{
-#if _DEBUG
-					if (m_flight)
-					{
-						m_position += Vec2(InputManager::GetKey(PLAYER_DEBUG_ADD_SPEED) ? -3.0f : -1.4f, 0.f);
-						return;
-					}
-#endif
-					if (m_physics->GetVelocity().X > -PlayerSpeedCap)
-					{
-						m_physics->SetFrictionDrag(0);
-						m_physics->AddVelocity(Vec2((Time::GameTime::GetScaledDeltaTime() / 0.017f) * (PlayerSpeedCap - m_physics->GetVelocity().X) * (-PlayerSpeed), 0.f));
-					}
-
-					//Check if the player has begun to move to the left, play a sliding animation if slowing down, flip the sprite if moving left.
-					if (m_physics->GetVelocity().X < 0)
-					{
-						m_textureFlipped = false;
-					}
-					else
-					{
-						playerIsSkidding = true;
-					}
-				}
-
-
 				{
 					
-//Determines what animation to play currently. (Move to seperate function. USE RETURNS INSTEAD OF ELSES)
+					//Determines what animation to play currently.
 					float anim_momentum;
 					setAnimations(playerIsSkidding, anim_momentum);
 
@@ -433,8 +436,8 @@ namespace  GAME_NAME
 #endif
 
 
-				//Check if player is jumping.
-				if (InputManager::GetKey(PLAYER_JUMP))
+				//Check if player is jumping and not frozen.
+				if (m_frozen <= 0 && InputManager::GetKey(PLAYER_JUMP))
 				{
 					unsigned char checks = m_physics->GetUpdatesThisFrame();
 					while (checks > 0)
@@ -466,6 +469,7 @@ namespace  GAME_NAME
 
 				}
 			}
+
 			void Player::setAnimations(bool playerIsSkidding, float& anim_momentum)
 			{
 				anim_momentum = std::abs(m_physics->GetVelocity().X);	//X Speed of player.

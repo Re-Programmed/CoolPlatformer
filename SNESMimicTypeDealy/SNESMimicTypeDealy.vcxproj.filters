@@ -234,6 +234,9 @@
     <ClCompile Include="!TestGame\Items\Inventories\InventoryContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="!TestGame\Items\Inventories\InventoryContainerRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glad\include\glad\glad.h">
@@ -489,6 +492,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EngineCompileOptions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="!TestGame\Items\Inventories\InventoryContainerRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomCompileOptions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

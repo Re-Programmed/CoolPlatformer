@@ -245,7 +245,7 @@ std::function<void (std::vector<std::string>, size_t line)> m_mappings[MAPPINGS_
 
 		for (int i = 8; i < data.size(); i++)
 		{
-			Items::InventoryItem ii = Items::InventoryItem::InventoryItem(static_cast<Items::ITEM_TYPE>(i));
+			Items::InventoryItem ii = Items::InventoryItem::InventoryItem(static_cast<Items::ITEM_TYPE>(std::stoi(data[i])));
 			container->AddItem(ii);
 		}
 

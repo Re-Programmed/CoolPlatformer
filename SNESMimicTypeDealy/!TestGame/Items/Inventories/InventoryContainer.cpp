@@ -2,8 +2,7 @@
 #include <cstdarg>
 #include "../../../Input/InputManager.h"
 #include "../../InputDisplay/DisplayIconManager.h"
-
-#define OPEN_INVENTORY_CONTAINER_KEY keyRef::PLAYER_INTERACT
+#include "InventoryContainerRenderer.h"
 
 namespace GAME_NAME::Items::Inventories
 {
@@ -30,26 +29,46 @@ using namespace std;
 
 	void InventoryContainer::OpenGUI()
 	{
+		if (m_isOpen) { return; }
+
+		InventoryContainerRenderer::OpenInventoryContainer(this);
 		m_isOpen = true;
 	}
 
 	void InventoryContainer::CloseGUI()
 	{
+		if (!m_isOpen) { return; }
+
+		InventoryContainerRenderer::CloseCurrentContainer();
 		m_isOpen = false;
+	}
+
+	void InventoryContainer::Update(GLFWwindow* window)
+	{
+		if (m_isOpen)
+		{
+			if (InputManager::GetKeyUpDown(OPEN_INVENTORY_CONTAINER_KEY) & InputManager::KEY_STATE_PRESSED)
+			{
+				CloseGUI();
+			}
+		}
+
+		Interactable::Update(window);
 	}
 
 	void InventoryContainer::onInteract(std::shared_ptr<GAME_NAME::Objects::Player::Player> player, InputManager::KEY_STATE state)
 	{
+		if (m_isOpen)
+		{
+			return;
+		}
+
 using namespace GAME_NAME;
 		Input::DisplayIconManager::ShowKeyInputDisplay(Input::DisplayIconManager::INPUT_DISPLAY_KEY_E, TestGame::ThePlayer->GetPosition() + Vec2(TestGame::ThePlayer->GetScale() + Vec2(3, -5)));
 
-		if (state & InputManager::KEY_STATE_HELD)
+		if (state & InputManager::KEY_STATE_PRESSED)
 		{
-
-		}
-		else if (state & InputManager::KEY_STATE_RELEASED)
-		{
-			
+			OpenGUI();
 		}
 	}
 

@@ -137,9 +137,6 @@ namespace GAME_NAME
 
 		GameObject* leaf = Instantiate::LevelObjectHandler::GetLevelObject("leaf_particle_objects", "leaf_1");
 		leaf->SetPosition(ThePlayer->GetPosition());
-
-		Vec2 digitPosition(15);
-		Text::TextRenderer::RenderNumber(123, digitPosition, 1.f, 5.f);
 	}
 
 

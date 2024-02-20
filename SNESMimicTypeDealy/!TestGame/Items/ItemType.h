@@ -10,7 +10,7 @@ namespace GAME_NAME
 		enum ITEM_TYPE
 		{
 			LOG = 0,
-			LEAVES
+			LEAVES = 1
 		};
 
 		//An array containing the sprite for each of the items in order of the ITEM_TYPE enum.
