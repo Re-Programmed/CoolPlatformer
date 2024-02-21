@@ -42,3 +42,6 @@ Each line is 1 object.
 
 ---ADDING T---
 Putting T on any vec2s or parameters specified in the mapping will multiply the scale of the value inputted by the size of a tile on a Genesis.
+
+--PREFIXES--
+_m_ - Prefix for load object last.

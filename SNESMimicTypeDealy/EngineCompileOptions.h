@@ -6,6 +6,24 @@
 
 #pragma region Renderer	
 	
+	/*
+	---RENDER ORDER---
+
+	   [BACKGROUND] {Static.}
+	   [RENDER LAYER 0] {Bound to the chunk spawned in.}
+	   [RENDER LAYER 1]	|
+	   [RENDER LAYER 2]	|
+	   [RENDER LAYER 3]	|
+	   [ACTIVE RENDER LAYER 0] {Rendered if visible by camera.}
+	   [ACTIVE RENDER LAYER 1]		|
+	   [ACTIVE RENDER LAYER 2]		|	(PLAYER)
+	   [ACTIVE RENDER LAYER 3]		|
+	   [PRIORITY OBJECTS (FRONT OBJECTS)] {Bound to the chunk spawned in.}
+	   [GUI LAYER 0] {Always rendered.}
+	   [GUI LAYER 1]	|
+	   [GUI LAYER 2]	|
+	*/
+
 	#define GLOBAL_SPRITE_BASE -64								//Represents the negative number of sprites in the global_sprites directory.
 
 #pragma endregion

@@ -95,7 +95,7 @@ namespace GAME_NAME::Objects::Environment::Plants
 			int c = 1 + (std::rand() * 3 / RAND_MAX);
 			for (int i = 0; i < c; i++)
 			{
-				Items::FloorItem* myItem = new Items::FloorItem(m_position + Vec2::RandVec2(m_scale.X, m_scale.Y), Items::LEAVES, 2.f);
+				Items::FloorItem* myItem = new Items::FloorItem(m_position + Vec2::RandVec2(m_scale.X, m_scale.Y), Items::LEAVES, 0.5f);
 				Renderer::InstantiateObject(Renderer::InstantiateGameObject(myItem, true, 1, false));
 			}
 

@@ -34,7 +34,10 @@ namespace GAME_NAME
 
 		void FloorItem::Update(GLFWwindow* window)
 		{
+			//Check if the item has been picked up.
 			if (m_pickedUp) { return; }
+
+			//Track the lifetime of the item for pickup delay.
 			m_lifetime += Utils::Time::GameTime::GetScaledDeltaTime();
 
 			if (m_lifetime >= m_pickupDelay)
@@ -50,12 +53,13 @@ namespace GAME_NAME
 
 		void FloorItem::pickup()
 		{
-			if (TestGame::ThePlayer->GetInventory()->AddItem(InventoryItem(this->m_inventoryItem)) > 0)
+			//Attempt to add the item to the player's inventory.
+			if (TestGame::ThePlayer->GetInventory()->AddItem(InventoryItem(this->m_inventoryItem)) >= 0)
 			{
+				//Sucessful, destroy the item.
 				m_pickedUp = true;
 				Renderer::DestroyActiveObjectImmediate(this);
 				//delete this;
-
 			}
 		}
 	}

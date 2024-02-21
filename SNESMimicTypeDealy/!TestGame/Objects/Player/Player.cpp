@@ -118,11 +118,10 @@ namespace  GAME_NAME
 
 				std::thread animationUpdate([this, window] { m_animator->Update(window, this); });
 
+				//This makes the current held item move up and down while running to look like it is moving around in the player's hand.
 				if (m_heldItemDisplay != nullptr && m_heldItemDisplay->GetScale().X > 0)
 				{
-					int add = m_position.X;
-					if (add % 4 == 0) { add = 2; }
-					else { add = 0; }
+					float add = std::sin(m_position.X/8.f) * 1.44f;
 					m_heldItemDisplay->SetPosition(m_position + Vec2(2, 3 + (add)));
 				}
 
@@ -266,13 +265,17 @@ namespace  GAME_NAME
 
 			}
 
+			//Sets the display for the held item/tool.
 			void Player::SetHeldItem(Items::InventoryItem item)
 			{
+				//If no display exists yet, create one.
 				if (m_heldItemDisplay == nullptr)
 				{
 					m_heldItemDisplay = new GameObject(m_position, Vec2(0), Renderer::GetSprite(0));
 					Renderer::LoadActiveObject(m_heldItemDisplay, 2);
 				}
+
+				//Update item position, scale, and sprite.
 				m_heldItemDisplay->SetPosition(m_position + Vec2(2, 3));
 				m_heldItemDisplay->SetScale(Vec2(8));
 				m_heldItemDisplay->SetSprite(Items::ITEMTYPE_GetItemTypeTexture(item.GetType()));

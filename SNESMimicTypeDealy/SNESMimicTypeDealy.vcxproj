@@ -272,6 +272,8 @@
     <ClInclude Include="Objects\GUI\StaticGUIElement.h" />
     <ClInclude Include="Objects\GUI\Text\TextRenderer.h" />
     <ClInclude Include="Objects\Helpers\Interactable.h" />
+    <ClInclude Include="Objects\Helpers\Trigger.h" />
+    <ClInclude Include="Objects\Helpers\Triggers\CameraTrigger.h" />
     <ClInclude Include="Objects\StateSaver.h" />
     <ClInclude Include="Objects\Instantiate\LevelObjectHandler.h" />
     <ClInclude Include="Objects\Levels\Data\LevelDataParser.h" />

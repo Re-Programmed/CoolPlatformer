@@ -39,6 +39,7 @@ namespace GAME_NAME
 				/// <param name="window"></param>
 				void Update(GLFWwindow* window);
 			private:
+				std::vector<float> m_randomSinEffects;
 				std::vector<std::unique_ptr<BakedReflection>> m_bakedReflections;	//Array of objects that are displayed as reflections of objects above the water. Calculated on level load.
 
 				const Vec2 m_reflectionPosition;									//The line at which objects should be relfected accross vertically. (The top of the water)

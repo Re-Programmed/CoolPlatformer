@@ -77,10 +77,11 @@ namespace GAME_NAME
 			static void LoadObjectData(const char* subfolder, const std::function<void(std::vector<std::string>, size_t line)> mappings[], bool reloadObjects = false);
 
 		private:
+			static volatile std::atomic<int> m_currentThreadLoadCount;
+			static volatile int m_currentThreadLoadCountINT;
 			static std::vector<std::string> m_loadAtEnd; //Objects that must be loaded last, like water that must bake reflections.
 		public:
-
-			static inline void loadObjectDataThread(std::string line, size_t lineId, const std::function<void(std::vector<std::string>, size_t)> mappings[])
+			static inline void loadObjectDataThread(std::string line, size_t lineId, const std::function<void(std::vector<std::string>, size_t)> mappings[], int expectedLoadValue = 0, bool expectLoad = false)
 			{
 				std::stringstream linestream(line);
 				std::string component;
@@ -124,6 +125,30 @@ namespace GAME_NAME
 					}
 					c++; //C++ AHHAHAHAHAHAHH Like the language :)L::):)
 				}
+
+				//If we are expecting to load from the file, await for the array to be given the previous object in order to maintain load and render order.
+				/*if (expectLoad)
+				{
+					std::cout << "THREAD " << expectedLoadValue << " WAITING\n";
+
+					auto atmVal = m_currentThreadLoadCount.load(std::memory_order_relaxed);
+					while (expectedLoadValue != atmVal)
+					{
+						//std::cout << "AWAITING " << expectedLoadValue << "!=" << atmVal << std::endl;
+						atmVal = m_currentThreadLoadCount.load(std::memory_order_relaxed);
+					}
+
+					while (atmVal == expectedLoadValue)
+					{
+						if (!m_currentThreadLoadCount.compare_exchange_weak(atmVal, atmVal + 1, std::memory_order_release, std::memory_order_relaxed))
+						{
+							break;
+						}
+					}
+
+					std::cout << "THREAD " << expectedLoadValue << " LOADED" << std::endl;
+				}*/
+
 
 				(*mapping)(v, lineId);
 

@@ -25,7 +25,10 @@ namespace GAME_NAME
 
 			const double sdt = GAME_NAME::Utils::Time::GameTime::GetScaledDeltaTime();
 
-			Vec2 l = Vec2(std::lerp(m_position.X + HalfTResX, playerPos.X, CameraSpeed * sdt) - HalfTResX, std::lerp(m_position.Y + HalfTResY, playerPos.Y, CameraSpeed * sdt) - HalfTResY);
+			float resX = HalfTResX * (1 / m_zoom);
+			float resY = HalfTResY * (1 / m_zoom);
+
+			Vec2 l = Vec2(std::lerp(m_position.X + resX, playerPos.X, CameraSpeed * sdt) - resX, std::lerp(m_position.Y + resY, playerPos.Y, CameraSpeed * sdt) - resY);
 
 			SetPosition(l);
 		}

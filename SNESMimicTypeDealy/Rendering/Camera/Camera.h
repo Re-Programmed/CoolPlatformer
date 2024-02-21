@@ -8,7 +8,7 @@
 constexpr float minimumCameraZoom = 0.3f;
 constexpr float maximumCameraZoom = 2.f;
 
-#define LIMIT_CAMERA_NEGATIVE true	//Should the camera be allowed to move into negative X and Y coords?
+#define LIMIT_CAMERA_NEGATIVE true //Should the camera not be allowed to move into negative X and Y coords?
 
 namespace GAME_NAME
 {

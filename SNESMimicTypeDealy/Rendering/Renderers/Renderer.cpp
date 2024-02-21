@@ -37,17 +37,17 @@ namespace GAME_NAME
 		 
 		[BACKGROUND] {Static.}
 		[RENDER LAYER 0] {Bound to the chunk spawned in.}
-		[RENDER LAYER 1]
-		[RENDER LAYER 2]
-		[RENDER LAYER 3]
+		[RENDER LAYER 1]	|
+		[RENDER LAYER 2]	|
+		[RENDER LAYER 3]	|
 		[ACTIVE RENDER LAYER 0] {Rendered if visible by camera.}
-		[ACTIVE RENDER LAYER 1]
-		[ACTIVE RENDER LAYER 2]			(PLAYER)
-		[ACTIVE RENDER LAYER 3]
+		[ACTIVE RENDER LAYER 1]		|
+		[ACTIVE RENDER LAYER 2]		|	(PLAYER)
+		[ACTIVE RENDER LAYER 3]		|
 		[PRIORITY OBJECTS (FRONT OBJECTS)] {Bound to the chunk spawned in.}
 		[GUI LAYER 0] {Always rendered.}
-		[GUI LAYER 1]
-		[GUI LAYER 2]
+		[GUI LAYER 1]	|
+		[GUI LAYER 2]	|
 		*/
 
 		std::vector<GameObject*> Renderer::m_destroyQueue;
@@ -434,19 +434,21 @@ namespace GAME_NAME
 			const int iterEnd = AsChunkPosition((int)cameraPosition.X + cameraBoundingBox.GetX()) * levelSizeY;
 
 
-			//Loop over chunks that are before the right edge of the camera.
-			for (int i = iterInit; i < iterEnd; i++)
+			for (int rLayer = 0; rLayer < MICRO_RENDER_LAYER_COUNT; rLayer++)
 			{
-				//Check if chunk is out of level bounds.
-				if (i >= levelSizeX * levelSizeY) { continue; }
+				//Loop over chunks that are before the right edge of the camera.
+				for (int i = iterInit; i < iterEnd; i++)
+				{
+					//Check if chunk is out of level bounds.
+					if (i >= levelSizeX * levelSizeY) { continue; }
 
-				//Check if a chunk is within the bounding box of the camera. (MAY NEED BUGFIXED FOR WHEN CAMERA CHANGES ZOOM!!!!!)
-				//if (m_chunks[i].GetPosition().Y < cameraTopEdge)
-				//{
-					//Render a chunk if it is in the cameras bounding box.
-					m_chunks[i].Render(cameraPosition, chunkSize, layer, window);
+					//Check if a chunk is within the bounding box of the camera. (MAY NEED BUGFIXED FOR WHEN CAMERA CHANGES ZOOM!!!!!)
+					//if (m_chunks[i].GetPosition().Y < cameraTopEdge)
+					//{
+						//Render a chunk if it is in the cameras bounding box.
+					m_chunks[i].Render(cameraPosition, chunkSize, layer, window, rLayer);
 
-					
+
 					//Check if the chunk we just rendered is at the top of the screen.
 					if ((i % levelSizeY) == (levelSizeY - 1))
 					{
@@ -455,12 +457,13 @@ namespace GAME_NAME
 						i += cameraChunkPosition.GetY();
 					}
 
-				//}
-				//else
-				//{
-					//If we tried to render a chunk and failed, skip this entire column.
-				//	i += cameraChunkPosition.GetY() + (levelSizeY - 1) - i % levelSizeY;
-				//}
+					//}
+					//else
+					//{
+						//If we tried to render a chunk and failed, skip this entire column.
+					//	i += cameraChunkPosition.GetY() + (levelSizeY - 1) - i % levelSizeY;
+					//}
+				}
 			}
 
 			if (layer == RENDER_LAYER_BG)

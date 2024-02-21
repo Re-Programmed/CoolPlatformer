@@ -40,7 +40,7 @@ namespace GAME_NAME
 			return &m_frontObjects;
 		}
 
-		void Chunk::Render(const Vec2 cameraPosition, const int chunkSize, RENDER_LAYER layer, GLFWwindow* window)
+		void Chunk::Render(const Vec2 cameraPosition, const int chunkSize, RENDER_LAYER layer, GLFWwindow* window, int microLayer)
 		{
 			switch (layer)
 			{
@@ -51,11 +51,21 @@ namespace GAME_NAME
 				}
 				break;
 			case RENDER_LAYER_OBJECTS:
-				for (int i = 0; i < CHUNK_OBJECT_RENDER_LAYER_COUNT; i++)
+				if (microLayer < 0)
 				{
-  					for (GameObject* obj : m_objects[i])
+					for (int i = 0; i < CHUNK_OBJECT_RENDER_LAYER_COUNT; i++)
 					{
-						if(Renderer::UpdateObjects){ obj->Update(window); }
+						for (GameObject* obj : m_objects[i])
+						{
+							if (Renderer::UpdateObjects) { obj->Update(window); }
+							obj->Render(cameraPosition);
+						}
+					}
+				}
+				else {
+					for (GameObject* obj : m_objects[microLayer])
+					{
+						if (Renderer::UpdateObjects) { obj->Update(window); }
 						obj->Render(cameraPosition);
 					}
 				}

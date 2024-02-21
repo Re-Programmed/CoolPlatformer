@@ -21,6 +21,8 @@ namespace GAME_NAME
 	namespace Resources
 	{
 		std::vector<std::string> AssetManager::m_loadAtEnd;
+		volatile std::atomic<int> AssetManager::m_currentThreadLoadCount;
+		volatile int AssetManager::m_currentThreadLoadCountINT = 0;
 
 		void AssetManager::LoadTextures(const char* subfolder, TEXTURE_LOAD textureLoad, bool reloadTextures)
 		{
@@ -234,7 +236,7 @@ namespace GAME_NAME
 					while (std::getline(multiobjectmacrostream, component, ';'))
 					{
 						//Start the loading thread for the macro.
-						threads.push_back(new std::thread(loadObjectDataThread, component, lineID++, mappings));
+						threads.push_back(new std::thread(loadObjectDataThread, component, lineID++, mappings, thCurr, true));
 						thCurr++;
 					}
 
@@ -248,7 +250,8 @@ namespace GAME_NAME
 					m_loadAtEnd.push_back(line);
 				}
 				else {
-					threads.push_back(new std::thread(loadObjectDataThread, line, lineID++, mappings));
+					//Load the object. (if its not a load last.)
+					threads.push_back(new std::thread(loadObjectDataThread, line, lineID++, mappings, thCurr, true));
 					thCurr++;
 				}
 
@@ -265,6 +268,8 @@ namespace GAME_NAME
 					}
 
 					thCurr = 0;
+					m_currentThreadLoadCount.store(0);
+					m_currentThreadLoadCountINT = 0;
 				}
 			}
 
@@ -278,13 +283,16 @@ namespace GAME_NAME
 			}
 
 			//Load objects that must come last. (like water) (prefixed with '_m_')
+			size_t lNum = 0;
 			for (std::string line : m_loadAtEnd)
 			{
 				loadObjectDataThread(line.erase(0,3), lineID++, mappings);
 			}
 
 			m_loadAtEnd.clear();
-			
+
+			m_currentThreadLoadCount.store(0);
+
 			//delete[definedMacrosCount] definedMacros;
 		}
 

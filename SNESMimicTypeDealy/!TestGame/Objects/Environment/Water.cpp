@@ -14,8 +14,12 @@ namespace GAME_NAME
 			{
 				std::vector<GameObject*> bakedReflections = Renderer::GetAllChunkObjectsInArea(Vec2(position.X, m_reflectionPosition.Y), scale);
 					
+				int r = 0;
 				for (GameObject* obj : bakedReflections)
 				{
+					//Random fluctuation in rate of reflection distortion.
+					m_randomSinEffects.push_back(0.5f + (std::rand() / RAND_MAX));
+
 					const Vec2 pos = obj->GetPosition();
 					Vec2 scale = obj->GetScale();
 
@@ -45,9 +49,10 @@ namespace GAME_NAME
 					const float check = std::clamp((m_scale.X / 2) - ((scale.X / 2) + std::abs((pos.X + scale.X / 2) - (m_position.X + m_scale.X / 2))), 0.f, 25.f) / 25.f;
 
 					m_bakedReflections.push_back(std::make_unique<BakedReflection>(GameObject(Vec2(pos.X, (2 * m_reflectionPosition.Y) - pos.Y - scale.Y), scale, obj->GetSprite()), std::make_unique<DynamicSprite>(obj->GetSprite()->GetSpriteId(), vertices, vertices, textureColor), Vec4(percXM, percXG, percYM, percYG), check));
+				
+					r++;
 				}
 			}
-
 
 			void Water::Update(GLFWwindow* window)
 			{
@@ -69,10 +74,10 @@ namespace GAME_NAME
 					const float percYG = m_bakedReflections[i]->Perc.W;
 
 					Vec2 vertices[4]{
-						Vec2(percXM + sin * check, percYG),
-						Vec2(percXM + sin1 * check, percYM),
-						Vec2(percXG + sin2 * check, percYM),
-						Vec2(percXG + sin3 * check, percYG)
+						Vec2(percXM + sin * check * m_randomSinEffects[i], percYG),
+						Vec2(percXM + sin1 * check * m_randomSinEffects[i], percYM),
+						Vec2(percXG + sin2 * check * m_randomSinEffects[i], percYM),
+						Vec2(percXG + sin3 * check * m_randomSinEffects[i], percYG)
 					};
 
 

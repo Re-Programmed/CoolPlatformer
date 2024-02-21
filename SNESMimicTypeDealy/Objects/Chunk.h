@@ -35,7 +35,7 @@ namespace GAME_NAME
 			std::vector<GameObject*>* GetObjects();						//Get all the objects in this chunk.
 			std::vector<GameObject*>* GetFrontObjects();				//Get all the front in this chunk.
 
-			void Render(const Vec2 cameraPosition, const int chunkSize, RENDER_LAYER layer, GLFWwindow* window);
+			void Render(const Vec2 cameraPosition, const int chunkSize, RENDER_LAYER layer, GLFWwindow* window, int microLayer = -1);
 
 			Vec2 GetPosition();											//Get the position of this chunk.
 		private:
