@@ -23,7 +23,12 @@ namespace GAME_NAME
 			public:
 				static UI16_AppDataGlobalVariable MaxThreads;
 
+				static UI16_AppDataGlobalVariable WindowResolutionX;
+				static UI16_AppDataGlobalVariable WindowResolutionY;
+
 				static void LoadAppDataVariables();
+
+				static void SaveUpdatedVariables();
 			};
 		}
 	}

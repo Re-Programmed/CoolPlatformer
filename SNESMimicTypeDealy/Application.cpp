@@ -11,6 +11,7 @@
 #endif
 #include "!TestGame/TestGame.h"
 #include "Settings/AppDataFileManager.h"
+#include "Settings/SettingsGlobals.h"
 //#include "./Input/InputManager.h"
 
 #define THREAD_LIMIT 128
@@ -39,6 +40,7 @@ int main()
 	}
 
 	AppData::AppDataFileManager::CreateAppDataFiles();
+	AppData::Settings::SettingsGlobals::LoadAppDataVariables();
 
 	ApplicationWindow = new Window(false, new TestGame());
 
@@ -47,10 +49,12 @@ int main()
 		ApplicationWindow->Render();
 	}
 
-	glfwDestroyWindow(ApplicationWindow->GetWindow());
-	glfwTerminate();
+	AppData::Settings::SettingsGlobals::SaveUpdatedVariables();
 	
+	//ALREADY CALLED IN delete ApplicationWindow [glfwDestroyWindow(ApplicationWindow->GetWindow())];	
 	delete ApplicationWindow;
+
+	glfwTerminate();
 
 	//glfwTerminate();
 }

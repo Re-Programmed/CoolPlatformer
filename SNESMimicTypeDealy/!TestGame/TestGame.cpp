@@ -70,7 +70,6 @@ namespace GAME_NAME
 
 	void TestGame::Init(GLFWwindow* window)
 	{
-		AppData::Settings::SettingsGlobals::LoadAppDataVariables();
 
 		INSTANCE = this;
 		m_gameCamera = new GAME_NAME::Camera::GameCamera();

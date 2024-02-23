@@ -14,6 +14,7 @@
 #include "../Audio/SoundManager.h"
 #include "../Utils/Time/GameTime.h"
 #include "../Objects/GUI/GUIManager.h"
+#include "../Settings/SettingsGlobals.h"
 
 //The expected amount of time that should pass between each frame.
 #define _G_EXPECTED_FRAME_OBJ_UPDATE 0.0088f
@@ -50,6 +51,13 @@ namespace GAME_NAME
 
 		//Set sprite scaling. (Maintains the size of sprites and camera zoom when the window is changed.)
 		Sprite::SetResolution(Vec2(width, height));
+
+		AppData::Settings::SettingsGlobals::WindowResolutionX.Value = adjustedWindowW;
+		AppData::Settings::SettingsGlobals::WindowResolutionY.Value = adjustedWindowH;
+
+		AppData::Settings::SettingsGlobals::SaveUpdatedVariables();
+
+		std::cout << "SET ADJUSTED WINDOW SCALE TO: " << AppData::Settings::SettingsGlobals::WindowResolutionX.Value << ", " << AppData::Settings::SettingsGlobals::WindowResolutionY.Value << "\n";
 	}
 
 	GLFWwindow* Window::GetWindow()
@@ -71,6 +79,7 @@ namespace GAME_NAME
 		const GLFWvidmode* mode = glfwGetVideoMode(primaryMonitor);
 		width = mode->width;
 		height = mode->height;
+
 
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
@@ -109,6 +118,18 @@ namespace GAME_NAME
 		glMatrixMode(GL_PROJECTION);
 		glOrtho(0, width, 0, height, 0, 100);
 		glMatrixMode(GL_MODELVIEW);
+
+		if (AppData::Settings::SettingsGlobals::WindowResolutionX.Value > 0)
+		{
+			width = AppData::Settings::SettingsGlobals::WindowResolutionX.Value;
+		}
+
+		if (AppData::Settings::SettingsGlobals::WindowResolutionY.Value > 0)
+		{
+			height = AppData::Settings::SettingsGlobals::WindowResolutionY.Value;
+		}
+
+		std::cout << "[[ GOT WINDOW SCALE TO BE: " << width << ", " << height << " ]]\n";
 
 		windowSizeCallback(m_glWindow, width, height);
 		glfwSetWindowSizeLimits(m_glWindow, 200, 200, GLFW_DONT_CARE, GLFW_DONT_CARE);
