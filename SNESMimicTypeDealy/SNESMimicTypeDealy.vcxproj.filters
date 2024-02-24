@@ -237,6 +237,9 @@
     <ClCompile Include="!TestGame\Items\Inventories\InventoryContainerRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="!TestGame\Level\LevelInfoDisplay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glad\include\glad\glad.h">
@@ -504,6 +507,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Objects\Helpers\Triggers\CameraTrigger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="!TestGame\Level\LevelInfoDisplay.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

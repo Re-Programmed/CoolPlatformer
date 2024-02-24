@@ -39,7 +39,7 @@ namespace GAME_NAME
 	
 	bool TestGame::m_gamePaused = false;
 
-	GlobalLevelData* TestGame::m_globalLevelData;
+	GlobalLevelData* TestGame::m_globalLevelData = nullptr;
 
 	unsigned int pauseMenu_buttonIdOffset = 0;
 	void pauseMenu_guiCallback(int id)

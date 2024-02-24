@@ -22,7 +22,8 @@ namespace GAME_NAME::Debug::LevelBuilder
 		static void DrawObjectMenu();
 
 		LevelBuilder(Game::Game* game, unsigned int loadedSpriteCount)
-			:m_updateIndex(UpdateManager::RegisterUpdateable(this)), m_currentGame(game), m_loadedSpriteCount(loadedSpriteCount)
+			:m_updateIndex(UpdateManager::RegisterUpdateable(this)), m_currentGame(game), m_loadedSpriteCount(loadedSpriteCount),
+			m_editObject(nullptr), m_interactKeyDown(false)
 		{
 			sv_currentLevelBuilder = this;
 		}

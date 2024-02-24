@@ -141,6 +141,7 @@
     <ClCompile Include="!TestGame\Items\Inventory.cpp" />
     <ClCompile Include="!TestGame\Items\InventoryItem.cpp" />
     <ClCompile Include="!TestGame\Level\GlobalLevelData.cpp" />
+    <ClCompile Include="!TestGame\Level\LevelInfoDisplay.cpp" />
     <ClCompile Include="!TestGame\Mappings.cpp" />
     <ClCompile Include="!TestGame\Camera\GameCamera.cpp" />
     <ClCompile Include="!TestGame\Objects\Components\Climbable.cpp" />
@@ -220,6 +221,7 @@
     <ClInclude Include="!TestGame\Items\InventoryItem.h" />
     <ClInclude Include="!TestGame\Items\ItemType.h" />
     <ClInclude Include="!TestGame\Level\GlobalLevelData.h" />
+    <ClInclude Include="!TestGame\Level\LevelInfoDisplay.h" />
     <ClInclude Include="!TestGame\Mappings.h" />
     <ClInclude Include="!TestGame\Camera\GameCamera.h" />
     <ClInclude Include="!TestGame\Objects\Environment\BackgroundObjects.h" />

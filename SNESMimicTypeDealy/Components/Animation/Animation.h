@@ -29,7 +29,7 @@ namespace GAME_NAME
 			{
 			public:
 				Animation(AnimData data, const float spf)	//AnimData should contain a list of sprites for the animation, spf is how many seconds pass between each frame.
-					: m_data(data), m_speed(spf)
+					: m_data(data), m_speed(spf), m_currentFrame(0)
 				{
 					
 				}
@@ -45,7 +45,7 @@ namespace GAME_NAME
 					object->SetSprite(m_data.Sprites[m_currentFrame]);
 				}
 
-				void DecrementFrame()								//Decrease the current animation frame by one.
+				void DecrementFrame(Objects::GameObject* object)		//Decrease the current animation frame by one.
 				{
 					m_currentFrame--;
 
@@ -53,7 +53,8 @@ namespace GAME_NAME
 					{
 						m_currentFrame = m_data.Sprites.size() - 1;
 					}
-					m_data.Sprites[m_currentFrame];
+
+					object->SetSprite(m_data.Sprites[m_currentFrame]);
 				}
 
 				const float GetSpeed()								//Returns the SPF of the animation.
