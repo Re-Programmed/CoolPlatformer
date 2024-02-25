@@ -23,7 +23,9 @@
 #include "../Debug/LevelBuilder/LevelBuilder.h"
 #endif
 
+#include "./Level/LevelManager.h"
 #include <thread>
+#include "./Objects/Enemies/Enemy.h"
 
 namespace GAME_NAME
 {
@@ -91,7 +93,6 @@ namespace GAME_NAME
 
 		std::string data_0("null");
 		SaveManager::GetSaveString("data_0", data_0);
-		std::cout << "{{{{{" << data_0 << "}}}}}" << std::endl;
 
 		SaveManager::SaveString("testing string", "data_0");
 
@@ -134,8 +135,12 @@ namespace GAME_NAME
 		delete m_globalLevelData;
 		m_globalLevelData = new GlobalLevelData(level.Path);
 
-		GameObject* leaf = Instantiate::LevelObjectHandler::GetLevelObject("leaf_particle_objects", "leaf_1");
-		leaf->SetPosition(ThePlayer->GetPosition());
+		//GameObject* leaf = Instantiate::LevelObjectHandler::GetLevelObject("leaf_particle_objects", "leaf_1");
+		//leaf->SetPosition(ThePlayer->GetPosition());
+
+		//GAME_NAME::Objects::Enemies::Enemy* enemy = new GAME_NAME::Objects::Enemies::Enemy(Vec2(100, 51), Vec2(32,64), Renderer::GetSprite(SpriteBase(10)));
+	
+		//Renderer::LoadActiveObject(enemy);
 	}
 
 

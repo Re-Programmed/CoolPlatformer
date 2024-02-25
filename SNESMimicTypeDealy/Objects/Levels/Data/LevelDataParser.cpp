@@ -19,6 +19,7 @@ namespace GAME_NAME
 			/// song
 			/// playerX
 			/// playerY
+			/// Background Color (r,g,b) (255)
 			/// </summary>
 			const std::function<void(std::string,Game::Level&)> LevelDataParser::m_ops[LevelDataSize] {
 					[](std::string title,Game::Level& level) { level.Name = title; },
