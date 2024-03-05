@@ -34,7 +34,7 @@ namespace GAME_NAME
 			DEBUG::DebugLog::Log("[MUSIC] De-Initilized MusicManager.");
 #endif
 			m_audioPlayer->deinit();
-			delete m_audioPlayer;
+			//delete m_audioPlayer;
 		}
 
 

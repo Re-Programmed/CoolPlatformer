@@ -101,18 +101,35 @@ namespace GAME_NAME
 
 
 					Vec2 vertices[4]{
-						Vec2(percXM + sin * check, percYG),
-						Vec2(percXM + sin1 * check, percYM),
-						Vec2(percXG + sin2 * check, percYM),
-						Vec2(percXG + sin3 * check, percYG)
+						0,0,0,0
 					};
 
-					Vec2 texture[4]{
-						Vec2(percXM, percYG),
-						Vec2(percXM, percYM),
-						Vec2(percXG, percYM),
-						Vec2(percXG, percYG)
-					};
+					Vec2 texture[4]{0,0,0,0};
+
+					if (obj->GetTextureFlipped())
+					{
+						vertices[0] = Vec2(percXM + sin * check, percYG);
+						vertices[1] = Vec2(percXM + sin1 * check, percYM);
+						vertices[2] = Vec2(percXG + sin2 * check, percYM);
+						vertices[3] = Vec2(percXG + sin3 * check, percYG);
+
+						texture[0] = Vec2(percXM, percYG);
+						texture[1] = Vec2(percXM, percYM);
+						texture[2] = Vec2(percXG, percYM);
+						texture[3] = Vec2(percXG, percYG);	
+					}
+					else {
+						vertices[0] = Vec2(percXG + sin * check, percYM);
+						vertices[1] = Vec2(percXG + sin1 * check, percYG);
+						vertices[2] = Vec2(percXM + sin2 * check, percYG);
+						vertices[3] = Vec2(percXM + sin3 * check, percYM);
+
+						texture[0] = Vec2(percXG, percYM);
+						texture[1] = Vec2(percXG, percYG);
+						texture[2] = Vec2(percXM, percYG);
+						texture[3] = Vec2(percXM, percYM);
+					}
+
 
 					const float v1Colors = 2.f - (pos.Y - m_position.Y) / m_scale.Y;
 					const float v2Colors = 2.f - ((pos.Y + scale.Y) - m_position.Y) / m_scale.Y;
@@ -125,7 +142,7 @@ namespace GAME_NAME
 						Vec4(1.f, 1.f, 1.f, v1Colors)
 					};
 
-					DynamicSprite(obj->GetSprite()->GetSpriteId(), vertices, texture, textureColor).Render(camPos, Vec2(pos.X, (2 * m_reflectionPosition.Y) - pos.Y - scale.Y), scale);
+					DynamicSprite(obj->GetSprite()->GetSpriteId(), vertices, texture, textureColor).Render(camPos, Vec2(pos.X + (obj->GetTextureFlipped() ? 0 : scale.X), (2 * m_reflectionPosition.Y) - pos.Y - scale.Y), scale * Vec2((obj->GetTextureFlipped() ? 1 : -1), 1));
 				}
 			}
 

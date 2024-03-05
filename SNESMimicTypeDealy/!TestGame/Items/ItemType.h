@@ -10,13 +10,17 @@ namespace GAME_NAME
 		enum ITEM_TYPE
 		{
 			LOG = 0,
-			LEAVES = 1
+			LEAVES = 1,
+			STONE_1,
+			STONE_2
 		};
 
 		//An array containing the sprite for each of the items in order of the ITEM_TYPE enum.
-		const int ITEM_TEXTURES[2]{
+		const int ITEM_TEXTURES[4]{
 			18,
-			18
+			18,
+			55,
+			56
 		};
 
 		/// <summary>

@@ -237,6 +237,15 @@
     <ClCompile Include="!TestGame\Items\Inventories\InventoryContainerRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="!TestGame\Level\LevelInfoDisplay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="!TestGame\Level\LevelManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="!TestGame\Objects\Enemies\Enemy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glad\include\glad\glad.h">
@@ -506,6 +515,15 @@
     <ClInclude Include="Objects\Helpers\Triggers\CameraTrigger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="!TestGame\Level\LevelInfoDisplay.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="!TestGame\Level\LevelManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="!TestGame\Objects\Enemies\Enemy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\testing\sprite\1_player.png">
@@ -683,6 +701,9 @@
     <None Include="Assets\Menus\stat_overlay.pk" />
     <None Include="Assets\town_1\objects\leaf_particle_objects.pk" />
     <None Include="cpp.hint" />
+    <None Include="Assets\player_house_1_1\chunk.pk" />
+    <None Include="Assets\player_house_1_1\level.dat" />
+    <None Include="Assets\player_house_1_1\object.pk" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Assets\testing\music\0_test.wav">

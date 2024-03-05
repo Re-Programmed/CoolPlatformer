@@ -15,7 +15,7 @@ namespace GAME_NAME
 	{
 		constexpr int chunkSize = 0x40;
 
-		constexpr int levelSizeX = 30;
+		constexpr int levelSizeX = 120;
 		constexpr int levelSizeY = 5;
 		unsigned int Renderer::spriteCount = 0, Renderer::bgCount, Renderer::imageCount = 1;
 
@@ -430,8 +430,8 @@ namespace GAME_NAME
 
 			//delete cameraPositionPadding;
 
-			const int iterInit = cameraChunkPosition.GetX() * levelSizeY + cameraChunkPosition.GetY();
-			const int iterEnd = AsChunkPosition((int)cameraPosition.X + cameraBoundingBox.GetX()) * levelSizeY;
+			const int iterInit = cameraChunkPosition.GetX() * levelSizeY + cameraChunkPosition.GetY() - (levelSizeY * 2);
+			const int iterEnd = AsChunkPosition((int)cameraPosition.X + cameraBoundingBox.GetX() + 2) * levelSizeY;
 
 
 			for (int rLayer = 0; rLayer < MICRO_RENDER_LAYER_COUNT; rLayer++)
@@ -440,7 +440,7 @@ namespace GAME_NAME
 				for (int i = iterInit; i < iterEnd; i++)
 				{
 					//Check if chunk is out of level bounds.
-					if (i >= levelSizeX * levelSizeY) { continue; }
+					if (i < 0 || i >= levelSizeX * levelSizeY) { continue; }
 
 					//Check if a chunk is within the bounding box of the camera. (MAY NEED BUGFIXED FOR WHEN CAMERA CHANGES ZOOM!!!!!)
 					//if (m_chunks[i].GetPosition().Y < cameraTopEdge)

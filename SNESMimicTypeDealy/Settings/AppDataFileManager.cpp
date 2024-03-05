@@ -43,10 +43,9 @@ namespace GAME_NAME
 
 		void AppDataFileManager::SetValue(std::string file, std::string variable, std::string value)
 		{
-			std::cout << "SAVING \"" << variable << "\" TO \"" << file << "\" WITH VALUE \"" << value << "\"" << std::endl;
 
 			std::filesystem::path filePath = m_appFolder;
-			filePath.append("\\").append(file);
+			filePath += "\\" + file;
 			if (std::filesystem::exists(filePath))
 			{
 				std::string fullFile;
@@ -69,6 +68,8 @@ namespace GAME_NAME
 			else {
 				CreateFileWithVariable(filePath, variable, value);
 			}
+
+			std::cout << "SAVING \"" << variable << "\" TO \"" << file << "\" WITH VALUE \"" << value << "\"" << std::endl;
 		}
 
 		std::string AppDataFileManager::GetValue(std::string file, std::string variable, std::string defaultvalue)

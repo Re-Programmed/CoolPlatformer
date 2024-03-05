@@ -41,7 +41,12 @@ namespace GAME_NAME
 				m_textureFlipped = textureFlipped;
 			}
 
-			GameObject(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, float rotation = 0.f) : m_position(position), m_sprite(sprite), m_scale(scale), m_rotation(rotation), m_rotationOffset(0) {};
+			inline bool GetTextureFlipped()
+			{
+				return m_textureFlipped;
+			}
+
+			GameObject(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, float rotation = 0.f) : m_position(position), m_sprite(sprite), m_scale(scale), m_rotation(rotation), m_rotationOffset(0), m_textureFlipped(false) {};
 			GameObject();
 
 			~GameObject();

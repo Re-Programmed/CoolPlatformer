@@ -27,6 +27,7 @@ namespace GAME_NAME
 				{
 				public:
 					ActiveCollider()
+						: m_beforeUpdate(nullptr), m_object(nullptr), ID(0)
 					{
 						m_onCollision = nullptr;
 					};

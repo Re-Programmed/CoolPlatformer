@@ -16,6 +16,7 @@ namespace GAME_NAME
 				{
 				public:
 					StaticCollider()
+						: ID(0), m_object(nullptr)
 					{
 						OnCollision = nullptr;
 					};

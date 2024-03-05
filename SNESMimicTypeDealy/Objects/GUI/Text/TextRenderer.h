@@ -28,6 +28,6 @@ namespace GAME_NAME::Objects::GUI::Text
 		/// <returns></returns>
 		static StaticGUIElement* RenderDigit(digit digit, Vec2& position, const float scale);
 
-		static RenderedDigit RenderNumber(uint16_t number, Vec2& firstDigitPosition, const float scale, const float digitPadding);
+		static RenderedDigit RenderNumber(uint16_t number, Vec2& firstDigitPosition, const float scale, const float digitPadding, uint8_t minimumDigits = 0);
 	};
 }

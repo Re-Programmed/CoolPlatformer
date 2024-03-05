@@ -16,21 +16,39 @@ namespace GAME_NAME::Objects::GUI::Text
 		return go;
 	}
 
-	GAME_NAME::Objects::GUI::Text::TextRenderer::RenderedDigit TextRenderer::RenderNumber(uint16_t number, Vec2& firstDigitPosition, const float scale, const float digitPadding)
+	GAME_NAME::Objects::GUI::Text::TextRenderer::RenderedDigit TextRenderer::RenderNumber(uint16_t number, Vec2& firstDigitPosition, const float scale, const float digitPadding, uint8_t minimumDigits)
 	{
 		RenderedDigit finalDigit;
 
 		uint8_t currentDigit = 0;
 		while (number > 0)
 		{
-			Vec2 pos(firstDigitPosition.X + (currentDigit * (TEXT_RENDERER_DIGIT_SIZE_X + digitPadding)), firstDigitPosition.Y);
+			for (StaticGUIElement* sge : finalDigit)
+			{
+				sge->SetPosition(sge->GetPosition() + Vec2(TEXT_RENDERER_DIGIT_SIZE_X + digitPadding, 0));
+			}
+
+			Vec2 pos(firstDigitPosition.X, firstDigitPosition.Y);
 		
 			finalDigit.push_back(RenderDigit(number % 10, pos, scale));
 
 			number /= 10;
 			currentDigit++;
+			if(minimumDigits > 0){ minimumDigits--; }
 		}
 
+		while (minimumDigits > 0)
+		{
+			for (StaticGUIElement* sge : finalDigit)
+			{
+				sge->SetPosition(sge->GetPosition() + Vec2(TEXT_RENDERER_DIGIT_SIZE_X + digitPadding, 0));
+			}
+
+			Vec2 pos(firstDigitPosition.X, firstDigitPosition.Y);
+			finalDigit.push_back(RenderDigit(0, pos, scale));
+			minimumDigits--;
+		}
+		
 		return finalDigit;
 	}
 }

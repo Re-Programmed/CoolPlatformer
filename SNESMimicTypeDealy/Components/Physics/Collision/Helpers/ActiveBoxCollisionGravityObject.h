@@ -51,6 +51,11 @@ namespace GAME_NAME
 						m_physics->SetGravitationalVelocity(gVelocity);
 					}
 
+					inline Vec2 GetVelocity()
+					{
+						return m_physics->GetVelocity() + Vec2(0, m_physics->GetGravitationalVelocity());
+					}
+
 				protected:
 					ActiveBoxCollider* const m_boxCollider;
 					GravityComponent* const m_physics;			//Used for gravity and velocity.

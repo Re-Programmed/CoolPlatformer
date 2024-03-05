@@ -1,6 +1,8 @@
 #include "SettingsGlobals.h"
 #include "AppDataFileManager.h"
 
+#include <iostream>
+
 namespace GAME_NAME
 {
 	namespace AppData
@@ -20,6 +22,7 @@ namespace GAME_NAME
 
 			void SettingsGlobals::SaveUpdatedVariables()
 			{
+				std::cout << "SAVING SETTINGS VARIABLES" << std::endl;
 				AppDataFileManager::SetValue("settings\\graphics.dat", WindowResolutionX.VariableName, std::to_string(WindowResolutionX.Value));
 				AppDataFileManager::SetValue("settings\\graphics.dat", WindowResolutionY.VariableName, std::to_string(WindowResolutionY.Value));
 			}

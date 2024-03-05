@@ -33,6 +33,11 @@ namespace GAME_NAME
 			return;
 		}
 
+		if (width < 355)
+		{
+			width = 355;
+		}
+
 		//Figure out what the width and height should be based off of each other.
 		float adjustedWindowW = (float)height * (FORCE_WINDOW_RATIO_X / FORCE_WINDOW_RATIO_Y);
 		float adjustedWindowH = (float)width * (FORCE_WINDOW_RATIO_Y / FORCE_WINDOW_RATIO_X);
@@ -54,10 +59,6 @@ namespace GAME_NAME
 
 		AppData::Settings::SettingsGlobals::WindowResolutionX.Value = adjustedWindowW;
 		AppData::Settings::SettingsGlobals::WindowResolutionY.Value = adjustedWindowH;
-
-		AppData::Settings::SettingsGlobals::SaveUpdatedVariables();
-
-		std::cout << "SET ADJUSTED WINDOW SCALE TO: " << AppData::Settings::SettingsGlobals::WindowResolutionX.Value << ", " << AppData::Settings::SettingsGlobals::WindowResolutionY.Value << "\n";
 	}
 
 	GLFWwindow* Window::GetWindow()
