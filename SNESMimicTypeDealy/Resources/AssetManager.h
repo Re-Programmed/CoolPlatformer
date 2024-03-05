@@ -5,6 +5,7 @@
 #include "../Objects/Levels/Data/LevelDataParser.h"
 #include "../Objects/GameObject.h"
 #include <functional>
+#include <cassert>
 
 constexpr const char* AssetPath = "./Assets";			//Path to the Asset folder that contains all level data.
 constexpr const char* SpriteSubfolder = "/sprite";		//Path within a level to its sprites.
@@ -149,6 +150,7 @@ namespace GAME_NAME
 					std::cout << "THREAD " << expectedLoadValue << " LOADED" << std::endl;
 				}*/
 
+				assert(mapping != NULL);
 
 				(*mapping)(v, lineId);
 
