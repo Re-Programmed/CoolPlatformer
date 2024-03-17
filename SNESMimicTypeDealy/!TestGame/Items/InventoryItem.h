@@ -26,7 +26,7 @@ namespace GAME_NAME
 				return m_itemType;
 			}
 
-		private:
+		protected:
 			/// <summary>
 			/// The type of the item represented by this InventoryItem.
 			/// </summary>

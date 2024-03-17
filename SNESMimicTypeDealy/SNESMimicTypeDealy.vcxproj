@@ -140,6 +140,7 @@
     <ClCompile Include="!TestGame\Items\Inventories\InventoryContainerRenderer.cpp" />
     <ClCompile Include="!TestGame\Items\Inventory.cpp" />
     <ClCompile Include="!TestGame\Items\InventoryItem.cpp" />
+    <ClCompile Include="!TestGame\Items\Types\Tool.cpp" />
     <ClCompile Include="!TestGame\Level\GlobalLevelData.cpp" />
     <ClCompile Include="!TestGame\Level\LevelInfoDisplay.cpp" />
     <ClCompile Include="!TestGame\Level\LevelManager.cpp" />
@@ -186,6 +187,7 @@
     <ClCompile Include="Objects\Helpers\Interactable.cpp" />
     <ClCompile Include="Objects\Instantiate\LevelObjectHandler.cpp" />
     <ClCompile Include="Objects\Levels\Data\LevelDataParser.cpp" />
+    <ClCompile Include="Objects\MiscStateGroup.cpp" />
     <ClCompile Include="Objects\Particles\ParticleEmitter.cpp" />
     <ClCompile Include="Objects\StateSaver.cpp" />
     <ClCompile Include="Rendering\DynamicSprite.cpp" />
@@ -222,6 +224,7 @@
     <ClInclude Include="!TestGame\Items\Inventory.h" />
     <ClInclude Include="!TestGame\Items\InventoryItem.h" />
     <ClInclude Include="!TestGame\Items\ItemType.h" />
+    <ClInclude Include="!TestGame\Items\Types\Tool.h" />
     <ClInclude Include="!TestGame\Level\GlobalLevelData.h" />
     <ClInclude Include="!TestGame\Level\LevelInfoDisplay.h" />
     <ClInclude Include="!TestGame\Level\LevelManager.h" />
@@ -280,6 +283,8 @@
     <ClInclude Include="Objects\Helpers\Interactable.h" />
     <ClInclude Include="Objects\Helpers\Trigger.h" />
     <ClInclude Include="Objects\Helpers\Triggers\CameraTrigger.h" />
+    <ClInclude Include="Objects\MiscState.h" />
+    <ClInclude Include="Objects\MiscStateGroup.h" />
     <ClInclude Include="Objects\StateSaver.h" />
     <ClInclude Include="Objects\Instantiate\LevelObjectHandler.h" />
     <ClInclude Include="Objects\Levels\Data\LevelDataParser.h" />
