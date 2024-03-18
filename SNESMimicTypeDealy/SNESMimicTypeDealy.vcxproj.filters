@@ -246,7 +246,10 @@
     <ClCompile Include="!TestGame\Objects\Enemies\Enemy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="!TestGame\Objects\LayerFlip.cpp">
+    <ClCompile Include="!TestGame\Items\Types\Tool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\MiscStateGroup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -527,10 +530,13 @@
     <ClInclude Include="!TestGame\Objects\Enemies\Enemy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="!TestGame\Objects\Rooms\FrontWall.h">
+    <ClInclude Include="!TestGame\Items\Types\Tool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="!TestGame\Objects\LayerFlip.h">
+    <ClInclude Include="Objects\MiscState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\MiscStateGroup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
