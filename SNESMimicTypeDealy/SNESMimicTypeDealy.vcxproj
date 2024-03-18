@@ -151,6 +151,7 @@
     <ClCompile Include="!TestGame\Objects\Environment\CloudGenerator.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Plants\Tree.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Water.cpp" />
+    <ClCompile Include="!TestGame\Objects\LayerFlip.cpp" />
     <ClCompile Include="!TestGame\Objects\Platforms\RotatingPlatform.cpp" />
     <ClCompile Include="!TestGame\Objects\Platforms\RotatingPlatform.h" />
     <ClCompile Include="!TestGame\Objects\Player\Player.cpp" />
@@ -233,9 +234,11 @@
     <ClInclude Include="!TestGame\Objects\Environment\CloudGenerator.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Plants\Tree.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Water.h" />
+    <ClInclude Include="!TestGame\Objects\LayerFlip.h" />
     <ClInclude Include="!TestGame\Objects\Player\Player.h" />
     <ClInclude Include="!TestGame\Objects\Player\ScreenInventory.h" />
     <ClInclude Include="!TestGame\Objects\Components\Climbable.h" />
+    <ClInclude Include="!TestGame\Objects\Rooms\FrontWall.h" />
     <ClInclude Include="!TestGame\TestGame.h" />
     <ClInclude Include="Audio\SoundManager.h" />
     <ClInclude Include="Audio\SoundTypes\Sound.h" />

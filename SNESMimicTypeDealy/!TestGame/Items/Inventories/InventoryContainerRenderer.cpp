@@ -1,5 +1,7 @@
 #include "InventoryContainerRenderer.h"
 
+#include "../../../Utils/CollisionDetection.h"
+
 namespace GAME_NAME::Items::Inventories
 {
 	std::shared_ptr<InventoryContainer> InventoryContainerRenderer::m_currentContainer;
@@ -52,6 +54,22 @@ namespace GAME_NAME::Items::Inventories
 		TestGame::ThePlayer->SetFrozen(false);
 	}
 
+	void InventoryContainerRenderer::UpdateCurrentInventoryContainer()
+	{
+		//Check if the user is clicking on a slot and call the respective clickSlot method.
+		if (InputManager::GetMouseButton(0))
+		{
+			for (uint8_t i = 0; i < m_renderedSlots.size(); i++)
+			{
+				if (CollisionDetection::PointWithinBoxBL(InputManager::GetMousePosition(), m_renderedSlots[i]->GetPosition(), m_renderedSlots[i]->GetScale()))
+				{
+					clickSlot(i);
+					break;
+				}
+			}
+		}
+	}
+
 	void InventoryContainerRenderer::createSlot(uint8_t index, Inventory::ReturnItem item)
 	{
 		//Position of slot based on defines in header and the current index.
@@ -69,5 +87,10 @@ namespace GAME_NAME::Items::Inventories
 			m_renderedSlotItems.push_back(slotItem);
 			Renderer::LoadGUIElement(slotItem.get(), 1);
 		}
+	}
+
+	void InventoryContainerRenderer::clickSlot(uint8_t index)
+	{
+
 	}
 }

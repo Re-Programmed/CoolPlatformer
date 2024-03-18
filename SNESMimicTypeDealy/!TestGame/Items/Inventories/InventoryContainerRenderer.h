@@ -19,6 +19,11 @@ namespace GAME_NAME::Items::Inventories
 	public:
 		static void OpenInventoryContainer(InventoryContainer* container);
 		static void CloseCurrentContainer();
+
+		/// <summary>
+		/// Should be called every frame as long as there is an inventory container currently open.
+		/// </summary>
+		static void UpdateCurrentInventoryContainer();
 	private:
 		static std::shared_ptr<InventoryContainer> m_currentContainer;
 		static std::vector<std::shared_ptr<StaticGUIElement>> m_renderedSlots;
@@ -31,5 +36,7 @@ namespace GAME_NAME::Items::Inventories
 		/// </summary>
 		/// <param name="index">Slot Index / Number.</param>
 		static void createSlot(uint8_t index, Inventory::ReturnItem item);
+		
+		static void clickSlot(uint8_t index);
 	};
 }
