@@ -6,13 +6,13 @@
 namespace GAME_NAME::Items
 {
 	class Tool
-		: public InventoryItem, public MiscState<Tool>
+		: public InventoryItem
 	{
 	public:
 		Tool(ITEM_TYPE type, float uses);
 
-		Tool Decode(SaveParam params[]) override;
-		SaveParam* Encode(Tool tool) override;
+		SaveParam* Encode(size_t& paramSize) override;
+		void Decode(SaveParam params[]) override;
 
 	protected:
 		float m_uses;

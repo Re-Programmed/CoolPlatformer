@@ -7,13 +7,24 @@ namespace GAME_NAME::Items
 	{
 
 	}
-	Tool Tool::Decode(SaveParam params[])
+
+	MiscState::SaveParam* Tool::Encode(size_t& paramSize)
 	{
-		return Tool();
+		MiscState::SaveParam params[2]{
+			InventoryItem::Encode(paramSize)[0],
+			SaveParam("Uses", std::to_string(m_uses))
+		};
+
+		paramSize = 2;
+
+		return params;
 	}
 
-	SaveParam* Tool::Encode(Tool tool)
+	void Tool::Decode(SaveParam params[])
 	{
-		return nullptr;
+		InventoryItem::Decode(params);
+		
+		m_uses = std::stoi(params[1].Value);
 	}
+
 }

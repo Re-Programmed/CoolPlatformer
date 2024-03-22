@@ -40,7 +40,7 @@ constexpr float PlayerJumpBonus = 13.f;		//How vertical velocity to add for ever
 constexpr int8_t PlayerJumpHoldLength = 10;	//The maximum amount of frames the player can hold jump for.
 constexpr float PlayerXSpeedJumpMultiplier = 0.08f; //The multiplier for how much of the X speed is added to the players jump.
 
-constexpr float DefaultPlayerGravity = 4.5f;	//The default gravity.
+constexpr float DefaultPlayerGravity = 5.5f;	//The default gravity.
 constexpr float SwimmingPlayerGravity = 0.4f;	//The default gravity while underwater.
 
 constexpr float Drag = 4.f;					//How much the player should slow down each frame when they stop moving.

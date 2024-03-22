@@ -2,12 +2,13 @@
 #include "../../Items/Inventory.h"
 #include "../../../Objects/GUI/StaticGUIElement.h"
 #include "../../Items/InventoryItem.h"
+#include "../../../Objects/MiscStateGroup.h"
 
 namespace GAME_NAME
 {
 	typedef uint8_t InventorySlot;
 	class ScreenInventory
-		: public GAME_NAME::Items::Inventory
+		: public GAME_NAME::Items::Inventory, public MiscStateGroup
 	{
 	public:
 		ScreenInventory();

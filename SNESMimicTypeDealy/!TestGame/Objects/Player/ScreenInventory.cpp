@@ -10,7 +10,7 @@ namespace GAME_NAME
 {
 
 	ScreenInventory::ScreenInventory()
-		: Inventory("Screen Inventory", 3)
+		: Inventory("Screen Inventory", 3), MiscStateGroup("screen_inventory")
 	{
 		m_slots[0] = new GUI::StaticGUIElement(Vec2(4, 20), Vec2(16, 16), Renderer::GetSprite(INVENTORY_SELECTED_SLOT_SPRITE)->GetSpriteId());
 		m_slots[1] = new GUI::StaticGUIElement(Vec2(24, 20), Vec2(16, 16), Renderer::GetSprite(INVENTORY_UNSELECTED_SLOT_SPRITE)->GetSpriteId());
@@ -55,6 +55,14 @@ namespace GAME_NAME
 		delete sprite;
 		Renderer::LoadGUIElement(itemDisplay, 1);
 
+		//Remove all save data.
+		clearStates();
+		//Add save data for all items.
+		for (Items::InventoryItem item : m_items)
+		{
+			assignState(new Items::InventoryItem(item));
+		}
+		
 		return s;
 	}
 

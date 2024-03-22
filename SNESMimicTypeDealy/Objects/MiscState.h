@@ -2,12 +2,14 @@
 
 #include <string>
 
+#define SERIALIZED
+
 namespace GAME_NAME
 {
-	template<class T>
-	class MiscState
+	class MiscState abstract
 	{
 	public:
+
 		struct SaveParam
 		{
 			std::string Key;
@@ -16,7 +18,7 @@ namespace GAME_NAME
 			SaveParam(std::string key, std::string value) : Key(key), Value(value) {};
 		};
 
-		T Decode(SaveParam params[]) virtual;
-		SaveParam* Encode(T) virtual;
+		virtual void Decode(SaveParam params[]) = 0;
+		virtual SaveParam* Encode(size_t& paramSize) = 0;
 	};
 }

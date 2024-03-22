@@ -1,7 +1,4 @@
 #include "SaveManager.h"
-#include <filesystem>
-#include <fstream>
-#include <iostream>
 #include "../base64.h"
 #include "../../Settings/AppDataFileManager.h"
 #include "../../!TestGame/TestGame.h"
@@ -11,11 +8,48 @@ namespace GAME_NAME::Resources
 	std::string SaveManager::m_currentSaveFile;
 	std::string SaveManager::m_currentLevelSaveFile;
 
+	std::shared_ptr<std::vector<std::string>> SaveManager::ReadSaveFile(std::string fileName)
+	{
+		const std::filesystem::path fileFolderPath = SM_AppData + std::string(APPDATA_SUBFOLDER).append(SAVE_SUBFOLDER_NAME);
+		const std::filesystem::path filePath = std::string(fileFolderPath.string()).append("\\").append(m_currentSaveFile).append("\\" + fileName).append(SAVE_FILE_EXTENSION);
+
+		std::shared_ptr<std::vector<std::string>> data(new std::vector<std::string>());
+
+		std::string fullFile;
+		std::ifstream readFile(filePath);
+		std::getline(readFile, fullFile);
+		readFile.close();
+		std::stringstream fileDecoded(B64::Decode(fullFile));
+		std::string line;
+
+		while (std::getline(fileDecoded, line, '\n'))
+		{
+			data->push_back(line);
+		}
+
+		return data;
+	}
+
+	void SaveManager::CreateSaveFile(std::string fileContents, std::string fileName)
+	{
+		const std::filesystem::path fileFolderPath = SM_AppData + std::string(APPDATA_SUBFOLDER).append(SAVE_SUBFOLDER_NAME);
+		const std::filesystem::path filePath = std::string(fileFolderPath.string()).append("\\").append(m_currentSaveFile).append("\\" + fileName).append(SAVE_FILE_EXTENSION);
+
+		if (!std::filesystem::exists(filePath.parent_path()))
+		{
+			std::filesystem::create_directories(filePath.parent_path());
+		}
+
+		std::ofstream createstream(filePath);
+		createstream << B64::Encode(fileContents);
+		createstream.close();
+	}
+
 	void SaveManager::SaveString(std::string data, std::string vName)
 	{
 		const std::filesystem::path fileFolderPath = SM_AppData + std::string(APPDATA_SUBFOLDER).append(SAVE_SUBFOLDER_NAME);
 
-		const std::filesystem::path filePath = std::string(fileFolderPath.string()).append("\\").append( m_currentSaveFile).append(SAVE_FILE_EXTENSION);
+		const std::filesystem::path filePath = std::string(fileFolderPath.string()).append("\\").append(m_currentSaveFile).append(SAVE_FILE_EXTENSION);
 
 		if (std::filesystem::exists(filePath))
 		{

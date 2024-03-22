@@ -1,5 +1,6 @@
 #pragma once
 #include "./ItemType.h"
+#include "../../Objects/MiscState.h"
 
 namespace GAME_NAME
 {
@@ -9,6 +10,7 @@ namespace GAME_NAME
 		/// An inventory item represents an item's data.
 		/// </summary>
 		class InventoryItem
+			: public MiscState
 		{
 		public:
 			/// <summary>
@@ -26,11 +28,14 @@ namespace GAME_NAME
 				return m_itemType;
 			}
 
+			SaveParam* Encode(size_t& paramSize) override;
+			void Decode(SaveParam params[]) override;
+
 		protected:
 			/// <summary>
 			/// The type of the item represented by this InventoryItem.
 			/// </summary>
-			const ITEM_TYPE m_itemType;
+			ITEM_TYPE m_itemType SERIALIZED;
 		};
 	}
 }

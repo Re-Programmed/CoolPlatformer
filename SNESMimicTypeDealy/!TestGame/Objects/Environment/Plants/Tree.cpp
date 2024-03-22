@@ -49,12 +49,6 @@ namespace GAME_NAME::Objects::Environment::Plants
 	{
 		Interactable::Update(window);
 
-//TEMP DEBUGGING
-		if (InputManager::GetKeyUpDown(PLAYER_FORCE_WALK) & InputManager::KEY_STATE_PRESSED)
-		{
-			StateSaver::SaveStates();
-		}
-
 		m_animator->Update(window, this);
 	}
 

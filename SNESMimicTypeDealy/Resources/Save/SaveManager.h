@@ -1,5 +1,8 @@
 #pragma once
 #include <string>
+#include <filesystem>
+#include <fstream>
+#include <iostream>
 
 #define SAVE_SUBFOLDER_NAME "/saves"
 #define SAVE_FILE_EXTENSION ".00.spk"
@@ -14,6 +17,15 @@ namespace GAME_NAME::Resources
 	class SaveManager
 	{
 	public:
+		static std::shared_ptr<std::vector<std::string>> ReadSaveFile(std::string fileName);
+
+		/// <summary>
+		/// Creates the specified file with the specified data inside. Will override existing files.
+		/// </summary>
+		/// <param name="fileContents"></param>
+		/// <param name="fileName"></param>
+		static void CreateSaveFile(std::string fileContents, std::string fileName);
+
 		static void SaveString(std::string data, std::string vName);
 		static void SaveBool(bool data, std::string vName)
 		{

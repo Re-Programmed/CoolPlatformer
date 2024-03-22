@@ -1,23 +1,44 @@
 #include "MiscStateGroup.h"
+#include "StateSaver.h"
 
 namespace GAME_NAME
 {
-	template<class T>
-	MiscStateGroup<T>::MiscStateGroup(std::string destination)
+	MiscStateGroup::MiscStateGroup(std::string destination)
 		: m_destination(destination)
 	{
-
+		Objects::StateSaver::RegisterToBeSaved(this);
 	}
 
-	template<class T>
-	void MiscStateGroup<T>::registerMiscState(MiscState<T> state)
+	void MiscStateGroup::assignState(MiscState* state)
 	{
 		m_states.push_back(state);
 	}
 
-	template<class T>
-	void MiscStateGroup<T>::saveStates()
+	std::string MiscStateGroup::GetSaveString()
 	{
-		//Write states to save destination
+		std::string returnVal("");
+
+		for (int i = 0; i < m_states.size(); i++)
+		{
+			MiscState* state = m_states[i];
+
+			//if (state == nullptr)
+			//{
+			//	m_states.erase(m_states.begin() + i);
+			//	i--;
+			//	continue;
+			//}
+
+			size_t paramSize;
+			GAME_NAME::MiscState::SaveParam* params = state->Encode(paramSize);
+
+			for (unsigned int i = 0; i < paramSize; i++)
+			{
+				returnVal += params->Key + "+" + params->Value + "+";
+			}
+		}
+
+		return returnVal;
 	}
-}
+
+}   

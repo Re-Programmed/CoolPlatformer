@@ -148,6 +148,7 @@
     <ClCompile Include="!TestGame\Camera\GameCamera.cpp" />
     <ClCompile Include="!TestGame\Objects\Components\Climbable.cpp" />
     <ClCompile Include="!TestGame\Objects\Enemies\Enemy.cpp" />
+    <ClCompile Include="!TestGame\Objects\Enemies\Types\LeftRightEnemy.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\BackgroundObjects.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\CloudGenerator.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Plants\Tree.cpp" />
@@ -231,6 +232,7 @@
     <ClInclude Include="!TestGame\Mappings.h" />
     <ClInclude Include="!TestGame\Camera\GameCamera.h" />
     <ClInclude Include="!TestGame\Objects\Enemies\Enemy.h" />
+    <ClInclude Include="!TestGame\Objects\Enemies\Types\LeftRightEnemy.h" />
     <ClInclude Include="!TestGame\Objects\Environment\BackgroundObjects.h" />
     <ClInclude Include="!TestGame\Objects\Environment\BGParallax.h" />
     <ClInclude Include="!TestGame\Objects\Environment\CloudGenerator.h" />

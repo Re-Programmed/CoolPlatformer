@@ -12,6 +12,7 @@
 #include "../!TestGame/Items/FloorItem.h"
 #include "../!TestGame/Objects/Environment/Plants/Tree.h"
 #include "../!TestGame/Items/Inventories/InventoryContainer.h"
+#include "../!TestGame/Objects/Enemies/Types/LeftRightEnemy.h"
 
 #if _DEBUG
 #include "../Debug/DebugLog.h"
@@ -251,6 +252,40 @@ std::function<void (std::vector<std::string>, size_t line)> m_mappings[MAPPINGS_
 		}
 
 		Renderer::LoadActiveObject(container, std::stoi(data[7]));
+	},
+
+	/*
+		12: Enemy (map,positionX,positionY,scaleX,scaleY,sprite,type,layer, ...)
+		Type:
+			0 - LeftRightEnemy (anchorLeftX,anchorLeftY,anchorRightX,anchorRightY)
+	*/
+	[](std::vector<std::string> data, size_t n)
+	{
+using namespace Enemies;
+
+#if _DEBUG
+		DebugMapper("Loading Enemy... (Type: " + data[5] + ")");
+#endif
+
+		uint8_t type = std::stoi(data[5]);
+
+		switch (type)
+		{
+			case 0:		//LeftRightEnemy
+			{
+				LeftRightEnemy* lre = new LeftRightEnemy(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), STOIVEC(data[7], data[8]), STOIVEC(data[9], data[10]));
+				Renderer::LoadObject(lre, std::stoi(data[6]));
+				break;
+			}
+
+			default:
+			{
+#if _DEBUG
+				DEBUG::DebugLog::LogError("Tried to load unknown enemy type. (Mappings.cpp : m_mappings:12)");
+#endif
+				break;
+			}
+		}
 	}
 };
 

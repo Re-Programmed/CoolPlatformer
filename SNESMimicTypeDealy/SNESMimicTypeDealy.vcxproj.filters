@@ -252,6 +252,9 @@
     <ClCompile Include="Objects\MiscStateGroup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="!TestGame\Objects\Enemies\Types\LeftRightEnemy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glad\include\glad\glad.h">
@@ -537,6 +540,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Objects\MiscStateGroup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="!TestGame\Objects\Enemies\Types\LeftRightEnemy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

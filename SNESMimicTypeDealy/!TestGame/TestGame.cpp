@@ -27,6 +27,8 @@
 #include <thread>
 #include "./Objects/Enemies/Enemy.h"
 
+#include "../Objects/StateSaver.h"
+
 namespace GAME_NAME
 {
 	using namespace MathUtils;
@@ -55,6 +57,13 @@ namespace GAME_NAME
 
 	void GAME_NAME::TestGame::Update(GLFWwindow* window)
 	{
+		//TEMP DEBUGGING
+		if (InputManager::GetKeyUpDown(PLAYER_FORCE_WALK) & InputManager::KEY_STATE_PRESSED)
+		{
+			StateSaver::SaveStates();
+			StateSaver::SaveMisc();
+		}
+		//END DEBUG
 
 		InputManager::GetJoystick();
 
