@@ -15,6 +15,8 @@ namespace GAME_NAME::Resources
 
 		std::shared_ptr<std::vector<std::string>> data(new std::vector<std::string>());
 
+		if (!std::filesystem::exists(filePath)) { return data; }
+
 		std::string fullFile;
 		std::ifstream readFile(filePath);
 		std::getline(readFile, fullFile);

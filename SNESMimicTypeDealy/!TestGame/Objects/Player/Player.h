@@ -58,7 +58,7 @@ namespace  GAME_NAME
 			using namespace GUI;
 
 			class Player	//The class used for the player GameObject.
-				: public ActiveBoxCollisionGravityObject
+				: public ActiveBoxCollisionGravityObject, public MiscStateGroup
 			{
 			public:
 				Player(Vec2 position);
@@ -106,6 +106,46 @@ namespace  GAME_NAME
 
 			private:
 				/// <summary>
+				/// Decodes the given string as player save data.
+				/// </summary>
+				/// <param name="params"></param>
+				void decodeSave(const std::string params);
+				/// <summary>
+				/// Returns the encoded version of the player save data.
+				/// </summary>
+				/// <returns></returns>
+				std::string encodeSave();
+
+				/// <summary>
+				/// Misc state for player save data.
+				/// </summary>
+				class PlayerSaveState
+					: public MiscState
+				{
+				public:
+					PlayerSaveState(Player* player)
+						: m_player(player)
+					{
+						
+					}
+
+					MiscState::SaveParam Encode() override final
+					{
+						return m_player->encodeSave();
+					}
+
+					void Decode(MiscState::SaveParam param) override final
+					{
+						m_player->decodeSave(param);
+					}
+
+				private:
+					Player* const m_player;
+				};
+
+				PlayerSaveState* const m_saveState;			//Stores all data for the players current save state.
+
+				/// <summary>
 				/// If the player is frozen they cannot move but can still be affected by gravity or other objects.
 				/// The value of frozen can go above 1, that way if multiple objects are currently freezing the player, the player will remain frozen until all objects have stopped freezing the player.
 				/// </summary>
@@ -115,6 +155,9 @@ namespace  GAME_NAME
 
 				ScreenInventory* const m_screenInventory;	//Player's three main inventory slots.
 
+				/// <summary>
+				/// Represents data about the players stamina, health, etc.
+				/// </summary>
 				struct {
 					float Health = 100.f;
 				} m_stats;

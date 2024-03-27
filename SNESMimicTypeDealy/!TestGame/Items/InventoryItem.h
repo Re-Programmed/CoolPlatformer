@@ -19,6 +19,8 @@ namespace GAME_NAME
 			/// <param name="type">The type of item to create.</param>
 			InventoryItem(ITEM_TYPE type);
 
+			InventoryItem() SERIALIZED;
+
 			/// <summary>
 			/// Returns the type of item.
 			/// </summary>
@@ -28,8 +30,8 @@ namespace GAME_NAME
 				return m_itemType;
 			}
 
-			SaveParam* Encode(size_t& paramSize) override;
-			void Decode(SaveParam params[]) override;
+			SaveParam Encode() override;
+			void Decode(SaveParam params) override;
 
 		protected:
 			/// <summary>

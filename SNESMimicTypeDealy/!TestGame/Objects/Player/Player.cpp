@@ -38,7 +38,8 @@ namespace  GAME_NAME
 				: ActiveBoxCollisionGravityObject(position, Vec2(DefaultPlayerScaleX, DefaultPlayerScaleY), Rendering::Renderer::GetSprite(DefaultPlayerSprite)), m_screenInventory(new ScreenInventory()),
 				m_healthProgressBar(new ProgressBar(
 					Vec2(10, 7), Vec2(24, 8), Renderer::GetSprite(SpriteBase(42))->GetSpriteId()
-				))
+				)),
+				MiscStateGroup("pl"), m_saveState(new PlayerSaveState(this))
 			{
 #if _DEBUG
 				PlayerLogger("Initilized Player");
@@ -98,14 +99,23 @@ namespace  GAME_NAME
 				m_emotionsObject = new ChildGameObject(Vec2(DefaultPlayerScaleX, 12.25), Vec2(-DefaultPlayerScaleX, DefaultPlayerScaleY * 0.519230769f), Renderer::GetSprite(PLAYER_EMOTIONS::ANGRY), this);
 				//Renderer::InstantiateObject(Renderer::InstantiateGameObject(m_emotionsObject, true, 2, false));
 
-
 				m_heldItemDisplay = nullptr;
+
+				std::shared_ptr<std::vector<std::string>> states = this->getStates();
+
+				if (states->size() > 0)
+				{
+					decodeSave(states->at(0));
+				}
+
+				assignState(m_saveState);
 			}
 
 			Player::~Player()
 			{
 				ActiveBoxCollisionGravityObject::~ActiveBoxCollisionGravityObject();
 				delete m_animator;
+				delete m_saveState;
 			}
 
 			
@@ -323,6 +333,34 @@ namespace  GAME_NAME
 					m_onGround = false;
 				}
 				m_foundCollisionInTick = false;
+			}
+
+			void Player::decodeSave(const std::string params)
+			{
+				std::stringstream paramDecode(params);
+				std::string param;
+
+				int i = 0;
+				while (std::getline(paramDecode, param, '+'))
+				{
+					switch (i)
+					{
+					case 0:
+						m_position.X = std::stoi(param);
+						break;
+					case 1:
+						m_position.Y = std::stoi(param);
+						break;
+					}
+
+					i++;
+				}
+			}
+
+			std::string Player::encodeSave()
+			{
+				//		xPos+yPos
+				return std::to_string(m_position.X).append("+").append(std::to_string(m_position.Y));
 			}
 
 

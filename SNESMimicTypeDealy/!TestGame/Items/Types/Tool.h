@@ -11,10 +11,10 @@ namespace GAME_NAME::Items
 	public:
 		Tool(ITEM_TYPE type, float uses);
 
-		SaveParam* Encode(size_t& paramSize) override;
-		void Decode(SaveParam params[]) override;
+		SaveParam Encode() override final;
+		void Decode(SaveParam params) override final;
 
 	protected:
-		float m_uses;
+		float m_uses SERIALIZED;
 	};
 }

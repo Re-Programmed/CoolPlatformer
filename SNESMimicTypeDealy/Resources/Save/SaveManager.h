@@ -17,6 +17,12 @@ namespace GAME_NAME::Resources
 	class SaveManager
 	{
 	public:
+		/// <summary>
+		/// Reads the specified file. If it does not exist, an empty vector is returned.
+		/// Otherwise returns a vector of each line in the file.
+		/// </summary>
+		/// <param name="fileName"></param>
+		/// <returns></returns>
 		static std::shared_ptr<std::vector<std::string>> ReadSaveFile(std::string fileName);
 
 		/// <summary>

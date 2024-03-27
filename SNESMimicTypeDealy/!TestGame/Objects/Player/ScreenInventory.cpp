@@ -10,7 +10,7 @@ namespace GAME_NAME
 {
 
 	ScreenInventory::ScreenInventory()
-		: Inventory("Screen Inventory", 3), MiscStateGroup("screen_inventory")
+		: Inventory("Screen Inventory", 3), MiscStateGroup("si")
 	{
 		m_slots[0] = new GUI::StaticGUIElement(Vec2(4, 20), Vec2(16, 16), Renderer::GetSprite(INVENTORY_SELECTED_SLOT_SPRITE)->GetSpriteId());
 		m_slots[1] = new GUI::StaticGUIElement(Vec2(24, 20), Vec2(16, 16), Renderer::GetSprite(INVENTORY_UNSELECTED_SLOT_SPRITE)->GetSpriteId());
@@ -19,6 +19,17 @@ namespace GAME_NAME
 		Renderer::LoadGUIElement(m_slots[0]);
 		Renderer::LoadGUIElement(m_slots[1]);
 		Renderer::LoadGUIElement(m_slots[2]);
+
+		std::shared_ptr<std::vector<std::string>> data = getStates();
+
+		for (int i = 0; i < data->size(); i++)
+		{
+			Items::InventoryItem item;
+
+			item.Decode(data->at(i));
+
+			AddItem(item);
+		}
 	}
 
 	void ScreenInventory::Update()
