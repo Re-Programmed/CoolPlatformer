@@ -6,22 +6,31 @@ namespace GAME_NAME
 {
 	namespace Items
 	{
+#define ITEM_COUNT 4
 		//An enum for the types of items in the game.
 		enum ITEM_TYPE
 		{
 			LOG = 0,
 			LEAVES = 1,
-			STONE_1,
-			STONE_2
+			STONE,	
+			SCRAP_AXE
 		};
 
 		//An array containing the sprite for each of the items in order of the ITEM_TYPE enum.
-		const int ITEM_TEXTURES[4]{
-			18,
-			18,
-			55,
-			56
+		const int ITEM_TEXTURES[ITEM_COUNT]{
+			18,	//LOG
+			18,	//LEAVES
+			55,	//STONE (add to have randomized textures)
+			56	//SCRAP_AXE
 		};
+
+		const std::string ITEM_DISPLAY_NAME[ITEM_COUNT]{
+			"Log",
+			"Leaves",
+			"Stone",
+			"Axe"
+		};
+
 
 		/// <summary>
 		/// Returns the corresponding texture for the given item type.
@@ -31,6 +40,11 @@ namespace GAME_NAME
 		inline Rendering::Sprite* const ITEMTYPE_GetItemTypeTexture(ITEM_TYPE itemType)
 		{
 			return Renderer::GetSprite(ITEM_TEXTURES[itemType]);
+		}
+
+		inline const std::string ITEMTYPE_GetItemTypeName(ITEM_TYPE itemType)
+		{
+			return ITEM_DISPLAY_NAME[itemType];
 		}
 	}
 }

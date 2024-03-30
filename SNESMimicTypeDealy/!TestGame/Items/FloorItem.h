@@ -22,7 +22,7 @@ namespace GAME_NAME
 			/// </summary>
 			/// <param name="position">Where the floor item is.</param>
 			/// <param name="item">What item the floor item is.</param>
-			FloorItem(Vec2 position, InventoryItem &item, float pickupDelay = 0);
+			FloorItem(Vec2 position, InventoryItem* item, float pickupDelay = 0);
 
 			FloorItem(Vec2 position, ITEM_TYPE type, float pickupDelay = 0);
 
@@ -38,7 +38,7 @@ namespace GAME_NAME
 			/// <summary>
 			/// The contained item by this floor item.
 			/// </summary>
-			const InventoryItem m_inventoryItem;
+			InventoryItem* const m_inventoryItem;
 
 			const float m_pickupDelay;
 			float m_lifetime;

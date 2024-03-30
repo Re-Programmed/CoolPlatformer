@@ -10,6 +10,7 @@
 #include "../Objects/Instantiate/LevelObjectHandler.h"
 
 #include "../!TestGame/Items/FloorItem.h"
+#include "../!TestGame/Items/Types/Tool.h"
 #include "../!TestGame/Objects/Environment/Plants/Tree.h"
 #include "../!TestGame/Items/Inventories/InventoryContainer.h"
 #include "../!TestGame/Objects/Enemies/Types/LeftRightEnemy.h"
@@ -193,7 +194,13 @@ std::function<void (std::vector<std::string>, size_t line)> m_mappings[MAPPINGS_
 		},
 
 	/*
-		8: Floor Item (map,positionX,positionY,itemType)
+		8: Floor Item (map,positionX,positionY,itemType,metaInf=0,...)
+			metaInf determines what constructor to use:
+				0 - ITEM:
+					
+				1 - TOOLS:
+					uses
+				
 		- An item that can be picked up.
 	*/
 	[](std::vector<std::string> data, size_t n)
@@ -202,7 +209,24 @@ std::function<void (std::vector<std::string>, size_t line)> m_mappings[MAPPINGS_
 			DebugMapper(">>> Loading FloorItem(" + data[2] + ")");
 #endif
 			using namespace GAME_NAME::Items;
-			InventoryItem invItem = InventoryItem((ITEM_TYPE)std::stoi(data[2]));
+
+			if (data.size() > 3)
+			{
+				unsigned int metaInf = std::stoi(data[3]);
+				switch (metaInf)
+				{
+				case 1:
+				{
+					Tool* invItem = new Tool((ITEM_TYPE)std::stoi(data[2]), std::stoi(data[4]));
+					FloorItem* newFloorItem = new FloorItem(STOIVEC(data[0], data[1]), invItem);
+					return;
+				}
+				default:
+					break;
+				}
+			}
+
+			InventoryItem* invItem = new InventoryItem((ITEM_TYPE)std::stoi(data[2]));
 			FloorItem* newFloorItem = new FloorItem(STOIVEC(data[0], data[1]), invItem);
 
 			Renderer::LoadActiveObject(newFloorItem);
@@ -247,7 +271,7 @@ std::function<void (std::vector<std::string>, size_t line)> m_mappings[MAPPINGS_
 
 		for (int i = 8; i < data.size(); i++)
 		{
-			Items::InventoryItem ii = Items::InventoryItem::InventoryItem(static_cast<Items::ITEM_TYPE>(std::stoi(data[i])));
+			Items::InventoryItem* ii = new Items::InventoryItem(static_cast<Items::ITEM_TYPE>(std::stoi(data[i])));
 			container->AddItem(ii);
 		}
 

@@ -2,7 +2,7 @@
 
 namespace GAME_NAME::Items
 {
-	Tool::Tool(ITEM_TYPE type, float uses)
+	Tool::Tool(ITEM_TYPE type, int uses)
 		: InventoryItem(type), m_uses(uses)
 	{
 

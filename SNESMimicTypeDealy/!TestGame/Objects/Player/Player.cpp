@@ -276,7 +276,7 @@ namespace  GAME_NAME
 			}
 
 			//Sets the display for the held item/tool.
-			void Player::SetHeldItem(Items::InventoryItem item)
+			void Player::SetHeldItem(Items::InventoryItem* item)
 			{
 				//If no display exists yet, create one.
 				if (m_heldItemDisplay == nullptr)
@@ -288,7 +288,7 @@ namespace  GAME_NAME
 				//Update item position, scale, and sprite.
 				m_heldItemDisplay->SetPosition(m_position + Vec2(2, 3));
 				m_heldItemDisplay->SetScale(Vec2(8));
-				m_heldItemDisplay->SetSprite(Items::ITEMTYPE_GetItemTypeTexture(item.GetType()));
+				m_heldItemDisplay->SetSprite(Items::ITEMTYPE_GetItemTypeTexture(item->GetType()));
 			}
 
 #define COLLISION_VEL_STOP_DAMPING 0.1f

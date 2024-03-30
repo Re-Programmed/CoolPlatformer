@@ -21,7 +21,7 @@ using namespace std;
 
 		for (int i = 0; i < itemCount; i++)
 		{
-			AddItem(va_arg(args, InventoryItem));
+			AddItem(va_arg(args, InventoryItem*));
 		}
 
 		va_end(args);

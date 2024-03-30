@@ -82,7 +82,7 @@ namespace GAME_NAME::Items::Inventories
 
 		if (!item.ri_IsNull)
 		{
-			GLuint texture = Items::ITEMTYPE_GetItemTypeTexture(item.ri_Item.GetType())->GetSpriteId();
+			GLuint texture = Items::ITEMTYPE_GetItemTypeTexture(item.ri_Item->GetType())->GetSpriteId();
 			std::shared_ptr<StaticGUIElement> slotItem(new StaticGUIElement(pos + Vec2(INVENTORY_CONTAINER_RENDERER_ITEM_SCALEDOWN), Vec2(INVENTORY_CONTAINER_RENDERER_SLOT_SCALE - INVENTORY_CONTAINER_RENDERER_ITEM_SCALEDOWN * 2), texture));
 			m_renderedSlotItems.push_back(slotItem);
 			Renderer::LoadGUIElement(slotItem.get(), 1);

@@ -12,7 +12,7 @@ namespace GAME_NAME
 				53.0f,		//Bounce
 				3.25f,		//Rotation Effect
 				7.50f		//Gravity Rotation Effect
-			)), m_inventoryItem(InventoryItem(type)), m_lifetime(0), m_pickupDelay(pickupDelay)
+			)), m_inventoryItem(new InventoryItem(type)), m_lifetime(0), m_pickupDelay(pickupDelay)
 		{
 			m_physics->SetGravityStrength(m_physics->GetGravityStrength() * 7);
 		}
@@ -22,8 +22,8 @@ namespace GAME_NAME
 			ActiveRotationalBoxCollisionGravityObject::~ActiveRotationalBoxCollisionGravityObject();
 		}
 
-		FloorItem::FloorItem(Vec2 position, InventoryItem &item, float pickupDelay)
-			: ActiveRotationalBoxCollisionGravityObject(position, Vec2(DF_FLOOR_ITEM_SCALE), ITEMTYPE_GetItemTypeTexture(item.GetType()), RotationalCollider_Settings(
+		FloorItem::FloorItem(Vec2 position, InventoryItem* item, float pickupDelay)
+			: ActiveRotationalBoxCollisionGravityObject(position, Vec2(DF_FLOOR_ITEM_SCALE), ITEMTYPE_GetItemTypeTexture(item->GetType()), RotationalCollider_Settings(
 				53.0f,		//Bounce
 				3.25f,		//Rotation Effect
 				7.50f		//Gravity Rotation Effect
@@ -54,7 +54,7 @@ namespace GAME_NAME
 		void FloorItem::pickup()
 		{
 			//Attempt to add the item to the player's inventory.
-			if (TestGame::ThePlayer->GetInventory()->AddItem(InventoryItem(this->m_inventoryItem)) >= 0)
+			if (TestGame::ThePlayer->GetInventory()->AddItem(m_inventoryItem) >= 0)
 			{
 				//Sucessful, destroy the item.
 				m_pickedUp = true;

@@ -221,6 +221,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="!TestGame\InputDisplay\DisplayIconManager.h" />
+    <ClInclude Include="!TestGame\ItemMappings.h" />
     <ClInclude Include="!TestGame\Items\FloorItem.h" />
     <ClInclude Include="!TestGame\Items\Inventories\InventoryContainer.h" />
     <ClInclude Include="!TestGame\Items\Inventories\InventoryContainerRenderer.h" />

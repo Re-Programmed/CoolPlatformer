@@ -77,7 +77,7 @@ namespace  GAME_NAME
 				void Damage(float damage);
 				void Kill();
 
-				void SetHeldItem(Items::InventoryItem item);
+				void SetHeldItem(Items::InventoryItem* item);
 				inline void RemoveHeldItem()
 				{
 					if (m_heldItemDisplay != nullptr)

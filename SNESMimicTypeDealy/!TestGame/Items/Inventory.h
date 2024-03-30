@@ -11,7 +11,7 @@ namespace GAME_NAME::Items
 		Inventory(std::string name, uint8_t size);
 		
 		struct ReturnItem {
-			InventoryItem& ri_Item;
+			InventoryItem* ri_Item;
 			bool ri_IsNull;
 		};
 		/// <summary>
@@ -26,7 +26,7 @@ namespace GAME_NAME::Items
 		/// </summary>
 		/// <param name="item">The item to add.</param>
 		/// <returns>The slot the item was added to. (-1 if the inventory is full)</returns>
-		int AddItem(InventoryItem item);
+		int AddItem(InventoryItem* item);
 
 		inline uint8_t GetSize()
 		{
@@ -42,6 +42,6 @@ namespace GAME_NAME::Items
 		/// </summary>
 		uint8_t m_size;
 
-		std::vector<InventoryItem> m_items;
+		std::vector<InventoryItem*> m_items;
 	};
 }

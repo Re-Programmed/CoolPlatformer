@@ -560,6 +560,9 @@
     <ClInclude Include="!TestGame\Objects\Environment\Buildings\FrontWall.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="!TestGame\ItemMappings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\testing\sprite\1_player.png">

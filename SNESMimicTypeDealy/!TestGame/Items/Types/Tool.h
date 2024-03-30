@@ -9,12 +9,12 @@ namespace GAME_NAME::Items
 		: public InventoryItem
 	{
 	public:
-		Tool(ITEM_TYPE type, float uses);
+		Tool(ITEM_TYPE type, int uses);
 
 		SaveParam Encode() override final;
 		void Decode(SaveParam params) override final;
 
 	protected:
-		float m_uses SERIALIZED;
+		int m_uses SERIALIZED;
 	};
 }

@@ -24,9 +24,9 @@ namespace GAME_NAME
 
 		for (int i = 0; i < data->size(); i++)
 		{
-			Items::InventoryItem item;
+			Items::InventoryItem* item;
 
-			item.Decode(data->at(i));
+			item->Decode(data->at(i));
 
 			AddItem(item);
 		}
@@ -52,7 +52,7 @@ namespace GAME_NAME
 		}
 	}
 
-	int ScreenInventory::AddItem(Items::InventoryItem item)
+	int ScreenInventory::AddItem(Items::InventoryItem* item)
 	{
 		int s = Inventory::AddItem(item);
 
@@ -61,7 +61,7 @@ namespace GAME_NAME
 			return -1;
 		}
 
-		Sprite* sprite = Items::ITEMTYPE_GetItemTypeTexture(item.GetType());
+		Sprite* sprite = Items::ITEMTYPE_GetItemTypeTexture(item->GetType());
 		GUI::StaticGUIElement* itemDisplay = new GUI::StaticGUIElement(m_slots[s]->GetPosition() + (INVENTORY_SLOT_PADDING/2.f), m_slots[s]->GetScale() - Vec2(INVENTORY_SLOT_PADDING), sprite->GetSpriteId());
 		delete sprite;
 		Renderer::LoadGUIElement(itemDisplay, 1);
@@ -69,9 +69,9 @@ namespace GAME_NAME
 		//Remove all save data.
 		clearStates();
 		//Add save data for all items.
-		for (Items::InventoryItem item : m_items)
+		for (Items::InventoryItem* item : m_items)
 		{
-			assignState(new Items::InventoryItem(item));
+			assignState(item);
 		}
 		
 		return s;

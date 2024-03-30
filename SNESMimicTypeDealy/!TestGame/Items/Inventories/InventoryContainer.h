@@ -14,6 +14,7 @@ namespace GAME_NAME::Items::Inventories
 	{
 	public:
 		InventoryContainer(std::string name, size_t size, Vec2 position, Vec2 scale, Rendering::Sprite* sprite, float rotation = 0.f);
+		//Takes a list of InventoryItem* to use for the inventory of this container.
 		InventoryContainer(std::string name, size_t size, Vec2 position, Vec2 scale, Rendering::Sprite* sprite, float rotation, int itemCount, ...);
 
 		void OpenGUI();
