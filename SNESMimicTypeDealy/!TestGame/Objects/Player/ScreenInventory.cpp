@@ -2,6 +2,8 @@
 #include "../../../Input/InputManager.h"
 #include "../../TestGame.h"
 
+#include "../../Items/Types/Tool.h"
+
 #include "../../../CustomCompileOptions.h"
 
 #define INVENTORY_SLOT_PADDING 5.f
@@ -22,11 +24,29 @@ namespace GAME_NAME
 
 		std::shared_ptr<std::vector<std::string>> data = getStates();
 
+using namespace Items;
+
 		for (int i = 0; i < data->size(); i++)
 		{
-			Items::InventoryItem* item;
+			//First char indicates the type of the item, and what class should be used to represent it.
+			const char& firstChar = data->at(i).at(0);
 
-			item->Decode(data->at(i));
+			InventoryItem* item = new InventoryItem();
+
+			switch (firstChar)
+			{
+			case ITEM_PREFIX_ITEM:
+				//Decode the item.
+				item->Decode(data->at(i));
+				break;
+			case ITEM_PREFIX_TOOL:
+				//Change item to point to a new tool.
+				delete item;
+				Tool* t = new Tool();
+				t->Decode(data->at(i));
+				item = t;
+				break;
+			}
 
 			AddItem(item);
 		}

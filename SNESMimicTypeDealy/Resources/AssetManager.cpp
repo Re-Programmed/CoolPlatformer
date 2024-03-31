@@ -6,6 +6,7 @@
 #include "../Audio/SoundTypes/Sound.h"
 #include "../Settings/SettingsGlobals.h"
 #include <regex>
+//regex for std::regex_replace
 
 #if _DEBUG
 #include "../Debug/DebugLog.h"

@@ -34,6 +34,11 @@ namespace GAME_NAME
 				}
 			}
 
+			~ComponentObject()
+			{
+
+			}
+
 		private:
 			const unsigned int m_componentCount;
 			IComponent* m_components[];

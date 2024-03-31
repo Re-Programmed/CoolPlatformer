@@ -261,6 +261,9 @@
     <ClCompile Include="!TestGame\Objects\Environment\Buildings\FrontWall.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="!TestGame\ItemMapping.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glad\include\glad\glad.h">
@@ -560,7 +563,7 @@
     <ClInclude Include="!TestGame\Objects\Environment\Buildings\FrontWall.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="!TestGame\ItemMappings.h">
+    <ClInclude Include="!TestGame\ItemMapping.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

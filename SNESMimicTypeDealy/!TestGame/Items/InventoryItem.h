@@ -2,6 +2,8 @@
 #include "./ItemType.h"
 #include "../../Objects/MiscState.h"
 
+#define ITEM_PREFIX_ITEM 'i'
+
 namespace GAME_NAME
 {
 	namespace Items
@@ -19,7 +21,10 @@ namespace GAME_NAME
 			/// <param name="type">The type of item to create.</param>
 			InventoryItem(ITEM_TYPE type);
 
-			InventoryItem() SERIALIZED;
+			InventoryItem() SERIALIZED = default;
+
+			InventoryItem(const InventoryItem& item);
+			InventoryItem(InventoryItem&& item) noexcept;
 
 			/// <summary>
 			/// Returns the type of item.
@@ -30,14 +35,16 @@ namespace GAME_NAME
 				return m_itemType;
 			}
 
-			SaveParam Encode() override;
-			void Decode(SaveParam params) override;
+			SaveParam& Encode() override;
+			void Decode(const SaveParam& params) override;
 
 		protected:
 			/// <summary>
 			/// The type of the item represented by this InventoryItem.
 			/// </summary>
 			ITEM_TYPE m_itemType SERIALIZED;
+
+			inline virtual const char&& getPrefix() { return ITEM_PREFIX_ITEM; }
 		};
 	}
 }

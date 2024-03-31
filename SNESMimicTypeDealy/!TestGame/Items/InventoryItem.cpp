@@ -10,20 +10,29 @@ namespace GAME_NAME
 
 		}
 
-		InventoryItem::InventoryItem()
+		InventoryItem::InventoryItem(const InventoryItem& item)
+			: m_itemType(item.m_itemType)
 		{
-
+			
 		}
 
-		MiscState::SaveParam InventoryItem::Encode()
+		InventoryItem::InventoryItem(InventoryItem&& item) noexcept
 		{
-			return std::to_string(m_itemType);
+			m_itemType = item.m_itemType;
+		}
+
+
+		MiscState::SaveParam& InventoryItem::Encode()
+		{
+			MiscState::SaveParam param = std::to_string(getPrefix());
+			return param.append(std::to_string(m_itemType));
 		}
 
 		//Expects a string that is purely a number representing the type.
-		void InventoryItem::Decode(MiscState::SaveParam param)
+		void InventoryItem::Decode(const MiscState::SaveParam& param)
 		{
-			m_itemType = (Items::ITEM_TYPE)std::stoi(param);
+			//Get the item type, ignore the first character that denotes item type.
+			m_itemType = (Items::ITEM_TYPE)std::stoi(param.substr(1));
 		}
 	}
 }

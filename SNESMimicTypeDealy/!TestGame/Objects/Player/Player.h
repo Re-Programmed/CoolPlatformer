@@ -114,7 +114,7 @@ namespace  GAME_NAME
 				/// Returns the encoded version of the player save data.
 				/// </summary>
 				/// <returns></returns>
-				std::string encodeSave();
+				std::string& encodeSave();
 
 				/// <summary>
 				/// Misc state for player save data.
@@ -129,12 +129,12 @@ namespace  GAME_NAME
 						
 					}
 
-					MiscState::SaveParam Encode() override final
+					MiscState::SaveParam& Encode() override final
 					{
 						return m_player->encodeSave();
 					}
 
-					void Decode(MiscState::SaveParam param) override final
+					void Decode(const MiscState::SaveParam& param) override final
 					{
 						m_player->decodeSave(param);
 					}
