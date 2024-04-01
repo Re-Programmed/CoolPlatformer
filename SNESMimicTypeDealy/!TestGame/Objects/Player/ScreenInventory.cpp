@@ -23,32 +23,40 @@ namespace GAME_NAME
 		Renderer::LoadGUIElement(m_slots[2]);
 
 		std::shared_ptr<std::vector<std::string>> data = getStates();
-
-using namespace Items;
-
-		for (int i = 0; i < data->size(); i++)
+		
+		if (data->size() > 0)
 		{
-			//First char indicates the type of the item, and what class should be used to represent it.
-			const char& firstChar = data->at(i).at(0);
+			//Metadata is stored as first data string.
+			m_saveMetadata.Decode(data->at(0));
+			selectSlot(m_saveMetadata.SelectedSlot, false);
+			data->erase(data->begin());
 
-			InventoryItem* item = new InventoryItem();
+			using namespace Items;
 
-			switch (firstChar)
+			for (int i = 0; i < data->size(); i++)
 			{
-			case ITEM_PREFIX_ITEM:
-				//Decode the item.
-				item->Decode(data->at(i));
-				break;
-			case ITEM_PREFIX_TOOL:
-				//Change item to point to a new tool.
-				delete item;
-				Tool* t = new Tool();
-				t->Decode(data->at(i));
-				item = t;
-				break;
-			}
+				//First char indicates the type of the item, and what class should be used to represent it.
+				const char& firstChar = data->at(i).at(0);
 
-			AddItem(item);
+				InventoryItem* item = new InventoryItem();
+
+				switch (firstChar)
+				{
+				case ITEM_PREFIX_ITEM:
+					//Decode the item.
+					item->Decode(data->at(i));
+					break;
+				case ITEM_PREFIX_TOOL:
+					//Change item to point to a new tool.
+					delete item;
+					Tool* t = new Tool();
+					t->Decode(data->at(i));
+					item = t;
+					break;
+				}
+
+				AddItem(item, true);
+			}
 		}
 	}
 
@@ -72,7 +80,7 @@ using namespace Items;
 		}
 	}
 
-	int ScreenInventory::AddItem(Items::InventoryItem* item)
+	int ScreenInventory::AddItem(Items::InventoryItem* item, bool ignoreSave)
 	{
 		int s = Inventory::AddItem(item);
 
@@ -86,28 +94,29 @@ using namespace Items;
 		delete sprite;
 		Renderer::LoadGUIElement(itemDisplay, 1);
 
-		//Remove all save data.
-		clearStates();
-		//Add save data for all items.
-		for (Items::InventoryItem* item : m_items)
-		{
-			assignState(item);
-		}
+		if(!ignoreSave) { updateSave(); }
 		
 		return s;
 	}
 
 
-	void ScreenInventory::selectSlot(InventorySlot slot)
+	void ScreenInventory::selectSlot(InventorySlot slot, bool updatePlayerDisplay)
 	{
+		//Update save for selected slot.
+		m_saveMetadata.SelectedSlot = slot;
+		updateSave();
+
 		slot--;
+
 		for (InventorySlot i = 0; i < 3; i++)
 		{
 			if (slot == i)
 			{
 				m_slots[i]->SetSprite(Renderer::GetSprite(INVENTORY_SELECTED_SLOT_SPRITE));
 
-				if (m_items.size() > i)
+				if (!updatePlayerDisplay) { continue; }
+
+				if (m_items.size() > i && m_items[i] != nullptr)
 				{
 					TestGame::ThePlayer->SetHeldItem(m_items[i]);
 				}
@@ -119,6 +128,20 @@ using namespace Items;
 			}
 
 			m_slots[i]->SetSprite(Renderer::GetSprite(INVENTORY_UNSELECTED_SLOT_SPRITE));
+		}
+	}
+
+	void ScreenInventory::updateSave()
+	{
+		//Remove all save data.
+		clearStates();
+		//Assign the metadata.
+		ScreenInventory::ScreenInventoryMetadata& metadata = m_saveMetadata;
+		assignState(&metadata);
+		//Add save data for all items.
+		for (Items::InventoryItem* item : m_items)
+		{
+			assignState(item);
 		}
 	}
 }

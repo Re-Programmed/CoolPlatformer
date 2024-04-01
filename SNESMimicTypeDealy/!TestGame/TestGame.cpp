@@ -16,6 +16,7 @@
 #include "../Resources/Save/SaveManager.h"
 #include "./Objects/Environment/Plants/Tree.h"
 #include "./InputDisplay/DisplayIconManager.h"
+#include "../Objects/Particles/ParticleEmitter.h"
 
 #include "../Objects/GUI/Text/TextRenderer.h"
 
@@ -144,8 +145,28 @@ namespace GAME_NAME
 		delete m_globalLevelData;
 		m_globalLevelData = new GlobalLevelData(level.Path);
 
-		//GameObject* leaf = Instantiate::LevelObjectHandler::GetLevelObject("leaf_particle_objects", "leaf_1");
-		//leaf->SetPosition(ThePlayer->GetPosition());
+	/*	
+	----------------------------PARTICLE TEST----------------------------
+	GameObject* leaf = Instantiate::LevelObjectHandler::GetLevelObject("leaf_particle_objects", "leaf_1");
+		leaf->SetPosition(Vec2(0,0));
+
+		{
+		using namespace Particles;
+
+			ParticleEmitter* testPE = new ParticleEmitter(ThePlayer->GetPosition());
+			Particle testP = leaf;
+
+			testP.Velocity = Vec2(3.f, 1.f);
+
+			testPE->RegisterParticle(testP);
+
+			Renderer::LoadActiveObject(testPE);
+
+			testPE->SpawnParticles(15);
+		
+		}
+
+		*/
 
 		//GAME_NAME::Objects::Enemies::Enemy* enemy = new GAME_NAME::Objects::Enemies::Enemy(Vec2(100, 51), Vec2(32,64), Renderer::GetSprite(SpriteBase(10)));
 	

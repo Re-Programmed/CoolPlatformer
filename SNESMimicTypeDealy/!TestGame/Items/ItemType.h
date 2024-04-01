@@ -31,6 +31,11 @@ namespace GAME_NAME
 			"Axe"
 		};
 
+		enum TOOL_ACTION
+		{
+			CHOP = 0b00001 //Can cut down trees.
+		};
+
 
 		/// <summary>
 		/// Returns the corresponding texture for the given item type.
@@ -45,6 +50,17 @@ namespace GAME_NAME
 		inline const std::string ITEMTYPE_GetItemTypeName(ITEM_TYPE itemType)
 		{
 			return ITEM_DISPLAY_NAME[itemType];
+		}
+
+		inline const int ITEMTYPE_GetItemActions(ITEM_TYPE itemType)
+		{
+			switch (itemType)
+			{
+			case SCRAP_AXE:
+				return CHOP;
+			default:
+				return 0;
+			}
 		}
 	}
 }

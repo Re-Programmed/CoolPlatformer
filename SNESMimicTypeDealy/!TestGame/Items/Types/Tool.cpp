@@ -8,7 +8,7 @@ namespace GAME_NAME::Items
 
 	}
 
-	MiscState::SaveParam& Tool::Encode()
+	MiscState::SaveParam Tool::Encode()
 	{
 		MiscState::SaveParam param = InventoryItem::Encode();
 
@@ -18,11 +18,20 @@ namespace GAME_NAME::Items
 		return param;
 	}
 
-	void Tool::Decode(const SaveParam& params)
+	bool Tool::Use()
 	{
+		m_uses--;
+
+		return m_uses < 1;
+	}
+
+	void Tool::Decode(const SaveParam params)
+	{
+		//Decode uses.
 		m_uses = std::stoi(params.substr(params.find('+') + 1));
 
-		InventoryItem::Decode(params.substr(1, params.find('+')));
+		//Call base decoding.
+		InventoryItem::Decode(ITEM_PREFIX_ITEM + params.substr(1, params.find('+') - 1));
 	}
 
 }

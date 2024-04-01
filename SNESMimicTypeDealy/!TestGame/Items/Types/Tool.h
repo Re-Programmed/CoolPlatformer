@@ -15,11 +15,17 @@ namespace GAME_NAME::Items
 
 		Tool(ITEM_TYPE type, int uses);
 
-		SaveParam& Encode() override final;
-		void Decode(const SaveParam& params) override final;
+		/// <summary>
+		/// Decrease the number of uses left.
+		/// </summary>
+		/// <returns>True if the tool broke.</returns>
+		bool Use();
 
-		inline const char&& getPrefix() override { return ITEM_PREFIX_TOOL; }
+		SaveParam Encode() override final;
+		void Decode(const SaveParam params) override final;
 	protected:
 		int m_uses SERIALIZED;
+
+		inline const char&& getPrefix() override { return ITEM_PREFIX_TOOL; }
 	};
 }

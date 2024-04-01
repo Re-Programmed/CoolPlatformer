@@ -33,10 +33,12 @@ using namespace std;
 
 
 		//Check the first character to determine what type of item this is. 
-		switch (itemString.at(0))
+		switch (firstChar)
 		{
-		case 't':	//Tool
+		case ITEM_PREFIX_TOOL:	//Tool
 			return new Tool((ITEM_TYPE)std::stoi(parameters[0]), std::stoi(parameters[1]));
+
+		case ITEM_PREFIX_ITEM:
 		default:
 			return new InventoryItem((ITEM_TYPE)std::stoi(parameters[0]));
 		}

@@ -22,14 +22,15 @@ namespace GAME_NAME
 		}
 
 
-		MiscState::SaveParam& InventoryItem::Encode()
+		MiscState::SaveParam InventoryItem::Encode()
 		{
-			MiscState::SaveParam param = std::to_string(getPrefix());
+			MiscState::SaveParam param;
+			param += getPrefix();
 			return param.append(std::to_string(m_itemType));
 		}
 
 		//Expects a string that is purely a number representing the type.
-		void InventoryItem::Decode(const MiscState::SaveParam& param)
+		void InventoryItem::Decode(const MiscState::SaveParam param)
 		{
 			//Get the item type, ignore the first character that denotes item type.
 			m_itemType = (Items::ITEM_TYPE)std::stoi(param.substr(1));

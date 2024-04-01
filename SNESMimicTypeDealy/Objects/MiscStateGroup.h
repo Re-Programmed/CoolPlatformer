@@ -47,10 +47,10 @@ namespace GAME_NAME
 
 		inline void clearStates()
 		{
-			for (MiscState* state : m_states)
+			/*for (MiscState* state : m_states)
 			{
 				delete state;
-			}
+			}*/
 
 			m_states.clear();
 		}
