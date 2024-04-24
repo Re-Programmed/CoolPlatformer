@@ -146,6 +146,12 @@ namespace  GAME_NAME
 				PlayerSaveState* const m_saveState;			//Stores all data for the players current save state.
 
 				/// <summary>
+				/// Drops the currently held item and returns true if the item was sucussfully dropped.
+				/// </summary>
+				/// <returns></returns>
+				bool dropHeldItem();
+
+				/// <summary>
 				/// If the player is frozen they cannot move but can still be affected by gravity or other objects.
 				/// The value of frozen can go above 1, that way if multiple objects are currently freezing the player, the player will remain frozen until all objects have stopped freezing the player.
 				/// </summary>
