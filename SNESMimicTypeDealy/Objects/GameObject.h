@@ -47,6 +47,8 @@ namespace GAME_NAME
 			}
 
 			GameObject(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, float rotation = 0.f) : m_position(position), m_sprite(sprite), m_scale(scale), m_rotation(rotation), m_rotationOffset(0), m_textureFlipped(false) {};
+
+
 			GameObject();
 
 			~GameObject();

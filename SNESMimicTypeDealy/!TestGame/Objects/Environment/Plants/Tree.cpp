@@ -5,6 +5,9 @@
 #include "../../../../Components/Animation/AnimatorComponent.h"
 #include "../../../../Utils/Time/GameTime.h"
 #include "../../../InputDisplay/DisplayIconManager.h"
+#include "../../../Items/Types/Tool.h"
+#include "../../../../Objects/Particles/ParticleEmitter.h"
+#include "../../../../Objects/Instantiate/LevelObjectHandler.h"
 
 namespace GAME_NAME::Objects::Environment::Plants
 {
@@ -58,14 +61,43 @@ namespace GAME_NAME::Objects::Environment::Plants
 
 		setChopped(true);
 
-		//DROP ITEMS
-		Rustle();
+		//DROP LOG
+		Items::FloorItem* myItem = new Items::FloorItem(m_position + Vec2::RandVec2(m_scale.X, m_scale.Y), Items::LOG, 0.5f);
+		Renderer::InstantiateObject(Renderer::InstantiateGameObject(myItem, true, 1, false));
+
 		if (!m_toBeSaved)
 		{
 			StateSaver::RegisterToBeSaved(this);
 		}
 
-		//DROP LOGS
+using namespace Particles;
+		
+		auto objs = Instantiate::LevelObjectHandler::GetLevelObjects("tree_particles");
+		
+		for (GameObject* obj : objs)
+		{
+			Particle particle1 = std::move(obj);
+			//delete obj;
+
+			particle1.Velocity = Vec2((float)(std::rand() * 100 / RAND_MAX) / 100.f - 0.5f, 1.f + (float)(std::rand() * 100 / RAND_MAX) / 100.f - 0.5f);
+			particle1.RotationalVelocity = (std::rand() * 12 / RAND_MAX) - 6;
+			particle1.ConstantVelocity = Vec2((float)(std::rand() * 100 / RAND_MAX) / 100.f - 0.5f, -0.3f);
+			particle1.TargetOpacity = 0.f;
+			particle1.TargetScale = 0.f;
+
+			ParticleEmitter* emitter = new ParticleEmitter(this->m_position, 1.f);
+			emitter->SetScale({ 7.f, 6.f });
+			emitter->RegisterParticle(particle1);
+
+			Renderer::LoadActiveObject(emitter);
+
+			emitter->SpawnParticles(12);
+
+			Renderer::DestroyActiveObjectImmediate(obj);
+			if (obj != nullptr) {
+				Renderer::DestroyObject(obj);
+			}
+		}
 
 		return true;
 	}
@@ -103,6 +135,17 @@ namespace GAME_NAME::Objects::Environment::Plants
 
 	void Tree::onInteract(std::shared_ptr<Player::Player> player, InputManager::KEY_STATE state)
 	{
+		if (m_isChopped) { return; }
+
+		if (InputManager::GetMouseButton(0))
+		{
+			auto heldItem = TestGame::ThePlayer->GetInventory()->GetHeldItem();
+			if (heldItem != nullptr && Items::ITEMTYPE_GetItemActions(heldItem->GetType()) & Items::TOOL_ACTION::CHOP)
+			{
+				Chop();
+			}
+		}
+
 		if (m_rustles > 2) { return; }
 
 		Input::DisplayIconManager::ShowKeyInputDisplay(Input::DisplayIconManager::INPUT_DISPLAY_KEY_E, TestGame::ThePlayer->GetPosition() + Vec2(TestGame::ThePlayer->GetScale() + Vec2(3, -5)), (char)(std::floor(m_rustleCounter * 10 / 1.85f)));
@@ -131,7 +174,7 @@ namespace GAME_NAME::Objects::Environment::Plants
 		m_isChopped = chopped;
 
 		//FLIP m_choppedSprite and m_sprite
-		Rendering::Sprite* spCpy = new Rendering::Sprite(m_choppedSprite->GetSpriteId());
+		Rendering::Sprite* const spCpy = new Rendering::Sprite(m_choppedSprite->GetSpriteId());
 
 		delete m_choppedSprite;
 		this->m_choppedSprite = m_sprite;

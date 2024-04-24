@@ -21,7 +21,7 @@ namespace GAME_NAME
 
 		typedef std::string SaveParam;
 
-		virtual void Decode(const SaveParam& params) = 0;
-		virtual SaveParam& Encode() = 0;
+		virtual void Decode(const SaveParam params) = 0;
+		virtual SaveParam Encode() = 0;
 	};
 }

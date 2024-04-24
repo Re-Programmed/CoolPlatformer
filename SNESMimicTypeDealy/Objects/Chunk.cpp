@@ -55,26 +55,29 @@ namespace GAME_NAME
 				{
 					for (int i = 0; i < CHUNK_OBJECT_RENDER_LAYER_COUNT; i++)
 					{
-						for (GameObject* obj : m_objects[i])
+						for (int d = 0; d < m_objects[i].size(); d++)
 						{
-							if (Renderer::UpdateObjects) { obj->Update(window); }
-							obj->Render(cameraPosition);
+							if (m_objects[i][d] == nullptr) { m_objects[i].erase(m_objects[i].begin() + d); d--; continue; }
+							if (Renderer::UpdateObjects) { m_objects[i][d]->Update(window); }
+							m_objects[i][d]->Render(cameraPosition);
 						}
 					}
 				}
 				else {
-					for (GameObject* obj : m_objects[microLayer])
+					for (int d = 0; d < m_objects[microLayer].size(); d++)
 					{
-						if (Renderer::UpdateObjects) { obj->Update(window); }
-						obj->Render(cameraPosition);
+						if (m_objects[microLayer][d] == nullptr) { m_objects[microLayer].erase(m_objects[microLayer].begin() + d); d--; continue; }
+						if (Renderer::UpdateObjects) { m_objects[microLayer][d]->Update(window); }
+						m_objects[microLayer][d]->Render(cameraPosition);
 					}
 				}
 				break;
 			case RENDER_LAYER_OBJECTS_FRONT:
-				for (GameObject* obj : m_frontObjects)
+				for (int d = 0; d < m_frontObjects.size(); d++)
 				{
-					if (Renderer::UpdateObjects) { obj->Update(window); }
-					obj->Render(cameraPosition);
+					if (m_frontObjects[d] == nullptr) { m_frontObjects.erase(m_frontObjects.begin() + d); d--; continue; }
+					if (Renderer::UpdateObjects) { m_frontObjects[d]->Update(window); }
+					m_frontObjects[d]->Render(cameraPosition);
 				}
 				break;
 			default:

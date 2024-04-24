@@ -35,8 +35,8 @@ namespace GAME_NAME
 				return m_itemType;
 			}
 
-			SaveParam& Encode() override;
-			void Decode(const SaveParam& params) override;
+			SaveParam Encode() override;
+			void Decode(const SaveParam params) override;
 
 		protected:
 			/// <summary>

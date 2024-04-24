@@ -399,8 +399,17 @@ namespace GAME_NAME
 				//Render active objects if they are on screen. Renders in order of layers from least to greatest.
 				for (int i = 1; i < MICRO_RENDER_LAYER_COUNT; i++)
 				{
-					for (GameObject* obj : m_activeGameObjects[i])
+					for (int d = 0; d < m_activeGameObjects[i].size(); d++)
 					{
+						GameObject* obj = m_activeGameObjects[i][d];
+						if (obj == nullptr)
+						{
+							m_activeGameObjects[i].erase(m_activeGameObjects[i].begin() + d);
+							d--;
+							continue;
+							
+						}
+
 						if (UpdateObjects)
 						{
 							obj->Update(window);
@@ -410,6 +419,8 @@ namespace GAME_NAME
 						{
 							renderBuffer.push_back(obj);
 						}
+
+						d++;
 					}
 				}
 

@@ -85,6 +85,7 @@ namespace GAME_NAME
             m_sprite = sprite;
         }
 
+
         GameObject::GameObject() : m_position(Vec2::Zero), m_scale(Vec2::Zero), m_rotation(0.f), m_rotationOffset(0)
         {
 

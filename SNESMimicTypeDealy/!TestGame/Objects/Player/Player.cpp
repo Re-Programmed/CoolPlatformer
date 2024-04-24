@@ -359,10 +359,10 @@ namespace  GAME_NAME
 				}
 			}
 
-			std::string& Player::encodeSave()
+			std::string Player::encodeSave()
 			{
 				//		xPos+yPos
-				return std::to_string(m_position.X).append("+").append(std::to_string(m_position.Y));
+				return std::to_string(std::round(m_position.X)).append("+").append(std::to_string(std::round(m_position.Y)));
 			}
 
 			bool Player::dropHeldItem()

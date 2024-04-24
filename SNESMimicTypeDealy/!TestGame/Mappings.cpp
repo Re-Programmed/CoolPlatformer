@@ -65,7 +65,7 @@ std::function<Components::IComponent* (std::vector<std::string>)> m_componentMap
 /// </summary>
 std::function<void (std::vector<std::string>, size_t line)> m_mappings[MAPPINGS_SIZE]
 {
-	//Basic Object
+	//Basic Object (map,xPos,yPos,xScale,yScale,sprite,layer?,front?)
 	[](std::vector<std::string> data, size_t n) {
 
 #if _DEBUG
