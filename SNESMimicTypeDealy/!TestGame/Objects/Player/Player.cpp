@@ -15,6 +15,8 @@
 
 #include "../../TestGame.h"
 
+#include "../../Items/FloorItem.h"
+
 #include <thread>
 
 #define PLAYER_ANIMATION_RUN_WALK_SWITCH 180.f //When the player should switch from the walking to running animation.
@@ -465,6 +467,24 @@ namespace  GAME_NAME
 			{
 				//		xPos+yPos
 				return std::to_string(std::round(m_position.X)).append("+").append(std::to_string(std::round(m_position.Y)));
+			}
+
+			bool Player::dropHeldItem()
+			{
+				//Get the held item. REPLACE "0" WITH CURRENT ITEM.
+				Items::Inventory::ReturnItem ri = m_screenInventory->GetItem(0);
+				
+				if (ri.ri_IsNull) { return false; }
+
+				Items::InventoryItem* item = ri.ri_Item;
+
+				//Create the object for the item.
+				Items::FloorItem* createdItem = new Items::FloorItem(m_position + (m_scale / 2), item->GetType(), 3.5F);
+				Renderer::InstantiateObject(Renderer::InstantiateGameObject(createdItem, true, 1, false));
+
+				delete item;
+
+				return true;
 			}
 
 
