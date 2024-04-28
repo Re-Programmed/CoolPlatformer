@@ -26,7 +26,7 @@
 
 #include "./Level/LevelManager.h"
 #include <thread>
-#include "./Objects/Enemies/Enemy.h"
+#include "./Objects/Enemies/Types/LeftRightEnemy.h"
 
 #include "../Objects/StateSaver.h"
 
@@ -116,6 +116,13 @@ namespace GAME_NAME
 		Input::DisplayIconManager::AttemptHideIcons();
 	}
 
+
+	GameObject* testAudioObject;
+	void testAudioUpdate(MusicSync::MusicSync::SongPosition songPosition)
+	{
+		testAudioObject->SetSprite(Rendering::Renderer::GetSprite(songPosition.sp_beat % 2 == 1 ? SpriteBase(54) : SpriteBase(53)));
+	}
+
 	void TestGame::InitLevel(GAME_NAME::Game::Level level)
 	{
 #if _DEBUG
@@ -168,12 +175,31 @@ namespace GAME_NAME
 
 		*/
 
-		//GAME_NAME::Objects::Enemies::Enemy* enemy = new GAME_NAME::Objects::Enemies::Enemy(Vec2(100, 51), Vec2(32,64), Renderer::GetSprite(SpriteBase(10)));
+		/*
+		----------------------------ENEMY TEST----------------------------
+		Enemies::LeftRightEnemy::LeftRightEnemyAttributes* attributes = new Enemies::LeftRightEnemy::LeftRightEnemyAttributes();
+		attributes->EndpointPause = 2.F;
+		attributes->MovementSpeed = 2.F;
+		attributes->TerminalMovementSpeed = 40.F;
+		Enemies::LeftRightEnemy* lreTest = new Enemies::LeftRightEnemy({ 100, 21 }, { 32, 32 }, Renderer::GetSprite(2), { 100, -1 }, { 200, -1 }, attributes);
+		
 	
-		//Renderer::LoadActiveObject(enemy);
+		Renderer::LoadActiveObject(lreTest);*/
+
+		//Create a sound and set it to loop.
+		Audio::AudioVoice testMusic = Audio::SoundManager::Play(1, Audio::SoundManager::MusicGroup);
+		Audio::SoundManager::GetAudioPlayer()->setLooping(testMusic, true);
+
+		//Pause the current background music.
+		Audio::SoundManager::GetAudioPlayer()->setPause(level.CurrentBGMusic, true);
+
+		testAudioObject = new GameObject(level.PlayerStartPosition, { 32, 32 }, Rendering::Renderer::GetSprite(SpriteBase(54)));
+		Rendering::Renderer::LoadActiveObject(testAudioObject);
+
+		MusicSync::MusicSync::SetCurrentSong(80, 4);
+
+		MusicSync::MusicSync::Subscribe(testAudioUpdate);
 	}
-
-
 
 	void TestGame::TogglePauseState()
 	{

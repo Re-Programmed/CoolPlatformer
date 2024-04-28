@@ -116,6 +116,7 @@ namespace  GAME_NAME
 				ActiveBoxCollisionGravityObject::~ActiveBoxCollisionGravityObject();
 				delete m_animator;
 				delete m_saveState;
+				delete m_heldItemDisplay;
 			}
 
 			
@@ -128,11 +129,18 @@ namespace  GAME_NAME
 
 				std::thread animationUpdate([this, window] { m_animator->Update(window, this); });
 
+				
+
 				//This makes the current held item move up and down while running to look like it is moving around in the player's hand.
-				if (m_heldItemDisplay != nullptr && m_heldItemDisplay->GetScale().X > 0)
+				if (m_heldItemDisplay != nullptr && m_heldItemDisplay->GetScale().X != 0)
 				{
-					float add = std::sin(m_position.X/8.f) * 1.44f;
-					m_heldItemDisplay->SetPosition(m_position + Vec2(2, 3 + (add)));
+					if (m_heldItemDisplay->GetScale().X < 8)
+					{
+						float add = std::sin(m_position.X / 8.f) * 1.44f;
+						m_heldItemDisplay->SetPosition(m_position + Vec2(2, 3 + (add)));
+					}
+
+					std::cout << m_heldItemDisplay->GetPosition().ToString() << "\n";
 				}
 
 				//Calculate time spent in air.
@@ -186,6 +194,7 @@ namespace  GAME_NAME
 				}
 			}
 
+
 			void Player::Render(const Vec2 cameraPosition)
 			{
 #if _DEBUG
@@ -215,13 +224,90 @@ namespace  GAME_NAME
 				else {
 					m_sprite->Render(cameraPosition, m_position + (m_textureFlipped ? (m_scale * Vec2::OneX) : 0), m_scale * (m_textureFlipped ? Vec2::MinusOneXOneY : 1), m_rotation);
 				}
-				
-#if _DEBUG
-				if (m_debug)
+
+				/*
+					Held item rendering.
+				*/
+
+				if (m_heldItemDisplay != nullptr && m_heldItemDisplay->GetScale().X > 8)
 				{
-					Debug::LevelBuilder::LevelBuilder::Render();
+					const float playerYVel = m_physics->GetVelocity().Y + m_physics->GetGravitationalVelocity();
+					if (playerYVel > 1.5f && !m_onGround)
+					{
+						const int baseSpriteId = m_heldItemDisplay->GetSprite()->GetSpriteId() - m_heldItemDisplayFrameOffset;
+						const int frame = 0;
+						m_heldItemLastSprite = new Sprite(baseSpriteId + frame);
+						m_heldItemDisplayFrameOffset = frame;
+						m_heldItemDisplay->SetSprite(m_heldItemLastSprite);
+
+						m_heldItemDisplay->SetPosition(m_position + (m_textureFlipped ? Vec2(6.75f, -0.5f) : Vec2(0, -0.5f)));
+					}else if (playerYVel < -1.5f && !m_onGround)
+					{
+						const int baseSpriteId = m_heldItemDisplay->GetSprite()->GetSpriteId() - m_heldItemDisplayFrameOffset;
+						const int frame = 2;
+						m_heldItemLastSprite = new Sprite(baseSpriteId + frame);
+						m_heldItemDisplayFrameOffset = frame;
+						m_heldItemDisplay->SetSprite(m_heldItemLastSprite);
+
+						m_heldItemDisplay->SetPosition(m_position + (m_textureFlipped ? Vec2(2.6f, 7.f) : Vec2(4.5f, 7.f)));
+					}
+					else if (m_physics->GetVelocity().X > 0.3 || m_physics->GetVelocity().X < -0.3)
+					{
+						int&& frame = m_animator->GetCurrentAnimation()->GetFrame();
+						int baseSpriteId = m_heldItemDisplay->GetSprite()->GetSpriteId() - m_heldItemDisplayFrameOffset;
+
+						//Determine what frame of item animation to show.
+						switch (frame)
+						{
+						case 0:
+							frame = 0;
+							break;
+						case 1:
+							frame = 1;
+							break;
+						case 2:
+							frame = 2;
+							break;
+						case 3:
+							frame = 1;
+							break;
+						case 4:
+							frame = 0;
+							break;
+						case 5:
+							frame = 3;
+							break;
+						case 6:
+							frame = 4;
+							break;
+						case 7:
+							frame = 3;
+							break;
+						}
+
+						m_heldItemLastSprite = new Sprite(baseSpriteId + frame);
+						m_heldItemDisplayFrameOffset = frame;
+						m_heldItemDisplay->SetSprite(m_heldItemLastSprite);
+
+						m_heldItemDisplay->SetPosition(m_position + (m_textureFlipped ? Vec2(6.75f, -0.5f) : Vec2(0, -0.5f)));
+					}
+					else {
+						if (m_heldItemDisplayFrameOffset != 0)
+						{
+							m_heldItemDisplay->SetSprite(new Sprite(m_heldItemDisplay->GetSprite()->GetSpriteId() - m_heldItemDisplayFrameOffset));
+							m_heldItemDisplayFrameOffset = 0;
+						}
+						m_heldItemDisplay->SetPosition(m_position + Vec2(3.5, 0.95f));
+					}
+
+					if (m_textureFlipped)
+					{
+						m_heldItemDisplay->GetSprite()->Render(cameraPosition, m_heldItemDisplay->GetPosition() + Vec2{ m_heldItemDisplay->GetScale().X - 7, 0 }, m_heldItemDisplay->GetScale() * Vec2{ -1, 1 }, 0.0F);
+					}
+					else {
+						m_heldItemDisplay->GetSprite()->Render(cameraPosition, m_heldItemDisplay->GetPosition(), m_heldItemDisplay->GetScale(), 0.0F);
+					}
 				}
-#endif
 			}
 
 #if _DEBUG
@@ -282,12 +368,30 @@ namespace  GAME_NAME
 				if (m_heldItemDisplay == nullptr)
 				{
 					m_heldItemDisplay = new GameObject(m_position, Vec2(0), Renderer::GetSprite(0));
-					Renderer::LoadActiveObject(m_heldItemDisplay, 2);
+					//Renderer::LoadActiveObject(m_heldItemDisplay, 2); NOT NEEDED SINCE THE HELD ITEM IS RENDERED THROUGH THE PLAYER RENDERER.
 				}
 
 				//Update item position, scale, and sprite.
 				m_heldItemDisplay->SetPosition(m_position + Vec2(2, 3));
 				m_heldItemDisplay->SetScale(Vec2(8));
+
+
+				//If the item has a custom display.
+				const int& customHeldTexture = Items::ITEM_DATA[item->GetType()].HeldTexture;
+
+				std::cout << "CHECKING TEXTURE " << customHeldTexture << "\n";
+
+				if (customHeldTexture != GLOBAL_SPRITE_BASE)
+				{
+					m_heldItemDisplay->SetScale({ 16, 16 });
+					//delete m_heldItemDisplay->GetSprite();
+
+					std::cout << "FOUND CUSTOM ITEM HOLD DISPLAY" << customHeldTexture << "\n";
+
+					m_heldItemDisplay->SetSprite(Renderer::GetSprite(customHeldTexture));
+					return;
+				}
+
 				m_heldItemDisplay->SetSprite(Items::ITEMTYPE_GetItemTypeTexture(item->GetType()));
 			}
 
@@ -550,14 +654,14 @@ namespace  GAME_NAME
 				m_animator->SetSpeedMult(1.f);
 				float player_y_vel = m_physics->GetVelocity().Y + m_physics->GetGravitationalVelocity();
 
-				if (player_y_vel > 1.f)
+				if (player_y_vel > 1.5f)
 				{
 					m_animator->SetCurrentAnimation(3); //Jumping Animation
 					m_begunMotion = true;
 					return;
 				}
 				
-				if (player_y_vel < -1.f)
+				if (player_y_vel < -1.5f)
 				{
 					m_animator->SetCurrentAnimation(2); //Falling Animation
 					m_begunMotion = true;

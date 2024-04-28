@@ -140,7 +140,7 @@ using namespace Particles;
 		if (InputManager::GetMouseButton(0))
 		{
 			auto heldItem = TestGame::ThePlayer->GetInventory()->GetHeldItem();
-			if (heldItem != nullptr && Items::ITEMTYPE_GetItemActions(heldItem->GetType()) & Items::TOOL_ACTION::CHOP)
+			if (heldItem != nullptr && Items::ITEMTYPE_GetItemData(heldItem->GetType()).Actions & Items::TOOL_ACTION::CHOP)
 			{
 				Chop();
 			}

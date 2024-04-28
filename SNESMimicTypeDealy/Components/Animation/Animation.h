@@ -62,6 +62,11 @@ namespace GAME_NAME
 					return m_speed;
 				}
 
+				inline int GetFrame()
+				{
+					return m_currentFrame;
+				}
+
 			private:
 				const float m_speed;	//The SPF of the animation.
 				const AnimData m_data;	//The sprites in the animation.

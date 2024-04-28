@@ -12,11 +12,57 @@ namespace GAME_NAME::Objects::Enemies
 		: public ActiveBoxCollisionGravityObject
 	{
 	public:
-		Enemy(Vec2 position, Vec2 scale, Rendering::Sprite* sprite)
-			: ActiveBoxCollisionGravityObject(position, scale, sprite), m_pathfind(position)
+		struct EnemyAttributes
 		{
-			m_physics->SetGravityStrength(1.5F);
-			m_physics->SetFrictionDrag(4.F);
+			float MovementSpeed = 5.0F;
+			float TerminalMovementSpeed = 20.F;
+			
+			struct TempAttributes
+			{
+				float Gravity = 1.5F;
+				float FrictionDrag = 4.F;
+			};
+
+			TempAttributes* InputAttributes;
+
+			EnemyAttributes() = default;
+
+			EnemyAttributes(const EnemyAttributes& enemyAttributes)
+				: MovementSpeed(enemyAttributes.MovementSpeed), TerminalMovementSpeed(enemyAttributes.TerminalMovementSpeed), InputAttributes(enemyAttributes.InputAttributes)
+			{}
+
+			EnemyAttributes(EnemyAttributes&& enemyAttributes) noexcept
+				: MovementSpeed(enemyAttributes.MovementSpeed), TerminalMovementSpeed(enemyAttributes.TerminalMovementSpeed), InputAttributes(enemyAttributes.InputAttributes)
+			{}
+
+			EnemyAttributes(float movementSpeed, float terminalMovementSpeed, TempAttributes* tempAttributes)
+				: MovementSpeed(movementSpeed), TerminalMovementSpeed(terminalMovementSpeed), InputAttributes(tempAttributes)
+			{}
+
+			TempAttributes GetInputAttributes()
+			{
+				if (InputAttributes == nullptr)
+				{
+					return TempAttributes();
+				}
+
+				TempAttributes attribs = *InputAttributes;
+				return attribs;
+				delete InputAttributes;
+			}
+
+			~EnemyAttributes()
+			{
+				delete InputAttributes;
+			}
+		};
+
+		Enemy(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, EnemyAttributes* attributes = new EnemyAttributes())
+			: ActiveBoxCollisionGravityObject(position, scale, sprite), m_pathfind(position), m_enemyAttributes(attributes)
+		{
+			EnemyAttributes::TempAttributes startAttributes = attributes->GetInputAttributes();
+			m_physics->SetGravityStrength(startAttributes.Gravity);
+			m_physics->SetFrictionDrag(startAttributes.FrictionDrag);
 		}
 
 		void Update(GLFWwindow* window) override;
@@ -31,6 +77,10 @@ namespace GAME_NAME::Objects::Enemies
 		{
 			this->m_pathfind = position;
 		}
+
+		~Enemy();
+
+		EnemyAttributes* m_enemyAttributes;
 	private:
 		Vec2 m_pathfind;
 	};

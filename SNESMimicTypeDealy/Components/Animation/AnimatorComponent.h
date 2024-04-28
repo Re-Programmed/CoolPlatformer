@@ -35,7 +35,12 @@ namespace GAME_NAME
 				inline void SetCurrentAnimation(int8_t animation)						//Sets the current animation.
 				{
 					m_currentAnimation = animation;
-				}			
+				}		
+
+				inline std::shared_ptr<Animation> GetCurrentAnimation()
+				{
+					return m_animations[m_currentAnimation];
+				}
 			private:
 				std::vector<std::shared_ptr<Animation>> m_animations;					//List of all possible animations this object can have.
 				int8_t m_currentAnimation = -1;											//Current animation to use.

@@ -228,7 +228,9 @@
     <ClInclude Include="!TestGame\Items\Inventories\InventoryContainerRenderer.h" />
     <ClInclude Include="!TestGame\Items\Inventory.h" />
     <ClInclude Include="!TestGame\Items\InventoryItem.h" />
-    <ClInclude Include="!TestGame\Items\ItemType.h" />
+    <ClInclude Include="!TestGame\Items\ItemType.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="!TestGame\Items\Types\Tool.h" />
     <ClInclude Include="!TestGame\Level\GlobalLevelData.h" />
     <ClInclude Include="!TestGame\Level\LevelInfoDisplay.h" />

@@ -71,6 +71,8 @@ namespace  GAME_NAME
 				void Render(const Vec2 cameraPosition);	
 
 #if _DEBUG
+				inline bool GetDebug() { return m_debug; }
+
 				void EnterDebug();
 				void ToggleFlight();
 #endif
@@ -152,6 +154,8 @@ namespace  GAME_NAME
 				int8_t m_frozen = 0;
 
 				GameObject* m_heldItemDisplay;				//Follows the player to display the current held item.
+				int m_heldItemDisplayFrameOffset = 0;		//How many sprite difference from the default held item sprite to its current animation frame.
+				Sprite* m_heldItemLastSprite;
 
 				ScreenInventory* const m_screenInventory;	//Player's three main inventory slots.
 

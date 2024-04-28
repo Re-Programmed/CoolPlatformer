@@ -15,8 +15,8 @@ namespace GAME_NAME
 	{
 		constexpr int chunkSize = 0x40;
 
-		constexpr int levelSizeX = 120;
-		constexpr int levelSizeY = 5;
+		constexpr int levelSizeX = DEFAULT_LEVEL_SIZE_X;
+		constexpr int levelSizeY = DEFAULT_LEVEL_SIZE_Y;
 		unsigned int Renderer::spriteCount = 0, Renderer::bgCount, Renderer::imageCount = 1;
 
 		int Renderer::lastFileOff = -1;
