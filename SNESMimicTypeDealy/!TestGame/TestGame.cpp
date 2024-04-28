@@ -30,6 +30,10 @@
 
 #include "../Objects/StateSaver.h"
 
+//TESTING:
+#include "./Objects/Environment/Buildings/Door.h"
+#include "./Objects/Environment/Buildings/FrontWall.h"
+
 namespace GAME_NAME
 {
 	using namespace MathUtils;
@@ -187,18 +191,26 @@ namespace GAME_NAME
 		Renderer::LoadActiveObject(lreTest);*/
 
 		//Create a sound and set it to loop.
-		Audio::AudioVoice testMusic = Audio::SoundManager::Play(1, Audio::SoundManager::MusicGroup);
-		Audio::SoundManager::GetAudioPlayer()->setLooping(testMusic, true);
+		//Audio::AudioVoice testMusic = Audio::SoundManager::Play(1, Audio::SoundManager::MusicGroup);
+		//Audio::SoundManager::GetAudioPlayer()->setLooping(testMusic, true);
 
 		//Pause the current background music.
-		Audio::SoundManager::GetAudioPlayer()->setPause(level.CurrentBGMusic, true);
+		//Audio::SoundManager::GetAudioPlayer()->setPause(level.CurrentBGMusic, true);
 
-		testAudioObject = new GameObject(level.PlayerStartPosition, { 32, 32 }, Rendering::Renderer::GetSprite(SpriteBase(54)));
-		Rendering::Renderer::LoadActiveObject(testAudioObject);
+		//testAudioObject = new GameObject(level.PlayerStartPosition, { 32, 32 }, Rendering::Renderer::GetSprite(SpriteBase(54)));
+		//Rendering::Renderer::LoadActiveObject(testAudioObject);
 
-		MusicSync::MusicSync::SetCurrentSong(80, 4);
 
-		MusicSync::MusicSync::Subscribe(testAudioUpdate);
+		//Environment::Buildings::Door* testDoor = new Environment::Buildings::Door({ 125, 21 }, { 3, 28 }, Renderer::GetSprite(61), Renderer::GetSprite(59));
+		//Rendering::Renderer::LoadActiveObject(testDoor);
+
+		//Environment::Buildings::FrontWall* frontWall = new Environment::Buildings::FrontWall({ 200, 21 }, { 32, 32 }, Renderer::GetSprite(58));
+		//Rendering::Renderer::LoadActiveObject(frontWall);
+
+		//MusicSync::MusicSync::SetCurrentSong(80, 4);
+
+		//MusicSync::MusicSync::Subscribe(testAudioUpdate);
+
 	}
 
 	void TestGame::TogglePauseState()

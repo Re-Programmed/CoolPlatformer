@@ -9,7 +9,7 @@
 #include "../Resources/AssetManager.h"
 
 #define COMPONENT_MAPPINGS_SIZE 1	//How many component mappings there are
-#define MAPPINGS_SIZE 13			//How many object mappings there are.
+#define MAPPINGS_SIZE 14			//How many object mappings there are.
 
 namespace GAME_NAME
 {

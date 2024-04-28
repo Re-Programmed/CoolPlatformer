@@ -1,5 +1,6 @@
 #include "Door.h"
 #include "../../../TestGame.h"
+#include "../../../../Utils/CollisionDetection.h"
 
 namespace GAME_NAME::Objects::Environment::Buildings
 {
@@ -7,7 +8,7 @@ namespace GAME_NAME::Objects::Environment::Buildings
 	{
 
 		//Check if player is near door -- door should open.
-		if (Vec2::Distance(TestGame::ThePlayer->GetPosition(), m_position) < m_doorOpenDistance)
+		if (CollisionDetection::BoxWithinBox(TestGame::ThePlayer->GetPosition(), TestGame::ThePlayer->GetScale(), (m_isOpen ? m_position : Vec2{ m_position.X - 13, m_position.Y }) - m_doorOpenDistance / 2, m_isOpen ? (m_scale + m_doorOpenDistance) : (Vec2{ m_scale.X + 13, m_scale.Y } + m_doorOpenDistance)))
 		{
 			//Open door.
 			open();
@@ -27,6 +28,11 @@ namespace GAME_NAME::Objects::Environment::Buildings
 	{
 		if (m_isOpen) { return; }
 		flipSprite();
+
+		//Resize door.
+		m_scale = { m_scale.X + 13, m_scale.Y };
+		m_position = { m_position.X - 13, m_position.Y };
+
 		m_isOpen = true;
 	}
 
@@ -34,6 +40,11 @@ namespace GAME_NAME::Objects::Environment::Buildings
 	{
 		if (!m_isOpen) { return; }
 		flipSprite();
+
+		//Resize door.
+		m_scale = { m_scale.X - 13, m_scale.Y };
+		m_position = { m_position.X + 13, m_position.Y };
+
 		m_isOpen = false;
 	}
 

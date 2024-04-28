@@ -24,7 +24,12 @@
 #include "../Components/Physics/Collision/Helpers/PixelPerfectColliderStaticObject.h"
 #include "../Objects/Particles/ParticleEmitter.h"
 
+#include "./Objects/Environment/Buildings/FrontWall.h"
+#include "./Objects/Environment/Buildings/Door.h"
+
 constexpr int8_t GenesisTileSize = 8;
+
+std::vector<std::shared_ptr<GAME_NAME::Objects::Environment::Buildings::BuildingZone>> BUILDING_createdBuildingZones;
 
 inline Vec2 STOIVEC(std::string x, std::string y)
 {
@@ -289,7 +294,61 @@ using namespace Enemies;
 				break;
 			}
 		}
-	}
+	},
+
+	/*
+		13: BuildingObject (map,type,positionX,positionY,scaleX,scaleY,layer,...)
+		Type:
+			0 - FrontWall (sprite,buildingZone_positionX,buildingZone_positionY,buildingZone_scaleX,buildingZone_scaleY)
+			1 - Door (closeSprite,openSprite,openDistance[float]=DEFAULT_DOOR_OPEN_DISTANCE,rotation[float]=0)
+	*/
+	[](std::vector<std::string> data, size_t n)
+	{
+using namespace Objects::Environment::Buildings;
+
+#if _DEBUG
+		DebugMapper("Loading Building Structure (Type: " + data[0] + ")");
+#endif
+
+		uint8_t buildingType = std::stoi(data[0]);
+
+		switch (buildingType)
+		{
+		//Front wall.
+		case 0:
+		{
+			const Vec2 bZonePos = STOIVEC(data[7], data[8]);
+			const Vec2 bZoneSca = STOIVEC(data[9], data[10]);
+
+			std::shared_ptr<BuildingZone> newBz(nullptr);
+
+			for (std::shared_ptr<BuildingZone> bz : BUILDING_createdBuildingZones)
+			{
+				if (Vec2::Distance(bz->Position, bZonePos) < 2.f)
+				{
+					newBz = bz;
+					break;
+				}
+			}
+
+			if (newBz == nullptr)
+			{
+				newBz = std::shared_ptr<BuildingZone>(new BuildingZone(bZonePos, bZoneSca));
+			}
+
+			FrontWall* frontWall = new FrontWall(STOIVEC(data[1], data[2]), STOIVEC(data[3], data[4]), Renderer::GetSprite(std::stoi(data[6])), newBz);
+			Renderer::LoadObject(frontWall, std::stoi(data[5]));
+			break;
+		}
+		case 1:
+		{
+			Door* door = new Door(STOIVEC(data[1], data[2]), STOIVEC(data[3], data[4]), Renderer::GetSprite(std::stoi(data[6])), Renderer::GetSprite(std::stoi(data[7])), (data.size() > 8 ? std::stof(data[8]) : DEFAULT_DOOR_OPEN_DISTANCE), (data.size() > 9) ? std::stof(data[9]) : 0.f);
+			Renderer::LoadObject(door, std::stoi(data[5]));
+			break;
+		}
+		}
+	
+	},
 };
 
 void GAME_NAME::Mappings::LoadObjectsWithDefaultMapping(const char* levelPath)
@@ -298,10 +357,15 @@ void GAME_NAME::Mappings::LoadObjectsWithDefaultMapping(const char* levelPath)
 	DebugMapper("!=== LOADING OBJECT DATA ===!");
 #endif
 	Resources::AssetManager::LoadObjectData(levelPath, m_mappings);
+
+	BUILDING_createdBuildingZones.clear();
 }
 
 GameObject* GAME_NAME::Mappings::LoadObjectWithDefaultMapping(std::string objectCode)
 {
 	Resources::AssetManager::loadObjectDataThread(objectCode, 0, m_mappings);
+
+	BUILDING_createdBuildingZones.clear();
+
 	return Renderer::GetLastLoadedObject();
 }

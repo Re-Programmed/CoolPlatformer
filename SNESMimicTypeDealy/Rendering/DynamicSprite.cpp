@@ -54,6 +54,14 @@ namespace GAME_NAME
 			m_vertices[3] = verts[3];
 		}
 
+		void DynamicSprite::UpdateTextureVerticies(const Vec2 texVerts[4])
+		{
+			m_textureCoords[0] = texVerts[0];
+			m_textureCoords[1] = texVerts[1];
+			m_textureCoords[2] = texVerts[2];
+			m_textureCoords[3] = texVerts[3];
+		}
+
 		void DynamicSprite::UpdateTextureColor(const Vec4 textureColor[4])
 		{
 			m_textureColor[0] = textureColor[0];

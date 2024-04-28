@@ -5,6 +5,8 @@
 
 namespace GAME_NAME::Objects::Environment::Buildings
 {
+	using namespace GAME_NAME::Components::Physics::Collision;
+
 	/// <summary>
 	/// A door to a building that can open and close if the player is near.
 	/// </summary>
@@ -22,13 +24,10 @@ namespace GAME_NAME::Objects::Environment::Buildings
 		/// <param name="doorOpenDistance">How close the player must be to open the door.</param>
 		/// <param name="rotation">Rotation.</param>
 		Door(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, Rendering::Sprite* openSprite, float doorOpenDistance = DEFAULT_DOOR_OPEN_DISTANCE, float rotation = 0.f)
-			: GameObject(position, scale, sprite, rotation), m_openSprite(openSprite), m_doorOpenDistance(doorOpenDistance),
-			m_boxCollider(
-				new StaticBoxCollider()
-			)
+			: GameObject(position, scale, sprite, rotation), m_openSprite(openSprite), m_doorOpenDistance(doorOpenDistance), m_boxCollider(new StaticBoxCollider())
 		{
 			m_boxCollider->Init(this);
-		}
+		};
 
 		Door() = default;
 		
@@ -43,7 +42,7 @@ namespace GAME_NAME::Objects::Environment::Buildings
 			delete m_boxCollider;
 			delete m_openSprite;
 			GameObject::~GameObject();
-		}
+		};
 	private:
 		/// <summary>
 		/// The doors collider, only updated when the door is shut.

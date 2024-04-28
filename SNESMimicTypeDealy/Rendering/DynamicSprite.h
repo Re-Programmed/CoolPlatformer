@@ -21,6 +21,8 @@ namespace GAME_NAME
 
 			void UpdateVertices(const Vec2 verts[4]);
 
+			void UpdateTextureVerticies(const Vec2 texVerts[4]);
+
 			void UpdateTextureColor(const Vec4 textureColor[4]);
 
 			void Render(const Vec2 cameraPosition, Vec2 position, Vec2 scale, float rotation = 0.f) override;
