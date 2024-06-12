@@ -10,9 +10,16 @@ namespace GAME_NAME
 			class CloudGenerator
 			{
 			public:
-				static void GenerateClouds(uint8_t skyBeginY);
-			private:
+				static void GenerateClouds();
 
+				static inline void SetData(uint8_t skyBegin, uint8_t cloudCount)
+				{
+					m_skyBeginY = skyBegin;
+					m_cloudCount = cloudCount;
+				}
+			private:
+				static uint8_t m_skyBeginY; 
+				static uint8_t m_cloudCount;
 			};
 		}
 	}

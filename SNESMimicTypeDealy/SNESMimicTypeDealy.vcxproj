@@ -134,6 +134,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="!TestGame\Cutscenes\CutsceneManager.cpp" />
+    <ClCompile Include="!TestGame\Cutscenes\InnerThoughtScene.cpp" />
     <ClCompile Include="!TestGame\InputDisplay\DisplayIconManager.cpp" />
     <ClCompile Include="!TestGame\ItemMapping.cpp" />
     <ClCompile Include="!TestGame\Items\FloorItem.cpp" />
@@ -222,6 +224,9 @@
     <ClCompile Include="Utils\Time\GameTime.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="!TestGame\Cutscenes\Cutscene.h" />
+    <ClInclude Include="!TestGame\Cutscenes\CutsceneManager.h" />
+    <ClInclude Include="!TestGame\Cutscenes\InnerThoughtScene.h" />
     <ClInclude Include="!TestGame\InputDisplay\DisplayIconManager.h" />
     <ClInclude Include="!TestGame\ItemMapping.h" />
     <ClInclude Include="!TestGame\Items\FloorItem.h" />

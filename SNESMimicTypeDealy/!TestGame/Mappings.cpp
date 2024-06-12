@@ -16,6 +16,9 @@
 #include "../!TestGame/Items/Inventories/InventoryContainer.h"
 #include "../!TestGame/Objects/Enemies/Types/LeftRightEnemy.h"
 
+#include "../!TestGame/Cutscenes/InnerThoughtScene.h"
+#include "../!TestGame/Cutscenes/CutsceneManager.h"
+
 #if _DEBUG
 #include "../Debug/DebugLog.h"
 #define DebugMapper(x) {std::string s = "[MAPPER] ";DEBUG::DebugLog::Log(s + x, true, ";35");}
@@ -132,6 +135,7 @@ std::function<void (std::vector<std::string>, size_t line)> m_mappings[MAPPINGS_
 		Renderer::LoadActiveObject(new GAME_NAME::Objects::Environment::Water(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3])), 1);
 	},
 
+	//5
 	[](std::vector<std::string> data, size_t d)
 	{
 
@@ -317,6 +321,7 @@ using namespace Objects::Environment::Buildings;
 		//Front wall.
 		case 0:
 		{
+			
 			const Vec2 bZonePos = STOIVEC(data[7], data[8]);
 			const Vec2 bZoneSca = STOIVEC(data[9], data[10]);
 
@@ -349,6 +354,34 @@ using namespace Objects::Environment::Buildings;
 		}
 	
 	},
+
+	/*
+		Cutscene Trigger (map,type,positionX,positionY,radius*10,...)
+		Type:
+			0 - InnerThoughtCutscene (text)
+	*/
+
+	[](std::vector<std::string> data, size_t n)
+	{
+using namespace Cutscenes;
+
+#if _DEBUG
+		DebugMapper("Loading Cutscene (Type: " + data[0] + ")");
+#endif
+
+		uint8_t cutsceneType = std::stoi(data[0]);
+
+		switch (cutsceneType)
+		{
+		//Inner thought cutscene.
+		case 0:
+			std::string textString = data[4];
+			std::replace(textString.begin(), textString.end(), '-', ' ');
+			std::shared_ptr<InnerThoughtScene> itc(new InnerThoughtScene(STOIVEC(data[1], data[2]), (float)std::stoi(data[3])/10.f, textString));
+			CutsceneManager::RegisterCutscene(itc);
+			break;
+		}
+	}
 };
 
 void GAME_NAME::Mappings::LoadObjectsWithDefaultMapping(const char* levelPath)

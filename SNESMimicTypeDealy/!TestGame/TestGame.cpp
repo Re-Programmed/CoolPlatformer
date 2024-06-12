@@ -18,6 +18,8 @@
 #include "./InputDisplay/DisplayIconManager.h"
 #include "../Objects/Particles/ParticleEmitter.h"
 
+#include "./Cutscenes/CutsceneManager.h"
+
 #include "../Objects/GUI/Text/TextRenderer.h"
 
 #if _DEBUG
@@ -72,6 +74,9 @@ namespace GAME_NAME
 
 		InputManager::GetJoystick();
 
+		//Update all cutscenes detection.
+		Cutscenes::CutsceneManager::UpdateCutsceneTriggers();
+
 		if (InputManager::GetKeyUpDown(DEFAULT_PAUSE_GAME) & InputManager::KEY_STATE_PRESSED)
 		{
 			TogglePauseState();
@@ -105,6 +110,7 @@ namespace GAME_NAME
 		Mappings::LoadObjectsWithDefaultMapping("/town_1");
 		RenderFront = true;
 
+		//SAVE DATA TEST.
 		std::string data_0("null");
 		SaveManager::GetSaveString("data_0", data_0);
 
@@ -135,7 +141,15 @@ namespace GAME_NAME
 
 		ThePlayer = std::make_shared<Objects::Player::Player>(level.PlayerStartPosition);
 		Rendering::Renderer::LoadActiveObject(ThePlayer.get(), 2); //Spawn in the player on Active Layer 2.
-		std::srand(ThePlayer->GetPosition().X + ThePlayer->GetPosition().Y + static_cast<int>(glfwGetTime()));
+		
+		auto epochTime = std::chrono::time_point<std::chrono::system_clock>{}.time_since_epoch();
+
+		//Set the current random seed to the time since epoch in seconds.
+		auto tp = std::chrono::system_clock::now();
+		unsigned int sRand = tp.time_since_epoch().count();
+
+		std::cout << "====================== SRAND: " << sRand << std::endl;
+		std::srand(sRand);
 
 		MusicSync::MusicSync::SetCurrentSong(134, 2);
 
@@ -155,6 +169,9 @@ namespace GAME_NAME
 		//Clear the current global level data.
 		delete m_globalLevelData;
 		m_globalLevelData = new GlobalLevelData(level.Path);
+
+		//Generate clouds if there are any to be generated.
+		Environment::CloudGenerator::GenerateClouds();
 
 	/*	
 	----------------------------PARTICLE TEST----------------------------

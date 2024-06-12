@@ -3,6 +3,7 @@
 
 #if _DEBUG
 #include "../../../Debug/DebugLog.h"
+#include "../../../!TestGame/Objects/Environment/CloudGenerator.h"
 #endif
 
 
@@ -69,6 +70,29 @@ namespace GAME_NAME
 						}
 
 						level.BackgroundColor = color;
+					},
+					[](std::string cloudData, Game::Level& level) {
+						std::stringstream read(cloudData);
+						std::string component;
+						uint8_t i = 0;
+
+						int cloudCount = 0, skyStart = 0;
+
+						while (std::getline(read, component, ','))
+						{
+							switch (i)
+							{
+							case 0:
+								cloudCount = std::stoi(component);
+								break;
+							case 1:
+								skyStart = std::stoi(component);
+								break;
+							}
+							i++;
+						}
+
+						Objects::Environment::CloudGenerator::SetData(skyStart, cloudCount);
 					}
 			};
 

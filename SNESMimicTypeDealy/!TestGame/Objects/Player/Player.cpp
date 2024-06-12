@@ -233,6 +233,8 @@ namespace  GAME_NAME
 
 				if (m_heldItemDisplay != nullptr && m_heldItemDisplay->GetScale().X > 8)
 				{
+					std::cout << "RENDERING HELD ITEN!\n";
+
 					const float playerYVel = m_physics->GetVelocity().Y + m_physics->GetGravitationalVelocity();
 					if (playerYVel > 1.5f && !m_onGround)
 					{

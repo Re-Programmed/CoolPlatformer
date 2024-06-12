@@ -10,7 +10,7 @@ namespace GAME_NAME
 	{
 		namespace Levels
 		{
-			constexpr const int LevelDataSize = 7;
+			constexpr const int LevelDataSize = 8;
 
 			//Parses the data from a level data file. ALWAYS DELETE DATA PARSER AFTER USE.
 			class LevelDataParser
