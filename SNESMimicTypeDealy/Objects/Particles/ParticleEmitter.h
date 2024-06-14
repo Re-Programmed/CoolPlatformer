@@ -16,6 +16,8 @@ namespace GAME_NAME::Objects::Particles
 		Vec2 Velocity, ConstantVelocity;
 		float RotationalVelocity;
 
+		float Gravity;
+
 		float Opacity, TargetOpacity;
 
 		Sprite* const PSprite;
@@ -23,13 +25,13 @@ namespace GAME_NAME::Objects::Particles
 		float Lifetime;
 
 		Particle(Vec2 position, Vec2 scale, float rotation, Vec2 velocity, float rotationalVelocity, float opacity, Sprite* const sprite, float InitialLifetime = 0.f) : Position(position), Scale(scale), Rotation(rotation), Velocity(velocity),
-			RotationalVelocity(rotationalVelocity), Opacity(opacity), PSprite(sprite), Lifetime(InitialLifetime), ConstantVelocity(0), TargetOpacity(opacity), TargetScale(scale) {};
+			RotationalVelocity(rotationalVelocity), Opacity(opacity), PSprite(sprite), Lifetime(InitialLifetime), ConstantVelocity(0), TargetOpacity(opacity), TargetScale(scale), Gravity(0.f) {};
 
 		Particle(GameObject* gameObject) : Position(gameObject->GetPosition()), Scale(gameObject->GetScale()), Rotation(gameObject->GetRotation()), Velocity(Vec2::Zero), RotationalVelocity(0.f), Opacity(1.f), PSprite(gameObject->GetSprite()),
-			Lifetime(0.f), ConstantVelocity(0), TargetOpacity(1.f), TargetScale(Scale) {};
+			Lifetime(0.f), ConstantVelocity(0), TargetOpacity(1.f), TargetScale(Scale), Gravity(0.f) {};
 
 		Particle(GameObject&& gameObject) : Position(gameObject.GetPosition()), Scale(gameObject.GetScale()), Rotation(gameObject.GetRotation()), Velocity(Vec2::Zero), RotationalVelocity(0.f), Opacity(1.f), PSprite(gameObject.GetSprite()),
-			Lifetime(0.f), ConstantVelocity(0), TargetOpacity(1.f), TargetScale(Scale)
+			Lifetime(0.f), ConstantVelocity(0), TargetOpacity(1.f), TargetScale(Scale), Gravity(0.f)
 		{	
 		};
 
@@ -47,21 +49,29 @@ namespace GAME_NAME::Objects::Particles
 	public:
 		ParticleEmitter(Vec2 position, float maxParticleLifetime = 5.f);
 
-		void Render(Vec2 cameraPosition) override;
+		void Render(const Vec2& cameraPosition) override;
 
-		void SpawnParticle();
+		void SpawnParticle(Vec2 velocity = { 0, 0 }, float gravity = 0.f, float rotation = 0.f);
 
-		inline void SpawnParticles(uint8_t numParticles)
+		inline void SpawnParticles(uint8_t numParticles, Vec2 maxVelocity = { 0, 0 }, float gravity = 0.f, float rotation = 0.f)
 		{
+			std::srand(m_position.X * m_position.Y);
+
 			for (uint8_t i = 0; i < numParticles; i++)
 			{
-				this->SpawnParticle();
+				Vec2 velocity = { std::rand() * maxVelocity.X * 2 / RAND_MAX - maxVelocity.X, std::rand() * maxVelocity.Y / RAND_MAX };
+				this->SpawnParticle(velocity, gravity, rotation);
 			}
 		}
 
 		inline void RegisterParticle(Particle p)
 		{
 			m_particleCopy.push_back(p);
+		}
+
+		inline const size_t GetParticleCount()
+		{
+			return m_particleCopy.size();
 		}
 
 		void Update(GLFWwindow* window) override;

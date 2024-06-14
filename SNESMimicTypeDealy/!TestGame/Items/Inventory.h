@@ -28,6 +28,13 @@ namespace GAME_NAME::Items
 		/// <returns>The slot the item was added to. (-1 if the inventory is full)</returns>
 		int AddItem(InventoryItem* item);
 
+		/// <summary>
+		/// Sets the item at the given slot to the given item. If item is nullptr, removes the item from the given slot.
+		/// </summary>
+		/// <param name="slot">The slot to set the item in.</param>
+		/// <param name="item">The item to set (or nullptr).</param>
+		bool SetItem(uint8_t slot, InventoryItem* item);
+
 		inline uint8_t GetSize()
 		{
 			return m_size;

@@ -18,7 +18,7 @@ namespace GAME_NAME
 
 				}
 
-				void Render(const Vec2 cameraPosition) override
+				void Render(const Vec2& cameraPosition) override
 				{
 					m_sprite->Render(((Vec2)cameraPosition)/m_pAmount, m_position, m_scale, m_rotation);
 				}

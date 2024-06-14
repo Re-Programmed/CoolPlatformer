@@ -13,6 +13,8 @@
 #include "../../../Rendering/DynamicSprite.h"
 #include "../../../Objects/GUI/Menus/GUIMenu.h"
 
+#include "../../../Objects/Instantiate/LevelObjectHandler.h"
+
 #include "../../TestGame.h"
 
 #include "../../Items/FloorItem.h"
@@ -41,11 +43,13 @@ namespace  GAME_NAME
 				m_healthProgressBar(new ProgressBar(
 					Vec2(10, 7), Vec2(24, 8), Renderer::GetSprite(SpriteBase(42))->GetSpriteId()
 				)),
-				MiscStateGroup("pl"), m_saveState(new PlayerSaveState(this))
+				MiscStateGroup("pl"), m_saveState(new PlayerSaveState(this)),
+				m_particleEmitter(new Particles::ParticleEmitter(position))
 			{
 #if _DEBUG
 				PlayerLogger("Initilized Player");
 #endif
+				m_particleEmitter->SetScale(m_scale);
 
 				//INIT WATER MUSIC
 				Audio::SoundManager::WaterMusic = Audio::SoundManager::Play(Audio::UnderwaterMusicID, Audio::SoundManager::BGMusic, -1.0F, 0.0F, true);
@@ -142,7 +146,6 @@ namespace  GAME_NAME
 						m_heldItemDisplay->SetPosition(m_position + Vec2(2, 3 + (add)));
 					}
 
-					std::cout << m_heldItemDisplay->GetPosition().ToString() << "\n";
 				}
 
 				//Calculate time spent in air.
@@ -197,7 +200,7 @@ namespace  GAME_NAME
 			}
 
 
-			void Player::Render(const Vec2 cameraPosition)
+			void Player::Render(const Vec2& cameraPosition)
 			{
 #if _DEBUG
 				if (m_debug)
@@ -233,8 +236,6 @@ namespace  GAME_NAME
 
 				if (m_heldItemDisplay != nullptr && m_heldItemDisplay->GetScale().X > 8)
 				{
-					std::cout << "RENDERING HELD ITEN!\n";
-
 					const float playerYVel = m_physics->GetVelocity().Y + m_physics->GetGravitationalVelocity();
 					if (playerYVel > 1.5f && !m_onGround)
 					{
@@ -351,6 +352,7 @@ namespace  GAME_NAME
 
 			void Player::Damage(float damage)
 			{
+				CreateBloodParticle((int)damage + 10);
 				m_stats.Health -= damage;
 				m_healthProgressBar->SetPercentage(m_stats.Health);
 
@@ -383,8 +385,6 @@ namespace  GAME_NAME
 				//If the item has a custom display.
 				const int& customHeldTexture = Items::ITEM_DATA[item->GetType()].HeldTexture;
 
-				std::cout << "CHECKING TEXTURE " << customHeldTexture << "\n";
-
 				if (customHeldTexture != GLOBAL_SPRITE_BASE)
 				{
 					m_heldItemDisplay->SetScale({ 16, 16 });
@@ -400,6 +400,7 @@ namespace  GAME_NAME
 			}
 
 #define COLLISION_VEL_STOP_DAMPING 0.1f
+
 			void Player::onCollision(Vec2 push)
 			{
 				if (m_swimming) { return; }
@@ -473,22 +474,43 @@ namespace  GAME_NAME
 
 			bool Player::dropHeldItem()
 			{
-				//Get the held item. REPLACE "0" WITH CURRENT ITEM.
-				Items::Inventory::ReturnItem ri = m_screenInventory->GetItem(0);
+				Items::InventoryItem* item = m_screenInventory->GetHeldItem();
 				
-				if (ri.ri_IsNull) { return false; }
+				if (item == nullptr) { return false; }
 
-				Items::InventoryItem* item = ri.ri_Item;
-
+				//FIX, DROPPING WRONG ITEM FOR SOME REASON.
 				//Create the object for the item.
 				Items::FloorItem* createdItem = new Items::FloorItem(m_position + (m_scale / 2), item->GetType(), 3.5F);
+				createdItem->GetPhysics()->AddVelocity(m_textureFlipped ? Vec2{ 1.f, 0.3f } : Vec2{ -1.f, 0.3f });
+				createdItem->GetPhysics()->AddRotationalVelocity(std::rand() * 30 / RAND_MAX);
 				Renderer::InstantiateObject(Renderer::InstantiateGameObject(createdItem, true, 1, false));
 
+				m_screenInventory->SetItem(m_screenInventory->GetSelectedSlot(), nullptr);
 				delete item;
+
 
 				return true;
 			}
 
+			void Player::CreateBloodParticle()
+			{
+				if (m_particleEmitter->GetParticleCount() == 0)
+				{
+					//Register blood particles
+
+					auto bParticles = Instantiate::LevelObjectHandler::GetLevelObjects("blood");
+
+					for (auto particleObj : bParticles)
+					{
+						m_particleEmitter->RegisterParticle(Particles::Particle(particleObj));
+					}
+
+					Renderer::InstantiateObject(Renderer::InstantiateGameObject(m_particleEmitter, true, 2, true));
+				}
+
+				m_particleEmitter->SetPosition(m_position);
+				m_particleEmitter->SpawnParticles(100, { 0.5f, 0.5f }, 0.04f);
+			}
 
 
 			void Player::readKeys()
@@ -510,6 +532,12 @@ namespace  GAME_NAME
 					m_debugKey = false;
 				}
 #endif
+				//If the player is pressing the drop item key, drop the item they are holding.
+				if (InputManager::GetKeyUpDown(PLAYER_DROP_HELD_ITEM) & InputManager::KEY_STATE::KEY_STATE_PRESSED)
+				{
+					dropHeldItem();
+				}
+
 				bool playerIsSkidding = false;
 
 				//int joyAxesCount;		JOYSTICK INPUT
@@ -690,6 +718,7 @@ namespace  GAME_NAME
 					return;
 				}
 			}
+
 		}
 	}
 }

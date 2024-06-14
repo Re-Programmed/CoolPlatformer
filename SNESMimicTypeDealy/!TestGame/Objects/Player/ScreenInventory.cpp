@@ -12,15 +12,13 @@ namespace GAME_NAME
 {
 
 	ScreenInventory::ScreenInventory()
-		: Inventory("Screen Inventory", 3), MiscStateGroup("si")
+		: Inventory("Screen Inventory", 3), MiscStateGroup("si"), m_itemSprites{ nullptr, nullptr, nullptr }
 	{
 		m_slots[0] = new GUI::StaticGUIElement(Vec2(4, 20), Vec2(16, 16), Renderer::GetSprite(INVENTORY_SELECTED_SLOT_SPRITE)->GetSpriteId());
 		m_slots[1] = new GUI::StaticGUIElement(Vec2(24, 20), Vec2(16, 16), Renderer::GetSprite(INVENTORY_UNSELECTED_SLOT_SPRITE)->GetSpriteId());
 		m_slots[2] = new GUI::StaticGUIElement(Vec2(44, 20), Vec2(16, 16), Renderer::GetSprite(INVENTORY_UNSELECTED_SLOT_SPRITE)->GetSpriteId());
 
-		Renderer::LoadGUIElement(m_slots[0]);
-		Renderer::LoadGUIElement(m_slots[1]);
-		Renderer::LoadGUIElement(m_slots[2]);
+		ShowPlayerSlots();
 
 		std::shared_ptr<std::vector<std::string>> data = getStates();
 		
@@ -29,10 +27,12 @@ namespace GAME_NAME
 			//Metadata is stored as first data string.
 			m_saveMetadata.Decode(data->at(0));
 			selectSlot(m_saveMetadata.SelectedSlot, false);
+			//Remove metadata for inventory, all other data saved represents items.
 			data->erase(data->begin());
 
 			using namespace Items;
 
+			//Iterate over all save states, loading the corresponding item.
 			for (int i = 0; i < data->size(); i++)
 			{
 				//First char indicates the type of the item, and what class should be used to represent it.
@@ -89,16 +89,49 @@ namespace GAME_NAME
 			return -1;
 		}
 
-		Sprite* sprite = Items::ITEMTYPE_GetItemTypeTexture(item->GetType());
-		GUI::StaticGUIElement* itemDisplay = new GUI::StaticGUIElement(m_slots[s]->GetPosition() + (INVENTORY_SLOT_PADDING/2.f), m_slots[s]->GetScale() - Vec2(INVENTORY_SLOT_PADDING), sprite->GetSpriteId());
-		delete sprite;
-		Renderer::LoadGUIElement(itemDisplay, 1);
+		createItemSpriteDisplay(s, *item);
 
 		if(!ignoreSave) { updateSave(); }
 		
 		return s;
 	}
 
+	bool ScreenInventory::SetItem(uint8_t slot, Items::InventoryItem* item)
+	{
+		//Attempt to call base function, returning if failure occurs.
+		if (!Inventory::SetItem(slot, item)) { return false; }
+
+		//The item was removed from the inventory, clear the graphic.
+		if (item == nullptr && m_itemSprites[slot] != nullptr)
+		{
+			Renderer::UnloadGUIElement(m_itemSprites[slot], 1);
+			m_itemSprites[slot] = nullptr;
+		}
+		else if(item != nullptr)
+		{
+			//Add the item display.
+			createItemSpriteDisplay(slot, *item);
+		}
+
+		//Update save metadata.
+		updateSave();
+
+		return true;
+	}
+
+	void ScreenInventory::HidePlayerSlots()
+	{
+		Renderer::UnloadGUIElement(m_slots[0]);
+		Renderer::UnloadGUIElement(m_slots[1]);
+		Renderer::UnloadGUIElement(m_slots[2]);
+	}
+
+	void ScreenInventory::ShowPlayerSlots()
+	{
+		Renderer::LoadGUIElement(m_slots[0]);
+		Renderer::LoadGUIElement(m_slots[1]);
+		Renderer::LoadGUIElement(m_slots[2]);
+	}
 
 	void ScreenInventory::selectSlot(InventorySlot slot, bool updatePlayerDisplay)
 	{
@@ -143,5 +176,15 @@ namespace GAME_NAME
 		{
 			assignState(item);
 		}
+	}
+
+	void ScreenInventory::createItemSpriteDisplay(uint8_t slot, Items::InventoryItem& item)
+	{
+		Sprite* sprite = Items::ITEMTYPE_GetItemTypeTexture(item.GetType());
+		GUI::StaticGUIElement* itemDisplay = new GUI::StaticGUIElement(m_slots[slot]->GetPosition() + (INVENTORY_SLOT_PADDING / 2.f), m_slots[slot]->GetScale() - Vec2(INVENTORY_SLOT_PADDING), sprite->GetSpriteId());
+		delete sprite;
+		Renderer::LoadGUIElement(itemDisplay, 1);
+
+		m_itemSprites[slot] = itemDisplay;
 	}
 }

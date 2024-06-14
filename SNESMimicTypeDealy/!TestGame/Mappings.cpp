@@ -262,8 +262,8 @@ std::function<void (std::vector<std::string>, size_t line)> m_mappings[MAPPINGS_
 			Items::InventoryItem* ii = ItemMapping::DeSerialize(data[i]);
 			container->AddItem(ii);
 		}
-
-		Renderer::LoadActiveObject(container, std::stoi(data[7]));
+		
+		Renderer::LoadObject(container, std::stoi(data[7]));
 	},
 
 	/*

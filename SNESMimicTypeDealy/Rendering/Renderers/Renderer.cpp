@@ -404,8 +404,7 @@ namespace GAME_NAME
 						GameObject* obj = m_activeGameObjects[i][d];
 						if (obj == nullptr)
 						{
-							m_activeGameObjects[i].erase(m_activeGameObjects[i].begin() + d);
-							d--;
+							m_activeGameObjects[i].erase(m_activeGameObjects[i].begin() + (d--));
 							continue;
 							
 						}
@@ -420,7 +419,6 @@ namespace GAME_NAME
 							renderBuffer.push_back(obj);
 						}
 
-						d++;
 					}
 				}
 

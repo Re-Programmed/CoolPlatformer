@@ -51,6 +51,9 @@ using namespace std;
 			{
 				CloseGUI();
 			}
+			
+			//If the inventory is open, update it to detect clicking on slots.
+			InventoryContainerRenderer::UpdateCurrentInventoryContainer();
 		}
 
 		Interactable::Update(window);

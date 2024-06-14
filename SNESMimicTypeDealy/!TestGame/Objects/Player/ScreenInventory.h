@@ -17,15 +17,32 @@ namespace GAME_NAME
 
 		int AddItem(Items::InventoryItem* item, bool ignoreSave = false);
 
+		bool SetItem(uint8_t slot, Items::InventoryItem* item);
+
 		inline Items::InventoryItem* const GetHeldItem()
 		{
-			if (m_items.size() <= m_saveMetadata.SelectedSlot)
+			uint8_t& slot = m_saveMetadata.SelectedSlot;
+			if (m_items.size() <= slot)
 			{
 				return nullptr;
 			}
 
-			return m_items[m_saveMetadata.SelectedSlot - 1];
+			return m_items[slot];
 		}
+
+		inline InventorySlot GetSelectedSlot()
+		{
+			return m_saveMetadata.SelectedSlot;
+		}
+
+		/// <summary>
+		/// Hides the main display in the lower left for the players items.
+		/// </summary>
+		void HidePlayerSlots();
+		/// <summary>
+		/// Shows the main display in the lower left for the players items.
+		/// </summary>
+		void ShowPlayerSlots();
 	private:
 		///Used to store the save data for the ScreenInventory such as the currently selected item.
 		struct ScreenInventoryMetadata
@@ -46,9 +63,18 @@ namespace GAME_NAME
 		ScreenInventoryMetadata m_saveMetadata;
 
 		GUI::StaticGUIElement* m_slots[3];
+		/// <summary>
+		/// Contains the sprite currently rendered for each item in its corresponding slot, nullptr for no item.
+		/// </summary>
+		GUI::StaticGUIElement* m_itemSprites[3];
 
 		void selectSlot(InventorySlot slot, bool updatePlayerDisplay = true);
 
 		void updateSave();
+		
+		/// <summary>
+		/// Instantiates the item display for the given slot and item.
+		/// </summary>
+		void createItemSpriteDisplay(uint8_t slot, Items::InventoryItem& item);
 	};
 }

@@ -53,7 +53,7 @@ namespace GAME_NAME
 
 			~GameObject();
 
-			virtual void Render(const Vec2 cameraPosition);
+			virtual void Render(const Vec2& cameraPosition);
 
 			virtual void Update(GLFWwindow* window)
 			{

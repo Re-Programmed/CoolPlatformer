@@ -19,7 +19,7 @@ namespace GAME_NAME::Objects::Enemies
 	}
 
 #if _DEBUG
-	void LeftRightEnemy::Render(const Vec2 cameraPosition)
+	void LeftRightEnemy::Render(const Vec2& cameraPosition)
 	{
 		if (TestGame::ThePlayer->GetDebug())
 		{

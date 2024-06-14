@@ -30,6 +30,14 @@ namespace GAME_NAME
 
 			void Update(GLFWwindow* window) override; 
 
+			/// <summary>
+			/// Returns the physics object of this floor item. Useful for adding velocity to items that spawn in.
+			/// </summary>
+			/// <returns></returns>
+			inline Components::Physics::GravityComponent* const GetPhysics()
+			{
+				return m_physics;
+			}
 		protected:
 			void pickup();
 

@@ -9,9 +9,9 @@
 
 ///How many inputs to check for
 #if _DEBUG
-#define KEY_ARRAY_SIZE 19
+#define KEY_ARRAY_SIZE 20
 #else
-#define KEY_ARRAY_SIZE 11
+#define KEY_ARRAY_SIZE 12
 #endif
 
 const std::string KeybindNames[KEY_ARRAY_SIZE] {
@@ -25,6 +25,7 @@ const std::string KeybindNames[KEY_ARRAY_SIZE] {
 	"PLAYER_SCREEN_INVENTORY_SLOT_1",
 	"PLAYER_SCREEN_INVENTORY_SLOT_2",
 	"PLAYER_SCREEN_INVENTORY_SLOT_3",
+	"PLAYER_DROP_HELD_ITEM",
 	"DEFAULT_PAUSE_GAME",
 #if _DEBUG
 	"PLAYER_DEBUG",
@@ -54,6 +55,7 @@ namespace GAME_NAME
 		PLAYER_SCREEN_INVENTORY_SLOT_1, //Player Select Slot 1 [1]
 		PLAYER_SCREEN_INVENTORY_SLOT_2, //Player Select Slot 1 [2]
 		PLAYER_SCREEN_INVENTORY_SLOT_3, //Player Select Slot 1 [3]
+		PLAYER_DROP_HELD_ITEM,		//Player Drop Held Item [Q]
 
 		DEFAULT_PAUSE_GAME,			//Pause Game {DEFAULT} [ESC]
 

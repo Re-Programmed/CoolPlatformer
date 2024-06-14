@@ -33,7 +33,7 @@ namespace GAME_NAME::Objects::Enemies
 
 #if _DEBUG
 		//Debug render to show endpoints when the player is in debug mode.
-		void Render(const Vec2 cameraPosition) override;
+		void Render(const Vec2& cameraPosition) override;
 #endif
 
 		void Update(GLFWwindow* window) override;

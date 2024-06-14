@@ -26,7 +26,7 @@ namespace GAME_NAME::Objects::Environment::Buildings
 		/// <param name="baseOpacity">The opacity of the wall when it should be displayed.</param>
 		FrontWall(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, std::shared_ptr<BuildingZone> buildingZone, float baseOpacity = 1.f);
 
-		void Render(const Vec2 cameraPosition) override;
+		void Render(const Vec2& cameraPosition) override;
 
 		void Update(GLFWwindow* window) override;
 

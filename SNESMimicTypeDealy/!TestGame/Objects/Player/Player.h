@@ -5,6 +5,7 @@
 #include "../../../Components/Animation/AnimatorComponent.h"
 #include "../../../Audio/SoundManager.h"
 #include "../../../Components/ChildGameObject.h"
+#include "../../../Objects/Particles/ParticleEmitter.h"
 #include "../../../Objects/GUI/Progress/ProgressBar.h"
 #include "ScreenInventory.h"
 
@@ -68,7 +69,7 @@ namespace  GAME_NAME
 
 				void SetSwimming(bool swimming);		//Enables low gravity and swimming mode. (Sets m_swimming to true)
 
-				void Render(const Vec2 cameraPosition);	
+				void Render(const Vec2& cameraPosition) override;	
 
 #if _DEBUG
 				inline bool GetDebug() { return m_debug; }
@@ -78,6 +79,11 @@ namespace  GAME_NAME
 #endif
 				void Damage(float damage);
 				void Kill();
+
+				/// <summary>
+				/// Spawns random blood particles around the player. (can be used to imitate damage, is also called when Damage() is called)
+				/// </summary>
+				void CreateBloodParticle();
 
 				void SetHeldItem(Items::InventoryItem* item);
 				inline void RemoveHeldItem()
@@ -101,6 +107,8 @@ namespace  GAME_NAME
 				{
 					m_frozen += frozen ? 1 : -1;
 				}
+
+
 
 			protected:
 				void onCollision (Vec2 push) override;	//Called when a collision occurs.
@@ -173,6 +181,8 @@ namespace  GAME_NAME
 				} m_stats;
 
 				ProgressBar* m_healthProgressBar;		//Progress bar for displaying health.
+
+				Particles::ParticleEmitter* const m_particleEmitter;
 
 				bool m_onGround = false;				//If the player is on the ground.
 				bool m_foundCollisionInTick = false;	//Used for checking when the player leaves the ground.

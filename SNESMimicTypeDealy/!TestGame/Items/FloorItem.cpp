@@ -31,7 +31,7 @@ namespace GAME_NAME
 		{
 			m_physics->SetGravityStrength(m_physics->GetGravityStrength() * 7);
 		}
-
+		
 		void FloorItem::Update(GLFWwindow* window)
 		{
 			//Check if the item has been picked up.

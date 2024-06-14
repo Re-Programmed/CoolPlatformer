@@ -13,8 +13,9 @@ namespace GAME_NAME::Input
 	{
 		if (m_activeDisplays[keyDisplay] == nullptr)
 		{
+			std::cout << "SHOWING INPUT DISPLAY\n";
 			m_activeDisplays[keyDisplay] = new GameObject(*m_keyDisplayObjects[0]);
-			Renderer::InstantiateObject(Renderer::InstantiateGameObject(m_activeDisplays[keyDisplay], true, 1, true));
+			Renderer::InstantiateObject(Renderer::InstantiateGameObject(m_activeDisplays[keyDisplay], true, 2, true));
 		}
 
 		m_activeDisplays[keyDisplay]->SetSprite(Renderer::GetSprite(m_keyDisplayBaseTextures[keyDisplay] + progress));

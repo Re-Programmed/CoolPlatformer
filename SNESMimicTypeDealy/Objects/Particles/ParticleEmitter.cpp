@@ -11,7 +11,7 @@ namespace GAME_NAME::Objects::Particles
 		
 	}
 
-	void ParticleEmitter::Render(Vec2 cameraPosition)
+	void ParticleEmitter::Render(const Vec2& cameraPosition)
 	{
 		//Render Particles
 
@@ -43,13 +43,14 @@ namespace GAME_NAME::Objects::Particles
 			m_spawned[i].Scale.Y = std::lerp(m_spawned[i].Scale.Y, m_spawned[i].TargetScale.Y, 1.f / (m_maxParticleLifetime * 60.f));
 
 			//Add drag.
-			if (m_spawned[i].Velocity.X >= 0.1f) { m_spawned[i].Velocity.X -= 0.1f; } else
-			if (m_spawned[i].Velocity.X <= -0.1f) { m_spawned[i].Velocity.X += 0.1f; } else
+			if (m_spawned[i].Velocity.X >= 0.1f) { m_spawned[i].Velocity.X -= (float)std::rand() / (RAND_MAX * 100.f); } else
+			if (m_spawned[i].Velocity.X <= -0.1f) { m_spawned[i].Velocity.X += (float)std::rand() / (RAND_MAX * 100.f); } else
 			{ m_spawned[i].Velocity.X = 0.f; }
 
-			if (m_spawned[i].Velocity.Y >= 0.1f) { m_spawned[i].Velocity.Y -= 0.1f; } else
-			if (m_spawned[i].Velocity.Y <= -0.1f) { m_spawned[i].Velocity.Y += 0.1f; } else 
-			{ m_spawned[i].Velocity.Y = 0.f; }
+			if (m_spawned[i].Velocity.Y > -2.f)
+			{
+				m_spawned[i].Velocity.Y -= m_spawned[i].Gravity;
+			}
 
 			if (m_spawned[i].RotationalVelocity >= 0.1f) { m_spawned[i].RotationalVelocity -= 0.1f; } else
 			if (m_spawned[i].RotationalVelocity <= -0.1f) { m_spawned[i].RotationalVelocity += 0.1f; } else
@@ -64,18 +65,21 @@ namespace GAME_NAME::Objects::Particles
 		
 	}
 
-	void ParticleEmitter::SpawnParticle()
+	void ParticleEmitter::SpawnParticle(Vec2 velocity, float gravity, float rotation)
 	{
 		Particle emit(m_particleCopy[std::rand() / (RAND_MAX / m_particleCopy.size())]);
 
 		emit.Position += m_position + Vec2(std::rand() * m_scale.X / RAND_MAX, std::rand() * m_scale.Y / RAND_MAX);
+		emit.Velocity += velocity;
+		emit.Gravity = gravity;
+		//emit.Rotation = rotation;
 
 		if (emit.ConstantVelocity.X != 0) {
-			emit.ConstantVelocity.X += ((float)(std::rand()) / (float)RAND_MAX) * 0.75f - 0.375f;
+			emit.ConstantVelocity.X += ((float)(std::rand()) / (float)RAND_MAX) * 1.75f - 0.375f;
 		}
 
 		if (emit.ConstantVelocity.Y != 0) {
-			emit.ConstantVelocity.Y += ((float)(std::rand()) / (float)RAND_MAX) * 0.75f - 0.375f;
+			emit.ConstantVelocity.Y += ((float)(std::rand()) / (float)RAND_MAX) * 1.75f - 0.375f;
 		}
 
 		m_spawned.push_back(emit);

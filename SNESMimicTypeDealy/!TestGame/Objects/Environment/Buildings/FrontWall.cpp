@@ -18,7 +18,7 @@ namespace GAME_NAME::Objects::Environment::Buildings
 
 	}
 
-	void FrontWall::Render(const Vec2 cameraPosition)
+	void FrontWall::Render(const Vec2& cameraPosition)
 	{
 		if (m_opacity >= 1.f) { GameObject::Render(cameraPosition); }
 

@@ -767,6 +767,7 @@
     <None Include="Assets\player_house_1_1\chunk.pk" />
     <None Include="Assets\player_house_1_1\level.dat" />
     <None Include="Assets\player_house_1_1\object.pk" />
+    <None Include="Assets\town_1\objects\blood.pk" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Assets\testing\music\0_test.wav">

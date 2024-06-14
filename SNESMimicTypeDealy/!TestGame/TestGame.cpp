@@ -18,6 +18,8 @@
 #include "./InputDisplay/DisplayIconManager.h"
 #include "../Objects/Particles/ParticleEmitter.h"
 
+#include "./Items/Inventories/InventoryContainerRenderer.h"
+
 #include "./Cutscenes/CutsceneManager.h"
 
 #include "../Objects/GUI/Text/TextRenderer.h"
@@ -127,12 +129,6 @@ namespace GAME_NAME
 	}
 
 
-	GameObject* testAudioObject;
-	void testAudioUpdate(MusicSync::MusicSync::SongPosition songPosition)
-	{
-		testAudioObject->SetSprite(Rendering::Renderer::GetSprite(songPosition.sp_beat % 2 == 1 ? SpriteBase(54) : SpriteBase(53)));
-	}
-
 	void TestGame::InitLevel(GAME_NAME::Game::Level level)
 	{
 #if _DEBUG
@@ -238,6 +234,13 @@ namespace GAME_NAME
 		{
 			pauseMenu_buttonIdOffset = GUI::Menus::GUIMenu::LoadMenu("/pause", new std::function(pauseMenu_guiCallback));
 			Rendering::Renderer::UpdateObjects = false;
+
+			//Close any open inventory.
+			Items::Inventories::InventoryContainer* currentInv = Items::Inventories::InventoryContainerRenderer::GetCurrentContainer();
+			if (currentInv != nullptr)
+			{
+				currentInv->CloseGUI();
+			}
 		}
 		else {
 			GUI::Menus::GUIMenu::RemoveLastMenu();

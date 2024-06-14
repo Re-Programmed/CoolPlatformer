@@ -96,7 +96,7 @@ namespace GAME_NAME
             //delete m_sprite;
         }
 
-        void GameObject::Render(const Vec2 cameraPosition)
+        void GameObject::Render(const Vec2& cameraPosition)
         {
             m_sprite->Render(cameraPosition, m_rotationOffset + m_position + (m_textureFlipped ? (m_scale * Vec2::OneX) : 0), m_scale * (m_textureFlipped ? Vec2::MinusOneX : 1), m_rotation);
         }
