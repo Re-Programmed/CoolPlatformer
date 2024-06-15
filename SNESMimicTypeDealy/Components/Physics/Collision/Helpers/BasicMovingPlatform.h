@@ -17,7 +17,7 @@ namespace GAME_NAME::Components::Physics::Collision
 
 		void Update(GLFWwindow* window);
 
-	private:
+	protected:
 		inline static bool onCollision(Vec2 push, Objects::GameObject* object, Objects::GameObject* collider)
 		{
 			//Check if the collision occured with the bottom face.

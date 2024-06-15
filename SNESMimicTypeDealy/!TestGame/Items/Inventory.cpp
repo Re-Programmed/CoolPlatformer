@@ -47,7 +47,7 @@ namespace GAME_NAME::Items
 		}
 
 		//If the inventory vector is too small to support the new set item, expand it until it fits by adding nullptr references.
-		while (m_items.size() < slot)
+		while (m_items.size() <= slot)
 		{
 			m_items.push_back(nullptr);
 		}

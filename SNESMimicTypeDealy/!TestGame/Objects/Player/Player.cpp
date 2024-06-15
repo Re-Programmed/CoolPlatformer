@@ -41,7 +41,7 @@ namespace  GAME_NAME
 			Player::Player(Vec2 position)
 				: ActiveBoxCollisionGravityObject(position, Vec2(DefaultPlayerScaleX, DefaultPlayerScaleY), Rendering::Renderer::GetSprite(DefaultPlayerSprite)), m_screenInventory(new ScreenInventory()),
 				m_healthProgressBar(new ProgressBar(
-					Vec2(10, 7), Vec2(24, 8), Renderer::GetSprite(SpriteBase(42))->GetSpriteId()
+					Vec2(2, 10), Vec2(64, 16), Renderer::GetSprite(SpriteBase(72))->GetSpriteId()
 				)),
 				MiscStateGroup("pl"), m_saveState(new PlayerSaveState(this)),
 				m_particleEmitter(new Particles::ParticleEmitter(position))
@@ -352,7 +352,7 @@ namespace  GAME_NAME
 
 			void Player::Damage(float damage)
 			{
-				CreateBloodParticle((int)damage + 10);
+				CreateBloodParticle();
 				m_stats.Health -= damage;
 				m_healthProgressBar->SetPercentage(m_stats.Health);
 

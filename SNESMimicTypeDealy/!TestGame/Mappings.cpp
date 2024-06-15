@@ -7,7 +7,10 @@
 #include "../Components/Physics/Collision/ActiveBoxCollider.h"
 #include "../!TestGame/Objects/Environment/Water.h"
 #include "../!TestGame/Objects/Environment/BGParallax.h"
+
 #include "../!TestGame/Objects/Platforms/RotatingPlatform.h"
+#include "../!TestGame/Objects/Platforms/FallingPlatform.h"
+
 #include "../Objects/Instantiate/LevelObjectHandler.h"
 
 #include "../!TestGame/Items/FloorItem.h"
@@ -186,22 +189,40 @@ std::function<void (std::vector<std::string>, size_t line)> m_mappings[MAPPINGS_
 	},
 
 	/*
-		7: Rotating Platform (map,layer,positionX,positionY,scaleX,scaleY,sprite,originX,originY,speed*10,offset*pi/6)
-		- A platform that rotates about a fixed point.
+		7: Platform (map,layer,positionX,positionY,scaleX,scaleY,sprite,type,...)
+		TYPE:
+			0: Rotating (originX,originY,speed*10,offset*pi/6)
+				- A platform that rotates about a fixed point.
+			1: Falling (fallDelay[float])
+				- A platform that falls when it is stepped on.
 	*/
 	[](std::vector<std::string> data, size_t n) {
 #if _DEBUG
-		DebugMapper(">>> Loading RotatingPlatform");
+		DebugMapper(">>> Loading Platform");
 #endif
-		Renderer::LoadObject(new GAME_NAME::Objects::Platforms::RotatingPlatform(
-			STOIVEC(data[1], data[2]),								//positionX,positionY
-			STOIVEC(data[3], data[4]),								//scaleX,scaleY
-			Renderer::GetSprite(std::stoi(data[5])),				//sprite
-			STOIVEC(data[6], data[7]),								//originX,originY
-			static_cast<double>(std::stoi(data[8]) / 10.0),			//speed*10
-			M_PI * static_cast<double>(std::stoi(data[9]) / 6.0)	//offset * pi/6
-			), std::stoi(data[0]));									//layer
-		},
+		switch (std::stoi(data[6]))
+		{
+			//ROTATING PLATFORM
+		case 0:
+			Renderer::LoadObject(new GAME_NAME::Objects::Platforms::RotatingPlatform(
+				STOIVEC(data[1], data[2]),								//positionX,positionY
+				STOIVEC(data[3], data[4]),								//scaleX,scaleY
+				Renderer::GetSprite(std::stoi(data[5])),				//sprite
+				STOIVEC(data[7], data[8]),								//originX,originY
+				static_cast<double>(std::stoi(data[9]) / 10.0),			//speed*10
+				M_PI * static_cast<double>(std::stoi(data[10]) / 6.0)	//offset * pi/6
+			), std::stoi(data[0]));										//layer
+			break;
+			//FALLING PLATFORM
+		case 1:
+			Renderer::LoadObject(new Platforms::FallingPlatform(
+				STOIVEC(data[1], data[2]),					//positionX,positionY
+				STOIVEC(data[3], data[4]),					//scaleX,scaleY
+				Renderer::GetSprite(std::stoi(data[5])),	//sprite
+				std::stof(data[7])							//fallDelay[float]
+			), std::stoi(data[0]));							//layer
+		}
+	},
 
 	/*
 		8: Floor Item (map,positionX,positionY,itemSerialized)
@@ -255,15 +276,18 @@ std::function<void (std::vector<std::string>, size_t line)> m_mappings[MAPPINGS_
 	*/
 	[](std::vector<std::string> data, size_t n)
 	{
-		Items::Inventories::InventoryContainer* container = new Items::Inventories::InventoryContainer(data[5], std::stoi(data[6]), STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])));
+		Items::Inventories::InventoryContainer* container = new Items::Inventories::InventoryContainer(data[5], std::stoi(data[6]), STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), n);
 
-		for (int i = 8; i < data.size(); i++)
+		if (!container->GetWasLoadedFromState())
 		{
-			Items::InventoryItem* ii = ItemMapping::DeSerialize(data[i]);
-			container->AddItem(ii);
+			for (int i = 8; i < data.size(); i++)
+			{
+				Items::InventoryItem* ii = ItemMapping::DeSerialize(data[i]);
+				container->AddItem(ii);
+			}
 		}
 		
-		Renderer::LoadObject(container, std::stoi(data[7]));
+		Renderer::LoadActiveObject(container, std::stoi(data[7]));
 	},
 
 	/*

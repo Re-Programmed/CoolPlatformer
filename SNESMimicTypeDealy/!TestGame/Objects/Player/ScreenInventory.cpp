@@ -45,6 +45,14 @@ namespace GAME_NAME
 				case ITEM_PREFIX_ITEM:
 					//Decode the item.
 					item->Decode(data->at(i));
+
+					//Item should be null.
+					if (item->GetType() == NULL_ITEM)
+					{
+						delete item;
+						item = nullptr;
+					}
+
 					break;
 				case ITEM_PREFIX_TOOL:
 					//Change item to point to a new tool.
@@ -89,7 +97,10 @@ namespace GAME_NAME
 			return -1;
 		}
 
-		createItemSpriteDisplay(s, *item);
+		if (item != nullptr)
+		{
+			createItemSpriteDisplay(s, *item);
+		}
 
 		if(!ignoreSave) { updateSave(); }
 		
@@ -174,6 +185,13 @@ namespace GAME_NAME
 		//Add save data for all items.
 		for (Items::InventoryItem* item : m_items)
 		{
+			if (item == nullptr)
+			{
+				MiscState* nullItem = new Items::InventoryItem(Items::NULL_ITEM);
+				assignState(nullItem);
+				continue;
+			}
+
 			assignState(item);
 		}
 	}

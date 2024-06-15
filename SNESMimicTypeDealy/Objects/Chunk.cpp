@@ -17,11 +17,20 @@ namespace GAME_NAME
 		/// </summary>
 		void Chunk::Instantiate(GameObject* object, uint8_t layer, bool front)
 		{
-			if (front)
+			try
 			{
-				m_frontObjects.push_back(object);
-			} else {
-				m_objects[layer].push_back(object);
+				if (front)
+				{
+					m_frontObjects.push_back(object);
+				}
+				else {
+					if (layer >= CHUNK_OBJECT_RENDER_LAYER_COUNT) { return; }
+					m_objects[layer].push_back(object);
+				}
+			}
+			catch (int x)
+			{
+
 			}
 		}
 

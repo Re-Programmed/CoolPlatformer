@@ -6,7 +6,7 @@ namespace GAME_NAME
 {
 	namespace Items
 	{
-#define ITEM_COUNT 4
+#define ITEM_COUNT 5
 		/// <summary>
 		/// An enum for the types of items in the game.
 		/// </summary>
@@ -14,8 +14,9 @@ namespace GAME_NAME
 		{
 			LOG = 0,
 			LEAVES = 1,
-			STONE,	
-			SCRAP_AXE
+			STONE = 2,
+			SCRAP_AXE = 3,
+			NULL_ITEM = 4 //NULL ITEM IS 4 (used for saving data about items that are not there)
 		};
 
 		/// <summary>
@@ -48,7 +49,8 @@ namespace GAME_NAME
 			{ "Log", 18, NO_HELD_TEXTURE },
 			{ "Leaves", 18, NO_HELD_TEXTURE },
 			{ "Stone", 55, NO_HELD_TEXTURE },
-			{ "Axe", 56, SpriteBase(65), CHOP }
+			{ "Axe", 56, SpriteBase(65), CHOP },
+			{ "Unknown", 0, NO_HELD_TEXTURE }
 		};
 
 

@@ -17,8 +17,11 @@ using namespace std;
 		//Get the first char apart from the parenthesies to determine the type of item.
 		const char firstChar = itemString.at(1);
 
-		//Remove the first segment and last characters, should be '(t_' and ')'
-		itemString.erase(0, 3).erase(itemString.size() - 1, itemString.size());
+		//Remove the first segment, should be '(t_'
+		itemString.erase(0, 3);
+
+		//Remove ending ")".
+		if (itemString.ends_with(")")) { itemString.erase(itemString.size() - 1, itemString.size()); }
 
 		//Create a list of all item parameters.
 		stringstream ss(itemString);
