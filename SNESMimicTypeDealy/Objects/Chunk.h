@@ -4,9 +4,12 @@
 #include "../Rendering/Camera/Camera.h"
 #include "../Utils/Math/Vec3.h"
 #include "../Rendering/Sprite.h"
+
+#include <mutex>
+
 using namespace GAME_NAME::Rendering;
 
-#define CHUNK_OBJECT_RENDER_LAYER_COUNT 3
+#define CHUNK_OBJECT_RENDER_LAYER_COUNT 4 //Same as MICRO_LAYER_RENDER_COUNT
 
 namespace GAME_NAME
 {
@@ -30,6 +33,21 @@ namespace GAME_NAME
 			Chunk();
 			Chunk(Vec2 position, Sprite* bgSprite) : m_position(position), m_bgSprite(bgSprite) {};
 
+			//Copy constructor. (adding mutex made c++ forgor how to copy a Chunk object...)
+			Chunk(const Chunk& other)
+				: m_position(other.m_position), m_bgSprite(other.m_bgSprite)
+			{
+
+			}
+
+			//Move constructor.
+			Chunk(Chunk&& other) noexcept
+				: m_position(other.m_position), m_bgSprite(other.m_bgSprite)
+			{
+				other.m_bgSprite = nullptr;
+				other.m_position = NULL;
+			}
+
 			void Instantiate(GameObject* object, uint8_t layer = 1, bool front = false);	//Load an object to this chunk.
 
 			std::vector<GameObject*>* GetObjects();						//Get all the objects in this chunk.
@@ -38,8 +56,29 @@ namespace GAME_NAME
 			void Render(const Vec2 cameraPosition, const int chunkSize, RENDER_LAYER layer, GLFWwindow* window, int microLayer = -1);
 
 			Vec2 GetPosition();											//Get the position of this chunk.
+
+			Chunk& operator=(const Chunk& other)
+			{
+				m_bgSprite = other.m_bgSprite;
+				m_position = other.m_position;
+
+				return *this;
+			}
+
+			Chunk& operator=(Chunk&& other) noexcept
+			{
+				m_bgSprite = other.m_bgSprite;
+				m_position = other.m_position;
+				
+				other.m_bgSprite = nullptr;
+				other.m_position = NULL;
+
+				return *this;
+			}
+
 		private:
 			std::vector<GameObject*> m_objects[CHUNK_OBJECT_RENDER_LAYER_COUNT];							//All objects in this chunk.
+			std::mutex m_objectsLock;
 
 			std::vector<GameObject*> m_frontObjects;					//All high priority objects in this chunk. (Like genesis priority bit)
 

@@ -224,6 +224,7 @@ namespace GAME_NAME
 
 		//MusicSync::MusicSync::Subscribe(testAudioUpdate);
 
+		Text::TextRenderer::RenderLetter('f', { 32, -32 }, 48.f);
 	}
 
 	void TestGame::TogglePauseState()

@@ -17,6 +17,7 @@ namespace GAME_NAME
 		/// </summary>
 		void Chunk::Instantiate(GameObject* object, uint8_t layer, bool front)
 		{
+			m_objectsLock.lock();
 			try
 			{
 				if (front)
@@ -24,7 +25,9 @@ namespace GAME_NAME
 					m_frontObjects.push_back(object);
 				}
 				else {
-					if (layer >= CHUNK_OBJECT_RENDER_LAYER_COUNT) { return; }
+					if (layer >= CHUNK_OBJECT_RENDER_LAYER_COUNT) { m_objectsLock.unlock(); return; }
+					
+					//m_objects not mutex?
 					m_objects[layer].push_back(object);
 				}
 			}
@@ -32,12 +35,14 @@ namespace GAME_NAME
 			{
 
 			}
+			m_objectsLock.unlock();
 		}
 
 		Vec2 Chunk::GetPosition()
 		{
 			return m_position;
 		}
+
 
 		std::vector<GameObject*>* Chunk::GetObjects()
 		{

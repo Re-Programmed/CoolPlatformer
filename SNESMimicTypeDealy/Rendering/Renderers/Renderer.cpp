@@ -373,9 +373,14 @@ namespace GAME_NAME
 			{
 				for (uint8_t currLayer = 0; currLayer < MICRO_GUI_LAYER_COUNT; currLayer++)
 				{
-					for (GUI::IGUIElement* guiObject : m_guiGameObjects[currLayer])
+					//Store size before rendering to avoid running into issues with the length of m_guiGameObjects being modified during rendering.
+					const size_t size = m_guiGameObjects[currLayer].size();
+					for (size_t i = 0; i < size; i++)
 					{
-						guiObject->Render();
+						if (m_guiGameObjects[currLayer][i] != nullptr)
+						{
+							m_guiGameObjects[currLayer][i]->Render();
+						}
 					}
 				}
 

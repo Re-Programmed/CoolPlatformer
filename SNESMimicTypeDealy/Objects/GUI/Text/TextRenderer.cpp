@@ -51,4 +51,27 @@ namespace GAME_NAME::Objects::GUI::Text
 		
 		return finalDigit;
 	}
+
+	TextRenderer::Letter TextRenderer::RenderLetter(char letter, const Vec2& position, const float scale)
+	{
+		int texture = DEFAULT_FONT_RENDER_A_SPRITE_ID + (letter - 'a');
+		std::cout << "Rendering a Letter: " + texture;
+		Letter letterObject(new StaticGUIElement(position, scale, Renderer::GetSprite(texture)->GetSpriteId()));
+
+		Renderer::LoadGUIElement(letterObject.get());
+
+		return letterObject;
+	}
+
+	TextRenderer::RenderedWord TextRenderer::RenderWord(std::string& word, Vec2& position, const float scale, const float&& digitPadding)
+	{
+		RenderedWord wordRet;
+
+		for (size_t i = 0; i < word.size(); i++)
+		{
+			wordRet.push_back(RenderLetter(word.at(i), position + Vec2{ i * (scale + digitPadding), 0}, scale));
+		}
+
+		return wordRet;
+	}
 }
