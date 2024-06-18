@@ -156,11 +156,21 @@ namespace GAME_NAME
 			static void LoadActiveObjects(GameObject* objects[], const unsigned int size, int layer = 1);
 			static void LoadActiveObject(GameObject* object, int layer = 1);
 
+			/// <summary>
+			/// Instantiates a GUI element with given layer.
+			/// </summary>
+			/// <param name="element">- the element to create.</param>
+			/// <param name="layer">- the layer to spawn the element on.</param>
 			static inline void LoadGUIElement(GUI::IGUIElement* element, int layer = 1)
 			{
 				m_guiGameObjects[layer].push_back(element);
 			}
 
+			/// <summary>
+			/// Destroys the given gui element on the given layer.
+			/// </summary>
+			/// <param name="element">[IGUIElement*] - The element to destroy.</param>
+			/// <param name="layer">[int] - The layer the element is on.</param>
 			static void UnloadGUIElement(GUI::IGUIElement* element, int layer = 1)
 			{
 				uint16_t i = 0;
@@ -184,7 +194,7 @@ namespace GAME_NAME
 			/// <summary>
 			/// Sets a constant to add to all sprite texture indices. (For loading multiple levels at once. The last loaded level will always use positive indices with other levels having negative values.)
 			/// </summary>
-			/// <param name="fileOffset"></param>
+			/// <param name="fileOffset">[int] - the offset to add to all sprite texture indicies.</param>
 			inline static void SetLastFileOffset(int fileOffset)
 			{
 				lastFileOff = fileOffset;
@@ -193,7 +203,7 @@ namespace GAME_NAME
 			/// <summary>
 			/// Returns the constant added to all sprite texture indices.
 			/// </summary>
-			/// <returns></returns>
+			/// <returns>lastFileOff [int] - The offset that is currently applied to all sprite texture indicies.</returns>
 			inline static int GetLastFileOffest()
 			{
 				return lastFileOff;

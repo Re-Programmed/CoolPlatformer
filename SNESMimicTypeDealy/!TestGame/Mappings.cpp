@@ -33,6 +33,8 @@
 #include "./Objects/Environment/Buildings/FrontWall.h"
 #include "./Objects/Environment/Buildings/Door.h"
 
+#include "./Objects/Environment/BreakableBlock.h"
+
 constexpr int8_t GenesisTileSize = 8;
 
 std::vector<std::shared_ptr<GAME_NAME::Objects::Environment::Buildings::BuildingZone>> BUILDING_createdBuildingZones;
@@ -380,7 +382,7 @@ using namespace Objects::Environment::Buildings;
 	},
 
 	/*
-		Cutscene Trigger (map,type,positionX,positionY,radius*10,...)
+		14: Cutscene Trigger (map,type,positionX,positionY,radius*10,...)
 		Type:
 			0 - InnerThoughtCutscene (text)
 	*/
@@ -405,6 +407,20 @@ using namespace Cutscenes;
 			CutsceneManager::RegisterCutscene(itc);
 			break;
 		}
+	},
+
+	/*
+		15: Breakable Object (map,positionX,positionY,scaleX,scaleY,sprite,layer,breakResistance)
+	*/
+
+	[](std::vector<std::string> data, size_t n)
+	{
+#if _DEBUG
+		DebugMapper("Loading Breakable Object");
+#endif
+
+		BreakableBlock* bb = new BreakableBlock(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])));
+		Renderer::LoadObject(bb, std::stoi(data[5]));
 	}
 };
 

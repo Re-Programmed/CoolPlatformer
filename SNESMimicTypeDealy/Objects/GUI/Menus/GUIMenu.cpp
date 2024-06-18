@@ -3,6 +3,7 @@
 #include "../../../Settings/SettingsGlobals.h"
 #include "../../../Resources/AssetManager.h"
 #include <fstream>
+#include <mutex>
 #include <thread>
 
 #if _DEBUG
@@ -12,10 +13,15 @@
 #include "../GUIManager.h"
 #include "../Progress/ProgressBar.h"
 
+#include "../Text/TextRenderer.h"
+
 #define LoadMenuW LoadMenu
 
 namespace GAME_NAME::Objects::GUI::Menus
 {
+	std::mutex GUIMenu::m_asyncAddLock;
+	std::mutex asyncInstantiationLock;
+
 	uint8_t GUIMenu::m_menusOpen = 0;
 
 	uint16_t GUIMenu::m_lastMenuObjects[3] = {
@@ -50,12 +56,39 @@ namespace GAME_NAME::Objects::GUI::Menus
 
 		switch (gtype)
 		{
+			//Creates an EL_TEXT (text,pos1,pos2,scale[float],padding[float],layer)
 			case GUIManager::EL_TEXT:
+			{
+using namespace Text;
+
+				asyncInstantiationLock.lock();
+				TextRenderer::RenderedWord wObj = TextRenderer::RenderWord(data[0], { std::stof(data[1]), std::stof(data[2]) }, std::stof(data[3]), std::stof(data[4]), std::stoi(data[5]));
+				asyncInstantiationLock.unlock();
+
+				GUIMenu::AddLastMenuObject(std::stoi(data[5]), wObj.size());
 				break;
+			}
+			//Creates an EL_BUTTON (pos1, pos2, sca1, sca2, sprite, buttonID, baseColorR, baseColorG, baseColorB, baseColorA, hoverColorR, hoverColorG, hoverColorB, hoverColorA) 
 			case GUIManager::EL_BUTTON:
 			{
-				GUIButton* gButton = new GUIButton(Vec2(std::stoi(data[0]), std::stoi(data[1])), Vec2(std::stoi(data[2]), std::stoi(data[3])), Renderer::GetSprite(std::stoi(data[4]))->GetSpriteId(), elementCallback, std::stoi(data[5]));
+				Vec4 baseColor = { 1.f, 1.f, 1.f, 1.f };
+				Vec4 hoverColor = { 0.5f, 0.5f, 0.f, 1.f };
+				if (data.size() > 6)
+				{
+					baseColor = { std::stof(data[6]), std::stof(data[7]), std::stof(data[8]), std::stof(data[9]) };
+
+					if (data.size() > 10)
+					{
+						hoverColor = { std::stof(data[10]), std::stof(data[11]), std::stof(data[12]), std::stof(data[13]) };
+					}
+				}
+
+				std::cout << "LOADED BUTTON WITH ID: " << std::stoi(data[5]) << std::endl;
+				GUIButton* gButton = new GUIButton(Vec2(std::stoi(data[0]), std::stoi(data[1])), Vec2(std::stoi(data[2]), std::stoi(data[3])), Renderer::GetSprite(std::stoi(data[4]))->GetSpriteId(), elementCallback, std::stoi(data[5]), baseColor, hoverColor);
+				
+				asyncInstantiationLock.lock();
 				Renderer::LoadGUIElement(gButton);
+				asyncInstantiationLock.unlock();
 
 				GUIMenu::AddLastRegisterButtonID(GUIManager::RegisterButton(gButton));
 				GUIMenu::AddLastMenuObject(1);
@@ -67,13 +100,19 @@ namespace GAME_NAME::Objects::GUI::Menus
 				StaticGUIElement* gBlank = new StaticGUIElement(Vec2(std::stoi(data[0]), std::stoi(data[1])), Vec2(std::stoi(data[2]), std::stoi(data[3])), Renderer::GetSprite(std::stoi(data[4]))->GetSpriteId());
 				Renderer::LoadGUIElement(gBlank, std::stoi(data[5]));
 
+				asyncInstantiationLock.lock();
 				GUIMenu::AddLastMenuObject(std::stoi(data[5]));
+				asyncInstantiationLock.unlock();
+
 				break;
 			}
 			case GUIManager::EL_PROGRESS:
 			{
 				ProgressBar* pBar = new ProgressBar(Vec2(std::stoi(data[0]), std::stoi(data[1])), Vec2(std::stoi(data[2]), std::stoi(data[3])), Renderer::GetSprite(std::stoi(data[4]))->GetSpriteId(), std::stoi(data[5]));
+
+				asyncInstantiationLock.lock();
 				Renderer::LoadGUIElement(pBar);
+				asyncInstantiationLock.unlock();
 
 				GUIMenu::AddLastMenuObject(1);
 				break;
@@ -103,6 +142,9 @@ namespace GAME_NAME::Objects::GUI::Menus
 		while (std::getline(MenuStream, line, '\n'))
 		{
 			if (line.empty() || line.starts_with(";")) { continue; } //For line breaks or lines beginning with a ";" do nothing. (useful for comments etc.)
+
+			//Buttons should be loaded in main thread to prevent bugs with buttonID getting off sync.
+			if (line.starts_with("btn")) { GUIMenu_loadMenuObjectThread(line, elementCallback); continue; }
 
 			threads.push_back(new std::thread(GUIMenu_loadMenuObjectThread, line, elementCallback));
 			thCurr++;
@@ -154,7 +196,7 @@ namespace GAME_NAME::Objects::GUI::Menus
 
 		for (unsigned int i : m_lastRegisteredButtonIds)
 		{
-			GUIManager::UnregisterButton(i);
+			GUIManager::UnregisterButton(0u);
 		}
 	}
 

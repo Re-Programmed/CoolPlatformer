@@ -59,5 +59,9 @@ namespace GAME_NAME
 		/// </summary>
 		static bool m_gamePaused;
 
+		/// <summary>
+		/// Stores the objects created to represent the pause menu and to delete them after the menu is closed.
+		/// </summary>
+		static std::vector<GUI::StaticGUIElement*> m_pauseMenuObjects;
 	};
 }

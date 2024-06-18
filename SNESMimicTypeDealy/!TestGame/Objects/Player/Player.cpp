@@ -41,7 +41,10 @@ namespace  GAME_NAME
 			Player::Player(Vec2 position)
 				: ActiveBoxCollisionGravityObject(position, Vec2(DefaultPlayerScaleX, DefaultPlayerScaleY), Rendering::Renderer::GetSprite(DefaultPlayerSprite)), m_screenInventory(new ScreenInventory()),
 				m_healthProgressBar(new ProgressBar(
-					Vec2(2, 10), Vec2(64, 16), Renderer::GetSprite(SpriteBase(72))->GetSpriteId()
+					Vec2(20, 18), Vec2(32, -3), Renderer::GetSprite(SpriteBase(72))->GetSpriteId()
+				)),
+				m_abilityMeterProgressBar(new ProgressBar(
+					Vec2(10, 12), Vec2(46, -3), Renderer::GetSprite(SpriteBase(71))->GetSpriteId()
 				)),
 				MiscStateGroup("pl"), m_saveState(new PlayerSaveState(this)),
 				m_particleEmitter(new Particles::ParticleEmitter(position))
@@ -57,6 +60,7 @@ namespace  GAME_NAME
 				//Load the stat overlay menu that contains sprites for health and inventory.
 				GUI::Menus::GUIMenu::LoadMenu("/stat_overlay", nullptr);
 				Renderer::LoadGUIElement(m_healthProgressBar, 0);
+				Renderer::LoadGUIElement(m_abilityMeterProgressBar, 0);
 
 				//Register animations
 
@@ -407,7 +411,13 @@ namespace  GAME_NAME
 				if (m_foundCollisionInTick) { return; }
 				if (push.Y > 0)
 				{
-					m_isFlying = false;
+					if (m_isFlying)
+					{
+						//Reset flying graivty.
+						m_isFlying = false;
+						m_physics->SetGravityStrength(DefaultPlayerGravity);
+					}
+
 					m_onGround = true;
 					m_foundCollisionInTick = true;
 					m_physics->SetVelocityY(0.f);
@@ -548,6 +558,7 @@ namespace  GAME_NAME
 				{
 					if (InputManager::GetKey(PLAYER_MOVE_RIGHT))
 					{
+
 #if _DEBUG
 						if (m_flight)
 						{
@@ -660,9 +671,34 @@ namespace  GAME_NAME
 					{
 						m_jumpHeld = 0;
 					}
-
-
 				}
+				
+				/*
+					-----
+					CHECK PLAYER ABILITIES AND ACTIONS.
+					-----
+				*/
+				if (m_stats.AbilityMeter >= 10.f)
+				{
+					//FLIGHT (GLIDING) ABILITY, DISABLE IF PLAYER IS MISSING CERTAIN ITEMS.
+					if (InputManager::GetKeyUpDown(PLAYER_JUMP) & InputManager::KEY_STATE_PRESSED)
+					{
+						if (!m_swimming && !m_isFlying && m_frozen <= 0 && m_jumpHeld != 1 && m_airTime > 0.4f /*Make sure player has to start gliding at the peak of their jump.*/)
+						{
+							//DEBUGGING
+							std::cout << "FLIGHT ENABLED" << std::endl;
+
+							//Subtract from ability meter based on cost of ability.
+							updateAbilityMeter(-10.f);
+
+							//Set flying, "double jump" occured.
+							m_isFlying = true;
+							m_physics->SetVelocityY(200.f);
+							m_physics->SetGravityStrength(DefaultPlayerGravity - FlyingGravityReduction - 0.5f);
+						}
+					}
+				}
+				
 			}
 
 			void Player::setAnimations(bool playerIsSkidding, float& anim_momentum)
@@ -718,6 +754,13 @@ namespace  GAME_NAME
 					return;
 				}
 			}
+
+			void Player::updateAbilityMeter(float amount)
+			{
+				m_stats.AbilityMeter += amount;
+				m_abilityMeterProgressBar->SetPercentage(m_stats.AbilityMeter);
+			}
+
 
 		}
 	}

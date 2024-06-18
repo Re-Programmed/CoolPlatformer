@@ -112,6 +112,13 @@ namespace GAME_NAME
 		return MathUtils::Vec2(TargetResolutionX * normalizedScreenCoords.X, TargetResolutionY * normalizedScreenCoords.Y);
 	}
 
+	void InputManager::SaveAllKeybinds()
+	{
+		for (int i = 0; i < KEY_ARRAY_SIZE; i++)
+		{
+			AppData::AppDataFileManager::SetValue("settings\\keybinds.dat", KeybindNames[i], std::to_string(m_keys[i]));
+		}
+	}
 
 
 	MathUtils::Vec2 InputManager::GetMouseWorldPosition(Rendering::Camera::Camera* camera)

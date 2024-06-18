@@ -276,6 +276,18 @@
     <ClCompile Include="!TestGame\Objects\Platforms\FallingPlatform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="!TestGame\SettingsManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="!TestGame\Items\Inventories\CraftingInventory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="!TestGame\Objects\Environment\BreakableBlock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="!TestGame\Objects\Environment\Levels\Town1Manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glad\include\glad\glad.h">
@@ -593,6 +605,18 @@
     <ClInclude Include="!TestGame\Objects\Platforms\FallingPlatform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="!TestGame\SettingsManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="!TestGame\Items\Inventories\CraftingInventory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="!TestGame\Objects\Environment\BreakableBlock.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="!TestGame\Objects\Environment\Levels\Town1Manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\testing\sprite\1_player.png">
@@ -774,6 +798,8 @@
     <None Include="Assets\player_house_1_1\level.dat" />
     <None Include="Assets\player_house_1_1\object.pk" />
     <None Include="Assets\town_1\objects\blood.pk" />
+    <None Include="Assets\Menus\settings.pk" />
+    <None Include="Assets\Menus\settings_controls.pk" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Assets\testing\music\0_test.wav">

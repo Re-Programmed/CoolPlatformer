@@ -50,7 +50,7 @@ namespace GAME_NAME
 
 			void GravityComponent::SetGravitationalVelocity(float gVelocity)
 			{
-				m_gravitationalVelocity = gVelocity;
+ 				m_gravitationalVelocity = gVelocity;
 			}
 			void GravityComponent::SetGravityStrength(float strength)
 			{

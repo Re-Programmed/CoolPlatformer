@@ -113,6 +113,29 @@ namespace GAME_NAME
 
 		//Gets the mouse position in world coordinates with respect to the given camera.
 		static MathUtils::Vec2 GetMouseWorldPosition(Rendering::Camera::Camera* camera);
+
+		/// <summary>
+		/// Saves all registered keybinds to the settings file.
+		/// </summary>
+		static void SaveAllKeybinds();
+
+		/// <summary>
+		/// Returns a keybinds current linked key.
+		/// </summary>
+		inline static int GetKeybindValue(int index)
+		{
+			return m_keys[index];
+		}
+
+		/// <summary>
+		/// Updates the given keybind to be the given key.
+		/// </summary>
+		/// <param name="key">[keyRef] - The keybind to update.</param>
+		/// <param name="newValue">[int] - The new keycode to use.</param>
+		inline static void UpdateKeybind(keyRef key, int newValue)
+		{
+			m_keys[key] = newValue;
+		}
 	private:
 
 		static int m_keys[KEY_ARRAY_SIZE];				//Determines what button each keyRef refers to.

@@ -18,6 +18,8 @@
 #include "./InputDisplay/DisplayIconManager.h"
 #include "../Objects/Particles/ParticleEmitter.h"
 
+#include "./Objects/Environment/Levels/Town1Manager.h"
+
 #include "./Items/Inventories/InventoryContainerRenderer.h"
 
 #include "./Cutscenes/CutsceneManager.h"
@@ -33,6 +35,8 @@
 #include "./Objects/Enemies/Types/LeftRightEnemy.h"
 
 #include "../Objects/StateSaver.h"
+
+#include "./SettingsManager.h"
 
 //TESTING:
 #include "./Objects/Environment/Buildings/Door.h"
@@ -54,13 +58,31 @@ namespace GAME_NAME
 
 	GlobalLevelData* TestGame::m_globalLevelData = nullptr;
 
-	unsigned int pauseMenu_buttonIdOffset = 0;
+	std::vector<StaticGUIElement*> TestGame::m_pauseMenuObjects;
+
+	unsigned int pauseMenu_buttonIdOffset = 0; //UNUSED???????
 	void pauseMenu_guiCallback(int id)
 	{
-		id -= pauseMenu_buttonIdOffset;
-		if (id == 0)
+		std::cout << "ID OF BUTTON: " << id << std::endl; //TESTING BUTTONS.
+
+		//Resume button.
+		if (id == 1)
 		{
 			TestGame::INSTANCE->TogglePauseState();
+			return;
+		}
+
+		if (id == 2)
+		{
+			TestGame::INSTANCE->TogglePauseState();
+			SettingsManager::CreateSettingsMenu();
+			return;
+		}
+
+		//Exit button.
+		if (id == 0)
+		{
+			exit(1);
 		}
 	}
 
@@ -118,6 +140,7 @@ namespace GAME_NAME
 
 		SaveManager::SaveString("testing string", "data_0");
 
+
 		Input::DisplayIconManager::CreateKeyDisplayObjects();
 
 	}
@@ -127,7 +150,7 @@ namespace GAME_NAME
 		CollisionManager::UpdateAndClearBuffers();
 		Input::DisplayIconManager::AttemptHideIcons();
 	}
-
+	
 
 	void TestGame::InitLevel(GAME_NAME::Game::Level level)
 	{
@@ -168,6 +191,9 @@ namespace GAME_NAME
 
 		//Generate clouds if there are any to be generated.
 		Environment::CloudGenerator::GenerateClouds();
+
+		//CHNAGE TO DETECT WHAT LEVEL IS BEING LOADED AND CALL THE APPROPRIATE FUNCTION.
+		Objects::Environment::Levels::Town1Manager::InitLevel();
 
 	/*	
 	----------------------------PARTICLE TEST----------------------------
@@ -224,28 +250,54 @@ namespace GAME_NAME
 
 		//MusicSync::MusicSync::Subscribe(testAudioUpdate);
 
-		Text::TextRenderer::RenderLetter('f', { 32, -32 }, 48.f);
 	}
+
+
 
 	void TestGame::TogglePauseState()
 	{
+		if (SettingsManager::SettingsMenuIsOpen()) { return; }
+
+
+		//Close any open inventory.
+		Items::Inventories::InventoryContainer* currentInv = Items::Inventories::InventoryContainerRenderer::GetCurrentContainer();
+		if (currentInv != nullptr)
+		{
+			currentInv->CloseGUI();
+
+			return;
+		}
+
 		m_gamePaused = !m_gamePaused;
 		
 		if (m_gamePaused)
 		{
 			pauseMenu_buttonIdOffset = GUI::Menus::GUIMenu::LoadMenu("/pause", new std::function(pauseMenu_guiCallback));
+
+			//Prevent object updating to PAUSE GAME and PHYSICS.
 			Rendering::Renderer::UpdateObjects = false;
 
-			//Close any open inventory.
-			Items::Inventories::InventoryContainer* currentInv = Items::Inventories::InventoryContainerRenderer::GetCurrentContainer();
-			if (currentInv != nullptr)
-			{
-				currentInv->CloseGUI();
-			}
+			//Create text objects.
+			m_pauseMenuObjects = Text::TextRenderer::RenderWord("resume", { 25, 68 }, 12.f, 0.f, 2);
+			auto renderedWordSettings = Text::TextRenderer::RenderWord("settings", { 25, 48 }, 12.f, 0.f, 2);
+			auto renderedWordQuit = Text::TextRenderer::RenderWord("quit", { 25, 28 }, 12.f, 0.f, 2);
+			m_pauseMenuObjects.insert(m_pauseMenuObjects.end(), renderedWordQuit.begin(), renderedWordQuit.end());
+			m_pauseMenuObjects.insert(m_pauseMenuObjects.end(), renderedWordSettings.begin(), renderedWordSettings.end());
+
 		}
 		else {
 			GUI::Menus::GUIMenu::RemoveLastMenu();
+
+			//Renable all objects to RESUME GAME and PHYSICS.
 			Rendering::Renderer::UpdateObjects = true;
+
+			for (GUI::StaticGUIElement* obj : m_pauseMenuObjects)
+			{
+				Renderer::UnloadGUIElement(obj, 2);
+				//delete obj;
+			}
+
+			m_pauseMenuObjects.clear();
 		}
 	}
 

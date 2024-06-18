@@ -377,9 +377,15 @@ namespace GAME_NAME
 					const size_t size = m_guiGameObjects[currLayer].size();
 					for (size_t i = 0; i < size; i++)
 					{
-						if (m_guiGameObjects[currLayer][i] != nullptr)
+						if (m_guiGameObjects[currLayer][i] != nullptr && i < m_guiGameObjects[currLayer].size())
 						{
-							m_guiGameObjects[currLayer][i]->Render();
+							try {
+								m_guiGameObjects[currLayer][i]->Render();
+							}
+							catch (int i)
+							{
+
+							}
 						}
 					}
 				}

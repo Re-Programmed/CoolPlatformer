@@ -139,6 +139,7 @@
     <ClCompile Include="!TestGame\InputDisplay\DisplayIconManager.cpp" />
     <ClCompile Include="!TestGame\ItemMapping.cpp" />
     <ClCompile Include="!TestGame\Items\FloorItem.cpp" />
+    <ClCompile Include="!TestGame\Items\Inventories\CraftingInventory.cpp" />
     <ClCompile Include="!TestGame\Items\Inventories\InventoryContainer.cpp" />
     <ClCompile Include="!TestGame\Items\Inventories\InventoryContainerRenderer.cpp" />
     <ClCompile Include="!TestGame\Items\Inventory.cpp" />
@@ -153,9 +154,11 @@
     <ClCompile Include="!TestGame\Objects\Enemies\Enemy.cpp" />
     <ClCompile Include="!TestGame\Objects\Enemies\Types\LeftRightEnemy.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\BackgroundObjects.cpp" />
+    <ClCompile Include="!TestGame\Objects\Environment\BreakableBlock.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Buildings\Door.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Buildings\FrontWall.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\CloudGenerator.cpp" />
+    <ClCompile Include="!TestGame\Objects\Environment\Levels\Town1Manager.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Plants\Tree.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Water.cpp" />
     <ClCompile Include="!TestGame\Objects\LayerFlip.cpp" />
@@ -164,6 +167,7 @@
     <ClCompile Include="!TestGame\Objects\Platforms\FallingPlatform.cpp" />
     <ClCompile Include="!TestGame\Objects\Player\Player.cpp" />
     <ClCompile Include="!TestGame\Objects\Player\ScreenInventory.cpp" />
+    <ClCompile Include="!TestGame\SettingsManager.cpp" />
     <ClCompile Include="!TestGame\TestGame.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Audio\SoundManager.cpp" />
@@ -231,6 +235,7 @@
     <ClInclude Include="!TestGame\InputDisplay\DisplayIconManager.h" />
     <ClInclude Include="!TestGame\ItemMapping.h" />
     <ClInclude Include="!TestGame\Items\FloorItem.h" />
+    <ClInclude Include="!TestGame\Items\Inventories\CraftingInventory.h" />
     <ClInclude Include="!TestGame\Items\Inventories\InventoryContainer.h" />
     <ClInclude Include="!TestGame\Items\Inventories\InventoryContainerRenderer.h" />
     <ClInclude Include="!TestGame\Items\Inventory.h" />
@@ -248,9 +253,11 @@
     <ClInclude Include="!TestGame\Objects\Enemies\Types\LeftRightEnemy.h" />
     <ClInclude Include="!TestGame\Objects\Environment\BackgroundObjects.h" />
     <ClInclude Include="!TestGame\Objects\Environment\BGParallax.h" />
+    <ClInclude Include="!TestGame\Objects\Environment\BreakableBlock.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Buildings\Door.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Buildings\FrontWall.h" />
     <ClInclude Include="!TestGame\Objects\Environment\CloudGenerator.h" />
+    <ClInclude Include="!TestGame\Objects\Environment\Levels\Town1Manager.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Plants\Tree.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Water.h" />
     <ClInclude Include="!TestGame\Objects\LayerFlip.h" />
@@ -259,6 +266,7 @@
     <ClInclude Include="!TestGame\Objects\Player\ScreenInventory.h" />
     <ClInclude Include="!TestGame\Objects\Components\Climbable.h" />
     <ClInclude Include="!TestGame\Objects\Rooms\FrontWall.h" />
+    <ClInclude Include="!TestGame\SettingsManager.h" />
     <ClInclude Include="!TestGame\TestGame.h" />
     <ClInclude Include="Audio\SoundManager.h" />
     <ClInclude Include="Audio\SoundTypes\Sound.h" />
@@ -413,6 +421,8 @@
       <DeploymentContent>true</DeploymentContent>
     </None>
     <None Include="Assets\Menus\pause.pk" />
+    <None Include="Assets\Menus\settings.pk" />
+    <None Include="Assets\Menus\settings_controls.pk" />
     <None Include="Assets\Menus\stat_overlay.pk" />
     <None Include="Assets\player_house_1_1\chunk.pk" />
     <None Include="Assets\player_house_1_1\level.dat" />

@@ -44,6 +44,8 @@ constexpr float PlayerXSpeedJumpMultiplier = 0.08f; //The multiplier for how muc
 constexpr float DefaultPlayerGravity = 5.5f;	//The default gravity.
 constexpr float SwimmingPlayerGravity = 0.4f;	//The default gravity while underwater.
 
+constexpr float FlyingGravityReduction = 4.f;   //How much gravity will be reduced by when gliding.
+
 constexpr float Drag = 4.f;					//How much the player should slow down each frame when they stop moving.
 
 namespace  GAME_NAME
@@ -178,9 +180,11 @@ namespace  GAME_NAME
 				/// </summary>
 				struct {
 					float Health = 100.f;
+					float AbilityMeter = 100.f;
 				} m_stats;
 
 				ProgressBar* m_healthProgressBar;		//Progress bar for displaying health.
+				ProgressBar* m_abilityMeterProgressBar;	//Progress bar for ability meter.
 
 				Particles::ParticleEmitter* const m_particleEmitter;
 
@@ -225,6 +229,12 @@ namespace  GAME_NAME
 					player->seek(Audio::SoundManager::BGMusic, ts);
 					player->setPause(Audio::SoundManager::BGMusic, false);
 				}
+
+				/// <summary>
+				/// Updates the ability meter stat and corrseponding graphics.
+				/// </summary>
+				/// <param name="amount">[float] - How much to add to the ability meter.</param>
+				void updateAbilityMeter(float amount);
 			};
 
 		};

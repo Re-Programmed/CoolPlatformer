@@ -20,14 +20,14 @@ namespace GAME_NAME
 
 			{
 			public:
-				GUIButton(Vec2 position, Vec2 scale, GLuint texture, std::function<void(int)>* onClick)
-					:StaticGUIElement(position, scale, texture), OnClick(onClick), m_buttonId(-1)
+				GUIButton(Vec2 position, Vec2 scale, GLuint texture, std::function<void(int)>* onClick, Vec4 baseColor = { 1.f, 1.f, 1.f, 1.f }, Vec4 hoverColor = { 0.5f, 0.5f, 0.f, 1.f })
+					:StaticGUIElement(position, scale, texture), OnClick(onClick), m_buttonId(-1), m_baseColor(baseColor), m_hoverColor(hoverColor)
 				{
 
 				}
 
-				GUIButton(Vec2 position, Vec2 scale, GLuint texture, std::function<void(int)>* onClick, int buttonId)
-					:StaticGUIElement(position, scale, texture), OnClick(onClick), m_buttonId(buttonId)
+				GUIButton(Vec2 position, Vec2 scale, GLuint texture, std::function<void(int)>* onClick, int buttonId, Vec4 baseColor = { 1.f, 1.f, 1.f, 1.f }, Vec4 hoverColor = { 0.5f, 0.5f, 0.f, 1.f })
+					:StaticGUIElement(position, scale, texture), OnClick(onClick), m_buttonId(buttonId), m_baseColor(baseColor), m_hoverColor(hoverColor)
 				{
 
 				}
@@ -44,9 +44,24 @@ namespace GAME_NAME
 					return m_buttonId;
 				}
 
+				void Render() override;	//Overriden to have detection for hovering.
+
 			private:
+				/// <summary>
+				/// The button id, used to dertermine which button is getting interacted with when a GUI callback is passed.
+				/// </summary>
 				unsigned int m_buttonId;
 
+				/// <summary>
+				/// Represents the color that the button is tinted when it is hovered.
+				/// </summary>
+				const Vec4 m_hoverColor, m_baseColor;
+
+				/// <summary>
+				/// Lerp Timer is used to store how much between states the button is.
+				/// This creates smooth animations between states for buttons.
+				/// </summary>
+				float m_lerpTimer = 0.f;
 			};
 		}
 	}
