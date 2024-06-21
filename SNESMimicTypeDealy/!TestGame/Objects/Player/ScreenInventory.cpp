@@ -35,35 +35,8 @@ namespace GAME_NAME
 			//Iterate over all save states, loading the corresponding item.
 			for (int i = 0; i < data->size(); i++)
 			{
-				//First char indicates the type of the item, and what class should be used to represent it.
-				const char& firstChar = data->at(i).at(0);
-
-				InventoryItem* item = new InventoryItem();
-
-				switch (firstChar)
-				{
-				case ITEM_PREFIX_ITEM:
-					//Decode the item.
-					item->Decode(data->at(i));
-
-					//Item should be null.
-					if (item->GetType() == NULL_ITEM)
-					{
-						delete item;
-						item = nullptr;
-					}
-
-					break;
-				case ITEM_PREFIX_TOOL:
-					//Change item to point to a new tool.
-					delete item;
-					Tool* t = new Tool();
-					t->Decode(data->at(i));
-					item = t;
-					break;
-				}
-
-				AddItem(item, true);
+				InventoryItem* ii = InventoryItem::DecodeItemString(data->at(i));
+				if (ii != nullptr) { AddItem(ii, true); }
 			}
 		}
 	}

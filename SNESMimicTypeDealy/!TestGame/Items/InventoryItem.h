@@ -38,6 +38,8 @@ namespace GAME_NAME
 			SaveParam Encode() override;
 			void Decode(const SaveParam params) override;
 
+			static InventoryItem* DecodeItemString(std::string data);
+
 		protected:
 			/// <summary>
 			/// The type of the item represented by this InventoryItem.

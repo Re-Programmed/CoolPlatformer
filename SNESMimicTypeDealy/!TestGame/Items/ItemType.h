@@ -2,6 +2,9 @@
 #include "../../Rendering/Sprite.h"
 #include "../../Rendering/Renderers/Renderer.h"
 
+#define ITEM_PREFIX_ITEM 'i'
+#define ITEM_PREFIX_TOOL 't'
+
 namespace GAME_NAME
 {
 	namespace Items
@@ -24,7 +27,8 @@ namespace GAME_NAME
 		/// </summary>
 		enum TOOL_ACTION
 		{
-			CHOP = 0b00001 //Can cut down trees.
+			CHOP = 0b00001, //Can cut down trees.
+			EQUIPMENT = 0b00010 //Can be equipped to equipment slots.
 		};
 
 		/// <summary>
@@ -46,7 +50,7 @@ namespace GAME_NAME
 		/// </summary>
 		const ItemData ITEM_DATA[ITEM_COUNT]
 		{
-			{ "Log", 18, NO_HELD_TEXTURE },
+			{ "Log", 18, NO_HELD_TEXTURE, EQUIPMENT },
 			{ "Leaves", 18, NO_HELD_TEXTURE },
 			{ "Stone", 55, NO_HELD_TEXTURE },
 			{ "Axe", 56, SpriteBase(65), CHOP },
@@ -83,5 +87,7 @@ namespace GAME_NAME
 		{
 			return ITEM_DATA[itemType];
 		}
+
+		
 	}
 }

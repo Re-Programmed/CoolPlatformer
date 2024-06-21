@@ -7,10 +7,14 @@
 #include "../../../Components/ChildGameObject.h"
 #include "../../../Objects/Particles/ParticleEmitter.h"
 #include "../../../Objects/GUI/Progress/ProgressBar.h"
+
 #include "ScreenInventory.h"
+#include "Backpack/Backpack.h"
+
 
 #ifndef _PLAYERDEF
 #define _PLAYERDEF
+
 
 constexpr float DefaultPlayerScaleX = 16.f;	//The default size for the player.
 constexpr float DefaultPlayerScaleY = 26.f;	//The default size for the player.
@@ -110,7 +114,10 @@ namespace  GAME_NAME
 					m_frozen += frozen ? 1 : -1;
 				}
 
-
+				inline Backpack* const GetBackpack()
+				{
+					return m_backpack;
+				}
 
 			protected:
 				void onCollision (Vec2 push) override;	//Called when a collision occurs.
@@ -156,6 +163,11 @@ namespace  GAME_NAME
 				};
 
 				PlayerSaveState* const m_saveState;			//Stores all data for the players current save state.
+
+				/// <summary>
+				/// The players current backpack that can be used to store items and equip gear.
+				/// </summary>
+				Backpack* m_backpack;
 
 				/// <summary>
 				/// Drops the currently held item and returns true if the item was sucussfully dropped.

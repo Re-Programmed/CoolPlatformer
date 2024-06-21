@@ -44,6 +44,26 @@ namespace GAME_NAME
 					return m_buttonId;
 				}
 
+				inline void SetHoverColor(Vec4 color)
+				{
+					m_hoverColor = color;
+				}
+
+				inline const Vec4& GetHoverColor()
+				{
+					return m_hoverColor;
+				}
+
+				inline void SetBaseColor(Vec4 color)
+				{
+					m_baseColor = color;
+				}
+
+				inline const Vec4& GetBaseColor()
+				{
+					return m_baseColor;
+				}
+
 				void Render() override;	//Overriden to have detection for hovering.
 
 			private:
@@ -55,7 +75,7 @@ namespace GAME_NAME
 				/// <summary>
 				/// Represents the color that the button is tinted when it is hovered.
 				/// </summary>
-				const Vec4 m_hoverColor, m_baseColor;
+				Vec4 m_hoverColor, m_baseColor;
 
 				/// <summary>
 				/// Lerp Timer is used to store how much between states the button is.

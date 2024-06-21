@@ -288,6 +288,9 @@
     <ClCompile Include="!TestGame\Objects\Environment\Levels\Town1Manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="!TestGame\Objects\Player\Backpack\Backpack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glad\include\glad\glad.h">
@@ -615,6 +618,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="!TestGame\Objects\Environment\Levels\Town1Manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="!TestGame\Objects\Player\Backpack\Backpack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

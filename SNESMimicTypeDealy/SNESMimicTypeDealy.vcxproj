@@ -165,6 +165,7 @@
     <ClCompile Include="!TestGame\Objects\Platforms\RotatingPlatform.cpp" />
     <ClCompile Include="!TestGame\Objects\Platforms\RotatingPlatform.h" />
     <ClCompile Include="!TestGame\Objects\Platforms\FallingPlatform.cpp" />
+    <ClCompile Include="!TestGame\Objects\Player\Backpack\Backpack.cpp" />
     <ClCompile Include="!TestGame\Objects\Player\Player.cpp" />
     <ClCompile Include="!TestGame\Objects\Player\ScreenInventory.cpp" />
     <ClCompile Include="!TestGame\SettingsManager.cpp" />
@@ -262,6 +263,7 @@
     <ClInclude Include="!TestGame\Objects\Environment\Water.h" />
     <ClInclude Include="!TestGame\Objects\LayerFlip.h" />
     <ClInclude Include="!TestGame\Objects\Platforms\FallingPlatform.h" />
+    <ClInclude Include="!TestGame\Objects\Player\Backpack\Backpack.h" />
     <ClInclude Include="!TestGame\Objects\Player\Player.h" />
     <ClInclude Include="!TestGame\Objects\Player\ScreenInventory.h" />
     <ClInclude Include="!TestGame\Objects\Components\Climbable.h" />

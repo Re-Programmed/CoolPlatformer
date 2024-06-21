@@ -19,6 +19,7 @@
 
 #include "../../Items/FloorItem.h"
 
+
 #include <thread>
 
 #define PLAYER_ANIMATION_RUN_WALK_SWITCH 180.f //When the player should switch from the walking to running animation.
@@ -47,7 +48,8 @@ namespace  GAME_NAME
 					Vec2(10, 12), Vec2(46, -3), Renderer::GetSprite(SpriteBase(71))->GetSpriteId()
 				)),
 				MiscStateGroup("pl"), m_saveState(new PlayerSaveState(this)),
-				m_particleEmitter(new Particles::ParticleEmitter(position))
+				m_particleEmitter(new Particles::ParticleEmitter(position)),
+				m_backpack(new Backpack(0))	//Create default backpack (load save in constructor).
 			{
 #if _DEBUG
 				PlayerLogger("Initilized Player");
@@ -139,7 +141,8 @@ namespace  GAME_NAME
 
 				std::thread animationUpdate([this, window] { m_animator->Update(window, this); });
 
-				
+				//Update the current backpack if it is open.
+				if (m_backpack->GetIsOpen()) { m_backpack->Render(); }
 
 				//This makes the current held item move up and down while running to look like it is moving around in the player's hand.
 				if (m_heldItemDisplay != nullptr && m_heldItemDisplay->GetScale().X != 0)
@@ -548,14 +551,40 @@ namespace  GAME_NAME
 					dropHeldItem();
 				}
 
+				/*
+					Player backpack opening.
+				*/
+				if (InputManager::GetKeyUpDown(PLAYER_OPEN_BACKPACK) & InputManager::KEY_STATE_PRESSED)
+				{
+					if (m_backpack->GetIsOpen())
+					{
+						//Close backpack.
+						m_backpack->Close();
+
+						SetFrozen(false);
+						return;
+					}
+
+					//Open backpack GUI.
+					m_backpack->Open();
+
+					//Freeze player inputs.
+					SetFrozen(true);
+					return;
+				}
+
+
 				bool playerIsSkidding = false;
+
 
 				//int joyAxesCount;		JOYSTICK INPUT
 				//const float* joyAxes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &joyAxesCount);
 
+
 				//If the player is frozen, do not check any key presses.
 				if (m_frozen <= 0) 
 				{
+					
 					if (InputManager::GetKey(PLAYER_MOVE_RIGHT))
 					{
 
