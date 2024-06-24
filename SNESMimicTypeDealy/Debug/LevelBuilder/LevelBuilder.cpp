@@ -74,7 +74,7 @@ namespace GAME_NAME::Debug::LevelBuilder
 	{
 		DynamicSprite* ds = Renderer::GetDynamicSprite(SpriteBase(-1));
 		Rendering::Camera::Camera* c = sv_currentLevelBuilder->m_currentGame->GetCamera();
-		ds->Render(c->GetPosition(), c->UIToGlobal(Vec2(0, 0)), Vec2(TargetResolutionX/5.5, TargetResolutionY));
+		ds->Render(c->GetPosition(), c->UIToGlobal(Vec2(0.f, 0.f)), Vec2(TargetResolutionX/5.5f, TargetResolutionY));
 		delete ds;
 
 using namespace GUI;
@@ -89,7 +89,7 @@ using namespace GUI;
 		{
 			SpawnObjects::Spawnable* sObj = SpawnObjects::GetSpawnable(i);
 
-			GUIButton* btn = new GUIButton(Vec2(0, i * 30), Vec2(30, 30), sObj->Spawnables[0].MyObject->GetSprite()->GetSpriteId(), new std::function([](int spawnable) {
+			GUIButton* btn = new GUIButton(Vec2(0.f, (float)i * 30.f), Vec2(30.f, 30.f), sObj->Spawnables[0].MyObject->GetSprite()->GetSpriteId(), new std::function([](int spawnable) {
 				SpawnObjects::Spawnable* spawnableObj = SpawnObjects::GetSpawnable(spawnable);
 
 				for (GAME_NAME::Rendering::Renderer::InstantiateGameObject obj : spawnableObj->Spawnables)
@@ -251,13 +251,13 @@ using namespace GUI;
 			case X_POSITION:
 				if (m_editObject != nullptr)
 				{
-					m_editObject->SetPosition(Vec2(readingNumInput, m_editObject->GetPosition().Y));
+					m_editObject->SetPosition(Vec2((float)readingNumInput, m_editObject->GetPosition().Y));
 				}
 				break;
 			case Y_POSITION:
 				if (m_editObject != nullptr)
 				{
-					m_editObject->SetPosition(Vec2(m_editObject->GetPosition().X, readingNumInput));
+					m_editObject->SetPosition(Vec2(m_editObject->GetPosition().X, (float)readingNumInput));
 				}
 				break;
 			}

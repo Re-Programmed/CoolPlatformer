@@ -8,11 +8,11 @@ namespace GAME_NAME
 	{
 		namespace Environment
 		{
-			typedef struct ParallaxObject
+			/*typedef struct ParallaxObject
 			{
 				GameObject Object;
 				float Amount;
-			};
+			};*/
 
 			class BackgroundObjects
 			{

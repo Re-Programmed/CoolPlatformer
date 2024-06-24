@@ -5,8 +5,8 @@
 
 #include <iostream>
 
-constexpr float minimumCameraZoom = 0.3f;
-constexpr float maximumCameraZoom = 2.f;
+constexpr static float minimumCameraZoom = 0.3f; //Local to Camera
+constexpr static float maximumCameraZoom = 2.f;	//Local to Camera
 
 #define LIMIT_CAMERA_NEGATIVE true //Should the camera not be allowed to move into negative X and Y coords?
 

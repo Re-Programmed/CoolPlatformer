@@ -53,7 +53,7 @@ namespace GAME_NAME
         void GameObject::RotateAboutCenter(float rotation)
         {
             //Get the rotation of the object before it has rotated starting from the bottom left in radians. (Subtract 3pi/4 to make the rotation begin from the bottom left.)
-            float rotOffPrev = MathUtils::to_radf(m_rotation) - M_3_PI_4;
+            float rotOffPrev = MathUtils::to_radf(m_rotation) - M_3_PI_4f;
 
             //Rotate the object from the bottom left.
             m_rotation += rotation;
@@ -72,7 +72,7 @@ namespace GAME_NAME
             float rotOff = rotOffPrev + MathUtils::to_radf(rotation);
 
             //Translate the object by calculating the distance between the desired center and the new center based on the distance the center traveled (ex. cos(start) - cos(prev) * [diagonal midpoint]).
-            m_rotationOffset += Vec2((m_scale.X * MATHUTILS_INVSQRT2) * (std::cosf(rotOff) - std::cosf(rotOffPrev)), (m_scale.Y * MATHUTILS_INVSQRT2) * (std::sinf(rotOff) - std::sinf(rotOffPrev)));
+            m_rotationOffset += Vec2((m_scale.X * MATHUTILS_INVSQRT2f) * (std::cosf(rotOff) - std::cosf(rotOffPrev)), (m_scale.Y * MATHUTILS_INVSQRT2f) * (std::sinf(rotOff) - std::sinf(rotOffPrev)));
         }
 
         Rendering::Sprite* GameObject::GetSprite()
@@ -86,13 +86,15 @@ namespace GAME_NAME
         }
 
 
-        GameObject::GameObject() : m_position(Vec2::Zero), m_scale(Vec2::Zero), m_rotation(0.f), m_rotationOffset(0)
+        //Default constructor.
+        GameObject::GameObject() : m_position(Vec2::Zero), m_scale(Vec2::Zero), m_rotation(0.f), m_rotationOffset(0), m_sprite(nullptr), m_textureFlipped(false)
         {
 
         }
 
         GameObject::~GameObject()
         {
+            //UH OH MEMORY LEAK? WHY NO DELETE FIX FIX FIX (TODO FIX)
             //delete m_sprite;
         }
 

@@ -19,6 +19,8 @@ namespace GAME_NAME
 						return (GUIManager::GUI_ELEMENT_TYPE)i;
 					}
 				}
+
+				return GUIManager::EL_BLANK;
 			}
 
 			void GUIManager::ButtonClickEvent(Vec2 position)

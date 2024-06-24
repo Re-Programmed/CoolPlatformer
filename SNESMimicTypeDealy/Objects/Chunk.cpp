@@ -31,7 +31,7 @@ namespace GAME_NAME
 					m_objects[layer].push_back(object);
 				}
 			}
-			catch (int x)
+			catch (...)
 			{
 
 			}
@@ -61,7 +61,7 @@ namespace GAME_NAME
 			case RENDER_LAYER_BG:
 				if (m_bgSprite != nullptr)
 				{
-					m_bgSprite->Render(cameraPosition, m_position << ChunkShift, Vec2(-chunkSize, chunkSize));
+					m_bgSprite->Render(cameraPosition, m_position << ChunkShift, Vec2(-(float)chunkSize, (float)chunkSize));
 				}
 				break;
 			case RENDER_LAYER_OBJECTS:

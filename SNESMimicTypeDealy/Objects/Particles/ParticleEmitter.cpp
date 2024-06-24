@@ -31,7 +31,7 @@ namespace GAME_NAME::Objects::Particles
 
 			particleSprite.Render(cameraPosition, m_spawned[i].Position, m_spawned[i].Scale, m_spawned[i].Rotation);
 
-			m_spawned[i].Lifetime += Utils::Time::GameTime::GetScaledDeltaTime();
+			m_spawned[i].Lifetime += (float)Utils::Time::GameTime::GetScaledDeltaTime();
 
 			//Update velocities.
 			m_spawned[i].Position += m_spawned[i].Velocity + m_spawned[i].ConstantVelocity;

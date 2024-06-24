@@ -49,7 +49,7 @@ namespace GAME_NAME
 			float aDist = abs(a.X - b.X);
 			float bDist = abs(a.Y - b.Y);
 
-			return sqrt(aDist * aDist + bDist * bDist);
+			return sqrtf(aDist * aDist + bDist * bDist);
 		}
 
 	}

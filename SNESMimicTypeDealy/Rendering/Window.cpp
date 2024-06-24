@@ -39,16 +39,16 @@ namespace GAME_NAME
 		}
 
 		//Figure out what the width and height should be based off of each other.
-		float adjustedWindowW = (float)height * (FORCE_WINDOW_RATIO_X / FORCE_WINDOW_RATIO_Y);
-		float adjustedWindowH = (float)width * (FORCE_WINDOW_RATIO_Y / FORCE_WINDOW_RATIO_X);
+		float adjustedWindowW = ((float)height * (FORCE_WINDOW_RATIO_X / FORCE_WINDOW_RATIO_Y));
+		float adjustedWindowH = ((float)width * (FORCE_WINDOW_RATIO_Y / FORCE_WINDOW_RATIO_X));
 
 		//Update the window size that was not changed to fit the ratio.
 		if (lastWindowSize != nullptr && lastWindowSize->X != width)
 		{
-			glfwSetWindowSize(window, width, adjustedWindowH);
+			glfwSetWindowSize(window, width, (int)adjustedWindowH);
 		}
 		else {
-			glfwSetWindowSize(window, adjustedWindowW, height);
+			glfwSetWindowSize(window, (int)adjustedWindowW, height);
 		}
 
 		//Update the last window size to the new size.
@@ -57,8 +57,8 @@ namespace GAME_NAME
 		//Set sprite scaling. (Maintains the size of sprites and camera zoom when the window is changed.)
 		Sprite::SetResolution(Vec2(width, height));
 
-		AppData::Settings::SettingsGlobals::WindowResolutionX.Value = adjustedWindowW;
-		AppData::Settings::SettingsGlobals::WindowResolutionY.Value = adjustedWindowH;
+		AppData::Settings::SettingsGlobals::WindowResolutionX.Value = (uint16_t)adjustedWindowW;
+		AppData::Settings::SettingsGlobals::WindowResolutionY.Value = (uint16_t)adjustedWindowH;
 	}
 
 	GLFWwindow* Window::GetWindow()

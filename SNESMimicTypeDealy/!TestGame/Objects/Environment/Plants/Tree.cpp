@@ -20,7 +20,7 @@ namespace GAME_NAME::Objects::Environment::Plants
 		AnimData rustleData;
 		rustleData.Sprites.push_back(new Sprite(m_sprite->GetSpriteId() + 1));
 		rustleData.Sprites.push_back(new Sprite(m_sprite->GetSpriteId() + 2));
-		std::shared_ptr<GAME_NAME::Components::Animation::Animation> rustle(new GAME_NAME::Components::Animation::Animation(rustleData, 0.2));
+		std::shared_ptr<GAME_NAME::Components::Animation::Animation> rustle(new GAME_NAME::Components::Animation::Animation(rustleData, 0.2f));
 
 		std::vector<std::shared_ptr<GAME_NAME::Components::Animation::Animation>> anims{ rustle };
 
@@ -80,7 +80,7 @@ using namespace Particles;
 			//delete obj;
 
 			particle1.Velocity = Vec2((float)(std::rand() * 100 / RAND_MAX) / 100.f - 0.5f, 1.f + (float)(std::rand() * 100 / RAND_MAX) / 100.f - 0.5f);
-			particle1.RotationalVelocity = (std::rand() * 12 / RAND_MAX) - 6;
+			particle1.RotationalVelocity = static_cast<float>((std::rand() * 12 / RAND_MAX) - 6);
 			particle1.ConstantVelocity = Vec2((float)(std::rand() * 100 / RAND_MAX) / 100.f - 0.5f, -0.3f);
 			particle1.TargetOpacity = 0.f;
 			particle1.TargetScale = 0.f;
@@ -104,7 +104,7 @@ using namespace Particles;
 
 	bool Tree::Rustle()
 	{
-		m_rustleCounter += Utils::Time::GameTime::GetScaledDeltaTime();
+		m_rustleCounter += (float)Utils::Time::GameTime::GetScaledDeltaTime();
 		m_animator->SetCurrentAnimation(0);
 
 		if (m_rustleCounter > 1.85f)

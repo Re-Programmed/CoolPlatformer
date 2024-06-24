@@ -2,6 +2,8 @@
 #include "../../Rendering/Sprite.h"
 #include "../../Rendering/Renderers/Renderer.h"
 
+#include <unordered_map>
+
 #define ITEM_PREFIX_ITEM 'i'
 #define ITEM_PREFIX_TOOL 't'
 
@@ -28,7 +30,8 @@ namespace GAME_NAME
 		enum TOOL_ACTION
 		{
 			CHOP = 0b00001, //Can cut down trees.
-			EQUIPMENT = 0b00010 //Can be equipped to equipment slots.
+			EQUIPMENT = 0b00010, //Can be equipped to equipment slots.
+			MINE = 0b00100, //Can break BreakableBlocks. (provide a strength attribute)
 		};
 
 		/// <summary>
@@ -37,10 +40,26 @@ namespace GAME_NAME
 		/// </summary>
 		struct ItemData
 		{
+			/// <summary>
+			/// The name of the item.
+			/// </summary>
 			const std::string DisplayName;
+			/// <summary>
+			/// The texture for the inventory display of the item.
+			/// </summary>
 			const uint16_t Texture;
+			/// <summary>
+			/// The texture for holding the item. 
+			/// </summary>
 			const int16_t HeldTexture;
+			/// <summary>
+			/// A flag list of things the item can do.
+			/// </summary>
 			const uint16_t Actions = 0;
+			/// <summary>
+			/// Stores data about the items actions like its strength.
+			/// </summary>
+			const std::unordered_map<TOOL_ACTION, std::string> Attributes;
 		};
 
 #define NO_HELD_TEXTURE GLOBAL_SPRITE_BASE

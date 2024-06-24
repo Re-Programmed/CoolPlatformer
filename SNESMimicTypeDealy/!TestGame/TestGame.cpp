@@ -165,7 +165,7 @@ namespace GAME_NAME
 
 		//Set the current random seed to the time since epoch in seconds.
 		auto tp = std::chrono::system_clock::now();
-		unsigned int sRand = tp.time_since_epoch().count();
+		unsigned int sRand = (unsigned int)tp.time_since_epoch().count();
 
 		std::cout << "====================== SRAND: " << sRand << std::endl;
 		std::srand(sRand);

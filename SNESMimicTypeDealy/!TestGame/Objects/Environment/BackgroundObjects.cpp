@@ -13,7 +13,7 @@ namespace GAME_NAME
 				int width;
 				glfwGetWindowSize(window, &width, NULL);
 
-				int n = 1 + width/tile->GetScale().X;
+				int n = 1 + width/(int)tile->GetScale().X;
 				for (int i = 0; i < n; i++)
 				{
 					int tileP = count * (std::rand() / RAND_MAX);

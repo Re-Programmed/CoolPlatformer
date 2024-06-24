@@ -19,4 +19,10 @@ namespace GAME_NAME::Objects::Enemies
 
 		ActiveBoxCollisionGravityObject::~ActiveBoxCollisionGravityObject();
 	}
+
+	Enemy::EnemyAttributes::EnemyAttributes()
+		: InputAttributes(nullptr)
+	{
+
+	}
 }

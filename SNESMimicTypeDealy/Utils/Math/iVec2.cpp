@@ -9,14 +9,14 @@ namespace GAME_NAME {
 
 		
 		iVec2::iVec2(Vec2 v)
-			: m_X(v.X), m_Y(v.Y)
+			: m_X((const int)v.X), m_Y((const int)v.Y)
 		{
 
 		}
 
 		Vec2 iVec2::ToVec2()
 		{
-			return Vec2(m_X, m_Y);
+			return Vec2((const float)m_X, (const float)m_Y);
 		}
 
 	}

@@ -17,7 +17,7 @@ namespace GAME_NAME
 				m_physicsTicks = 0;
 				m_stackedPhysicsTicks += GAME_NAME::Utils::Time::GameTime::GetScaledDeltaTime();
 
-				object->Translate(m_velocity * GAME_NAME::Utils::Time::GameTime::GetScaledDeltaTime());
+				object->Translate(m_velocity * (const float)GAME_NAME::Utils::Time::GameTime::GetScaledDeltaTime());
 				frameTick(window, object);
 
 				if (m_stackedPhysicsTicks >= PHYSICS_COMPONENT_TARGET_SPF)

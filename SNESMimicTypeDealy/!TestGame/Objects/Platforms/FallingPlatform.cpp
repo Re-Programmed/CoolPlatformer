@@ -40,7 +40,7 @@ namespace GAME_NAME::Objects::Platforms
 		}
 		else if (m_fallCounter > 0)
 		{
-			m_fallCounter += Utils::Time::GameTime::GetScaledDeltaTime();
+			m_fallCounter += (float)Utils::Time::GameTime::GetScaledDeltaTime();
 		}
 	}
 }

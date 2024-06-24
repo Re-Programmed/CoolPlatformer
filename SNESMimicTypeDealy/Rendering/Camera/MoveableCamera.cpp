@@ -13,7 +13,7 @@ namespace GAME_NAME
 			using namespace MathUtils;
 			void onScroll(GLFWwindow* window, double xoffset, double yoffset)
 			{
-				mainMoveableCamera->Zoom(yoffset * 0.01f * ZOOM_SPEED);
+				mainMoveableCamera->Zoom((float)yoffset * 0.01f * ZOOM_SPEED);
 			}
 
 			MoveableCamera::MoveableCamera()

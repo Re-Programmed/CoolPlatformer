@@ -7,7 +7,7 @@
 
 namespace GAME_NAME
 {
-	constexpr float TargetResolutionX = 320.f, TargetResolutionY = 180.f; //Resolution to scale sprites by.
+	constexpr static float TargetResolutionX = 320.f, TargetResolutionY = 180.f; //Resolution to scale sprites by.
 
 	namespace Rendering
 	{

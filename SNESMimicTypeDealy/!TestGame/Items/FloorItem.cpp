@@ -38,7 +38,7 @@ namespace GAME_NAME
 			if (m_pickedUp) { return; }
 
 			//Track the lifetime of the item for pickup delay.
-			m_lifetime += Utils::Time::GameTime::GetScaledDeltaTime();
+			m_lifetime += (float)Utils::Time::GameTime::GetScaledDeltaTime();
 
 			if (m_lifetime >= m_pickupDelay)
 			{

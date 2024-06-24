@@ -123,7 +123,7 @@ namespace GAME_NAME
 			/// <summary>
 			/// Used for specifying params when instantiating an object. (GameObject*, bool Active, int Layer, bool Front)
 			/// </summary>
-			typedef struct InstantiateGameObject {
+			struct InstantiateGameObject {
 				GameObject* MyObject; //The object to spawn.
 				const bool Active; //If it's an active object.
 				const int Layer; //The layer to load it on.

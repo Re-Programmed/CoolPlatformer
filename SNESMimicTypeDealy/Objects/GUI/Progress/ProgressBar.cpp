@@ -24,7 +24,7 @@ namespace GAME_NAME::Objects::GUI
 			delete m_sprite;
 
 			//Smoothly update display percentage.
-			m_displayPercentage = std::lerp(m_displayPercentage, m_percentage, 0.01f);
+			m_displayPercentage = (float)std::lerp(m_displayPercentage, m_percentage, 0.01f);
 
 
 			Vec2 textureCoords[4]{

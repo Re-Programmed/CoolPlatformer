@@ -45,7 +45,7 @@ namespace GAME_NAME::Objects::Enemies
 			const float& endpointPause = static_cast<LeftRightEnemyAttributes*>(m_enemyAttributes)->EndpointPause;
 			if (endpointPause > 0.F)
 			{
-				m_pauseTimeCounter += Utils::Time::GameTime::GetScaledDeltaTime();
+				m_pauseTimeCounter += (float)Utils::Time::GameTime::GetScaledDeltaTime();
 
 				if (m_pauseTimeCounter < endpointPause)
 				{

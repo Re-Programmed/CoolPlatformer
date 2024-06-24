@@ -16,7 +16,7 @@ namespace GAME_NAME::Debug::LevelBuilder
 	class SpawnObjects
 	{
 	public:
-		typedef struct Spawnable {
+		struct Spawnable {
 			const std::vector<Renderer::InstantiateGameObject> Spawnables;
 
 			Spawnable(std::vector<Renderer::InstantiateGameObject> objects)

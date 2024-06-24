@@ -17,18 +17,18 @@ namespace GAME_NAME
 		{
 		public:
 			ComponentObject(Vec2 position, Vec2 scale, GAME_NAME::Rendering::Sprite* sprite, std::vector<IComponent*> components)
-				: GameObject(position, scale, sprite), m_componentCount(components.size())
+				: GameObject(position, scale, sprite), m_componentCount(static_cast<unsigned int>(components.size())), m_components(components)
 			{
-				for (int i = 0; i < components.size(); i++)
+				for (unsigned int i = 0; i < components.size(); i++)
 				{
-					m_components[i] = components[i];
+					//m_components[i] = components[i];
 					m_components[i]->Init(this);
 				}
 			}
 
 			virtual void Update(GLFWwindow* window)
 			{
-				for (int i = 0; i < m_componentCount; i++)
+				for (unsigned int i = 0; i < m_componentCount; i++)
 				{
 					m_components[i]->Update(window, this);
 				}
@@ -41,7 +41,7 @@ namespace GAME_NAME
 
 		private:
 			const unsigned int m_componentCount;
-			IComponent* m_components[];
+			const std::vector<IComponent*> m_components;
 		};
 	}
 }

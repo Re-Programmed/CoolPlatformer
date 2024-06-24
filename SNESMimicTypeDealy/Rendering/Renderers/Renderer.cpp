@@ -73,7 +73,7 @@ namespace GAME_NAME
 
 		void Renderer::ClearGUIObjects(uint16_t startIndex, uint8_t layer)
 		{
-			startIndex = m_guiGameObjects[layer].size() - startIndex;
+			startIndex = (uint16_t)m_guiGameObjects[layer].size() - startIndex;
 			size_t size = m_guiGameObjects[layer].size();
 			do {
 				size--;
@@ -196,7 +196,7 @@ namespace GAME_NAME
 #endif
 
 			//Update last file off if any of the first sprites loaded were cleared.
-			lastFileOff = startIndex == 0 ? -1 : (startIndex > lastFileOff) ? lastFileOff : startIndex;
+			lastFileOff = startIndex == 0 ? -1 : (startIndex > static_cast<unsigned int>(lastFileOff < 0 ? 0 : lastFileOff)) ? lastFileOff : startIndex;
 			for (unsigned int i = startIndex; i < spriteCount + bgCount; i++)
 			{
 #if _DEBUG
@@ -300,7 +300,7 @@ namespace GAME_NAME
 
 			free(data);
 
-			return m_textureIDs.size() - 1;
+			return (GLuint)m_textureIDs.size() - 1;
 		}
 
 		void Renderer::InitChunks(std::vector<int> chunkData)
@@ -311,7 +311,7 @@ namespace GAME_NAME
 				{
 					int currChunk = y + static_cast<int>(x * levelSizeY);
 
-					Renderer::m_chunks[currChunk] = Chunk(Vec2(x, y), currChunk >= chunkData.size() ? 0 : (chunkData[currChunk] == 0 ? nullptr : getBackground(chunkData[currChunk])));
+					Renderer::m_chunks[currChunk] = Chunk(Vec2((float)x, (float)y), currChunk >= chunkData.size() ? 0 : (chunkData[currChunk] == 0 ? nullptr : getBackground(chunkData[currChunk])));
 				}
 			}
 		}
@@ -332,7 +332,7 @@ namespace GAME_NAME
 			int chunkY = AsChunkPosition(static_cast<int>(object->GetPosition().Y));
 
 #if _DEBUG
-			std::cout << "Loaded Object in position: " + Vec2(chunkX, chunkY).ToString() << std::endl;
+			std::cout << "Loaded Object in position: " + Vec2((float)chunkX, (float)chunkY).ToString() << std::endl;
 			if (chunkY >= levelSizeY)
 			{
 				DebugLog::LogError("Object is outside of chunk height boundaries! WRAPPING TO NEXT CHUNK COLUMN WILL OCCUR.");
@@ -382,7 +382,7 @@ namespace GAME_NAME
 							try {
 								m_guiGameObjects[currLayer][i]->Render();
 							}
-							catch (int i)
+							catch (...)
 							{
 
 							}
@@ -395,7 +395,7 @@ namespace GAME_NAME
 
 			Vec2 cameraPosition = camera->GetPosition() / parallax;
 
-			constexpr unsigned int cameraBoundsPadding = chunkSize * (1.33f);
+			constexpr unsigned int cameraBoundsPadding = (int)(chunkSize * (1.33f));
 
 			//Define const variables.
 
@@ -406,7 +406,7 @@ namespace GAME_NAME
 				std::vector<GameObject*> renderBuffer;
 
 				Vec2 cameraPositionPadding = cameraPosition - cameraBoundsPadding / 2.f;
-				Vec2 cameraBounds = Vec2(cameraBoundingBox.GetX(), cameraBoundingBox.GetY());
+				Vec2 cameraBounds = Vec2(static_cast<const float>(cameraBoundingBox.GetX()), static_cast<const float>(cameraBoundingBox.GetY()));
 				//Render active objects if they are on screen. Renders in order of layers from least to greatest.
 				for (int i = 1; i < MICRO_RENDER_LAYER_COUNT; i++)
 				{
@@ -451,7 +451,7 @@ namespace GAME_NAME
 			//delete cameraPositionPadding;
 
 			const int iterInit = cameraChunkPosition.GetX() * levelSizeY + cameraChunkPosition.GetY() - (levelSizeY * 2);
-			const int iterEnd = AsChunkPosition((int)cameraPosition.X + cameraBoundingBox.GetX() + 2) * levelSizeY;
+			const int iterEnd = (AsChunkPosition(((int)cameraPosition.X + cameraBoundingBox.GetX() + 2))) * levelSizeY;
 
 
 			for (int rLayer = 0; rLayer < MICRO_RENDER_LAYER_COUNT; rLayer++)
@@ -526,7 +526,7 @@ namespace GAME_NAME
 					}
 				}
 				else {
-					for (int i = MICRO_RENDER_LAYER_COUNT; i > 0; i--)
+					for (int i = MICRO_RENDER_LAYER_COUNT - 1; i >= 0; i--)
 					{
 						for (GameObject* obj : m_activeGameObjects[i])
 						{

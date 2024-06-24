@@ -7,14 +7,17 @@ namespace GAME_NAME
 	{
 		namespace Physics
 		{
-			int renderCalls = 0;
-			float tAlloc = 0;
-			float m_curr = 0;
+			/* ---RENDER UPDATE COUNTER---
+			int renderCalls = 0; //TODO: REMOVE
+			double tAlloc = 0;
+			double m_curr = 0;
+			*/
 			void GravityComponent::physicsTick(GLFWwindow* window, Objects::GameObject* object)
 			{
+				/* ---RENDER UPDATE COUNTER---
 				{
 					renderCalls++;
-					float t = glfwGetTime();
+					double t = glfwGetTime();
 					tAlloc += t - m_curr;
 					m_curr = t;
 
@@ -24,7 +27,7 @@ namespace GAME_NAME
 						std::cout << "PHYS IN LAST SECOND: " << renderCalls << std::endl;
 						renderCalls = 0;
 					}
-				}
+				} */
 
 				//std::cout << "TICK" << std::endl;
 				if (m_gravitationalVelocity < m_terminalVelocity)

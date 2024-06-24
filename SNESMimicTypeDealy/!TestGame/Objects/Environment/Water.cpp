@@ -58,10 +58,10 @@ namespace GAME_NAME
 			{
 				checkPlayerIn();
 
-				const double sin = (std::sin(glfwGetTime()) / 5.0);
-				const double sin1 = (std::sin(glfwGetTime() * 1.1) / 5.0);
-				const double sin2 = (std::sin(glfwGetTime() * 1.2) / 5.0);
-				const double sin3 = (std::sin(glfwGetTime() * 1.3) / 5.0);
+				const float sin = (float)(std::sin(glfwGetTime()) / 5.0);
+				const float sin1 = (float)(std::sin(glfwGetTime() * 1.1) / 5.0);
+				const float sin2 = (float)(std::sin(glfwGetTime() * 1.2) / 5.0);
+				const float sin3 = (float)(std::sin(glfwGetTime() * 1.3) / 5.0);
 
 				const Vec2 camPos = TestGame::INSTANCE->GetCamera()->GetPosition();
 				for (int i = 0; i < m_bakedReflections.size(); i++)
@@ -142,7 +142,7 @@ namespace GAME_NAME
 						Vec4(1.f, 1.f, 1.f, v1Colors)
 					};
 
-					DynamicSprite(obj->GetSprite()->GetSpriteId(), vertices, texture, textureColor).Render(camPos, Vec2(pos.X + (obj->GetTextureFlipped() ? 0 : scale.X), (2 * m_reflectionPosition.Y) - pos.Y - scale.Y), scale * Vec2((obj->GetTextureFlipped() ? 1 : -1), 1));
+					DynamicSprite(obj->GetSprite()->GetSpriteId(), vertices, texture, textureColor).Render(camPos, Vec2(pos.X + (obj->GetTextureFlipped() ? 0 : scale.X), (2 * m_reflectionPosition.Y) - pos.Y - scale.Y), scale * Vec2((obj->GetTextureFlipped() ? 1.f : -1.f), 1.f));
 				}
 			}
 

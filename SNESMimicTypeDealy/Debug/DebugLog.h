@@ -7,7 +7,7 @@
 
 namespace DEBUG
 {
-	static class DebugLog
+	class DebugLog
 	{
 	public:
 		/// <summary>
@@ -51,7 +51,6 @@ namespace DEBUG
 		/// Logs plain text.
 		/// </summary>
 		/// <param name="log">The text to show.</param>
-		/// <param name="showTime">If true, shows the time elasped when the message was displayed.</param>
 		/// <param name="additionalStyle">Any ANSI codes to add to the text. Must start with a ";".</param>
 		static void LogPlain(std::string log, std::string additionalStyle = "")
 		{

@@ -161,7 +161,7 @@ using namespace GUI::Text;
 						GUIManager::UnregisterButton(button);
 					}
 				}
-				catch (int e)
+				catch (...)
 				{
 
 				}

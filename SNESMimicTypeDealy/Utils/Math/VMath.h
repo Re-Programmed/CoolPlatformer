@@ -7,10 +7,15 @@ namespace GAME_NAME
 {
 	namespace MathUtils
 	{
-#define M_3_PI_4 2.35619449019	//3pi/4
+#define M_3_PI_4 2.35619449019	//STORED FOR EFFICIENCY: 3pi/4
+#define M_3_PI_4f 2.35619449019f //STORED FOR EFFICIENCY: 3pi/4
 
-#define MATHUTILS_INVSQRT2 0.707106781187
+#define M_PIf 3.14159265358979323846f
 
+#define MATHUTILS_INVSQRT2 0.707106781187 //STORED FOR EFFICIENCY: 1/sqrt(2)
+#define MATHUTILS_INVSQRT2f 0.707106781187f //STORED FOR EFFICIENCY: 1/sqrt(2)
+
+		///Silly function some guy came up with that maybe is fast but probably dosent matter on modern devices.
 		float inv_sqrtf(float number)
 		{
 			union {
@@ -30,7 +35,7 @@ namespace GAME_NAME
 
 		inline float to_radf(float number)
 		{
-			return (number / 180) * M_PI;
+			return (number / 180.f) * M_PIf;
 		}
 	}
 }

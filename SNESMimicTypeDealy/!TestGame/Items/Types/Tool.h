@@ -26,6 +26,6 @@ namespace GAME_NAME::Items
 	protected:
 		int m_uses SERIALIZED;
 
-		inline const char&& getPrefix() override { return ITEM_PREFIX_TOOL; }
+		inline constexpr const char getPrefix() override { return ITEM_PREFIX_TOOL; }
 	};
 }

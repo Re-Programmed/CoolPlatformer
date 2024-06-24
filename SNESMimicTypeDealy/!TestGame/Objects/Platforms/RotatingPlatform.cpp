@@ -2,6 +2,8 @@
 
 #include "../../../MusicSync/MusicSync.h"
 
+#include <corecrt_math_defines.h> //For M_PI
+
 namespace GAME_NAME::Objects::Platforms
 {
 	RotatingPlatform::RotatingPlatform(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, Vec2 rotationCenter, double speed, double offset)
@@ -16,10 +18,10 @@ namespace GAME_NAME::Objects::Platforms
 
 		using namespace Utils::Time;
 
-		double eTime = MusicSync::MusicSync::GetElapsedTimeWithinBeats(m_rotationSpeed);
+		double eTime = MusicSync::MusicSync::GetElapsedTimeWithinBeats((int)m_rotationSpeed);
 
-		float xPos = std::cos(eTime * 2 * 3.141592653589793 + m_rotationOffset) * m_rotationRadius;
-		float yPos = std::sin(eTime * 2 * 3.141592653589793 + m_rotationOffset) * m_rotationRadius;
+		float xPos = (float)std::cos(eTime * 2 * M_PI + m_rotationOffset) * m_rotationRadius;
+		float yPos = (float)std::sin(eTime * 2 * M_PI + m_rotationOffset) * m_rotationRadius;
 
 		SetPosition(Vec2(xPos + m_rotationOrigin.X, yPos + m_rotationOrigin.Y));
 	}

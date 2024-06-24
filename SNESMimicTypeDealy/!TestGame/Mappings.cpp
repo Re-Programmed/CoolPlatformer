@@ -35,7 +35,7 @@
 
 #include "./Objects/Environment/BreakableBlock.h"
 
-constexpr int8_t GenesisTileSize = 8;
+constexpr float GenesisTileSize = 8.f;
 
 std::vector<std::shared_ptr<GAME_NAME::Objects::Environment::Buildings::BuildingZone>> BUILDING_createdBuildingZones;
 
@@ -44,15 +44,15 @@ inline Vec2 STOIVEC(std::string x, std::string y)
 	float xcoord, ycoord;
 	if (x.ends_with("t"))
 	{
-		xcoord = std::stoi(x.erase(x.length() - 1)) * GenesisTileSize;
+		xcoord = std::stof(x.erase(x.length() - 1)) * GenesisTileSize;
 	}
-	else { xcoord = std::stoi(x); }
+	else { xcoord = std::stof(x); }
 
 	if (y.ends_with("t"))
 	{
-		ycoord = std::stoi(y.erase(y.length() - 1)) * GenesisTileSize;
+		ycoord = std::stof(y.erase(y.length() - 1)) * GenesisTileSize;
 	}
-	else { ycoord = std::stoi(y); }
+	else { ycoord = std::stof(y); }
 
 	return GAME_NAME::MathUtils::Vec2(xcoord, ycoord);
 }
@@ -410,7 +410,7 @@ using namespace Cutscenes;
 	},
 
 	/*
-		15: Breakable Object (map,positionX,positionY,scaleX,scaleY,sprite,layer,breakResistance)
+		15: Breakable Object (map,positionX,positionY,scaleX,scaleY,sprite,layer,breakSeconds[double],breakResistance)
 	*/
 
 	[](std::vector<std::string> data, size_t n)
@@ -419,7 +419,7 @@ using namespace Cutscenes;
 		DebugMapper("Loading Breakable Object");
 #endif
 
-		BreakableBlock* bb = new BreakableBlock(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])));
+		BreakableBlock* bb = new BreakableBlock(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), std::stod(data[5]), std::stoi(data[6]));
 		Renderer::LoadObject(bb, std::stoi(data[5]));
 	}
 };

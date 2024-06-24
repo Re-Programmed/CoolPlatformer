@@ -41,6 +41,7 @@ namespace  GAME_NAME
 
 			Player::Player(Vec2 position)
 				: ActiveBoxCollisionGravityObject(position, Vec2(DefaultPlayerScaleX, DefaultPlayerScaleY), Rendering::Renderer::GetSprite(DefaultPlayerSprite)), m_screenInventory(new ScreenInventory()),
+				m_heldItemLastSprite(nullptr),
 				m_healthProgressBar(new ProgressBar(
 					Vec2(20, 18), Vec2(32, -3), Renderer::GetSprite(SpriteBase(72))->GetSpriteId()
 				)),
@@ -143,6 +144,7 @@ namespace  GAME_NAME
 
 				//Update the current backpack if it is open.
 				if (m_backpack->GetIsOpen()) { m_backpack->Render(); }
+				else { m_backpack->UpdateCursorItemDisplay(); }
 
 				//This makes the current held item move up and down while running to look like it is moving around in the player's hand.
 				if (m_heldItemDisplay != nullptr && m_heldItemDisplay->GetScale().X != 0)
@@ -162,7 +164,7 @@ namespace  GAME_NAME
 				}
 
 				//Update the health bar display.
-				m_healthProgressBar->SetPercentage(m_stats.Health);
+				m_healthProgressBar->SetPercentage(static_cast<char>(std::clamp(m_stats.Health, 0.f, 100.f)));
 
 #if _DEBUG
 				if (!m_flight)
@@ -218,10 +220,10 @@ namespace  GAME_NAME
 
 				if (m_swimming)
 				{
-					const double sin = (std::sin(glfwGetTime()) / 20.0);
-					const double sin1 = (std::sin(glfwGetTime() * 1.1) / 20.0);
-					const double sin2 = (std::sin(glfwGetTime() * 1.2) / 20.0);
-					const double sin3 = (std::sin(glfwGetTime() * 1.3) / 20.0);
+					const float sin = (std::sinf((float)glfwGetTime()) / 20.f);
+					const float sin1 = (std::sinf((float)glfwGetTime() * 1.1f) / 20.f);
+					const float sin2 = (std::sinf((float)glfwGetTime() * 1.2f) / 20.f);
+					const float sin3 = (std::sinf((float)glfwGetTime() * 1.3f) / 20.f);
 
 					Vec2 vertices[4]{
 						Vec2(0.f + sin, 0.f),
@@ -361,7 +363,7 @@ namespace  GAME_NAME
 			{
 				CreateBloodParticle();
 				m_stats.Health -= damage;
-				m_healthProgressBar->SetPercentage(m_stats.Health);
+				m_healthProgressBar->SetPercentage(static_cast<char>(std::clamp(m_stats.Health, 0.f, 100.f)));
 
 				if (m_stats.Health <= 0)
 				{
@@ -430,7 +432,7 @@ namespace  GAME_NAME
 					{
 						std::cout << m_airTime << std::endl;
 
-						Damage((m_airTime - 1.85f) * 10.f);
+						Damage(((float)m_airTime - 1.85f) * 10.f);
 					}
 
 					m_airTime = 0;
@@ -468,10 +470,10 @@ namespace  GAME_NAME
 					switch (i)
 					{
 					case 0:
-						m_position.X = std::stoi(param);
+						m_position.X = std::stof(param);
 						break;
 					case 1:
-						m_position.Y = std::stoi(param);
+						m_position.Y = std::stof(param);
 						break;
 					}
 
@@ -495,7 +497,7 @@ namespace  GAME_NAME
 				//Create the object for the item.
 				Items::FloorItem* createdItem = new Items::FloorItem(m_position + (m_scale / 2), item->GetType(), 3.5F);
 				createdItem->GetPhysics()->AddVelocity(m_textureFlipped ? Vec2{ 1.f, 0.3f } : Vec2{ -1.f, 0.3f });
-				createdItem->GetPhysics()->AddRotationalVelocity(std::rand() * 30 / RAND_MAX);
+				createdItem->GetPhysics()->AddRotationalVelocity(std::rand() * 30.f / RAND_MAX);
 				Renderer::InstantiateObject(Renderer::InstantiateGameObject(createdItem, true, 1, false));
 
 				m_screenInventory->SetItem(m_screenInventory->GetSelectedSlot(), nullptr);
@@ -597,8 +599,8 @@ namespace  GAME_NAME
 #endif
 						if (m_physics->GetVelocity().X < PlayerSpeedCap)
 						{
-							m_physics->SetFrictionDrag(0);
-							m_physics->AddVelocity(Vec2((Time::GameTime::GetScaledDeltaTime() / 0.017f) * (PlayerSpeedCap - m_physics->GetVelocity().X) * (PlayerSpeed), 0.f));
+							m_physics->SetFrictionDrag(0.f);
+							m_physics->AddVelocity(Vec2(((float)Time::GameTime::GetScaledDeltaTime() / 0.017f) * (PlayerSpeedCap - m_physics->GetVelocity().X) * (PlayerSpeed), 0.f));
 
 							//Check if the player has begun to move to the right, play a sliding animation if slowing down, flip the sprite if moving right.
 							if (m_physics->GetVelocity().X > 0)
@@ -624,7 +626,7 @@ namespace  GAME_NAME
 						if (m_physics->GetVelocity().X > -PlayerSpeedCap)
 						{
 							m_physics->SetFrictionDrag(0);
-							m_physics->AddVelocity(Vec2((Time::GameTime::GetScaledDeltaTime() / 0.017f) * (PlayerSpeedCap - m_physics->GetVelocity().X) * (-PlayerSpeed), 0.f));
+							m_physics->AddVelocity(Vec2(((float)Time::GameTime::GetScaledDeltaTime() / 0.017f) * (PlayerSpeedCap - m_physics->GetVelocity().X) * (-PlayerSpeed), 0.f));
 						}
 
 						//Check if the player has begun to move to the left, play a sliding animation if slowing down, flip the sprite if moving left.
@@ -744,7 +746,7 @@ namespace  GAME_NAME
 
 					if (anim_momentum > 0.1f && m_onGround && !m_swimming)	//Check if player is moving a certain speed, is on the ground, and is not swimming.
 					{
-						m_animator->SetSpeedMult(anim_momentum / 100.f);
+						m_animator->SetSpeedMult((double)anim_momentum / 100.0);
 						if (anim_momentum > PLAYER_ANIMATION_RUN_WALK_SWITCH)
 						{
 							m_animator->SetCurrentAnimation(1);  //Running Animation
@@ -766,7 +768,7 @@ namespace  GAME_NAME
 				}
 
 
-				m_animator->SetSpeedMult(1.f);
+				m_animator->SetSpeedMult(1.0);
 				float player_y_vel = m_physics->GetVelocity().Y + m_physics->GetGravitationalVelocity();
 
 				if (player_y_vel > 1.5f)
@@ -787,7 +789,7 @@ namespace  GAME_NAME
 			void Player::updateAbilityMeter(float amount)
 			{
 				m_stats.AbilityMeter += amount;
-				m_abilityMeterProgressBar->SetPercentage(m_stats.AbilityMeter);
+				m_abilityMeterProgressBar->SetPercentage(static_cast<char>(std::clamp(m_stats.AbilityMeter, 0.f, 100.f)));
 			}
 
 

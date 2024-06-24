@@ -43,10 +43,15 @@ namespace GAME_NAME::Objects::Player
 		void Close(bool ignoreAnimation = false);
 
 		/// <summary>
-		/// Should be called each frame to update the rendering of items and cursor.
+		/// Should be called each frame to update the rendering of items and cursor display (no need to call UpdateHeldItemDisplay).
 		/// </summary>
 		void Render();
 
+		/// <summary>
+		/// Called each update to update the position of the held item graphic.
+		/// </summary>
+		void UpdateCursorItemDisplay();
+			
 		/// <summary>
 		/// Returns true if the backpack GUI is currently rendered.
 		/// </summary>
@@ -109,7 +114,7 @@ namespace GAME_NAME::Objects::Player
 		/// <summary>
 		/// Used to ensure the user can only click on a slot a certain number of times every second.
 		/// </summary>
-		static float m_clickDelay;
+		static double m_clickDelay;
 
 		/// <summary>
 		/// Callback for clicking an equipment slot.

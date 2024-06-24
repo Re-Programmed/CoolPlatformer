@@ -98,7 +98,7 @@ namespace GAME_NAME
 	{
 		double x, y;
 		glfwGetCursorPos(m_window, &x, &y);
-		return MathUtils::Vec2(x, y);
+		return MathUtils::Vec2(static_cast<float>(x), static_cast<float>(y));
 		
 	}
 

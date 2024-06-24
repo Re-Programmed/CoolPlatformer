@@ -9,13 +9,14 @@
 
 namespace GAME_NAME::Items::Inventories
 {
-	InventoryContainer::InventoryContainer(std::string name, size_t size, Vec2 position, Vec2 scale, Rendering::Sprite* sprite, size_t saveID, float rotation)
+
+	InventoryContainer::InventoryContainer(std::string name, uint8_t size, Vec2 position, Vec2 scale, Rendering::Sprite* sprite, size_t saveID, float rotation)
 		: Inventory(name, size), Interactable(OPEN_INVENTORY_CONTAINER_KEY, InputManager::KEY_STATE_NONE, position, scale, sprite, rotation), GameObjectState(saveID)
 	{
 		LoadState();
 	}
 
-	InventoryContainer::InventoryContainer(std::string name, size_t size, Vec2 position, Vec2 scale, Rendering::Sprite* sprite, size_t saveID, float rotation, int itemCount, ...)
+	InventoryContainer::InventoryContainer(std::string name, uint8_t size, Vec2 position, Vec2 scale, Rendering::Sprite* sprite, size_t saveID, float rotation, int itemCount, ...)
 		: Inventory(name, size), Interactable(OPEN_INVENTORY_CONTAINER_KEY, InputManager::KEY_STATE_NONE, position, scale, sprite, rotation), GameObjectState(saveID)
 	{
 		LoadState();

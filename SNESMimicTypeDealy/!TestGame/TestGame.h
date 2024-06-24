@@ -16,6 +16,12 @@ namespace GAME_NAME
 	class TestGame : public Game::Game
 	{
 	public:
+		TestGame()
+			: m_gameCamera(nullptr)
+		{
+
+		}
+
 		static std::shared_ptr<Objects::Player::Player> ThePlayer;	//Stores a reference to the player object.
 
 		static TestGame* INSTANCE;									//Singleton.
@@ -47,7 +53,7 @@ namespace GAME_NAME
 			return m_globalLevelData;
 		}
 	private:
-		GAME_NAME::Camera::GameCamera* m_gameCamera;				//Pointer to the camera.
+		GAME_NAME::Camera::GameCamera* m_gameCamera = nullptr;		//Pointer to the camera.
 
 		/// <summary>
 		/// Global Level Data for the current level.

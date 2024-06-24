@@ -46,7 +46,11 @@ namespace GAME_NAME
 			/// </summary>
 			ITEM_TYPE m_itemType SERIALIZED;
 
-			inline virtual const char&& getPrefix() { return ITEM_PREFIX_ITEM; }
+			/// <summary>
+			/// Returns the prefix used to save this type of item.
+			/// </summary>
+			/// <returns></returns>
+			inline virtual constexpr const char getPrefix() { return ITEM_PREFIX_ITEM; }
 		};
 	}
 }

@@ -61,12 +61,12 @@ namespace GAME_NAME
 
 			Vec2 operator<< (const int shift)
 			{
-				return Vec2((int)X << shift, (int)Y << shift);
+				return Vec2((float)((int)X << shift), (float)((int)Y << shift));
 			}
 
 			Vec2 operator>> (const int shift)
 			{
-				return Vec2((int)X >> shift, (int)Y >> shift);
+				return Vec2((float)((int)X >> shift), (float)((int)Y >> shift));
 			}
 
 			Vec2 operator- (const float& a)

@@ -25,7 +25,7 @@ namespace GAME_NAME::Objects::Enemies
 
 			TempAttributes* InputAttributes;
 
-			EnemyAttributes() = default;
+			EnemyAttributes();
 
 			EnemyAttributes(const EnemyAttributes& enemyAttributes)
 				: MovementSpeed(enemyAttributes.MovementSpeed), TerminalMovementSpeed(enemyAttributes.TerminalMovementSpeed), InputAttributes(enemyAttributes.InputAttributes)

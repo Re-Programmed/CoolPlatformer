@@ -10,7 +10,7 @@ namespace GAME_NAME
 	{
 		namespace Environment
 		{
-			typedef struct BakedReflection {		//Baked reflection stores an object and a DynamicSprite that can be updated to apply ripples to reflections.
+			struct BakedReflection {		//Baked reflection stores an object and a DynamicSprite that can be updated to apply ripples to reflections.
 				GameObject Object;
 				std::unique_ptr<Rendering::DynamicSprite> Sprite;
 

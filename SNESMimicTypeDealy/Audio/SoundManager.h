@@ -15,7 +15,7 @@ namespace GAME_NAME
 		typedef SoLoud::AudioSource AudioSource;
 		typedef SoLoud::time TimeSeconds;
 
-		static class SoundManager
+		/*static*/ class SoundManager
 		{
 		public:
 #pragma region MusicData

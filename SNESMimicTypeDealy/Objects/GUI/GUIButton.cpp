@@ -35,10 +35,10 @@ namespace GAME_NAME
 				{
 					if (pwbBL)
 					{
-						if (m_lerpTimer < 1.f) { m_lerpTimer += Utils::Time::GameTime::GetScaledDeltaTime() * BUTTON_FADE_SPEED_MULTIPLIER; }
+						if (m_lerpTimer < 1.f) { m_lerpTimer += (float)Utils::Time::GameTime::GetScaledDeltaTime() * BUTTON_FADE_SPEED_MULTIPLIER; }
 					}
 					else {
-						m_lerpTimer -= Utils::Time::GameTime::GetScaledDeltaTime() * BUTTON_FADE_SPEED_MULTIPLIER;
+						m_lerpTimer -= (float)Utils::Time::GameTime::GetScaledDeltaTime() * BUTTON_FADE_SPEED_MULTIPLIER;
 					}
 
 					//Flip the darker part of the gradient based on where the mouse is.

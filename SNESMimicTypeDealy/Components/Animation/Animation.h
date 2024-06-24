@@ -51,7 +51,7 @@ namespace GAME_NAME
 
 					if (m_currentFrame <= 0)
 					{
-						m_currentFrame = m_data.Sprites.size() - 1;
+						m_currentFrame = (int)m_data.Sprites.size() - 1;
 					}
 
 					object->SetSprite(m_data.Sprites[m_currentFrame]);

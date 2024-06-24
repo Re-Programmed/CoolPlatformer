@@ -7,7 +7,7 @@ namespace GAME_NAME
 	namespace Camera
 	{
 		GameCamera::GameCamera()
-			: Rendering::Camera::Camera(Vec2::Zero, 1.f), m_targetZoom(-1), m_offset( {0, 0} )
+			: Rendering::Camera::Camera(Vec2::Zero, 1.f), m_targetZoom(-1), m_offset( {0, 0} ), m_followPlayerExact(false)
 		{
 
 		}
@@ -29,13 +29,13 @@ namespace GAME_NAME
 			if (m_targetZoom > 0)
 			{
 				//Lerp zoom.
-				SetZoom(std::lerp(m_zoom, m_targetZoom, CameraSpeed/8.f * sdt));
+				SetZoom(std::lerp(m_zoom, m_targetZoom, (float)CameraSpeed/8.f * (float)sdt));
 			}
 
 			float resX = HalfTResX * (1 / m_zoom);
 			float resY = HalfTResY * (1 / m_zoom);
 
-			Vec2 l = Vec2(std::lerp(m_position.X + resX, playerPos.X + m_offset.X, CameraSpeed * sdt) - resX, std::lerp(m_position.Y + resY, playerPos.Y + m_offset.Y, CameraSpeed * sdt) - resY);
+			Vec2 l = Vec2(std::lerp(m_position.X + resX, playerPos.X + m_offset.X, (float)(CameraSpeed * sdt)) - resX, std::lerp(m_position.Y + resY, playerPos.Y + m_offset.Y, (float)(CameraSpeed * sdt)) - resY);
 
 			SetPosition(l);
 		}

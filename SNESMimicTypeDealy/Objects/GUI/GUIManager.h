@@ -64,8 +64,8 @@ namespace GAME_NAME
 				static inline unsigned int RegisterButton(GUIButton* btn)
 				{
 					m_buttons.push_back(btn);
-					btn->SetButtonId(m_buttons.size() - 1);
-					return m_buttons.size() - 1;
+					btn->SetButtonId(static_cast<unsigned int>(m_buttons.size()) - 1);
+					return static_cast<unsigned int>(m_buttons.size()) - 1;
 				}
 
 				/// <summary>

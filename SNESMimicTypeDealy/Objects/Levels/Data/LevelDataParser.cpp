@@ -38,8 +38,8 @@ namespace GAME_NAME
 						}
 					},
 
-					[](std::string playerX,Game::Level& level) { level.PlayerStartPosition.X = std::stoi(playerX); },
-					[](std::string playerY,Game::Level& level) { level.PlayerStartPosition.Y = std::stoi(playerY); },
+					[](std::string playerX,Game::Level& level) { level.PlayerStartPosition.X = std::stof(playerX); },
+					[](std::string playerY,Game::Level& level) { level.PlayerStartPosition.Y = std::stof(playerY); },
 					[](std::string levelColor, Game::Level& level) {
 						std::stringstream read(levelColor);
 						std::string component;

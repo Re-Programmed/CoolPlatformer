@@ -8,7 +8,7 @@ namespace GAME_NAME
 		class MusicSync
 		{
 		public:
-			typedef struct SongPosition {
+			struct SongPosition {
 				uint8_t sp_measure;												//Current measure of the song.
 				char sp_beat;													//Current beat of the current measure.
 			};

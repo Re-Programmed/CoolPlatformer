@@ -14,9 +14,9 @@ namespace GAME_NAME::Items::Inventories
 		: public Inventory, public Interactable, public GameObjectState
 	{
 	public:
-		InventoryContainer(std::string name, size_t size, Vec2 position, Vec2 scale, Rendering::Sprite* sprite, size_t saveID, float rotation = 0.f);
+		InventoryContainer(std::string name, uint8_t size, Vec2 position, Vec2 scale, Rendering::Sprite* sprite, size_t saveID, float rotation = 0.f);
 		//Takes a list of InventoryItem* to use for the inventory of this container.
-		InventoryContainer(std::string name, size_t size, Vec2 position, Vec2 scale, Rendering::Sprite* sprite, size_t saveID, float rotation, int itemCount, ...);
+		InventoryContainer(std::string name, uint8_t size, Vec2 position, Vec2 scale, Rendering::Sprite* sprite, size_t saveID, float rotation, int itemCount, ...);
 
 		void OpenGUI();
 		void CloseGUI();

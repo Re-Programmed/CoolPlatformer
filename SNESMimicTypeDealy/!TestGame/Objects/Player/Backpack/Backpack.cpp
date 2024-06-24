@@ -16,7 +16,7 @@ namespace GAME_NAME::Objects::Player
 	InventoryItem* Backpack::m_cursorItem = nullptr;
 	StaticGUIElement* Backpack::m_cursorItemDisplay = nullptr;
 
-	float Backpack::m_clickDelay = 0.f;
+	double Backpack::m_clickDelay = 0.0;
 
 	Backpack::Backpack(uint8_t size)
 		: Inventory("Backpack", size + BACKPACK_NUM_EQUIPMENT_SLOTS), MiscStateGroup("bk"), m_equipmentSlots{nullptr, nullptr, nullptr}, m_equipmentDisplayItems{nullptr, nullptr, nullptr}
@@ -70,7 +70,7 @@ namespace GAME_NAME::Objects::Player
 						//Scale in the items in the equipment slots.
 						if (m_equipmentDisplayItems[i] != nullptr)
 						{
-							m_equipmentDisplayItems[i]->SetScale(Vec2(std::lerp(m_equipmentDisplayItems[i]->GetScale().X, 16.f - BACKPACK_SLOT_ITEM_SCALEDOWN, 0.01), std::lerp(m_equipmentDisplayItems[i]->GetScale().Y, 16.f - BACKPACK_SLOT_ITEM_SCALEDOWN, 0.01)));
+							m_equipmentDisplayItems[i]->SetScale(Vec2(static_cast<float>(std::lerp(m_equipmentDisplayItems[i]->GetScale().X, 16.f - BACKPACK_SLOT_ITEM_SCALEDOWN, 0.01)), static_cast<float>(std::lerp(m_equipmentDisplayItems[i]->GetScale().Y, 16.f - BACKPACK_SLOT_ITEM_SCALEDOWN, 0.01))));
 						}
 					}
 
@@ -270,8 +270,12 @@ namespace GAME_NAME::Objects::Player
 
 	void Backpack::Render()
 	{
-		if (m_clickDelay > 0.f) { m_clickDelay -= Utils::Time::GameTime::GetScaledDeltaTime(); }
+		if (m_clickDelay > 0.0) { m_clickDelay -= Utils::Time::GameTime::GetScaledDeltaTime(); }
+		UpdateCursorItemDisplay();
+	}
 
+	void Backpack::UpdateCursorItemDisplay()
+	{
 		if (m_cursorItemDisplay != nullptr)
 		{
 			m_cursorItemDisplay->SetPosition(InputManager::GetMouseScreenPosition() - Vec2(0.f, 12.f));

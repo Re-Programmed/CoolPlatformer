@@ -22,7 +22,7 @@ namespace GAME_NAME
 		UpdateIndex UpdateManager::RegisterUpdateable(IUpdateable* updateable)
 		{
 			m_updateables.push_back(updateable);
-			return m_updateables.size() - 1;
+			return (Utils::UpdateIndex)m_updateables.size() - 1;
 		}
 
 		void UpdateManager::RemoveUpdateable(const UpdateIndex index)

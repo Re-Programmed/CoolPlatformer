@@ -7,7 +7,7 @@ namespace GAME_NAME
 	{
 		namespace Settings
 		{
-			typedef struct UI16_AppDataGlobalVariable
+			struct UI16_AppDataGlobalVariable
 			{
 				const std::string VariableName;
 				uint16_t Value;

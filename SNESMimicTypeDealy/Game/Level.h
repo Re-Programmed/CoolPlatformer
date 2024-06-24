@@ -10,7 +10,7 @@ namespace GAME_NAME
 	{
 		using namespace MathUtils;
 
-		typedef struct Level	//Stores basic data about levels.
+		struct Level	//Stores basic data about levels.
 		{
 			/// <summary>
 			/// Name/Path of the level.

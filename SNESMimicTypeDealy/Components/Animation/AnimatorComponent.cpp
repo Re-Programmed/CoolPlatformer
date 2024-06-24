@@ -26,7 +26,7 @@ namespace GAME_NAME
 				if (m_tick * m_speedMult >= m_animations[m_currentAnimation]->GetSpeed())
 				{
 					m_animations[m_currentAnimation]->IncrementFrame(object);
-					m_tick = 0;
+					m_tick = 0.0;
 				}
 			}
 

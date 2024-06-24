@@ -206,7 +206,7 @@ namespace  GAME_NAME
 				int m_jumpHeld = 0;						//Used for determining how many frames the jump button has been held after the player jumps.
 				bool m_begunMotion = false;				//Used for animation checks.
 
-				float m_airTime = 0;					//Time the player has spent in the air. (Used to calculate fall damage)
+				double m_airTime = 0;					//Time the player has spent in the air. (Used to calculate fall damage)
 
 				bool m_isFlying = false;				//True if the player is currently flying.
 

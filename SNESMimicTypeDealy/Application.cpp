@@ -17,7 +17,7 @@
 
 //#include "./Input/InputManager.h"
 
-#define THREAD_LIMIT 128
+//#define THREAD_LIMIT 128
 
 using namespace GAME_NAME;
 

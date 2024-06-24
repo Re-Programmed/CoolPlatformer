@@ -8,7 +8,7 @@ namespace GAME_NAME::Items::Inventories
 		: public InventoryContainer
 	{
 	public:
-		CraftingInventory(std::string name, size_t size, Vec2 position, Vec2 scale, Rendering::Sprite* sprite, size_t saveID, float rotation, unsigned int recipiesID);
+		CraftingInventory(std::string name, uint8_t size, Vec2 position, Vec2 scale, Rendering::Sprite* sprite, size_t saveID, float rotation, unsigned int recipiesID);
 
 	private:
 		const unsigned int m_recipesID;

@@ -78,7 +78,7 @@ namespace GAME_NAME
 			static void LoadObjectData(const char* subfolder, const std::function<void(std::vector<std::string>, size_t line)> mappings[], bool reloadObjects = false);
 
 		private:
-			static volatile std::atomic<int> m_currentThreadLoadCount;
+			static volatile std::atomic<int> m_currentThreadLoadCount; //TODO: Mark other atomics and mutex as volatile?
 			static volatile int m_currentThreadLoadCountINT;
 			static std::vector<std::string> m_loadAtEnd; //Objects that must be loaded last, like water that must bake reflections.
 		public:

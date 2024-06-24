@@ -2,6 +2,7 @@
 #include "../GameObject.h"
 #include "../../Rendering/Sprite.h"
 #include <vector>
+#include <algorithm>
 
 namespace GAME_NAME::Objects::Particles
 {
@@ -38,8 +39,7 @@ namespace GAME_NAME::Objects::Particles
 		Particle& operator=(const Particle& other)
 		{
 			Particle p(other.Position, other.Scale, other.Rotation, other.Velocity, other.RotationalVelocity, other.Opacity, other.PSprite, other.Lifetime);
-			
-			return p;
+			return *this;
 		}
 	};
 
@@ -55,7 +55,7 @@ namespace GAME_NAME::Objects::Particles
 
 		inline void SpawnParticles(uint8_t numParticles, Vec2 maxVelocity = { 0, 0 }, float gravity = 0.f, float rotation = 0.f)
 		{
-			std::srand(m_position.X * m_position.Y);
+			std::srand(std::clamp((int)m_position.X * (int)m_position.Y, 0, 999999999));
 
 			for (uint8_t i = 0; i < numParticles; i++)
 			{

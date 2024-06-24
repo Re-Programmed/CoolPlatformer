@@ -9,7 +9,7 @@ namespace GAME_NAME
 		/// <summary>
 		/// Call update each frame to update all IUpdateables.
 		/// </summary>
-		static class UpdateManager
+		class UpdateManager
 		{
 		public:
 			/// <summary>

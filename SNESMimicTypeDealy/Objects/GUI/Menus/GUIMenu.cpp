@@ -65,7 +65,7 @@ using namespace Text;
 				TextRenderer::RenderedWord wObj = TextRenderer::RenderWord(data[0], { std::stof(data[1]), std::stof(data[2]) }, std::stof(data[3]), std::stof(data[4]), std::stoi(data[5]));
 				asyncInstantiationLock.unlock();
 
-				GUIMenu::AddLastMenuObject(std::stoi(data[5]), wObj.size());
+				GUIMenu::AddLastMenuObject(std::stoi(data[5]), static_cast<int>(wObj.size()));
 				break;
 			}
 			//Creates an EL_BUTTON (pos1, pos2, sca1, sca2, sprite, buttonID, baseColorR, baseColorG, baseColorB, baseColorA, hoverColorR, hoverColorG, hoverColorB, hoverColorA) 
@@ -84,7 +84,7 @@ using namespace Text;
 				}
 
 				std::cout << "LOADED BUTTON WITH ID: " << std::stoi(data[5]) << std::endl;
-				GUIButton* gButton = new GUIButton(Vec2(std::stoi(data[0]), std::stoi(data[1])), Vec2(std::stoi(data[2]), std::stoi(data[3])), Renderer::GetSprite(std::stoi(data[4]))->GetSpriteId(), elementCallback, std::stoi(data[5]), baseColor, hoverColor);
+				GUIButton* gButton = new GUIButton(Vec2(std::stof(data[0]), std::stof(data[1])), Vec2(std::stof(data[2]), std::stof(data[3])), Renderer::GetSprite(std::stoi(data[4]))->GetSpriteId(), elementCallback, std::stoi(data[5]), baseColor, hoverColor);
 				
 				asyncInstantiationLock.lock();
 				Renderer::LoadGUIElement(gButton);
@@ -97,7 +97,7 @@ using namespace Text;
 			///Creates an EL_BLANK (pos1, pos2, sca1, sca2, sprite, layer)
 			case GUIManager::EL_BLANK:
 			{
-				StaticGUIElement* gBlank = new StaticGUIElement(Vec2(std::stoi(data[0]), std::stoi(data[1])), Vec2(std::stoi(data[2]), std::stoi(data[3])), Renderer::GetSprite(std::stoi(data[4]))->GetSpriteId());
+				StaticGUIElement* gBlank = new StaticGUIElement(Vec2(std::stof(data[0]), std::stof(data[1])), Vec2(std::stof(data[2]), std::stof(data[3])), Renderer::GetSprite(std::stoi(data[4]))->GetSpriteId());
 				Renderer::LoadGUIElement(gBlank, std::stoi(data[5]));
 
 				asyncInstantiationLock.lock();
@@ -108,7 +108,7 @@ using namespace Text;
 			}
 			case GUIManager::EL_PROGRESS:
 			{
-				ProgressBar* pBar = new ProgressBar(Vec2(std::stoi(data[0]), std::stoi(data[1])), Vec2(std::stoi(data[2]), std::stoi(data[3])), Renderer::GetSprite(std::stoi(data[4]))->GetSpriteId(), std::stoi(data[5]));
+				ProgressBar* pBar = new ProgressBar(Vec2(std::stof(data[0]), std::stof(data[1])), Vec2(std::stof(data[2]), std::stof(data[3])), Renderer::GetSprite(std::stoi(data[4]))->GetSpriteId(), std::stoi(data[5]));
 
 				asyncInstantiationLock.lock();
 				Renderer::LoadGUIElement(pBar);
@@ -149,7 +149,7 @@ using namespace Text;
 			threads.push_back(new std::thread(GUIMenu_loadMenuObjectThread, line, elementCallback));
 			thCurr++;
 
-		checkthreads:
+		//checkthreads:
 			if (thCurr == AppData::Settings::SettingsGlobals::MaxThreads.Value)
 			{
 				for (int i = 0; i < thCurr; i++)
