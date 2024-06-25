@@ -25,7 +25,7 @@ namespace GAME_NAME
 						//Collision for active colliders w/ eachother:
 						for (ActiveCollider* activeCollider2 : m_activeColliders)
 						{
-							if (activeCollider != activeCollider2)
+							if (activeCollider != activeCollider2 && activeCollider->CollideWithOtherActive && activeCollider2->CollideWithOtherActive)
 							{
 								activeCollider->CheckActiveCollisionShapes(activeCollider2);
 							}

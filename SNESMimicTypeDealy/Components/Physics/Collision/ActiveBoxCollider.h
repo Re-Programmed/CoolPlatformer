@@ -16,7 +16,9 @@ namespace GAME_NAME
 
 				{
 				public:
-					ActiveBoxCollider() {};
+					ActiveBoxCollider(bool collideWithOtherActive = true)
+						: ActiveCollider(collideWithOtherActive)
+					{};
 
 					void Update(GLFWwindow* window, Objects::GameObject* object);
 

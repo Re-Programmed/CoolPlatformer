@@ -26,13 +26,17 @@ namespace GAME_NAME
 
 				{
 				public:
-					ActiveCollider()
-						: m_beforeUpdate(nullptr), m_object(nullptr), ID(0)
+					ActiveCollider(bool collideWithOtherActive = true)
+						: m_beforeUpdate(nullptr), m_object(nullptr), ID(0), CollideWithOtherActive(collideWithOtherActive)
 					{
 						m_onCollision = nullptr;
 					};
 
 					int ID;
+					/// <summary>
+					/// If true, this collider will collide with other active colliders.
+					/// </summary>
+					bool CollideWithOtherActive;
 
 					virtual void Update(GLFWwindow* window, Objects::GameObject* object) = 0;
 					virtual void Init(Objects::GameObject* object) final

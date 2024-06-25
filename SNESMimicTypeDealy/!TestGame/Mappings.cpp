@@ -410,7 +410,7 @@ using namespace Cutscenes;
 	},
 
 	/*
-		15: Breakable Object (map,positionX,positionY,scaleX,scaleY,sprite,layer,breakSeconds[double],breakResistance)
+		15: Breakable Object (map,positionX,positionY,scaleX,scaleY,sprite,layer,breakSeconds[double],breakResistance,toolActionFlags=MINE)
 	*/
 
 	[](std::vector<std::string> data, size_t n)
@@ -419,8 +419,11 @@ using namespace Cutscenes;
 		DebugMapper("Loading Breakable Object");
 #endif
 
-		BreakableBlock* bb = new BreakableBlock(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), std::stod(data[5]), std::stoi(data[6]));
-		Renderer::LoadObject(bb, std::stoi(data[5]));
+		BreakableBlock* bb = new BreakableBlock(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), n, std::stod(data[6]), std::stoi(data[7]), data.size() > 8 ? (Items::TOOL_ACTION)std::stoi(data[8], nullptr, 2) : Items::TOOL_ACTION::MINE);
+		
+		//ACTIVE?
+		//TODO: NOT ACTIVE WOULD BE BETTER BUT DOES IT SCREW UP THE SAVE DATA.
+		Renderer::LoadActiveObject(bb, std::stoi(data[5]));
 	}
 };
 

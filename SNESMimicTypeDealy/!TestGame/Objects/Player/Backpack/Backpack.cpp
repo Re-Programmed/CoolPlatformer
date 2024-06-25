@@ -6,6 +6,9 @@
 #include "../../../../Utils/Time/GameTime.h"
 
 #include "../../../../Input/InputManager.h"
+#include "../../../../CustomCompileOptions.h"
+
+#include "../../../TestGame.h"
 
 #define BACKPACK_SLOT_ITEM_SCALEDOWN 4.f
 
@@ -16,10 +19,12 @@ namespace GAME_NAME::Objects::Player
 	InventoryItem* Backpack::m_cursorItem = nullptr;
 	StaticGUIElement* Backpack::m_cursorItemDisplay = nullptr;
 
+	StaticGUIElement* Backpack::m_playerSlots[3] { nullptr, nullptr, nullptr };
+
 	double Backpack::m_clickDelay = 0.0;
 
 	Backpack::Backpack(uint8_t size)
-		: Inventory("Backpack", size + BACKPACK_NUM_EQUIPMENT_SLOTS), MiscStateGroup("bk"), m_equipmentSlots{nullptr, nullptr, nullptr}, m_equipmentDisplayItems{nullptr, nullptr, nullptr}
+		: Inventory("Backpack", size + BACKPACK_NUM_EQUIPMENT_SLOTS), MiscStateGroup("bk"), m_equipmentSlots{ nullptr, nullptr, nullptr }, m_equipmentDisplayItems{ nullptr, nullptr, nullptr }
 	{
 		//TESTING, ADD INVENTORY SIZE AND ITEMS TO INVENTORY.
 		m_size = size + BACKPACK_NUM_EQUIPMENT_SLOTS;
@@ -115,6 +120,9 @@ namespace GAME_NAME::Objects::Player
 
 		loadEquipmentSlots(ignoreAnimation);
 		m_isOpen = true;
+
+		//Player Slots.
+		createPlayerSlots();
 	}
 
 	void Backpack::Close(bool ignoreAnimation)
@@ -253,6 +261,8 @@ namespace GAME_NAME::Objects::Player
 
 		m_isOpen = false;
 
+		removePlayerSlots();
+
 		//Update current save states.
 		clearStates();
 		for (InventoryItem* item : m_items)
@@ -342,6 +352,42 @@ namespace GAME_NAME::Objects::Player
 		updateSlotItem(index);
 	}
 
+#define UpdateBag() {										\
+		Backpack* const savedBag = CurrentOpenBackpack;		\
+		CurrentOpenBackpack->Close(true);					\
+		savedBag->Open(true);								\
+	}														\
+
+	void Backpack::clickPlayerSlot(int id)
+	{
+		if (m_clickDelay > 0.f) { return; }
+
+		m_clickDelay = 0.25f;
+
+		const int& index = id - CurrentOpenBackpack->m_size;
+		StaticGUIElement* cursorElement = nullptr;
+
+		if (cursorElement = setCursorItem(TestGame::ThePlayer->GetInventory()->GetItem(index).ri_Item))
+		{
+			TestGame::ThePlayer->GetInventory()->SetItem(index, nullptr);
+		}
+		else {
+			if (m_cursorItem == nullptr) { return; }
+			TestGame::ThePlayer->GetInventory()->SetItem(index, m_cursorItem);
+
+			Renderer::UnloadGUIElement(m_cursorItemDisplay, 2);
+			delete m_cursorItemDisplay;
+			m_cursorItemDisplay = nullptr;
+
+			m_cursorItem = nullptr;
+		}
+
+		UpdateBag();
+
+		//Load cursor element after to keep it in front.
+		Renderer::LoadGUIElement(cursorElement, 2);
+	}
+
 	void Backpack::updateSlotItem(const int& index, int requiredToolAction)
 	{
 		InventoryItem* const slotItem = CurrentOpenBackpack->m_items.size() <= index ? nullptr : CurrentOpenBackpack->m_items[index];
@@ -374,11 +420,32 @@ namespace GAME_NAME::Objects::Player
 		}
 
 		//Update current backpack.
-		Backpack* const savedBag = CurrentOpenBackpack;
-		CurrentOpenBackpack->Close(true);
-		savedBag->Open(true);
+		UpdateBag();
 
 		//Load cursor element after to keep it in front.
 		Renderer::LoadGUIElement(cursorElement, 2);
+	}
+
+	void Backpack::createPlayerSlots()
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			GUIButton* playerSlot = new GUIButton({ 2.98f + (i * 20.f), 19.f }, { 18.f, 18.f }, Renderer::GetSprite(INVENTORY_SELECTED_SLOT_SPRITE)->GetSpriteId(), new std::function(clickPlayerSlot), { 1.f, 1.f, 1.f, 0.f }, { 0.5f, 0.5f, 0.f, 0.25f });
+			Renderer::LoadGUIElement(playerSlot, 2);
+			GUIManager::RegisterButton(playerSlot);
+
+			m_playerSlots[i] = playerSlot;
+		}
+	}
+
+	void Backpack::removePlayerSlots()
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			Renderer::UnloadGUIElement(m_playerSlots[i], 2);
+			GUIManager::UnregisterButton(dynamic_cast<GUIButton*>(m_playerSlots[i]));
+			delete m_playerSlots[i];
+			m_playerSlots[i] = nullptr;
+		}
 	}
 }

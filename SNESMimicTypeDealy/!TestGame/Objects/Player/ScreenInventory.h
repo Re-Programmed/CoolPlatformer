@@ -22,12 +22,12 @@ namespace GAME_NAME
 		inline Items::InventoryItem* const GetHeldItem()
 		{
 			uint8_t& slot = m_saveMetadata.SelectedSlot;
-			if (m_items.size() <= slot)
+			if (m_items.size() <= slot - 1)
 			{
 				return nullptr;
 			}
 
-			return m_items[slot];
+			return m_items[slot - 1];
 		}
 
 		inline InventorySlot GetSelectedSlot()

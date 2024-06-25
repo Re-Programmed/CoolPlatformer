@@ -94,6 +94,10 @@ namespace GAME_NAME::Objects::Player
 		/// </summary>
 		static InventoryItem* m_cursorItem SERIALIZED;
 		
+		/// <summary>
+		/// Attempts to place an item on the cursor. If an item exists on it or an empty item is given, returns nullptr.
+		/// </summary>
+		/// <param name="item">[InventoryItem*] - The item to attempt to place.</param>
 		static StaticGUIElement* setCursorItem(InventoryItem* item);
 		
 		static StaticGUIElement* m_cursorItemDisplay;
@@ -122,6 +126,8 @@ namespace GAME_NAME::Objects::Player
 		/// <param name="id">[int] - Button ID.</param>
 		static void clickEquipmentSlot(int id);
 		static void clickGeneralItemSlot(int id);
+
+		static void clickPlayerSlot(int id);
 		
 		/// <summary>
 		/// Utility method for updating slot when clicked on.
@@ -130,5 +136,10 @@ namespace GAME_NAME::Objects::Player
 		/// </summary>
 		/// <param name="index"></param>
 		static void updateSlotItem(const int& index, int requiredToolAction = -1);
+
+		static StaticGUIElement* m_playerSlots[3];
+		static void createPlayerSlots();
+		static void removePlayerSlots();
+
 	};
 }

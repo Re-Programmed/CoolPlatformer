@@ -3,6 +3,8 @@
 #include "../../Rendering/Sprite.h"
 #include <vector>
 #include <algorithm>
+#include "../../Components/Physics/Collision/ActiveBoxCollider.h"
+
 
 namespace GAME_NAME::Objects::Particles
 {
@@ -47,7 +49,7 @@ namespace GAME_NAME::Objects::Particles
 		: public GameObject
 	{
 	public:
-		ParticleEmitter(Vec2 position, float maxParticleLifetime = 5.f);
+		ParticleEmitter(Vec2 position, float maxParticleLifetime = 5.f, bool allowCollision = false);
 
 		void Render(const Vec2& cameraPosition) override;
 
@@ -55,6 +57,11 @@ namespace GAME_NAME::Objects::Particles
 
 		inline void SpawnParticles(uint8_t numParticles, Vec2 maxVelocity = { 0, 0 }, float gravity = 0.f, float rotation = 0.f)
 		{
+			if (m_allowCollisions)
+			{
+				m_previousFrameColliders.rehash(numParticles);
+			}
+
 			std::srand(std::clamp((int)m_position.X * (int)m_position.Y, 0, 999999999));
 
 			for (uint8_t i = 0; i < numParticles; i++)
@@ -81,5 +88,15 @@ namespace GAME_NAME::Objects::Particles
 		std::vector<Particle> m_particleCopy;
 
 		std::vector<Particle> m_spawned;
+
+		/// <summary>
+		/// If true will add active box colliders to particles.
+		/// </summary>
+		bool m_allowCollisions;
+		/// <summary>
+		/// List of GameObjects that represent particles for collision.
+		/// </summary>
+		std::unordered_map<Components::Physics::Collision::ActiveBoxCollider*, Particle*> m_previousFrameColliders;
+
 	};
 }

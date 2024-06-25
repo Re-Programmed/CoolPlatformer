@@ -79,6 +79,7 @@ namespace GAME_NAME
 						Vec2 push = Vec2::Zero;
 						if (Utils::CollisionDetection::BoxWithinBox(objectPos, objectBounds, collider->GetObject()->GetPosition(), collider->GetObject()->GetScale(), push))
 						{
+
 							//Check if the static collider has anything that needs to happen when it collides.
 							if (collider->OnCollision != nullptr)
 							{

@@ -69,10 +69,10 @@ namespace GAME_NAME
 		/// </summary>
 		const ItemData ITEM_DATA[ITEM_COUNT]
 		{
-			{ "Log", 18, NO_HELD_TEXTURE, EQUIPMENT },
+			{ "Log", 18, NO_HELD_TEXTURE },
 			{ "Leaves", 18, NO_HELD_TEXTURE },
 			{ "Stone", 55, NO_HELD_TEXTURE },
-			{ "Axe", 56, SpriteBase(65), CHOP },
+			{ "(Temp) Axe", 56, SpriteBase(65), CHOP, { { TOOL_ACTION::CHOP , "1" } } },
 			{ "Unknown", 0, NO_HELD_TEXTURE }
 		};
 
