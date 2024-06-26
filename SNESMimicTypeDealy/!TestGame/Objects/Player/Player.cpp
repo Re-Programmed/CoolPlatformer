@@ -43,16 +43,17 @@ namespace  GAME_NAME
 				: ActiveBoxCollisionGravityObject(position, Vec2(DefaultPlayerScaleX, DefaultPlayerScaleY), Rendering::Renderer::GetSprite(DefaultPlayerSprite)), m_screenInventory(new ScreenInventory()),
 				m_heldItemLastSprite(nullptr),
 				m_healthProgressBar(new ProgressBar(
-					Vec2(20, 18), Vec2(32, -3), Renderer::GetSprite(SpriteBase(72))->GetSpriteId()
+					Vec2(30, 18), Vec2(32, -3), Renderer::GetSprite(SpriteBase(72))->GetSpriteId()
 				)),
 				m_abilityMeterProgressBar(new ProgressBar(
-					Vec2(10, 12), Vec2(46, -3), Renderer::GetSprite(SpriteBase(71))->GetSpriteId()
+					Vec2(20, 12), Vec2(46, -3), Renderer::GetSprite(SpriteBase(71))->GetSpriteId()
 				)),
 				MiscStateGroup("pl"), m_saveState(new PlayerSaveState(this)),
 				m_particleEmitter(new Particles::ParticleEmitter(position)),
-				m_backpack(new Backpack(0))	//Create default backpack (load save in constructor).
+				m_backpack(new Backpack(0)),	//Create default backpack (load save in constructor).
+				m_skillHolder({ 62.f, 7.f })		//Skill holder (manages update and display of current skill and equipment effects)
 			{
-#if _DEBUG
+#if _DEBUG 
 				PlayerLogger("Initilized Player");
 #endif
 				m_particleEmitter->SetScale(m_scale);
@@ -122,6 +123,9 @@ namespace  GAME_NAME
 				}
 
 				assignState(m_saveState);
+				
+				//TEMP TESTING TODO:REMOVE
+				m_skillHolder.UnlockSkill(FLIGHT);
 			}
 
 			Player::~Player()
@@ -141,6 +145,8 @@ namespace  GAME_NAME
 				std::thread playerInput([this] { readKeys(); });
 
 				std::thread animationUpdate([this, window] { m_animator->Update(window, this); });
+
+				m_skillHolder.Update();
 
 				//Update the current backpack if it is open.
 				if (m_backpack->GetIsOpen()) { m_backpack->Render(); }
@@ -361,9 +367,13 @@ namespace  GAME_NAME
 
 			void Player::Damage(float damage)
 			{
-				CreateBloodParticle();
+				float maxHealth = 100.f + m_skillHolder.GetEquipmentBoostEffect("Health", m_backpack);
+
+				
+				if(damage > 0.f){ CreateBloodParticle(); }
+
 				m_stats.Health -= damage;
-				m_healthProgressBar->SetPercentage(static_cast<char>(std::clamp(m_stats.Health, 0.f, 100.f)));
+				m_healthProgressBar->SetPercentage(static_cast<char>(std::clamp(100.f * m_stats.Health / maxHealth, 0.f, maxHealth)));
 
 				if (m_stats.Health <= 0)
 				{
@@ -587,6 +597,7 @@ namespace  GAME_NAME
 				if (m_frozen <= 0) 
 				{
 					
+	
 					if (InputManager::GetKey(PLAYER_MOVE_RIGHT))
 					{
 

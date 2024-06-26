@@ -2,8 +2,10 @@
 
 #include "../../../Utils/CollisionDetection.h"
 
+#include "../../../Objects/GUI/Text/TextRenderer.h"
+
 #define TOOLTIP_HEIGHT 25.6f
-#define TOOLTIP_ANIMATION_SPEED 0.06f
+#define TOOLTIP_ANIMATION_SPEED 0.12f
 
 namespace GAME_NAME::Items::Inventories
 {
@@ -14,6 +16,7 @@ namespace GAME_NAME::Items::Inventories
 	std::vector<std::shared_ptr<StaticGUIElement>> InventoryContainerRenderer::m_renderedSlotItems;
 
 	StaticGUIElement* InventoryContainerRenderer::m_tooltip;
+	std::vector<StaticGUIElement*> InventoryContainerRenderer::m_tooltipComponents;
 
 	StaticGUIElement* const InventoryContainerRenderer::m_backgroundCover = new StaticGUIElement(Vec2(0, 0), Vec2(580, 256), 1);
 
@@ -179,15 +182,39 @@ namespace GAME_NAME::Items::Inventories
 		lastContainer->OpenGUI();
 	}
 
-	
+	/// <summary>
+	/// Used to track if the tooltip text should update itself.
+	/// </summary>
+	uint8_t LastTooltipIndex = 255;
+	/// <summary>
+	/// Used to track how much the tooltip moved each frame.
+	/// </summary>
+	std::vector<Vec2> TooltipCompoentDisplacement;
 	void InventoryContainerRenderer::updateTooltip(uint8_t index, bool clearTooltip)
-	{
+	{		
+		Vec2 MousePosition = InputManager::GetMouseScreenPosition();
+
 		if (clearTooltip)
 		{
 			m_hidingTooltip = true;
 
 			if (m_tooltip != nullptr)
 			{
+				if (m_tooltipComponents.size() > 0)
+				{
+					LastTooltipIndex = 255;
+
+					//Delete existing tooltip data.
+					for (StaticGUIElement*& el : m_tooltipComponents)
+					{
+						Renderer::UnloadGUIElement(el, 2);
+						delete el; //no smart pointer ;)
+					}
+					m_tooltipComponents.clear();
+					TooltipCompoentDisplacement.clear();
+				}
+
+
 				if (m_tooltip->GetScale().Y > 0.05f)
 				{
 					//Scale down the tool tip by 2% until it has a height less than 0.05.
@@ -198,7 +225,7 @@ namespace GAME_NAME::Items::Inventories
 					//Tooltip is close to small enough, but will never actually reach 0 so set it to 0.
 					m_tooltip->SetScale({ m_tooltip->GetScale().X, 0 });
 				}
-				m_tooltip->SetPosition(InputManager::GetMouseScreenPosition() - Vec2{ 0, m_tooltip->GetScale().Y });
+				m_tooltip->SetPosition(MousePosition - Vec2{ 0, m_tooltip->GetScale().Y });
 			}
 
 			return;
@@ -207,6 +234,37 @@ namespace GAME_NAME::Items::Inventories
 		if (m_tooltip == nullptr) { return; }
 
 		m_hidingTooltip = false;
+
+		//A different item is now hovered, update the text.
+		if (LastTooltipIndex != index || m_tooltipComponents.size() == 0)
+		{
+			LastTooltipIndex = index;
+
+			//Delete existing tooltip data.
+			for (StaticGUIElement*& el : m_tooltipComponents)
+			{
+				Renderer::UnloadGUIElement(el, 2);
+				delete el; //no smart pointer ;)
+			}
+			m_tooltipComponents.clear();
+			TooltipCompoentDisplacement.clear();
+
+			Inventory::ReturnItem item = index >= m_currentContainer->GetSize() ? TestGame::ThePlayer->GetInventory()->GetItem(index - m_currentContainer->GetSize()) : m_currentContainer->GetItem(index);
+
+			//Get slot item.
+			if (!item.ri_IsNull)
+			{
+				const ItemData& itemData = ITEMTYPE_GetItemData(item.ri_Item->GetType());
+
+				//Create item name text.
+				Text::TextRenderer::RenderedWord word = Text::TextRenderer::RenderWord(itemData.DisplayName, { m_tooltip->GetPosition().X + 7.f, MousePosition.Y - 7.f }, 5.f, 0.f, 2);
+
+				for (StaticGUIElement*& letter : word) { letter->SetScale({ -5.f, 0.f }); TooltipCompoentDisplacement.push_back(letter->GetPosition() - Vec2{ m_tooltip->GetPosition().X, MousePosition.Y - TOOLTIP_HEIGHT }); }
+
+				m_tooltipComponents.insert(m_tooltipComponents.end(), word.begin(), word.end());
+			}
+
+		}
 
 		if (m_tooltip->GetScale().Y < TOOLTIP_HEIGHT)
 		{
@@ -217,6 +275,15 @@ namespace GAME_NAME::Items::Inventories
 			m_tooltip->SetScale({ m_tooltip->GetScale().X, TOOLTIP_HEIGHT });
 		}
 
-		m_tooltip->SetPosition(InputManager::GetMouseScreenPosition() - Vec2{ 0, m_tooltip->GetScale().Y });
+		m_tooltip->SetPosition(MousePosition - Vec2{ 0, m_tooltip->GetScale().Y });
+		
+		int i = 0;
+		//The tool tip moved, update all the components to follow its path.
+		for (StaticGUIElement*& el : m_tooltipComponents)
+		{
+			el->SetPosition(m_tooltip->GetPosition() + TooltipCompoentDisplacement[i]);
+			el->SetScale({ el->GetScale().X, std::lerp(el->GetScale().Y, 5.f, 0.08f) });
+			i++;
+		}
 	}
 }

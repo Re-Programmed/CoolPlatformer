@@ -10,6 +10,7 @@
 
 #include "ScreenInventory.h"
 #include "Backpack/Backpack.h"
+#include "Skills/SkillHolder.h"
 
 
 #ifndef _PLAYERDEF
@@ -124,6 +125,11 @@ namespace  GAME_NAME
 				void beforeCollision() override;		//Called before any collisions are calculated to allow for resetting the jump conditions.
 
 			private:
+				/// <summary>
+				/// The players current skill data.
+				/// </summary>
+				SkillHolder m_skillHolder;
+
 				/// <summary>
 				/// Decodes the given string as player save data.
 				/// </summary>

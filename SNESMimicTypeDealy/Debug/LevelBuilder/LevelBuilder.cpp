@@ -210,12 +210,12 @@ using namespace GUI;
 			refreshingLevel = false;
 		}
 
-		if (InputManager::GetMouseButton(0))
+		if (InputManager::GetMouseButton(0) || InputManager::GetMouseButton(1))
 		{
 			if (PerformedButtonClickEvent == false)
 			{
 				PerformedButtonClickEvent = true;
-				GUI::GUIManager::ButtonClickEvent(InputManager::GetMouseScreenPosition());
+				GUI::GUIManager::ButtonClickEvent(InputManager::GetMouseScreenPosition(), InputManager::GetMouseButton(1));
 			}
 		}
 		else {

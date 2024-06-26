@@ -43,7 +43,7 @@ namespace GAME_NAME
 				};
 
 			public:
-
+				static inline bool PreventMenus = false;
 				static inline bool MenuIsOpen = false;
 
 				/// <summary>
@@ -54,7 +54,7 @@ namespace GAME_NAME
 				/// <summary>
 				/// Call this everytime a click occurs. Updates all buttons accordingly.
 				/// </summary>
-				static void ButtonClickEvent(Vec2 position);
+				static void ButtonClickEvent(Vec2 position, bool wasRightClick);
 
 				/// <summary>
 				/// Register a button so it can get clicked.

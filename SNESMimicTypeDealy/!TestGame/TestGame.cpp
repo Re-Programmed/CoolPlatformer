@@ -42,6 +42,8 @@
 #include "./Objects/Environment/Buildings/Door.h"
 #include "./Objects/Environment/Buildings/FrontWall.h"
 
+#include "../Objects/GUI/GUIManager.h"
+
 namespace GAME_NAME
 {
 	using namespace MathUtils;
@@ -257,8 +259,7 @@ namespace GAME_NAME
 	void TestGame::TogglePauseState()
 	{
 		if (SettingsManager::SettingsMenuIsOpen()) { return; }
-
-
+		
 		//Close any open inventory.
 		Items::Inventories::InventoryContainer* currentInv = Items::Inventories::InventoryContainerRenderer::GetCurrentContainer();
 		if (currentInv != nullptr)
@@ -272,6 +273,14 @@ namespace GAME_NAME
 		
 		if (m_gamePaused)
 		{
+			if (GUI::GUIManager::PreventMenus)
+			{
+				m_gamePaused = false;
+				return;
+			}
+
+			GUI::GUIManager::PreventMenus = true;
+
 			pauseMenu_buttonIdOffset = GUI::Menus::GUIMenu::LoadMenu("/pause", new std::function(pauseMenu_guiCallback));
 
 			//Prevent object updating to PAUSE GAME and PHYSICS.
@@ -286,6 +295,8 @@ namespace GAME_NAME
 
 		}
 		else {
+			GUI::GUIManager::PreventMenus = false;
+
 			GUI::Menus::GUIMenu::RemoveLastMenu();
 
 			//Renable all objects to RESUME GAME and PHYSICS.

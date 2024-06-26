@@ -51,6 +51,10 @@ namespace GAME_NAME::Objects::Player
 
 	void Backpack::Open(bool ignoreAnimation)
 	{
+		if (GUI::GUIManager::PreventMenus) { return; }
+
+		GUI::GUIManager::PreventMenus = true;
+
 		CurrentOpenBackpack = this;
 
 		StaticGUIElement* equipmentSlotsBacking = new StaticGUIElement(Vec2(ignoreAnimation ? 325.f : 366.f, 26.5f), Vec2(-40.f, 64.f), Renderer::GetSprite(SpriteBase(102))->GetSpriteId());
@@ -127,6 +131,8 @@ namespace GAME_NAME::Objects::Player
 
 	void Backpack::Close(bool ignoreAnimation)
 	{
+		GUI::GUIManager::PreventMenus = false;
+
 		if (CurrentOpenBackpack == this)
 		{
 			CurrentOpenBackpack = nullptr;

@@ -200,9 +200,9 @@ namespace GAME_NAME
 		{
 			Renderer::Render(m_game->GetCamera(), lastWindowSize, RENDER_LAYER_GUI, m_glWindow);
 			
-			if (InputManager::GetMouseButton(0))
+			if (InputManager::GetMouseButton(0) || InputManager::GetMouseButton(1))
 			{
-				GUI::GUIManager::ButtonClickEvent(InputManager::GetMouseScreenPosition());
+				GUI::GUIManager::ButtonClickEvent(InputManager::GetMouseScreenPosition(), InputManager::GetMouseButton(1));
 			}
 		}
 

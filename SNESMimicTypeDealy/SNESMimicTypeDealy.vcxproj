@@ -168,6 +168,7 @@
     <ClCompile Include="!TestGame\Objects\Player\Backpack\Backpack.cpp" />
     <ClCompile Include="!TestGame\Objects\Player\Player.cpp" />
     <ClCompile Include="!TestGame\Objects\Player\ScreenInventory.cpp" />
+    <ClCompile Include="!TestGame\Objects\Player\Skills\SkillHolder.cpp" />
     <ClCompile Include="!TestGame\SettingsManager.cpp" />
     <ClCompile Include="!TestGame\TestGame.cpp" />
     <ClCompile Include="Application.cpp" />
@@ -267,6 +268,8 @@
     <ClInclude Include="!TestGame\Objects\Player\Player.h" />
     <ClInclude Include="!TestGame\Objects\Player\ScreenInventory.h" />
     <ClInclude Include="!TestGame\Objects\Components\Climbable.h" />
+    <ClInclude Include="!TestGame\Objects\Player\Skills\SkillHolder.h" />
+    <ClInclude Include="!TestGame\Objects\Player\Skills\SkillType.h" />
     <ClInclude Include="!TestGame\Objects\Rooms\FrontWall.h" />
     <ClInclude Include="!TestGame\SettingsManager.h" />
     <ClInclude Include="!TestGame\TestGame.h" />

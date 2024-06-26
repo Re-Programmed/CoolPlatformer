@@ -52,6 +52,10 @@ namespace GAME_NAME::Items::Inventories
 		static std::vector<std::shared_ptr<StaticGUIElement>> m_renderedSlotItems;
 
 		static StaticGUIElement* m_tooltip;
+		/// <summary>
+		/// The objects that make up the parts of the tooltip.
+		/// </summary>
+		static std::vector<StaticGUIElement*> m_tooltipComponents;
 
 		static StaticGUIElement* const m_backgroundCover;
 

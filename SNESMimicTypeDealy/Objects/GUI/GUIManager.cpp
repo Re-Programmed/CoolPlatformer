@@ -23,13 +23,20 @@ namespace GAME_NAME
 				return GUIManager::EL_BLANK;
 			}
 
-			void GUIManager::ButtonClickEvent(Vec2 position)
+			void GUIManager::ButtonClickEvent(Vec2 position, bool wasRightClick)
 			{
 				for (GUIButton* gb : m_buttons)
 				{
+					if (wasRightClick && gb->OnRightClick == nullptr) { continue; }
 					if (Utils::CollisionDetection::PointWithinBoxBL(position, gb->GetPosition(), gb->GetScale()))
 					{
-						(*gb->OnClick)(gb->GetButtonId());
+						if(wasRightClick)
+						{
+							(*gb->OnRightClick)(gb->GetButtonId());
+						}
+						else {
+							(*gb->OnClick)(gb->GetButtonId());
+						}
 						return;
 					}
 				}

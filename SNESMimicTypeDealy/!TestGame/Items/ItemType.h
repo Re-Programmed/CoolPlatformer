@@ -11,7 +11,7 @@ namespace GAME_NAME
 {
 	namespace Items
 	{
-#define ITEM_COUNT 5
+#define ITEM_COUNT 6
 		/// <summary>
 		/// An enum for the types of items in the game.
 		/// </summary>
@@ -73,7 +73,8 @@ namespace GAME_NAME
 			{ "Leaves", 18, NO_HELD_TEXTURE },
 			{ "Stone", 55, NO_HELD_TEXTURE },
 			{ "(Temp) Axe", 56, SpriteBase(65), CHOP, { { TOOL_ACTION::CHOP , "1" } } },
-			{ "Unknown", 0, NO_HELD_TEXTURE }
+			{ "Unknown", 0, NO_HELD_TEXTURE },
+			{ "Wooden Shoes", 18, NO_HELD_TEXTURE, EQUIPMENT, { { TOOL_ACTION::EQUIPMENT, "Health:10" } } }
 		};
 
 

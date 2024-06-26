@@ -144,6 +144,10 @@ using namespace GUI::Text;
 		{
 			m_controlsPageNumbers.clear();
 
+			/*
+				SHOULD HAVE USED SMART POUINTER HERE STUFF IS GETTING DELETEED AND ASAASPDFJSAKFJSAKLF
+				TODO: USE SMART POINTER STUFF PLEAES
+			*/
 			for (GUI::StaticGUIElement* el : m_currentPageElements)
 			{
 				if (el == nullptr) { continue; }
@@ -211,9 +215,24 @@ using namespace GUI::Text;
 						//Update keybind graphic.
 						m_recordingKey = false;
 						StaticGUIElement* const lastElement = m_controlsPageNumbers[m_currentRecordingIndex];
+
 						Renderer::UnloadGUIElement(m_controlsPageNumbers[m_currentRecordingIndex], 2);
 						m_controlsPageNumbers[m_currentRecordingIndex] = Text::TextRenderer::RenderLetter(i + LETTER_DISPLAY_OFFSET, lastElement->GetPosition(), lastElement->GetScale().Y, 2);
 						m_currentPageElements.push_back(m_controlsPageNumbers[m_currentRecordingIndex]);
+
+						//Remove from the current page list.
+						int a = 0;
+						for (StaticGUIElement*& el : m_currentPageElements)
+						{
+							if (el == lastElement)
+							{
+								m_currentPageElements.erase(m_currentPageElements.begin() + a);
+								break;
+							}
+
+							a++;
+						}
+
 						delete lastElement;
 
 						for (int i = 0; i < m_recordingText.size(); i++)

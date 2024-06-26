@@ -291,6 +291,9 @@
     <ClCompile Include="!TestGame\Objects\Player\Backpack\Backpack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="!TestGame\Objects\Player\Skills\SkillHolder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glad\include\glad\glad.h">
@@ -621,6 +624,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="!TestGame\Objects\Player\Backpack\Backpack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="!TestGame\Objects\Player\Skills\SkillHolder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="!TestGame\Objects\Player\Skills\SkillType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
