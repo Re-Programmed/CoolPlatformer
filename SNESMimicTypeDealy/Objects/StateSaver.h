@@ -17,10 +17,16 @@ namespace GAME_NAME::Objects
 	public:
 		/// <summary>
 		/// Registers a GameObjectState to be saved on the next save.
+		/// The object will no longer be registed after it is saved and should be assigned to be saved after an update to the object occurs.
 		/// </summary>
 		/// <param name="state"></param>
 		static void RegisterToBeSaved(GameObjectState* state);
 
+		/// <summary>
+		/// Registers a MiscStateGroup to be saved any time the game is saved.
+		/// The state group will always be saved from then on (unlike GameObjectStates)
+		/// </summary>
+		/// <param name="state"></param>
 		static void RegisterToBeSaved(MiscStateGroup* state);
 
 		/// <summary>

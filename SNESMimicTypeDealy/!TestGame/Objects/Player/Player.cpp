@@ -19,6 +19,8 @@
 
 #include "../../Items/FloorItem.h"
 
+#include "../../../Utils/Math/VMath.h"
+
 
 #include <thread>
 
@@ -30,6 +32,10 @@ namespace  GAME_NAME
 	{
 		namespace Player
 		{
+
+constexpr int PLAYER_NO_HEAD_SPRITE = SpriteBase(105);
+
+
 			typedef int8_t PlayerEmotion;
 			
 			enum PLAYER_EMOTIONS : PlayerEmotion
@@ -110,7 +116,7 @@ namespace  GAME_NAME
 
 				m_physics->SetGravityStrength(DefaultPlayerGravity);
 
-				m_emotionsObject = new ChildGameObject(Vec2(DefaultPlayerScaleX, 12.25), Vec2(-DefaultPlayerScaleX, DefaultPlayerScaleY * 0.519230769f), Renderer::GetSprite(PLAYER_EMOTIONS::ANGRY), this);
+				m_emotionsObject = nullptr;
 				//Renderer::InstantiateObject(Renderer::InstantiateGameObject(m_emotionsObject, true, 2, false));
 
 				m_heldItemDisplay = nullptr;
@@ -192,6 +198,19 @@ namespace  GAME_NAME
 					animationUpdate.join();
 				}
 
+				/*
+				Testing, implement something kinda like this but for looking at interesting objects.
+				*/
+				if (InputManager::GetMouseButton(1))
+				{
+					m_currentPlayerLookDirection = FOLLOW_MOUSE;
+				}
+				else {
+					m_currentPlayerLookDirection = NO_LOOK_DIRECTION;
+				}
+
+				updateLookDirection();
+
 				m_screenInventory->Update();
 			}
 
@@ -243,6 +262,11 @@ namespace  GAME_NAME
 				}
 				else {
 					m_sprite->Render(cameraPosition, m_position + (m_textureFlipped ? (m_scale * Vec2::OneX) : 0), m_scale * (m_textureFlipped ? Vec2::MinusOneXOneY : 1), m_rotation);
+					//Render emotions object if it should be rendered.
+					if (m_emotionsObject != nullptr)
+					{
+						m_emotionsObject->Render(cameraPosition);
+					}
 				}
 
 				/*
@@ -328,6 +352,8 @@ namespace  GAME_NAME
 						m_heldItemDisplay->GetSprite()->Render(cameraPosition, m_heldItemDisplay->GetPosition(), m_heldItemDisplay->GetScale(), 0.0F);
 					}
 				}
+
+
 			}
 
 #if _DEBUG
@@ -743,6 +769,7 @@ namespace  GAME_NAME
 				
 			}
 
+
 			void Player::setAnimations(bool playerIsSkidding, float& anim_momentum)
 			{
 				anim_momentum = std::abs(m_physics->GetVelocity().X);	//X Speed of player.
@@ -794,6 +821,50 @@ namespace  GAME_NAME
 					m_animator->SetCurrentAnimation(2); //Falling Animation
 					m_begunMotion = true;
 					return;
+				}
+			}
+
+			void Player::updateLookDirection()
+			{
+
+				if (m_currentPlayerLookDirection != NO_LOOK_DIRECTION)
+				{
+					delete m_sprite;
+					m_sprite = Renderer::GetSprite(PLAYER_NO_HEAD_SPRITE);
+
+					if (m_emotionsObject == nullptr)
+					{
+						m_emotionsObject = new ChildGameObject(Vec2(DefaultPlayerScaleX, 12.25), Vec2(-DefaultPlayerScaleX, DefaultPlayerScaleY * 0.519230769f), Renderer::GetSprite(PLAYER_EMOTIONS::ANGRY), this);
+					}
+					else {
+						m_emotionsObject->Update(TestGame::FirstWindow);
+					}
+				}
+				else {
+					if (m_emotionsObject != nullptr)
+					{
+						delete m_emotionsObject;
+						m_emotionsObject = nullptr;
+					}
+
+					return;
+				}
+
+				switch (m_currentPlayerLookDirection)
+				{
+					case FOLLOW_MOUSE:
+					{
+						//Get what angle the head must rotate to point at the mouse.
+						Vec2 mouseDistance = InputManager::GetMouseWorldPosition(TestGame::INSTANCE->GetCamera()) - m_emotionsObject->GetPosition();
+						float rotation = -MathUtils::to_degf(std::atanf(mouseDistance.Y / mouseDistance.X));
+						m_emotionsObject->SetRotationAboutCenter(rotation);
+						break;
+					}
+
+					default:
+					{
+						return;
+					}
 				}
 			}
 

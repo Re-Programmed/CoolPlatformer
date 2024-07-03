@@ -153,6 +153,7 @@
     <ClCompile Include="!TestGame\Objects\Components\Climbable.cpp" />
     <ClCompile Include="!TestGame\Objects\Enemies\Enemy.cpp" />
     <ClCompile Include="!TestGame\Objects\Enemies\Types\LeftRightEnemy.cpp" />
+    <ClCompile Include="!TestGame\Objects\Enemies\Types\PassiveRabbit.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\BackgroundObjects.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\BreakableBlock.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Buildings\Door.cpp" />
@@ -253,6 +254,7 @@
     <ClInclude Include="!TestGame\Camera\GameCamera.h" />
     <ClInclude Include="!TestGame\Objects\Enemies\Enemy.h" />
     <ClInclude Include="!TestGame\Objects\Enemies\Types\LeftRightEnemy.h" />
+    <ClInclude Include="!TestGame\Objects\Enemies\Types\PassiveRabbit.h" />
     <ClInclude Include="!TestGame\Objects\Environment\BackgroundObjects.h" />
     <ClInclude Include="!TestGame\Objects\Environment\BGParallax.h" />
     <ClInclude Include="!TestGame\Objects\Environment\BreakableBlock.h" />

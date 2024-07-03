@@ -23,14 +23,33 @@ namespace GAME_NAME::Objects::Player
 	}
 
 	SkillHolder::SkillHolder(const Vec2& skillDisplayPosition)
-		: m_skillDisplay(new StaticGUIElement(skillDisplayPosition, Vec2(16), Renderer::GetSprite(SpriteBase(103))->GetSpriteId())), m_currentSkill(SKILL_TYPE::NO_SKILL)
+		: m_skillDisplay(new StaticGUIElement(skillDisplayPosition, Vec2(16), Renderer::GetSprite(SpriteBase(103))->GetSpriteId())), m_currentSkill(SKILL_TYPE::NO_SKILL),
+		MiscStateGroup("sh")
 	{
 		//Always allow selection of NO_SKILL.
 		m_unlockedSkills.push_back(NO_SKILL);
 
 		Renderer::LoadGUIElement(m_skillDisplay, SKILL_HOLDER_SKILL_DISPLAY_LAYER);
 
-		//TODO: save selected skills and data.
+		auto states = getStates();
+
+		//The first state listed is the current skill.
+		m_currentSkill.Decode(states->at(0));
+
+		delete m_skillDisplay->GetSprite();
+		m_skillDisplay->SetSprite(new Sprite(SkillHolder_GetSkillSpriteId(m_currentSkill.Skill)));
+
+		//The current skill will always be the first state saved.
+		assignState(&m_currentSkill);
+
+		for (int i = 1; i < states->size(); i++)
+		{
+			SkillState skill(NO_SKILL);
+			skill.Decode(states->at(i));
+
+			//Unlock all saved skills.
+			UnlockSkill(skill.Skill);
+		}
 	}
 
 	SkillHolder::~SkillHolder()
@@ -44,7 +63,7 @@ namespace GAME_NAME::Objects::Player
 
 	void SkillHolder::SetCurrentSkill(SKILL_TYPE type)
 	{
-		m_currentSkill = type;
+		m_currentSkill.Skill = type;
 
 		delete m_skillDisplay->GetSprite();
 		m_skillDisplay->SetSprite(new Sprite(SkillHolder_GetSkillSpriteId(type)));
@@ -77,7 +96,7 @@ namespace GAME_NAME::Objects::Player
 		{
 			//Set the y position of the buttons to each spot 20 above the display, unless this is the current skill, in which case it is placed in the same position as the display.
 			float yPosition = m_skillDisplay->GetPosition().Y;
-			if (m_unlockedSkills[i] != m_currentSkill)
+			if (m_unlockedSkills[i] != m_currentSkill.Skill)
 			{
 				yPosition += (20.f + y * 20.f);
 			} else {
@@ -137,8 +156,6 @@ namespace GAME_NAME::Objects::Player
 
 	void SkillHolder::skillMenuButtonClicked(int id)
 	{
-		std::cout << id;
-
 		if (m_currentOpenSkillHolder == nullptr) { return; }
 		if (!m_currentOpenSkillHolder->m_skillMenuIsOpen) { return; }
 

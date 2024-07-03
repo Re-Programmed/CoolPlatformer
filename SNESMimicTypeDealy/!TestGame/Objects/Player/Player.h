@@ -120,11 +120,35 @@ namespace  GAME_NAME
 					return m_backpack;
 				}
 
+				enum PLAYER_LOOK_DIRECTION
+				{
+					NO_LOOK_DIRECTION,
+					BEHIND,
+					AT_POINT,
+					FOLLOW_MOUSE
+				};
+				
+				inline void SetLookDirection(PLAYER_LOOK_DIRECTION direction, Vec2 point = Vec2::Zero)
+				{
+					m_currentPlayerLookDirection = direction;
+					m_playerLookPoint = point;
+				}
+
 			protected:
 				void onCollision (Vec2 push) override;	//Called when a collision occurs.
 				void beforeCollision() override;		//Called before any collisions are calculated to allow for resetting the jump conditions.
 
 			private:
+
+				/// <summary>
+				/// If using AT_POINT for player look direction, where to look.
+				/// </summary>
+				Vec2 m_playerLookPoint = Vec2::Zero;
+				/// <summary>
+				/// The current player look state.
+				/// </summary>
+				PLAYER_LOOK_DIRECTION m_currentPlayerLookDirection = NO_LOOK_DIRECTION;
+
 				/// <summary>
 				/// The players current skill data.
 				/// </summary>
@@ -221,6 +245,7 @@ namespace  GAME_NAME
 
 				void readKeys();						//Called to determine what buttons are pressed and apply velocity based on those buttons.
 				void setAnimations(bool playerIsSkidding, float& anim_momentum);	//Called to determine what animation the player should be playing.
+				void updateLookDirection();				//Used to update player look state.
 
 #if _DEBUG
 				bool m_debug = false, m_debugKey = false, m_flight = false;

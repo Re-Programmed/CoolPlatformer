@@ -75,6 +75,11 @@ namespace GAME_NAME
             m_rotationOffset += Vec2((m_scale.X * MATHUTILS_INVSQRT2f) * (std::cosf(rotOff) - std::cosf(rotOffPrev)), (m_scale.Y * MATHUTILS_INVSQRT2f) * (std::sinf(rotOff) - std::sinf(rotOffPrev)));
         }
 
+        void GameObject::SetRotationAboutCenter(float rotation)
+        {
+            RotateAboutCenter(rotation - m_rotation);
+        }
+
         Rendering::Sprite* GameObject::GetSprite()
         {
             return m_sprite;

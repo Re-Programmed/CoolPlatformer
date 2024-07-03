@@ -14,6 +14,7 @@ using namespace GUI;
 	/// Manages effects applied to the player by a skill or equipment.
 	/// </summary>
 	class SkillHolder
+		: public MiscStateGroup
 	{
 	public:
 		SkillHolder(const Vec2& skillDisplayPosition);
@@ -22,7 +23,7 @@ using namespace GUI;
 
 		void SetCurrentSkill(SKILL_TYPE type);
 
-		inline bool CanUseAbility(SKILL_TYPE ability) { return m_currentSkill == ability; }
+		inline bool CanUseAbility(SKILL_TYPE ability) { return m_currentSkill.Skill == ability; }
 
 		/// <summary>
 		/// Should be called each frame to update the display.
@@ -41,11 +42,51 @@ using namespace GUI;
 		{
 			if (std::find(m_unlockedSkills.begin(), m_unlockedSkills.end(), skill) != m_unlockedSkills.end()) { return; }
 			m_unlockedSkills.push_back(skill);
+			assignState(new SkillState(skill));
 		}
 
 		inline bool GetSkillMenuIsOpen() { return m_skillMenuIsOpen; }
 	private:
-		SKILL_TYPE m_currentSkill;
+
+		/// <summary>
+		/// Used to save skills.
+		/// </summary>
+		class SkillState
+			: public MiscState
+		{
+		public:
+			SKILL_TYPE Skill;
+
+			/// <summary>
+			/// Create a saveable skill from given type.
+			/// </summary>
+			/// <param name="type"></param>
+			SkillState(SKILL_TYPE type)
+				: Skill(type)
+			{ 
+				
+			}
+			
+			/// <summary>
+			/// Sets the Skill value of this state based on the given SaveParam.
+			/// </summary>
+			/// <param name="param"></param>
+			inline void Decode(const SaveParam param)
+			{
+				Skill = (SKILL_TYPE)std::stoi(param);
+			}
+
+			/// <summary>
+			/// Returns the SaveParam that represents this objects Skill.
+			/// </summary>
+			/// <returns></returns>
+			inline SaveParam Encode() override
+			{
+				return std::to_string(Skill);
+			}
+		};
+
+		SkillState m_currentSkill;
 
 		/// <summary>
 		/// A list of all skills the player has unlocked.

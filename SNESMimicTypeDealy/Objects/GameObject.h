@@ -24,10 +24,11 @@ namespace GAME_NAME
 			float GetRotation();
 
 			/// <summary>
-			/// Rotates an object around its center point by adjusting its position.
+			/// Rotates an object around its center point by adjusting its position. IN DEGREES
 			/// </summary>
 			/// <param name="rotation">How much to rotate by.</param>
 			void RotateAboutCenter(float rotation);
+			void SetRotationAboutCenter(float rotation);
 
 			Rendering::Sprite* GetSprite();
 			void SetSprite(Rendering::Sprite* sprite);
