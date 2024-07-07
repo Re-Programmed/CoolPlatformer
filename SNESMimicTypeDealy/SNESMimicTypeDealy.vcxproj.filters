@@ -297,6 +297,12 @@
     <ClCompile Include="!TestGame\Objects\Enemies\Types\PassiveRabbit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Rendering\Lighting\SimpleLightingManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Lighting\LightingSource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glad\include\glad\glad.h">
@@ -638,6 +644,12 @@
     <ClInclude Include="!TestGame\Objects\Enemies\Types\PassiveRabbit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Rendering\Lighting\SimpleLightingManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Lighting\LightingSource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\testing\sprite\1_player.png">
@@ -794,6 +806,216 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Assets\town_1\sprite\1022_spotted_hill_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1023_dirt_30px.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1024_tree.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1025_tree_rustle_1png.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1026_tree_rustle_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1027_wooden_bridge_base_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1028_wooden_bridge_base_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1029_wooden_bridge_base_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1030_wooden_bridge_rope_1x.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1031_wooden_bridge_rope_2x.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1032_wooden_bridge_rope_4x.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1033_wooden_bridge_support.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1034_wooden_bridge_base_back_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1035_wooden_bridge_base_back_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1036_wooden_bridge_base_back_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1037_water.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1038_barrel_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1039_platform_strut_full.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1040_platform_strut_LR.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1041_platform_brace.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1042_platform_log_border_L.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1043_platform_log_border_R.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1044_platform_half.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1045_platform_strut_flat_top.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1046_platform_strut_log_top.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1047_platform_strut_log_top_extended.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1048_platform_strut_log_top_end_L.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1049_platform_strut_log_top_end_R.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1050_wheat_top_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1051_wheat_top_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1052_wheat_tall_base.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1053_fertile_soil.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1054_fertile_soil_top.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1055_stone_item_pile.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1056_stone_item_rock.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1057_tree_stump.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1058_blank_wood_door.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1059_handle_wooden_door.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1060_blue_glass_handle_wooden_door.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1061_closed_wooden_door.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1062_wall_framed.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1063_wall_border.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1064_wall_border_no_base.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1065_wall_window.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1066_roof_angle.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1067_roof_edge_piece.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1068_roof_tip.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1069_roof_inner__corner.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1070_tall_grass.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1071_yellow_flower.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1072_blank_white.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1073_bg_windmill.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1074_player_house_frame.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1075_player_house_frame_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1076_player_house_wall.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1077_player_house_roof_edge.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1078_player_house_roof.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1079_player_house_slanted_wall.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1080_player_house_window_flowers.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1081_player_house_window.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1082_player_house_window_round.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1083_player_house_window_covered.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1084_player_house_window_shelf.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1085_player_house_shelf.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1086_player_house_door.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1087_wooden_fence.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1088_player_house_wall_blank.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1089_rabbit_still.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1090_rabbit_run_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1091_rabbit_run_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\town_1\sprite\1001_blank.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

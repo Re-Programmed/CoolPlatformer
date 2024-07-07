@@ -89,6 +89,11 @@ namespace GAME_NAME
 			static void Render(Camera::Camera* camera, Vec2* windowSize, RENDER_LAYER layer, GLFWwindow* window, float parallax = 1.f);
 
 			/// <summary>
+			/// The current layer that is getting rendered. Useful for applying vertex effects to only a specific layer.
+			/// </summary>
+			static RENDER_LAYER CurrentlyRenderingLayer;
+
+			/// <summary>
 			/// Returns every GameObject in an area.
 			/// Use boxOverlap if you want all the objects overlapping the given area, otherwise this function will only return the objects with a position in the given area.
 			/// </summary>

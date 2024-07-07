@@ -43,6 +43,7 @@
 #include "./Objects/Environment/Buildings/FrontWall.h"
 
 #include "../Objects/GUI/GUIManager.h"
+#include "../Rendering/Lighting/SimpleLightingManager.h"
 
 namespace GAME_NAME
 {
@@ -197,6 +198,11 @@ namespace GAME_NAME
 		//CHNAGE TO DETECT WHAT LEVEL IS BEING LOADED AND CALL THE APPROPRIATE FUNCTION.
 		Objects::Environment::Levels::Town1Manager::InitLevel();
 
+		//TODO: Add a check on weather the current level uses lighting or not.
+		Rendering::Lighting::SimpleLightingManager::EnableLighting(DEFAULT_LEVEL_SIZE_X/10, true);
+
+		//Rendering::Lighting::SimpleLightingManager::RegisterSource(new Lighting::LightingSource(Vec2(200, 21), 46.f, 0.f, Lighting::POINT_LIGHT));
+
 	/*	
 	----------------------------PARTICLE TEST----------------------------
 	GameObject* leaf = Instantiate::LevelObjectHandler::GetLevelObject("leaf_particle_objects", "leaf_1");
@@ -252,6 +258,7 @@ namespace GAME_NAME
 
 		//MusicSync::MusicSync::Subscribe(testAudioUpdate);
 
+		//TODO: add music sync to everything.
 	}
 
 

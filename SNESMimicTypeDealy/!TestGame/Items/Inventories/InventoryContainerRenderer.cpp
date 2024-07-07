@@ -45,9 +45,9 @@ namespace GAME_NAME::Items::Inventories
 			//Create slot and add item to the slot.
 			createSlot(s, item);
 		}
-		
+
 		//Prevent the player from moving.
-		TestGame::ThePlayer->SetFrozen(true);
+		TestGame::ThePlayer->SetFrozen(true, GAME_NAME::Objects::Player::Player::BEHIND);
 
 		BeginRenderPlayerSlots();
 	}
@@ -55,8 +55,14 @@ namespace GAME_NAME::Items::Inventories
 	void InventoryContainerRenderer::CloseCurrentContainer()
 	{
 		Renderer::UnloadGUIElement(m_backgroundCover);
-
+		
+		//Remove tooltip.
 		Renderer::UnloadGUIElement(m_tooltip, 2);
+		for (auto& component : m_tooltipComponents)
+		{
+			Renderer::UnloadGUIElement(component, 2);
+		}
+		m_tooltipComponents.clear();
 
 		//delete m_tooltip;
 
@@ -192,6 +198,8 @@ namespace GAME_NAME::Items::Inventories
 	std::vector<Vec2> TooltipCompoentDisplacement;
 	void InventoryContainerRenderer::updateTooltip(uint8_t index, bool clearTooltip)
 	{		
+		if (m_currentContainer == nullptr) { return; }
+
 		Vec2 MousePosition = InputManager::GetMouseScreenPosition();
 
 		if (clearTooltip)

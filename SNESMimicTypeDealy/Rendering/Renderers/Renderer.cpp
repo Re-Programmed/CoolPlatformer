@@ -32,6 +32,8 @@ namespace GAME_NAME
 
 		GameObject* Renderer::m_lastLoadedObject;
 
+		RENDER_LAYER Renderer::CurrentlyRenderingLayer;
+
 		/*
 	 ---RENDER ORDER---
 		 
@@ -367,7 +369,7 @@ namespace GAME_NAME
 			//Update objects before rendering them.
 			updateObjectQueues();
 
-
+			CurrentlyRenderingLayer = layer;
 
 			if (layer == RENDER_LAYER_GUI)
 			{
@@ -453,7 +455,6 @@ namespace GAME_NAME
 			const int iterInit = cameraChunkPosition.GetX() * levelSizeY + cameraChunkPosition.GetY() - (levelSizeY * 2);
 			const int iterEnd = (AsChunkPosition(((int)cameraPosition.X + cameraBoundingBox.GetX() + 2))) * levelSizeY;
 
-
 			for (int rLayer = 0; rLayer < MICRO_RENDER_LAYER_COUNT; rLayer++)
 			{
 				//Loop over chunks that are before the right edge of the camera.
@@ -467,7 +468,6 @@ namespace GAME_NAME
 					//{
 						//Render a chunk if it is in the cameras bounding box.
 					m_chunks[i].Render(cameraPosition, chunkSize, layer, window, rLayer);
-
 
 					//Check if the chunk we just rendered is at the top of the screen.
 					if ((i % levelSizeY) == (levelSizeY - 1))

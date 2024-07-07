@@ -12,6 +12,8 @@
 #include "Backpack/Backpack.h"
 #include "Skills/SkillHolder.h"
 
+#include "../../../Rendering/Lighting/LightingSource.h"
+
 
 #ifndef _PLAYERDEF
 #define _PLAYERDEF
@@ -106,27 +108,29 @@ namespace  GAME_NAME
 					return m_screenInventory;
 				}
 
+				enum PLAYER_LOOK_DIRECTION
+				{
+					NO_LOOK_DIRECTION,
+					BEHIND,
+					AT_POINT,
+					FOLLOW_MOUSE,
+					BAG
+				};
+
 				/// <summary>
 				/// Sets an object to freeze the player.
 				/// </summary>
 				/// <param name="frozen">Freeze the player?</param>
-				inline void SetFrozen(bool frozen)
+				inline void SetFrozen(bool frozen, PLAYER_LOOK_DIRECTION direction = NO_LOOK_DIRECTION, Vec2 point = Vec2::Zero)
 				{
 					m_frozen += frozen ? 1 : -1;
+					SetLookDirection(direction, point);
 				}
 
 				inline Backpack* const GetBackpack()
 				{
 					return m_backpack;
 				}
-
-				enum PLAYER_LOOK_DIRECTION
-				{
-					NO_LOOK_DIRECTION,
-					BEHIND,
-					AT_POINT,
-					FOLLOW_MOUSE
-				};
 				
 				inline void SetLookDirection(PLAYER_LOOK_DIRECTION direction, Vec2 point = Vec2::Zero)
 				{
@@ -139,6 +143,7 @@ namespace  GAME_NAME
 				void beforeCollision() override;		//Called before any collisions are calculated to allow for resetting the jump conditions.
 
 			private:
+				Lighting::LightingSource* m_playerLight;
 
 				/// <summary>
 				/// If using AT_POINT for player look direction, where to look.
@@ -278,6 +283,8 @@ namespace  GAME_NAME
 				/// </summary>
 				/// <param name="amount">[float] - How much to add to the ability meter.</param>
 				void updateAbilityMeter(float amount);
+
+				void togglePlayerLight();
 			};
 
 		};

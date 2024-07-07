@@ -34,6 +34,8 @@ namespace  GAME_NAME
 		{
 
 constexpr int PLAYER_NO_HEAD_SPRITE = SpriteBase(105);
+constexpr int PLAYER_LOOK_BEHIND_SPRITE = SpriteBase(107);
+constexpr int PLAYER_LOOK_BAG = SpriteBase(106);
 
 
 			typedef int8_t PlayerEmotion;
@@ -48,6 +50,7 @@ constexpr int PLAYER_NO_HEAD_SPRITE = SpriteBase(105);
 			Player::Player(Vec2 position)
 				: ActiveBoxCollisionGravityObject(position, Vec2(DefaultPlayerScaleX, DefaultPlayerScaleY), Rendering::Renderer::GetSprite(DefaultPlayerSprite)), m_screenInventory(new ScreenInventory()),
 				m_heldItemLastSprite(nullptr),
+				m_playerLight(nullptr),
 				m_healthProgressBar(new ProgressBar(
 					Vec2(30, 18), Vec2(32, -3), Renderer::GetSprite(SpriteBase(72))->GetSpriteId()
 				)),
@@ -178,6 +181,11 @@ constexpr int PLAYER_NO_HEAD_SPRITE = SpriteBase(105);
 				//Update the health bar display.
 				m_healthProgressBar->SetPercentage(static_cast<char>(std::clamp(m_stats.Health, 0.f, 100.f)));
 
+				if (m_playerLight != nullptr)
+				{
+					m_playerLight->SetPosition(m_position + (m_scale / 2.f));
+				}
+
 #if _DEBUG
 				if (!m_flight)
 				{
@@ -201,12 +209,16 @@ constexpr int PLAYER_NO_HEAD_SPRITE = SpriteBase(105);
 				/*
 				Testing, implement something kinda like this but for looking at interesting objects.
 				*/
-				if (InputManager::GetMouseButton(1))
+
+				if (m_currentPlayerLookDirection == NO_LOOK_DIRECTION || m_currentPlayerLookDirection == FOLLOW_MOUSE)
 				{
-					m_currentPlayerLookDirection = FOLLOW_MOUSE;
-				}
-				else {
-					m_currentPlayerLookDirection = NO_LOOK_DIRECTION;
+					if (InputManager::GetMouseButton(1))
+					{
+						m_currentPlayerLookDirection = FOLLOW_MOUSE;
+					}
+					else {
+						m_currentPlayerLookDirection = NO_LOOK_DIRECTION;
+					}
 				}
 
 				updateLookDirection();
@@ -583,6 +595,13 @@ constexpr int PLAYER_NO_HEAD_SPRITE = SpriteBase(105);
 					m_debugKey = false;
 				}
 #endif
+
+				//Check if the player is pressing the key to toggle their flashlight.
+				if (InputManager::GetKeyUpDown(PLAYER_TOGGLE_FLASHLIGHT) & InputManager::KEY_STATE::KEY_STATE_PRESSED)
+				{
+					togglePlayerLight();
+				}
+
 				//If the player is pressing the drop item key, drop the item they are holding.
 				if (InputManager::GetKeyUpDown(PLAYER_DROP_HELD_ITEM) & InputManager::KEY_STATE::KEY_STATE_PRESSED)
 				{
@@ -606,8 +625,8 @@ constexpr int PLAYER_NO_HEAD_SPRITE = SpriteBase(105);
 					//Open backpack GUI.
 					m_backpack->Open();
 
-					//Freeze player inputs.
-					SetFrozen(true);
+					//Freeze player inputs and use bag sprite.
+					SetFrozen(true, BAG);
 					return;
 				}
 
@@ -826,8 +845,8 @@ constexpr int PLAYER_NO_HEAD_SPRITE = SpriteBase(105);
 
 			void Player::updateLookDirection()
 			{
-
-				if (m_currentPlayerLookDirection != NO_LOOK_DIRECTION)
+				
+				if (m_currentPlayerLookDirection == FOLLOW_MOUSE)
 				{
 					delete m_sprite;
 					m_sprite = Renderer::GetSprite(PLAYER_NO_HEAD_SPRITE);
@@ -846,18 +865,35 @@ constexpr int PLAYER_NO_HEAD_SPRITE = SpriteBase(105);
 						delete m_emotionsObject;
 						m_emotionsObject = nullptr;
 					}
-
-					return;
 				}
 
 				switch (m_currentPlayerLookDirection)
 				{
 					case FOLLOW_MOUSE:
 					{
+						/*
+							TODO: FIX THIS SO THE HEAD LOOKS BETTER.
+						*/
+
+
 						//Get what angle the head must rotate to point at the mouse.
 						Vec2 mouseDistance = InputManager::GetMouseWorldPosition(TestGame::INSTANCE->GetCamera()) - m_emotionsObject->GetPosition();
 						float rotation = -MathUtils::to_degf(std::atanf(mouseDistance.Y / mouseDistance.X));
 						m_emotionsObject->SetRotationAboutCenter(rotation);
+						break;
+					}
+
+					case BEHIND:
+					{
+						delete m_sprite;
+						m_sprite = Renderer::GetSprite(PLAYER_LOOK_BEHIND_SPRITE);
+						break;
+					}
+
+					case BAG:
+					{
+						delete m_sprite;
+						m_sprite = Renderer::GetSprite(PLAYER_LOOK_BAG);
 						break;
 					}
 
@@ -872,6 +908,22 @@ constexpr int PLAYER_NO_HEAD_SPRITE = SpriteBase(105);
 			{
 				m_stats.AbilityMeter += amount;
 				m_abilityMeterProgressBar->SetPercentage(static_cast<char>(std::clamp(m_stats.AbilityMeter, 0.f, 100.f)));
+			}
+
+			void Player::togglePlayerLight()
+			{
+using namespace Lighting;
+
+				if (m_playerLight == nullptr)
+				{
+					m_playerLight = new LightingSource(m_position, 45.f, 5.f, POINT_LIGHT, true, true);
+				}
+				else
+				{
+					m_playerLight->Off(true);
+					delete m_playerLight;
+					m_playerLight = nullptr;
+				}
 			}
 
 
