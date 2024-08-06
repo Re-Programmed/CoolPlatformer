@@ -6,12 +6,13 @@
 
 #define ITEM_PREFIX_ITEM 'i'
 #define ITEM_PREFIX_TOOL 't'
+#define ITEM_PREFIX_WEAPON 'w'
 
 namespace GAME_NAME
 {
 	namespace Items
 	{
-#define ITEM_COUNT 6
+#define ITEM_COUNT 7
 		/// <summary>
 		/// An enum for the types of items in the game.
 		/// </summary>
@@ -21,7 +22,9 @@ namespace GAME_NAME
 			LEAVES = 1,
 			STONE = 2,
 			SCRAP_AXE = 3,
-			NULL_ITEM = 4 //NULL ITEM IS 4 (used for saving data about items that are not there)
+			NULL_ITEM = 4, //NULL ITEM IS 4 (used for saving data about items that are not there)
+			WOODEN_SHOES = 5,
+			SHARP_STICK = 6
 		};
 
 		/// <summary>
@@ -32,6 +35,7 @@ namespace GAME_NAME
 			CHOP = 0b00001, //Can cut down trees.
 			EQUIPMENT = 0b00010, //Can be equipped to equipment slots.
 			MINE = 0b00100, //Can break BreakableBlocks. (provide a strength attribute)
+			WEAPON = 0b01000 //Can be used to attack. (provide a damage, power consumption, and reload attribute [damage,powerconsume,reloadseconds])
 		};
 
 		/// <summary>
@@ -47,7 +51,7 @@ namespace GAME_NAME
 			/// <summary>
 			/// The texture for the inventory display of the item.
 			/// </summary>
-			const uint16_t Texture;
+			const int16_t Texture; //WHY was this uint :(:(:( this caused so umuch pain.
 			/// <summary>
 			/// The texture for holding the item. 
 			/// </summary>
@@ -74,7 +78,8 @@ namespace GAME_NAME
 			{ "Stone", 55, NO_HELD_TEXTURE },
 			{ "(Temp) Axe", 56, SpriteBase(65), CHOP, { { TOOL_ACTION::CHOP , "1" } } },
 			{ "Unknown", 0, NO_HELD_TEXTURE },
-			{ "Wooden Shoes", 18, NO_HELD_TEXTURE, EQUIPMENT, { { TOOL_ACTION::EQUIPMENT, "Health:10" } } }
+			{ "Wooden Shoes", 18, NO_HELD_TEXTURE, EQUIPMENT, { { TOOL_ACTION::EQUIPMENT, "Health:10" } } },
+			{ "Sharp Stick", SpriteBase(118), SpriteBase(118), WEAPON, {{TOOL_ACTION::WEAPON, "5,0,0.8"}}}
 		};
 
 

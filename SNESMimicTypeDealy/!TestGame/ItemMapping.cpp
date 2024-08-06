@@ -2,6 +2,7 @@
 
 #include <sstream>
 #include "./Items/Types/Tool.h"
+#include "./Items/Types/Weapon.h"
 
 namespace GAME_NAME
 {
@@ -40,6 +41,9 @@ using namespace std;
 		{
 		case ITEM_PREFIX_TOOL:	//Tool
 			return new Tool((ITEM_TYPE)std::stoi(parameters[0]), std::stoi(parameters[1]));
+
+		case ITEM_PREFIX_WEAPON: //Weapon
+			return new Weapon((ITEM_TYPE)std::stoi(parameters[0]), std::stoi(parameters[1]));
 
 		case ITEM_PREFIX_ITEM:
 		default:

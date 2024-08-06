@@ -300,7 +300,7 @@ std::function<void (std::vector<std::string>, size_t line)> m_mappings[MAPPINGS_
 		Type:
 			0 - LeftRightEnemy (anchorLeftX,anchorLeftY,anchorRightX,anchorRightY)
 			1 - PassiveRabbit (runningSprite)
-			2 - FeralRabbit (runningSprite)
+			2 - FeralRabbit (runningSprite,asleep)
 	*/
 	[](std::vector<std::string> data, size_t n)
 	{
@@ -330,7 +330,7 @@ using namespace Enemies;
 
 			case 2:		//Feral Rabbit
 			{
-				FeralRabbit* pr = new FeralRabbit(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), std::stoi(data[7]));
+				FeralRabbit* pr = new FeralRabbit(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), std::stoi(data[7]), new PassiveRabbit::PassiveRabbitAttributes(), std::stoi(data[8]) == 1);
 				Renderer::LoadActiveObject(pr, std::stoi(data[6]));
 				break;
 			}

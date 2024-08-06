@@ -21,6 +21,8 @@
 
 #include "../../../Utils/Math/VMath.h"
 
+#include "../../Items/Types/Weapon.h"
+
 #include "../Environment/Effects/BloodMark.h"
 
 
@@ -178,6 +180,19 @@ constexpr int PlayerGetUpAnim[4] = {
 
 				std::thread animationUpdate([this, window] { m_animator->Update(window, this); });
 
+				//Check if the player is trying to use a weapon and use it if so.
+				if (m_screenInventory->GetHeldItem() != nullptr && InputManager::GetMouseButton(0))
+				{
+					if (ITEM_DATA[m_screenInventory->GetHeldItem()->GetType()].Actions & WEAPON)
+					{
+						if (Weapon* w = dynamic_cast<Weapon*>(m_screenInventory->GetHeldItem()))
+						{
+							w->Use();
+						}
+					}
+
+				}
+
 				m_skillHolder.Update();
 
 				if (m_frozenTimer > 0.f)
@@ -242,6 +257,7 @@ constexpr int PlayerGetUpAnim[4] = {
 				{
 					animationUpdate.join();
 				}
+
 
 				/*
 				Testing, implement something kinda like this but for looking at interesting objects.
