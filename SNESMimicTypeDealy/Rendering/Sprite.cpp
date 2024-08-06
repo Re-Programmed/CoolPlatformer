@@ -88,7 +88,7 @@ namespace GAME_NAME
 
 		const unsigned int Sprite::GetSpriteId()
 		{
-			return m_spriteId;
+ 			return m_spriteId;
 		}
 
 		unsigned int Sprite::AddPrerenderExecution(std::function<void(Sprite*, const Vec2&, const Vec2&, const float&, VertexData*)> prerenderExecution)

@@ -11,6 +11,7 @@ namespace GAME_NAME
 	{
 		namespace Animation
 		{
+#define ANIM_6_SPF 0.083f * 2.f /*12... FPS*/
 #define ANIM_12_SPF 0.083f /*12... FPS*/
 #define ANIM_16_SPF 0.0625f /*16 FPS*/
 
@@ -42,7 +43,11 @@ namespace GAME_NAME
 					{
 						m_currentFrame = 0;
 					}
-					object->SetSprite(m_data.Sprites[m_currentFrame]);
+					
+					if (object != nullptr)
+					{
+						object->SetSprite(m_data.Sprites[m_currentFrame]);
+					}
 				}
 
 				void DecrementFrame(Objects::GameObject* object)		//Decrease the current animation frame by one.

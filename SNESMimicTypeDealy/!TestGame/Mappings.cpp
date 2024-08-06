@@ -20,6 +20,7 @@
 
 #include "../!TestGame/Objects/Enemies/Types/LeftRightEnemy.h"
 #include "../!TestGame/Objects/Enemies/Types/PassiveRabbit.h"
+#include "../!TestGame/Objects/Enemies/Types/FeralRabbit.h"
 
 #include "../!TestGame/Cutscenes/InnerThoughtScene.h"
 #include "../!TestGame/Cutscenes/CutsceneManager.h"
@@ -299,6 +300,7 @@ std::function<void (std::vector<std::string>, size_t line)> m_mappings[MAPPINGS_
 		Type:
 			0 - LeftRightEnemy (anchorLeftX,anchorLeftY,anchorRightX,anchorRightY)
 			1 - PassiveRabbit (runningSprite)
+			2 - FeralRabbit (runningSprite)
 	*/
 	[](std::vector<std::string> data, size_t n)
 	{
@@ -322,6 +324,13 @@ using namespace Enemies;
 			case 1:		//Passive Rabbit
 			{
 				PassiveRabbit* pr = new PassiveRabbit(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), std::stoi(data[7]));
+				Renderer::LoadActiveObject(pr, std::stoi(data[6]));
+				break;
+			}
+
+			case 2:		//Feral Rabbit
+			{
+				FeralRabbit* pr = new FeralRabbit(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), std::stoi(data[7]));
 				Renderer::LoadActiveObject(pr, std::stoi(data[6]));
 				break;
 			}

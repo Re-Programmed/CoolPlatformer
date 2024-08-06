@@ -26,7 +26,7 @@ namespace GAME_NAME
 					{
 						m_boxCollider->Init(this);
 						m_physics->Init(this);
-						m_boxCollider->SetOnCollision(onCollision);
+						m_boxCollider->SetOnCollision(onCollisionS);
 						m_boxCollider->SetBeforeUpdate(beforeUpdate);
 					}
 
@@ -43,7 +43,11 @@ namespace GAME_NAME
 					
 					void Update(GLFWwindow* window)
 					{
-						CollisionManager::RegisterActiveColliderToBuffer(m_boxCollider);
+						if (m_didRender)
+						{
+							CollisionManager::RegisterActiveColliderToBuffer(m_boxCollider);
+						}
+						m_didRender = false;
 					}
 
 					void SetGravity(const float gVelocity)
@@ -56,14 +60,26 @@ namespace GAME_NAME
 						return m_physics->GetVelocity() + Vec2(0, m_physics->GetGravitationalVelocity());
 					}
 
+					void Render(const Vec2& cameraPosition) override
+					{
+						m_didRender = true;
+						GameObject::Render(cameraPosition);
+					}
+
 				protected:
 					ActiveBoxCollider* const m_boxCollider;
 					GravityComponent* const m_physics;			//Used for gravity and velocity.
 
-					static void onCollision(Vec2 push, Objects::GameObject* obj)
+					/// <summary>
+					/// True if the object rendered on this frame. (Disable collisions and gravity if the object didn' render since inactive objects will not update when off screen, meaning
+					/// active objects will not be able to acurletly reflect collisions.
+					/// </summary>
+					bool m_didRender = false;
+
+					static void onCollisionS(Vec2 push, Objects::GameObject* obj)
 					{
 						ActiveBoxCollisionGravityObject* acgo = ((ActiveBoxCollisionGravityObject*)obj);
-						acgo->onCollision(push);
+						acgo->onCollision(push, obj);
 
 						if (push.Y > 0) { acgo->SetGravity(0.f); }		//Resets the gravity to 0.
 						else if (push.X != 0) { acgo->m_physics->SetVelocityX(0.f); }	//If you hit the side of an object, set the X velocity to 0.
@@ -73,7 +89,7 @@ namespace GAME_NAME
 					/// Override to run code on collision.
 					/// </summary>
 					/// <param name="push">The direction the object is getting pushed to process the collision.</param>
-					virtual void onCollision(Vec2 push)
+					virtual void onCollision(Vec2 push, Objects::GameObject* gameObject)
 					{
 
 					}
@@ -91,7 +107,11 @@ namespace GAME_NAME
 					{
 						ActiveBoxCollisionGravityObject* acgo = ((ActiveBoxCollisionGravityObject*)obj);
 						acgo->beforeCollision();
-						acgo->m_physics->Update(nullptr, obj);
+						
+						if (acgo->m_didRender)
+						{
+							acgo->m_physics->Update(nullptr, obj);
+						}
 					}
 				};
 

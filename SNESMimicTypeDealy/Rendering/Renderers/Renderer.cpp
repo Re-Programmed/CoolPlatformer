@@ -4,6 +4,11 @@
 #include <thread>
 #include "../../Settings/SettingsGlobals.h"
 
+#include <string>
+#include <fstream>
+
+#include "../../Resources/base64.h"
+
 #if _DEBUG
 #include "../../Debug/DebugLog.h"
 using namespace DEBUG;
@@ -265,11 +270,82 @@ namespace GAME_NAME
 			
 		}
 
+		/*
+			B64 files should contain %width%:%height%:%imageData%
+			i_b64: FILE EXTENSION FOR B64 PNG DATA.
+		*/
 		GLuint Renderer::loadImage(const char* file)
 		{
+			//Load B64 file.
+			if (std::string(file).ends_with(".i_b64"))
+			{
+				std::ifstream fileData(file);
+				std::string line;
+
+				//Read B64 image file data if this file is a .b64
+				while (std::getline(fileData, line, '\n'))
+				{
+					//Comments start with "!" 
+					if (line.starts_with("!")) { continue; }
+					
+					int width = 0, height = 0;
+					std::string lineSegment; //Current iterated ":" segment.
+
+					//Concatenate line until it starts with a ":" and find width/height.
+					while ((!line.starts_with(":") || width == 0 || height == 0) && line.length() > 0)
+					{
+						std::string substrval = line.substr(0, 1);
+
+						if (substrval != ":")
+						{
+							//Create segment.
+							lineSegment.append(line.substr(0, 1));
+						}
+
+						line = line.substr(1);
+
+						//What each segment should do.
+						if (line.starts_with(":"))
+						{
+							if (width == 0)
+							{
+								width = std::stof(lineSegment);
+							}
+							else if (height == 0)
+							{
+								height = std::stof(lineSegment);
+							}
+
+							//Reset segment.
+							lineSegment = "";
+						}
+
+					}
+
+					//Remove ":" at the beginning.
+					line = line.substr(1);
+
+					//Found file data, load current line image via reading B64.
+					std::vector<unsigned char> decode = Resources::B64::DecodeToBytes(line);
+
+					int x, y, channelsInFile;
+					unsigned char* data = stbi_load_from_memory(&decode[0], decode.size(), &x, &y, &channelsInFile, STBI_rgb_alpha);
+					loadImageData(data, width, height);
+				}
+
+				return (GLuint)m_textureIDs.size() - 1;
+			}
+
+			//Load PNG file.
 			int width, height, channels;
 			unsigned char* data = stbi_load(file, &width, &height, &channels, 4);
 
+			GLuint val = loadImageData(data, width, height);
+			return val;
+		}
+
+		GLuint Renderer::loadImageData(unsigned char* data, const int& width, const int& height, bool freeData)
+		{
 			if (data == NULL)
 			{
 				std::cout << stbi_failure_reason() << std::endl;
@@ -300,7 +376,10 @@ namespace GAME_NAME
 			std::cout << "IMAGECOUNT: " << imageCount << std::endl;
 #endif
 
-			free(data);
+			if (freeData)
+			{
+				free(data);
+			}
 
 			return (GLuint)m_textureIDs.size() - 1;
 		}

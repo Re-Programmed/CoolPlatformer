@@ -86,13 +86,13 @@ namespace  GAME_NAME
 				void EnterDebug();
 				void ToggleFlight();
 #endif
-				void Damage(float damage);
+				void Damage(float damage, GameObject* cause);
 				void Kill();
 
 				/// <summary>
 				/// Spawns random blood particles around the player. (can be used to imitate damage, is also called when Damage() is called)
 				/// </summary>
-				void CreateBloodParticle();
+				void CreateBloodParticle(GameObject* cause);
 
 				void SetHeldItem(Items::InventoryItem* item);
 				inline void RemoveHeldItem()
@@ -114,7 +114,8 @@ namespace  GAME_NAME
 					BEHIND,
 					AT_POINT,
 					FOLLOW_MOUSE,
-					BAG
+					BAG,
+					FALLEN
 				};
 
 				/// <summary>
@@ -139,7 +140,7 @@ namespace  GAME_NAME
 				}
 
 			protected:
-				void onCollision (Vec2 push) override;	//Called when a collision occurs.
+				void onCollision (Vec2 push, GameObject* gameObject) override;	//Called when a collision occurs.
 				void beforeCollision() override;		//Called before any collisions are calculated to allow for resetting the jump conditions.
 
 			private:
@@ -215,6 +216,12 @@ namespace  GAME_NAME
 				/// The value of frozen can go above 1, that way if multiple objects are currently freezing the player, the player will remain frozen until all objects have stopped freezing the player.
 				/// </summary>
 				int8_t m_frozen = 0;
+
+
+				/// <summary>
+				/// If set to some value, will tick down each frame until 0 and then will unfreeze player.
+				/// </summary>
+				float m_frozenTimer = -1.f;
 
 				GameObject* m_heldItemDisplay;				//Follows the player to display the current held item.
 				int m_heldItemDisplayFrameOffset = 0;		//How many sprite difference from the default held item sprite to its current animation frame.

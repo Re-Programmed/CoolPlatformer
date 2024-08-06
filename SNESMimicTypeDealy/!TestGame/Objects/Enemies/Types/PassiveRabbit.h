@@ -28,7 +28,14 @@ namespace GAME_NAME::Objects::Enemies
 		~PassiveRabbit();
 		void Update(GLFWwindow* window) override;
 
-		void onCollision(Vec2 push) override;
+		void onCollision(Vec2 push, GameObject* collided) override;
+
+	protected:
+		/// <summary>
+		/// Updates the rabbit's textures to reflect its current action (running, jumping, etc.)
+		/// </summary>
+		/// <param name="window"></param>
+		void updateTextures(GLFWwindow* window);
 
 	private:
 		/// <summary>
@@ -50,5 +57,9 @@ namespace GAME_NAME::Objects::Enemies
 		/// (I'm not adding a whole animator to the rabbit, just this variable -- I could have added an animator component.)
 		/// </summary>
 		bool m_oddFrame = false;
+		/// <summary>
+		/// The last multiple of 8 that updated the rabbit's sprite. Used to prevent updating the rabbit's animation more than once on the same farme.
+		/// </summary>
+		int m_lastOddFrameX = 0;
 	};
 }

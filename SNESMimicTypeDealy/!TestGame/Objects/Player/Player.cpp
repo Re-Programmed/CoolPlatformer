@@ -21,6 +21,8 @@
 
 #include "../../../Utils/Math/VMath.h"
 
+#include "../Environment/Effects/BloodMark.h"
+
 
 #include <thread>
 
@@ -36,6 +38,15 @@ namespace  GAME_NAME
 constexpr int PLAYER_NO_HEAD_SPRITE = SpriteBase(105);
 constexpr int PLAYER_LOOK_BEHIND_SPRITE = SpriteBase(107);
 constexpr int PLAYER_LOOK_BAG = SpriteBase(106);
+constexpr int PLAYER_FALLEN_SPRITE = SpriteBase(109);
+
+constexpr int PlayerFallOverAnim[4] = {
+	SpriteBase(110), SpriteBase(111), SpriteBase(112), PLAYER_FALLEN_SPRITE
+};
+constexpr int PlayerGetUpAnim[4] = {
+	SpriteBase(113), SpriteBase(114), SpriteBase(115), SpriteBase(116)
+};
+
 
 
 			typedef int8_t PlayerEmotion;
@@ -78,7 +89,7 @@ constexpr int PLAYER_LOOK_BAG = SpriteBase(106);
 				//Register animations
 
 #pragma region Init Animation
-				AnimData walk_data, run_data, fall_data, jump_data, skid_data;
+				AnimData walk_data, run_data, fall_data, jump_data, skid_data, fall_over_data, get_up_data;
 
 				for (int i : PlayerWalkAnim)
 				{
@@ -105,15 +116,27 @@ constexpr int PLAYER_LOOK_BAG = SpriteBase(106);
 					skid_data.Sprites.push_back(Renderer::GetSprite(i));
 				}
 
+				for (int i : PlayerFallOverAnim)
+				{
+					fall_over_data.Sprites.push_back(Renderer::GetSprite(i));
+				}
+
+				for (int i : PlayerGetUpAnim)
+				{
+					get_up_data.Sprites.push_back(Renderer::GetSprite(i));
+				}
+
 				std::shared_ptr<GAME_NAME::Components::Animation::Animation> walk_anim(new GAME_NAME::Components::Animation::Animation(walk_data, ANIM_12_SPF));
 				std::shared_ptr<GAME_NAME::Components::Animation::Animation> run_anim(new GAME_NAME::Components::Animation::Animation(run_data, ANIM_16_SPF));
 				std::shared_ptr<GAME_NAME::Components::Animation::Animation> fall_anim(new GAME_NAME::Components::Animation::Animation(fall_data, ANIM_12_SPF));
 				std::shared_ptr<GAME_NAME::Components::Animation::Animation> jump_anim(new GAME_NAME::Components::Animation::Animation(jump_data, ANIM_12_SPF));
 				std::shared_ptr<GAME_NAME::Components::Animation::Animation> skid_anim(new GAME_NAME::Components::Animation::Animation(skid_data, ANIM_12_SPF));
+				std::shared_ptr<GAME_NAME::Components::Animation::Animation> fall_over_anim(new GAME_NAME::Components::Animation::Animation(fall_over_data, ANIM_6_SPF));
+				std::shared_ptr<GAME_NAME::Components::Animation::Animation> get_up_anim(new GAME_NAME::Components::Animation::Animation(get_up_data, ANIM_6_SPF));
 
 #pragma endregion
 
-				std::vector<std::shared_ptr<GAME_NAME::Components::Animation::Animation>> anims{ walk_anim, run_anim, fall_anim, jump_anim, skid_anim };
+				std::vector<std::shared_ptr<GAME_NAME::Components::Animation::Animation>> anims{ walk_anim, run_anim, fall_anim, jump_anim, skid_anim, fall_over_anim, get_up_anim };
 
 				m_animator = new AnimatorComponent(anims);
 
@@ -156,6 +179,20 @@ constexpr int PLAYER_LOOK_BAG = SpriteBase(106);
 				std::thread animationUpdate([this, window] { m_animator->Update(window, this); });
 
 				m_skillHolder.Update();
+
+				if (m_frozenTimer > 0.f)
+				{
+					m_frozenTimer -= Utils::Time::GameTime::GetScaledDeltaTime();
+
+					if (m_frozenTimer < 0.f)
+					{
+						SetFrozen(false);
+						//delete m_sprite; NO CAUSES ERROR (DELETING ANIMATION SPRITES)
+						m_sprite = Renderer::GetSprite(SpriteBase(0));
+
+						m_rotation = 0.f;
+					}
+				}
 
 				//Update the current backpack if it is open.
 				if (m_backpack->GetIsOpen()) { m_backpack->Render(); }
@@ -209,7 +246,7 @@ constexpr int PLAYER_LOOK_BAG = SpriteBase(106);
 				/*
 				Testing, implement something kinda like this but for looking at interesting objects.
 				*/
-
+				/*
 				if (m_currentPlayerLookDirection == NO_LOOK_DIRECTION || m_currentPlayerLookDirection == FOLLOW_MOUSE)
 				{
 					if (InputManager::GetMouseButton(1))
@@ -220,7 +257,7 @@ constexpr int PLAYER_LOOK_BAG = SpriteBase(106);
 						m_currentPlayerLookDirection = NO_LOOK_DIRECTION;
 					}
 				}
-
+				*/
 				updateLookDirection();
 
 				m_screenInventory->Update();
@@ -248,6 +285,7 @@ constexpr int PLAYER_LOOK_BAG = SpriteBase(106);
 
 			void Player::Render(const Vec2& cameraPosition)
 			{
+				m_didRender = true;
 #if _DEBUG
 				if (m_debug)
 				{
@@ -273,7 +311,10 @@ constexpr int PLAYER_LOOK_BAG = SpriteBase(106);
 					return;
 				}
 				else {
-					m_sprite->Render(cameraPosition, m_position + (m_textureFlipped ? (m_scale * Vec2::OneX) : 0), m_scale * (m_textureFlipped ? Vec2::MinusOneXOneY : 1), m_rotation);
+					if (m_sprite != nullptr)
+					{
+						m_sprite->Render(cameraPosition, m_position + (m_textureFlipped ? (m_scale * Vec2::OneX) : 0), m_scale * (m_textureFlipped ? Vec2::MinusOneXOneY : 1), m_rotation);
+					}
 					//Render emotions object if it should be rendered.
 					if (m_emotionsObject != nullptr)
 					{
@@ -403,12 +444,12 @@ constexpr int PLAYER_LOOK_BAG = SpriteBase(106);
 
 #endif
 
-			void Player::Damage(float damage)
+			void Player::Damage(float damage, GameObject* cause)
 			{
 				float maxHealth = 100.f + m_skillHolder.GetEquipmentBoostEffect("Health", m_backpack);
 
 				
-				if(damage > 0.f){ CreateBloodParticle(); }
+				if(damage > 0.f){ CreateBloodParticle(cause); }
 
 				m_stats.Health -= damage;
 				m_healthProgressBar->SetPercentage(static_cast<char>(std::clamp(100.f * m_stats.Health / maxHealth, 0.f, maxHealth)));
@@ -458,7 +499,7 @@ constexpr int PLAYER_LOOK_BAG = SpriteBase(106);
 
 #define COLLISION_VEL_STOP_DAMPING 0.1f
 
-			void Player::onCollision(Vec2 push)
+			void Player::onCollision(Vec2 push, GameObject* collided)
 			{
 				if (m_swimming) { return; }
 				if (m_foundCollisionInTick) { return; }
@@ -480,7 +521,7 @@ constexpr int PLAYER_LOOK_BAG = SpriteBase(106);
 					{
 						std::cout << m_airTime << std::endl;
 
-						Damage(((float)m_airTime - 1.85f) * 10.f);
+						Damage(((float)m_airTime - 1.85f) * 10.f, collided);
 					}
 
 					m_airTime = 0;
@@ -555,7 +596,7 @@ constexpr int PLAYER_LOOK_BAG = SpriteBase(106);
 				return true;
 			}
 
-			void Player::CreateBloodParticle()
+			void Player::CreateBloodParticle(GameObject* cause)
 			{
 				if (m_particleEmitter->GetParticleCount() == 0)
 				{
@@ -573,6 +614,17 @@ constexpr int PLAYER_LOOK_BAG = SpriteBase(106);
 
 				m_particleEmitter->SetPosition(m_position);
 				m_particleEmitter->SpawnParticles(100, { 0.5f, 0.5f }, 0.04f);
+
+				//Freeze player after falling from a great height.
+				SetFrozen(true, FALLEN);
+				m_frozenTimer = 5.f;
+
+				//Create blood on floor.
+				if (cause == nullptr) { return; }
+
+				Environment::BloodMark* floorMark = new Environment::BloodMark(cause, m_position + Vec2(m_scale.X / 2.f, 0.f));
+				Renderer::LoadObject(floorMark, 1);
+				//Renderer::InstantiateObject(Renderer::InstantiateGameObject(floorMark, false, 2, false));
 			}
 
 
@@ -890,6 +942,61 @@ constexpr int PLAYER_LOOK_BAG = SpriteBase(106);
 						break;
 					}
 
+					case FALLEN:
+					{
+						if (m_frozenTimer < 0.f) { break; }
+
+						if (m_frozenTimer < ANIM_6_SPF * 4.f)
+						{
+							if (m_animator->GetCurrentAnimation() == nullptr)
+							{
+								break;
+							}
+
+							//Reset falling animation via incrementing frame.
+							m_animator->GetCurrentAnimation()->IncrementFrame(nullptr);
+							m_animator->SetCurrentAnimation(6); //Get Up Anim
+							m_animator->SetSpeedMult(1.f);
+
+							m_rotation = 0.f;
+
+							if (m_animator->GetCurrentAnimation()->GetFrame() == 3)
+							{
+								//Reset animation via incrementing frame.
+								m_animator->GetCurrentAnimation()->IncrementFrame(nullptr);
+								m_animator->SetCurrentAnimation(-1); //No Animation
+								m_animator->SetSpeedMult(0.f);
+							}
+
+							break;
+						}
+
+						m_animator->SetCurrentAnimation(5); //Fall Over Anim
+						
+
+						//Update scale to keep sprites relative size the same.
+						if (m_animator->GetCurrentAnimation()->GetFrame() > 0)
+						{
+							m_scale = Vec2(26, 26);
+						}
+
+						//Animation done.
+						if (m_animator->GetCurrentAnimation()->GetFrame() == 3)
+						{
+							m_animator->SetSpeedMult(0.f);
+
+							//delete m_sprite;
+							m_sprite = Renderer::GetSprite(PLAYER_FALLEN_SPRITE);
+							m_rotation = -11.f;
+
+						}
+						else {
+							m_animator->SetSpeedMult(1.f);
+						}
+
+						break;
+					}
+
 					case BAG:
 					{
 						delete m_sprite;
@@ -899,6 +1006,7 @@ constexpr int PLAYER_LOOK_BAG = SpriteBase(106);
 
 					default:
 					{
+						m_scale = Vec2(16, 26);
 						return;
 					}
 				}

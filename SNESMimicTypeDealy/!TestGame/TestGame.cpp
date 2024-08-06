@@ -194,14 +194,14 @@ namespace GAME_NAME
 
 		//Generate clouds if there are any to be generated.
 		Environment::CloudGenerator::GenerateClouds();
-
+		
 		//CHNAGE TO DETECT WHAT LEVEL IS BEING LOADED AND CALL THE APPROPRIATE FUNCTION.
 		Objects::Environment::Levels::Town1Manager::InitLevel();
 
 		//TODO: Add a check on weather the current level uses lighting or not.
-		Rendering::Lighting::SimpleLightingManager::EnableLighting(DEFAULT_LEVEL_SIZE_X/10, true);
+		//Rendering::Lighting::SimpleLightingManager::EnableLighting(DEFAULT_LEVEL_SIZE_X/10, true);
 
-		//Rendering::Lighting::SimpleLightingManager::RegisterSource(new Lighting::LightingSource(Vec2(200, 21), 46.f, 0.f, Lighting::POINT_LIGHT));
+		//Rendering::Lighting::SimpleLightingManager::RegisterSource(new Lighting::LightingSource(Vec2(200, 21), -100.f, -10.f, Lighting::POINT_LIGHT));
 
 	/*	
 	----------------------------PARTICLE TEST----------------------------

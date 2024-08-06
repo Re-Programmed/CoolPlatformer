@@ -2,6 +2,7 @@
 #include "../Renderers/Renderer.h"
 
 #include <algorithm>
+#include "../../Utils/Math/VMath.h"
 
 namespace GAME_NAME::Rendering::Lighting
 {
@@ -99,9 +100,66 @@ namespace GAME_NAME::Rendering::Lighting
 	void ApplyLightingEffect(LightingSource* source, VertexData* data, const Vec2& vertexPosition/*, std::mutex* dataMutex*/)
 	{
 		float distance = Vec2::Distance(source->GetPosition(), vertexPosition);
-		float appliedPower = (source->GetPower() - distance) / (source->GetPower() - source->GetFalloff());
+		float appliedPower = (std::abs(source->GetPower()) - distance) / (std::abs(source->GetPower()) - std::abs(source->GetFalloff()));
+
+		if (source->GetType() == SPOT_LIGHT)
+		{
+			/*
+				Positive Power / Positive Falloff: Right
+				Negative Power / Positive Falloff: Left
+				Positive Power / Negative Falloff: Down
+				Negative Power / Negative Falloff: Up
+			*/
+
+			bool powerNegative = source->GetPower() < 0;
+			bool falloffNegative = source->GetFalloff() < 0;
+			
+			double angleBetween = std::atan((vertexPosition.Y - source->GetPosition().Y)/(vertexPosition.X - source->GetPosition().X));
+
+			if (falloffNegative)
+			{
+				if (powerNegative)
+				{
+					//Up
+
+					if (angleBetween > M_PI_4 && angleBetween < M_3_PI_4 && source->GetPosition().Y < vertexPosition.Y)
+					{
+						goto apply_light;
+					}
+				}
+				else
+				{
+					//Down
+					if (angleBetween < -M_PI_4 && angleBetween > M_PI_4 && source->GetPosition().Y > vertexPosition.Y)
+					{
+						goto apply_light;
+					}
+				}
+			}
+			else {
+				if (powerNegative)
+				{
+					//Left
+					if (angleBetween < M_PI_4 && angleBetween > -M_PI_4 && source->GetPosition().X > vertexPosition.X)
+					{
+						goto apply_light;
+					}
+				}
+				else {
+					//Right
+					if (angleBetween > -M_PI_4 && angleBetween < M_PI_4 && source->GetPosition().X < vertexPosition.X)
+					{
+						goto apply_light;
+					}
+				}
+			}
 
 
+			return;
+		}
+
+apply_light:
+		//General lighting.
 		if (appliedPower > 0.f)
 		{
 			//dataMutex->lock();

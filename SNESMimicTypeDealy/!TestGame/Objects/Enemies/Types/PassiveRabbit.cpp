@@ -63,6 +63,18 @@ namespace GAME_NAME::Objects::Enemies
 			m_actionTimer -= Utils::Time::GameTime::GetScaledDeltaTime();
 		}
 
+		updateTextures(window);
+
+		Enemy::Update(window);
+	}
+
+	void PassiveRabbit::onCollision(Vec2 push, GameObject* cause)
+	{
+		m_physics->SetVelocity({ 0.f, 0.f });
+	}
+
+	void PassiveRabbit::updateTextures(GLFWwindow* window)
+	{
 		/*
 			--TEXTURE UPDATES--
 		*/
@@ -79,8 +91,10 @@ namespace GAME_NAME::Objects::Enemies
 		//The rabbit is running
 		if (m_allowPathfinding)
 		{
-			if ((int)m_position.X % 8 == 0)
+			int inc8Frame = (int)m_position.X;
+			if (inc8Frame % 8 == 0 && inc8Frame != m_lastOddFrameX)
 			{
+				m_lastOddFrameX = inc8Frame;
 				m_oddFrame = !m_oddFrame;
 
 				//If the last sprite was not the base sprite, we don't need it anymore.
@@ -92,8 +106,9 @@ namespace GAME_NAME::Objects::Enemies
 				//Alternate between the jumping sprite and 1 after the jumping sprite.
 				m_sprite = Renderer::GetSprite(m_jumpingSprite + m_oddFrame);
 			}
-		//The rabbit is jumping.
-		}else if (m_physics->GetVelocity().Y > 3.f || m_physics->GetVelocity().Y < -3.f)
+			//The rabbit is jumping.
+		}
+		else if (m_physics->GetVelocity().Y > 3.f || m_physics->GetVelocity().Y < -3.f)
 		{
 			if (m_sprite == m_baseSprite)
 			{
@@ -106,13 +121,6 @@ namespace GAME_NAME::Objects::Enemies
 			m_sprite = m_baseSprite;
 		}
 #pragma endregion
-
-		Enemy::Update(window);
-	}
-
-	void PassiveRabbit::onCollision(Vec2 push)
-	{
-		m_physics->SetVelocity({ 0.f, 0.f });
 	}
 
 }

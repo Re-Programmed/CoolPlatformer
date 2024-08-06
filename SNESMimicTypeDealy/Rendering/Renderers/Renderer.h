@@ -248,6 +248,8 @@ namespace GAME_NAME
 			/// <returns>The buffer loaded to.</returns>
 			static GLuint loadImage(const char* file);
 
+			static GLuint loadImageData(unsigned char* data, const int& width, const int& height, bool freeData = true);
+
 			/// <summary>
 			/// Objects that need updated no matter where they are in game.
 			/// </summary>

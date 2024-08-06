@@ -39,6 +39,7 @@ namespace GAME_NAME
 
 				inline std::shared_ptr<Animation> GetCurrentAnimation()
 				{
+					if (m_currentAnimation < 0) { return nullptr; }
 					return m_animations[m_currentAnimation];
 				}
 			private:

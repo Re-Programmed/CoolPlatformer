@@ -152,6 +152,7 @@
     <ClCompile Include="!TestGame\Camera\GameCamera.cpp" />
     <ClCompile Include="!TestGame\Objects\Components\Climbable.cpp" />
     <ClCompile Include="!TestGame\Objects\Enemies\Enemy.cpp" />
+    <ClCompile Include="!TestGame\Objects\Enemies\Types\FeralRabbit.cpp" />
     <ClCompile Include="!TestGame\Objects\Enemies\Types\LeftRightEnemy.cpp" />
     <ClCompile Include="!TestGame\Objects\Enemies\Types\PassiveRabbit.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\BackgroundObjects.cpp" />
@@ -159,6 +160,7 @@
     <ClCompile Include="!TestGame\Objects\Environment\Buildings\Door.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Buildings\FrontWall.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\CloudGenerator.cpp" />
+    <ClCompile Include="!TestGame\Objects\Environment\Effects\BloodMark.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Levels\Town1Manager.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Plants\Tree.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Water.cpp" />
@@ -255,6 +257,7 @@
     <ClInclude Include="!TestGame\Mappings.h" />
     <ClInclude Include="!TestGame\Camera\GameCamera.h" />
     <ClInclude Include="!TestGame\Objects\Enemies\Enemy.h" />
+    <ClInclude Include="!TestGame\Objects\Enemies\Types\FeralRabbit.h" />
     <ClInclude Include="!TestGame\Objects\Enemies\Types\LeftRightEnemy.h" />
     <ClInclude Include="!TestGame\Objects\Enemies\Types\PassiveRabbit.h" />
     <ClInclude Include="!TestGame\Objects\Environment\BackgroundObjects.h" />
@@ -263,6 +266,7 @@
     <ClInclude Include="!TestGame\Objects\Environment\Buildings\Door.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Buildings\FrontWall.h" />
     <ClInclude Include="!TestGame\Objects\Environment\CloudGenerator.h" />
+    <ClInclude Include="!TestGame\Objects\Environment\Effects\BloodMark.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Levels\Town1Manager.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Plants\Tree.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Water.h" />

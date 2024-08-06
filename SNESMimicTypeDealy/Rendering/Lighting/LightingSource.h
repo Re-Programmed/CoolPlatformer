@@ -8,7 +8,14 @@ using namespace MathUtils;
 
 	enum LIGHT_SOURCE_TYPE
 	{
-		POINT_LIGHT
+		POINT_LIGHT,
+		SPOT_LIGHT
+		/* SPOT_LIGHT
+			Positive Power / Positive Falloff: Right
+			Negative Power / Positive Falloff: Left
+			Positive Power / Negative Falloff: Down
+			Negative Power / Negative Falloff: Up
+		*/
 	};
 
 	class LightingSource
@@ -46,6 +53,11 @@ using namespace MathUtils;
 		inline const Vec2 GetPosition()
 		{
 			return m_position;
+		}
+
+		inline const LIGHT_SOURCE_TYPE GetType()
+		{
+			return m_type;
 		}
 
 		inline const float GetPower()
