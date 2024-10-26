@@ -2,6 +2,8 @@
 
 #include "../../../Components/Physics/Collision/Helpers/ActiveBoxCollisionGravityObject.h"
 
+#include "../../../Objects/GameObjectState.h"
+
 constexpr uint8_t PATHFINDING_PADDING = 1;
 
 namespace GAME_NAME::Objects::Enemies
@@ -9,7 +11,7 @@ namespace GAME_NAME::Objects::Enemies
 	using namespace Components::Physics::Collision;
 
 	class Enemy
-		: public ActiveBoxCollisionGravityObject
+		: public ActiveBoxCollisionGravityObject, public GameObjectState
 	{
 	public:
 		struct EnemyAttributes
@@ -59,8 +61,8 @@ namespace GAME_NAME::Objects::Enemies
 			}
 		};
 
-		Enemy(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, EnemyAttributes* attributes = new EnemyAttributes())
-			: ActiveBoxCollisionGravityObject(position, scale, sprite), m_pathfind(position), m_enemyAttributes(attributes), m_pathfindTimeout{ 0.0 }
+		Enemy(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, EnemyAttributes* attributes = new EnemyAttributes(), size_t saveId = 0, float health = 20.f)
+			: ActiveBoxCollisionGravityObject(position, scale, sprite), GameObjectState(saveId), m_pathfind(position), m_enemyAttributes(attributes), m_pathfindTimeout{ 0.0 }, m_health(health)
 		{
 			EnemyAttributes::TempAttributes startAttributes = attributes->GetInputAttributes();
 			m_physics->SetGravityStrength(startAttributes.Gravity);
@@ -68,6 +70,14 @@ namespace GAME_NAME::Objects::Enemies
 		}
 
 		void Update(GLFWwindow* window) override;
+
+		void Damage(float damage);
+		void Heal(float health);
+
+		void LoadState() override;
+		void SaveState() override;
+
+		void Kill();
 	protected:
 		/// <summary>
 		/// If false, the enemy will not try to pathfind anywhere.
@@ -82,6 +92,8 @@ namespace GAME_NAME::Objects::Enemies
 													((m_enemyAttributes->IgnoreYPathfind ?
 														(std::abs(m_position.X - m_pathfind.X) <= PATHFINDING_PADDING) : 
 														(Vec2::Distance(m_pathfind, m_position) <= PATHFINDING_PADDING))); }
+
+		float m_health;
 
 		inline void setPathfinding(Vec2 position)
 		{

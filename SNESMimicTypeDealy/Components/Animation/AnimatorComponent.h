@@ -32,10 +32,16 @@ namespace GAME_NAME
 					m_speedMult = speedMult;
 				}
 
-				inline void SetCurrentAnimation(int8_t animation)						//Sets the current animation.
+				inline void SetCurrentAnimation(int8_t animation, Objects::GameObject* forceFirstFrame = nullptr)						//Sets the current animation.
 				{
 					m_currentAnimation = animation;
+					if(forceFirstFrame != nullptr){m_animations[m_currentAnimation]->InitFrame(forceFirstFrame);}
 				}		
+
+				inline int8_t GetCurrentAnimationIndex()
+				{
+					return m_currentAnimation;
+				}
 
 				inline std::shared_ptr<Animation> GetCurrentAnimation()
 				{

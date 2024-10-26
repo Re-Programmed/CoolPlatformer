@@ -81,14 +81,25 @@ std::function<Components::IComponent* (std::vector<std::string>)> m_componentMap
 /// </summary>
 std::function<void (std::vector<std::string>, size_t line)> m_mappings[MAPPINGS_SIZE]
 {
-	//Basic Object (map,xPos,yPos,xScale,yScale,sprite,layer?,front?)
+	//Basic Object (map,xPos,yPos,xScale,yScale,sprite[start with "sb_" to use SpriteBase() function],layer?,front?)
 	[](std::vector<std::string> data, size_t n) {
 
 #if _DEBUG
 		DebugMapper(">>> Loading Basic Object");
 #endif
 		uint8_t layer = (data.size() > 5) ? std::stoi(data[5]) : 1;
-		Renderer::LoadObject(new Objects::GameObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4]))), layer, (data.size() > 6) ? std::stoi(data[6]) > 0 : false);
+
+		Sprite* finalSprite = nullptr;
+
+		if (data[4].starts_with("sb_"))
+		{
+			finalSprite = Renderer::GetSprite(SpriteBase(std::stoi(data[4].substr(3))));
+		}
+		else {
+			finalSprite = Renderer::GetSprite(std::stoi(data[4]));
+		}
+
+		Renderer::LoadObject(new Objects::GameObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), finalSprite), layer, (data.size() > 6) ? std::stoi(data[6]) > 0 : false);
 	},
 
 	//Component Object

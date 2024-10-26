@@ -18,6 +18,8 @@ namespace GAME_NAME::Items
 		bool Use();
 
 		int GetDamage();
+		double GetCooldown();
+		int GetPowerConsumption();
 
 		SaveParam Encode() override final;
 		void Decode(const SaveParam params) override final;

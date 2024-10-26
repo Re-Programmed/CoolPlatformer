@@ -76,7 +76,7 @@ using namespace GAME_NAME::Components::Physics::Collision;
 		for (int i = 0; i < m_spawned.size(); i++)
 		{
 			//Update lifetime and add randomness to make particles despawn at different times.
-			m_spawned[i].Lifetime += (float)Utils::Time::GameTime::GetScaledDeltaTime() - (std::rand() / (RAND_MAX * 10.f));
+			m_spawned[i].Lifetime += (float)Utils::Time::GameTime::GetScaledDeltaTime();
 
 
 			if (m_spawned[i].Lifetime >= m_maxParticleLifetime)

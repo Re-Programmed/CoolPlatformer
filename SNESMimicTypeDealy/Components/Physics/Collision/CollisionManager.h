@@ -29,6 +29,8 @@ namespace GAME_NAME
 					/// Should be called after objects are updated. (Updates collisions and clears the buffers.)
 					/// </summary>
 					static void UpdateAndClearBuffers();	//Detects collisions and clears all buffers. Should be called after all updates and all render calls.
+
+					static const std::vector<ActiveCollider*>& GetActiveColliders() { return m_activeColliders; }
 				private:
 					static std::vector<StaticCollider*> m_staticColliders;
 					static std::vector<ActiveCollider*> m_activeColliders;

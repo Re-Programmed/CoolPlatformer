@@ -25,6 +25,7 @@
 
 #include "../Environment/Effects/BloodMark.h"
 
+#include "../Enemies/Enemy.h"
 
 #include <thread>
 
@@ -47,6 +48,10 @@ constexpr int PlayerFallOverAnim[4] = {
 };
 constexpr int PlayerGetUpAnim[4] = {
 	SpriteBase(113), SpriteBase(114), SpriteBase(115), SpriteBase(116)
+};
+
+constexpr int PlayerBasicAttackAnim[9] = {
+	SpriteBase(122), SpriteBase(123), SpriteBase(124), SpriteBase(125), SpriteBase(126), SpriteBase(127), SpriteBase(128), SpriteBase(129), SpriteBase(130)
 };
 
 
@@ -90,56 +95,25 @@ constexpr int PlayerGetUpAnim[4] = {
 
 				//Register animations
 
+#define RegisterAnimation(data_name, data_source, data_out, spf) AnimData data_name; \
+				for(int i : data_source){ data_name.Sprites.push_back(Renderer::GetSprite(i)); }; \
+				std::shared_ptr<GAME_NAME::Components::Animation::Animation> data_out(new GAME_NAME::Components::Animation::Animation(data_name, spf)); 
+
 #pragma region Init Animation
-				AnimData walk_data, run_data, fall_data, jump_data, skid_data, fall_over_data, get_up_data;
 
-				for (int i : PlayerWalkAnim)
-				{
-					walk_data.Sprites.push_back(Renderer::GetSprite(i));
-				}
-
-				for (int i : PlayerRunAnim)
-				{
-					run_data.Sprites.push_back(Renderer::GetSprite(i));
-				}
-
-				for (int i : PlayerFallAnim)
-				{
-					fall_data.Sprites.push_back(Renderer::GetSprite(i));
-				}
-
-				for (int i : PlayerJumpAnim)
-				{
-					jump_data.Sprites.push_back(Renderer::GetSprite(i));
-				}
-
-				for (int i : PlayerSkidAnim)
-				{
-					skid_data.Sprites.push_back(Renderer::GetSprite(i));
-				}
-
-				for (int i : PlayerFallOverAnim)
-				{
-					fall_over_data.Sprites.push_back(Renderer::GetSprite(i));
-				}
-
-				for (int i : PlayerGetUpAnim)
-				{
-					get_up_data.Sprites.push_back(Renderer::GetSprite(i));
-				}
-
-				std::shared_ptr<GAME_NAME::Components::Animation::Animation> walk_anim(new GAME_NAME::Components::Animation::Animation(walk_data, ANIM_12_SPF));
-				std::shared_ptr<GAME_NAME::Components::Animation::Animation> run_anim(new GAME_NAME::Components::Animation::Animation(run_data, ANIM_16_SPF));
-				std::shared_ptr<GAME_NAME::Components::Animation::Animation> fall_anim(new GAME_NAME::Components::Animation::Animation(fall_data, ANIM_12_SPF));
-				std::shared_ptr<GAME_NAME::Components::Animation::Animation> jump_anim(new GAME_NAME::Components::Animation::Animation(jump_data, ANIM_12_SPF));
-				std::shared_ptr<GAME_NAME::Components::Animation::Animation> skid_anim(new GAME_NAME::Components::Animation::Animation(skid_data, ANIM_12_SPF));
-				std::shared_ptr<GAME_NAME::Components::Animation::Animation> fall_over_anim(new GAME_NAME::Components::Animation::Animation(fall_over_data, ANIM_6_SPF));
-				std::shared_ptr<GAME_NAME::Components::Animation::Animation> get_up_anim(new GAME_NAME::Components::Animation::Animation(get_up_data, ANIM_6_SPF));
+				RegisterAnimation(walk_data, PlayerWalkAnim, walk_anim, ANIM_12_SPF);						  //0
+				RegisterAnimation(run_data, PlayerRunAnim, run_anim, ANIM_16_SPF);							  //1
+				RegisterAnimation(fall_data, PlayerFallAnim, fall_anim, ANIM_12_SPF);						  //2
+				RegisterAnimation(jump_data, PlayerJumpAnim, jump_anim, ANIM_12_SPF);						  //3
+				RegisterAnimation(skid_data, PlayerSkidAnim, skid_anim, ANIM_12_SPF);						  //4 
+				RegisterAnimation(fall_over_data, PlayerFallOverAnim, fall_over_anim, ANIM_6_SPF);			  //5
+				RegisterAnimation(get_up_data, PlayerGetUpAnim, get_up_anim, ANIM_6_SPF);					  //6
+				RegisterAnimation(basic_attack_data, PlayerBasicAttackAnim, basic_attack_anim, ANIM_16_SPF);  //7
 
 #pragma endregion
 
-				std::vector<std::shared_ptr<GAME_NAME::Components::Animation::Animation>> anims{ walk_anim, run_anim, fall_anim, jump_anim, skid_anim, fall_over_anim, get_up_anim };
-
+				std::vector<std::shared_ptr<GAME_NAME::Components::Animation::Animation>> anims{ walk_anim, run_anim, fall_anim, jump_anim, skid_anim, fall_over_anim, get_up_anim, basic_attack_anim };
+				
 				m_animator = new AnimatorComponent(anims);
 
 				m_physics->SetGravityStrength(DefaultPlayerGravity);
@@ -188,12 +162,16 @@ constexpr int PlayerGetUpAnim[4] = {
 						if (Weapon* w = dynamic_cast<Weapon*>(m_screenInventory->GetHeldItem()))
 						{
 							w->Use();
+							Attack(w->GetDamage(), /*TODO: Give weapons a range attribute*/12.f, 0);
 						}
 					}
 
 				}
 
 				m_skillHolder.Update();
+
+				//Handle if the player is trying to attack an enemy.
+				handleAttack();
 
 				if (m_frozenTimer > 0.f)
 				{
@@ -464,7 +442,6 @@ constexpr int PlayerGetUpAnim[4] = {
 			{
 				float maxHealth = 100.f + m_skillHolder.GetEquipmentBoostEffect("Health", m_backpack);
 
-				
 				if(damage > 0.f){ CreateBloodParticle(cause); }
 
 				m_stats.Health -= damage;
@@ -476,9 +453,40 @@ constexpr int PlayerGetUpAnim[4] = {
 				}
 			}
 
+			void Player::Heal(float amount)
+			{
+				float maxHealth = 100.f + m_skillHolder.GetEquipmentBoostEffect("Health", m_backpack);
+
+				m_stats.Health += maxHealth;
+
+				if (m_stats.Health > maxHealth)
+				{
+					m_stats.Health = maxHealth;
+				}
+
+				m_healthProgressBar->SetPercentage(static_cast<char>(std::clamp(100.f * m_stats.Health / maxHealth, 0.f, maxHealth)));
+
+			}
+
 			void Player::Kill()
 			{
 
+			}
+
+#define GetObjectW GetObject //Stupid windows define thing that needs fixed.
+
+			void Player::Attack(float damage, float range, int atkAnimation)
+			{
+				for (ActiveCollider* ac : CollisionManager::GetActiveColliders())
+				{
+					if (Enemies::Enemy* enemy = dynamic_cast<Enemies::Enemy*>(ac->GetObject()))
+					{
+						if (Vec2::Distance(enemy->GetPosition() + (enemy->GetScale() / 2.f), this->m_position + (range / 2.f)) <= range)
+						{
+							
+						}
+					}
+				}
 			}
 
 			//Sets the display for the held item/tool.
@@ -622,7 +630,11 @@ constexpr int PlayerGetUpAnim[4] = {
 
 					for (auto particleObj : bParticles)
 					{
-						m_particleEmitter->RegisterParticle(Particles::Particle(particleObj));
+						Particles::Particle bloodParticle = Particles::Particle(particleObj);
+
+						bloodParticle.TargetOpacity = 0;
+
+						m_particleEmitter->RegisterParticle(bloodParticle);
 					}
 
 					Renderer::InstantiateObject(Renderer::InstantiateGameObject(m_particleEmitter, true, 2, true));
@@ -631,12 +643,12 @@ constexpr int PlayerGetUpAnim[4] = {
 				m_particleEmitter->SetPosition(m_position);
 				m_particleEmitter->SpawnParticles(100, { 0.5f, 0.5f }, 0.04f);
 
+				//Create blood on floor if the player fell.
+				if (cause == nullptr) { return; }
+
 				//Freeze player after falling from a great height.
 				SetFrozen(true, FALLEN);
 				m_frozenTimer = 5.f;
-
-				//Create blood on floor.
-				if (cause == nullptr) { return; }
 
 				Environment::BloodMark* floorMark = new Environment::BloodMark(cause, m_position + Vec2(m_scale.X / 2.f, 0.f));
 				Renderer::LoadObject(floorMark, 1);
@@ -647,6 +659,13 @@ constexpr int PlayerGetUpAnim[4] = {
 			void Player::readKeys()
 			{
 				m_physics->SetFrictionDrag(Drag);
+
+				//TESTING: REMOVE
+				//Fake damage by pressing TAB
+				if ((InputManager::GetKeyUpDown(DEBUG_OBJECT_MENU) & InputManager::KEY_STATE::KEY_STATE_PRESSED) && !m_debug)
+				{
+					Damage(10, nullptr);
+				}
 
 #if _DEBUG
 				if (InputManager::GetKey(PLAYER_DEBUG))
@@ -913,7 +932,9 @@ constexpr int PlayerGetUpAnim[4] = {
 
 			void Player::updateLookDirection()
 			{
-				
+				//Player is currently in an attacking animation, do not interrupt.
+				if (m_animator->GetCurrentAnimationIndex() == 7) { return; }
+
 				if (m_currentPlayerLookDirection == FOLLOW_MOUSE)
 				{
 					delete m_sprite;
@@ -953,7 +974,7 @@ constexpr int PlayerGetUpAnim[4] = {
 
 					case BEHIND:
 					{
-						delete m_sprite;
+						//delete m_sprite;
 						m_sprite = Renderer::GetSprite(PLAYER_LOOK_BEHIND_SPRITE);
 						break;
 					}
@@ -1047,6 +1068,47 @@ using namespace Lighting;
 					m_playerLight->Off(true);
 					delete m_playerLight;
 					m_playerLight = nullptr;
+				}
+			}
+
+			void Player::handleAttack()
+			{
+				if (m_attackCooldown > 0)
+				{
+					m_attackCooldown -= Utils::Time::GameTime::GetScaledDeltaTime();
+
+					if (m_attackCooldown <= 0)
+					{
+						//Completed attack.
+
+						m_frozen = false;
+						m_animator->SetCurrentAnimation(-1);
+						m_sprite = Renderer::GetSprite(DefaultPlayerSprite);
+					}
+
+					return;
+				}
+
+				//Player is trying to attack.
+				if (InputManager::GetMouseButton(0))
+				{
+					Vec2 mousePos = InputManager::GetMouseWorldPosition(TestGame::INSTANCE->GetCamera());
+
+					if (mousePos.X < m_position.X)
+					{
+						m_textureFlipped = false;
+					}
+					else {
+						m_textureFlipped = true;
+					}
+
+					//Play attacking animation.
+					m_physics->SetVelocityX(0.f);
+					m_animator->SetCurrentAnimation(7, this);
+					m_animator->SetSpeedMult(1.f);
+					m_scale = { 26.f, 26.f }; //Adjust scale to that of the animation sprites.
+					m_frozen = true;
+					m_attackCooldown = 9.0 * (double)ANIM_16_SPF;
 				}
 			}
 

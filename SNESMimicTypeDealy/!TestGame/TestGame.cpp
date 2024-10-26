@@ -163,15 +163,8 @@ namespace GAME_NAME
 
 		ThePlayer = std::make_shared<Objects::Player::Player>(level.PlayerStartPosition);
 		Rendering::Renderer::LoadActiveObject(ThePlayer.get(), 2); //Spawn in the player on Active Layer 2.
-		
-		auto epochTime = std::chrono::time_point<std::chrono::system_clock>{}.time_since_epoch();
 
-		//Set the current random seed to the time since epoch in seconds.
-		auto tp = std::chrono::system_clock::now();
-		unsigned int sRand = (unsigned int)tp.time_since_epoch().count();
-
-		std::cout << "====================== SRAND: " << sRand << std::endl;
-		std::srand(sRand);
+		srand((unsigned int)time(NULL));
 
 		MusicSync::MusicSync::SetCurrentSong(134, 2);
 

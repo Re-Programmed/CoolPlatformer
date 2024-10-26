@@ -2,6 +2,8 @@
 
 #include "../../../Utils/Time/GameTime.h"
 
+#include "../../../Resources/Save/SaveManager.h"
+
 namespace GAME_NAME::Objects::Enemies
 {
 	void Enemy::Update(GLFWwindow* window)
@@ -49,6 +51,39 @@ namespace GAME_NAME::Objects::Enemies
 
 finish_pathfind:
 		ActiveBoxCollisionGravityObject::Update(window);
+	}
+
+	void Enemy::Damage(float damage)
+	{
+		m_health -= damage;
+	}
+
+	void Enemy::Heal(float health)
+	{
+
+	}
+
+	void Enemy::Kill()
+	{
+
+	}
+
+	void Enemy::LoadState()
+	{
+		std::string resultStr("");
+		Resources::SaveManager::GetLevelString(resultStr, m_objectSaveID);
+
+		
+	}
+
+	void Enemy::SaveState()
+	{
+		std::string saveStr = "";
+		saveStr = saveStr + std::to_string(m_position.X) + ",";
+		saveStr = saveStr + std::to_string(m_position.Y) + ",";
+		saveStr = saveStr + std::to_string(m_health);
+
+		Resources::SaveManager::SaveLevelString(saveStr, m_objectSaveID);
 	}
 
 	Enemy::~Enemy()

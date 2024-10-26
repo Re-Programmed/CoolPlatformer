@@ -30,6 +30,18 @@ namespace GAME_NAME::Items
 		return std::stoi(data.substr(0, data.find_first_of(',')));
 	}
 
+	int Weapon::GetPowerConsumption()
+	{
+		std::string data = ITEM_DATA[m_itemType].Attributes.at(WEAPON);
+		return std::stod(data.substr(data.find_first_of(',') + 1, data.find_last_of(',')));
+	}
+
+	double Weapon::GetCooldown()
+	{
+		std::string data = ITEM_DATA[m_itemType].Attributes.at(WEAPON);
+		return std::stoi(data.substr(data.find_last_of(',') + 1));
+	}
+
 	void Weapon::Decode(const SaveParam params)
 	{
 		//Decode uses.

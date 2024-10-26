@@ -62,7 +62,6 @@ namespace GAME_NAME::Objects::Particles
 				m_previousFrameColliders.rehash(numParticles);
 			}
 
-			std::srand(std::clamp((int)m_position.X * (int)m_position.Y, 0, 999999999));
 
 			for (uint8_t i = 0; i < numParticles; i++)
 			{
@@ -70,6 +69,8 @@ namespace GAME_NAME::Objects::Particles
 				this->SpawnParticle(velocity, gravity, rotation);
 			}
 		}
+
+		inline void SetAllowCollisions(bool allowCollisions) { m_allowCollisions = allowCollisions; }
 
 		inline void RegisterParticle(Particle p)
 		{

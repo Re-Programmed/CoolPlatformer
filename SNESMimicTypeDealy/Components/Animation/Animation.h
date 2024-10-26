@@ -35,6 +35,20 @@ namespace GAME_NAME
 					
 				}
 
+				/// <summary>
+				/// Called when an animator switches the currently active animation to ensure the new animation to be played (this one) starts on the first frame.
+				/// </summary>
+				/// <param name="object"></param>
+				void InitFrame(Objects::GameObject* object)
+				{
+					m_currentFrame = 0;
+
+					if (object != nullptr)
+					{
+						object->SetSprite(m_data.Sprites[m_currentFrame]);
+					}
+				}
+
 				void IncrementFrame(Objects::GameObject* object)	//Increase the current animation frame by one.
 				{
 					m_currentFrame++;

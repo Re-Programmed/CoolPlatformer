@@ -37,12 +37,12 @@ namespace GAME_NAME::Objects::Enemies
 		/// <param name="window"></param>
 		void updateTextures(GLFWwindow* window);
 
-	private:
 		/// <summary>
 		/// Counts down to when the next action the rabbit will perform will occur.
 		/// </summary>
 		double m_actionTimer = 0.0;
 
+	private:
 		/// <summary>
 		/// Stores a pointer to the resting sprite of the rabbit.
 		/// </summary>

@@ -86,8 +86,25 @@ namespace  GAME_NAME
 				void EnterDebug();
 				void ToggleFlight();
 #endif
+
+				/// <summary>
+				/// Damage the player the specified amount with the given object as the cause. If this was fall damage, the ground will recieve a splatter (Otherwise cause should be nullptr).
+				/// </summary>
+				/// <param name="damage"></param>
+				/// <param name="cause"></param>
 				void Damage(float damage, GameObject* cause);
+
+				/// <summary>
+				/// Heal the player and ensure that the players health doesn't exceed the maximum with armour effects applied.
+				/// </summary>
+				/// <param name="health"></param>
+				void Heal(float health);
 				void Kill();
+
+				/// <summary>
+				/// Uses the specified damage and range to play an attacking animation and create a damage hitbox.
+				/// </summary>
+				void Attack(float damage, float range, int atkAnimation = 0);
 
 				/// <summary>
 				/// Spawns random blood particles around the player. (can be used to imitate damage, is also called when Damage() is called)
@@ -292,6 +309,12 @@ namespace  GAME_NAME
 				void updateAbilityMeter(float amount);
 
 				void togglePlayerLight();
+
+				/// <summary>
+				/// Counts down between attacks to prevent spamming one attack.
+				/// </summary>
+				double m_attackCooldown;
+				void handleAttack();
 			};
 
 		};
