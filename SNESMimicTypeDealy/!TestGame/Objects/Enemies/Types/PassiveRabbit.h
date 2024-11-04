@@ -23,7 +23,7 @@ namespace GAME_NAME::Objects::Enemies
 			}
 		};
 
-		PassiveRabbit(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, int jumpingSprite, PassiveRabbitAttributes* attributes = new PassiveRabbitAttributes());
+		PassiveRabbit(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, int jumpingSprite, PassiveRabbitAttributes* attributes = new PassiveRabbitAttributes(), size_t saveID = 0);
 
 		~PassiveRabbit();
 		void Update(GLFWwindow* window) override;

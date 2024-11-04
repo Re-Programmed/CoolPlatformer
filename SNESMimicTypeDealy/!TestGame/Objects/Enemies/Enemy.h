@@ -14,6 +14,8 @@ namespace GAME_NAME::Objects::Enemies
 		: public ActiveBoxCollisionGravityObject, public GameObjectState
 	{
 	public:
+		static std::vector<Enemy*> EnemyRegistry;
+
 		struct EnemyAttributes
 		{
 			float MovementSpeed = 5.0F;
@@ -61,28 +63,39 @@ namespace GAME_NAME::Objects::Enemies
 			}
 		};
 
-		Enemy(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, EnemyAttributes* attributes = new EnemyAttributes(), size_t saveId = 0, float health = 20.f)
-			: ActiveBoxCollisionGravityObject(position, scale, sprite), GameObjectState(saveId), m_pathfind(position), m_enemyAttributes(attributes), m_pathfindTimeout{ 0.0 }, m_health(health)
+		Enemy(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, EnemyAttributes* attributes = new EnemyAttributes(), size_t saveId = 0, float health = 20.f, bool allowPathfinding = true)
+			: ActiveBoxCollisionGravityObject(position, scale, sprite), GameObjectState(saveId), m_pathfind(position), m_enemyAttributes(attributes), m_pathfindTimeout{ 0.0 }, m_health(health), m_allowPathfinding(allowPathfinding)
 		{
 			EnemyAttributes::TempAttributes startAttributes = attributes->GetInputAttributes();
 			m_physics->SetGravityStrength(startAttributes.Gravity);
 			m_physics->SetFrictionDrag(startAttributes.FrictionDrag);
+
+			//Add enemy to registry for checking attacks and more.
+			m_enemyIndex = EnemyRegistry.size();
+			EnemyRegistry.push_back(this);
 		}
 
 		void Update(GLFWwindow* window) override;
 
-		void Damage(float damage);
+		void Damage(float damage, const Vec2 attackOrigin = Vec2(0));
 		void Heal(float health);
 
 		void LoadState() override;
 		void SaveState() override;
 
+		void Render(const Vec2& cameraPosition) override;
+		
 		void Kill();
 	protected:
 		/// <summary>
 		/// If false, the enemy will not try to pathfind anywhere.
 		/// </summary>
-		bool m_allowPathfinding = true;
+		bool m_allowPathfinding;
+
+		/// <summary>
+		/// Used for timing the attacked animation.
+		/// </summary>
+		float m_attackedAnimationTimer = 0.f;
 
 		/// <summary>
 		/// Returns true if the enemy has reached its destination.
@@ -104,6 +117,10 @@ namespace GAME_NAME::Objects::Enemies
 
 		EnemyAttributes* m_enemyAttributes;
 	private:
+		int m_enemyIndex; //This enemy's index in the registry.
+
+		bool m_isDead = false; //Is dead?
+
 		Vec2 m_pathfind;
 
 		/// <summary>

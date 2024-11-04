@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
- 
+#include <cmath> 
+
 namespace GAME_NAME
 {
 	namespace MathUtils
@@ -103,6 +104,22 @@ namespace GAME_NAME
 			inline float NormalizeX()
 			{
 				return X == 0 ? 0.f : (X < 0 ? -1.f : 1.f);
+			}
+
+			/// <summary>
+			/// Given two points and two other factors, returns the vector that points from the affectedObject away from the explosion origin, with magnitude inversley proportional to distaance.
+			/// </summary>
+			/// <param name="explosionOrigin"></param>
+			/// <param name="affectedObject"></param>
+			/// <param name="power"></param>
+			/// <param name="maxDamping"></param>
+			/// <returns></returns>
+			inline static Vec2 FindExplosionDestination(const Vec2& explosionOrigin, const Vec2& affectedObject, float power, float maxDamping)
+			{
+				float powerFactor = power / (std::pow(Distance(affectedObject, explosionOrigin), 2.f));
+				if (powerFactor > maxDamping) { powerFactor = maxDamping; }
+
+				return Vec2{ powerFactor * (affectedObject.X - explosionOrigin.X), powerFactor * (affectedObject.Y - explosionOrigin.Y) };
 			}
 
 			//Returns the normalized Y coord of this vector.

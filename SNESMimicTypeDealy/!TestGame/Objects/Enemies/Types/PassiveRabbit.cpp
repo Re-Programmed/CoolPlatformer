@@ -6,8 +6,8 @@
 
 namespace GAME_NAME::Objects::Enemies
 {
-	PassiveRabbit::PassiveRabbit(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, int jumpingSprite, PassiveRabbitAttributes* attributes)
-		: Enemy(position, scale, sprite, attributes), m_baseSprite(sprite), m_jumpingSprite(jumpingSprite)
+	PassiveRabbit::PassiveRabbit(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, int jumpingSprite, PassiveRabbitAttributes* attributes, size_t saveID)
+		: Enemy(position, scale, sprite, attributes, saveID), m_baseSprite(sprite), m_jumpingSprite(jumpingSprite)
 	{
 		m_allowPathfinding = false;
 		

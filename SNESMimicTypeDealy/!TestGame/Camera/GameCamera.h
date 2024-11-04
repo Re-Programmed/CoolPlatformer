@@ -50,6 +50,7 @@ namespace GAME_NAME
 		private:
 			bool m_followPlayerExact;
 			float m_targetZoom;
+			float m_deadzoneRadius;
 			Vec2 m_offset;
 		};
 	}

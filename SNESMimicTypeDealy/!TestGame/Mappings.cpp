@@ -311,7 +311,8 @@ std::function<void (std::vector<std::string>, size_t line)> m_mappings[MAPPINGS_
 		Type:
 			0 - LeftRightEnemy (anchorLeftX,anchorLeftY,anchorRightX,anchorRightY)
 			1 - PassiveRabbit (runningSprite)
-			2 - FeralRabbit (runningSprite,asleep)
+			2 - FeralRabbit (runningSprite,asleep),
+			3 - Dummy Enemy (health)
 	*/
 	[](std::vector<std::string> data, size_t n)
 	{
@@ -327,22 +328,29 @@ using namespace Enemies;
 		{
 			case 0:		//LeftRightEnemy
 			{
-				LeftRightEnemy* lre = new LeftRightEnemy(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), STOIVEC(data[7], data[8]), STOIVEC(data[9], data[10]));
+				LeftRightEnemy* lre = new LeftRightEnemy(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), STOIVEC(data[7], data[8]), STOIVEC(data[9], data[10]), new LeftRightEnemy::LeftRightEnemyAttributes(), n);
 				Renderer::LoadObject(lre, std::stoi(data[6]));
 				break;
 			}
 
 			case 1:		//Passive Rabbit
 			{
-				PassiveRabbit* pr = new PassiveRabbit(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), std::stoi(data[7]));
+				PassiveRabbit* pr = new PassiveRabbit(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), std::stoi(data[7]), new PassiveRabbit::PassiveRabbitAttributes() , n);
 				Renderer::LoadActiveObject(pr, std::stoi(data[6]));
 				break;
 			}
 
 			case 2:		//Feral Rabbit
 			{
-				FeralRabbit* pr = new FeralRabbit(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), std::stoi(data[7]), new PassiveRabbit::PassiveRabbitAttributes(), std::stoi(data[8]) == 1);
+				FeralRabbit* pr = new FeralRabbit(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), std::stoi(data[7]), new PassiveRabbit::PassiveRabbitAttributes(), std::stoi(data[8]) == 1, n);
 				Renderer::LoadActiveObject(pr, std::stoi(data[6]));
+				break;
+			}
+
+			case 3:     //Dummy Enemy
+			{
+				Enemy* e = new Enemy(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), new Enemy::EnemyAttributes(), n, std::stof(data[7]), false);
+				Renderer::LoadActiveObject(e, std::stoi(data[6]));
 				break;
 			}
 

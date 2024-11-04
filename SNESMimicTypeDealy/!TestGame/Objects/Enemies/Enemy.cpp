@@ -4,10 +4,31 @@
 
 #include "../../../Resources/Save/SaveManager.h"
 
+#include "../../../Rendering/DynamicSprite.h"
+
+#include "../../../Rendering/Renderers/Renderer.h"
+
+#define ATTACK_ANIMATION_LENGTH 1.2f
+
 namespace GAME_NAME::Objects::Enemies
 {
+	std::vector<Enemy*> Enemy::EnemyRegistry;
+
 	void Enemy::Update(GLFWwindow* window)
 	{
+		if (m_isDead)
+		{
+			if (m_attackedAnimationTimer > 0.f)
+			{
+				m_attackedAnimationTimer -= Utils::Time::GameTime::GetScaledDeltaTime();
+				return;
+			}
+
+			Renderer::DestroyActiveObjectImmediate(this);
+			delete this;
+			return;
+		}
+
 		if (!m_allowPathfinding)
 		{
 			m_pathfindTimeout.Timer = 0.f;
@@ -53,9 +74,27 @@ finish_pathfind:
 		ActiveBoxCollisionGravityObject::Update(window);
 	}
 
-	void Enemy::Damage(float damage)
+	void Enemy::Damage(float damage, const Vec2 attackOrigin)
 	{
+		if (m_isDead) { return; }
+
 		m_health -= damage;
+		m_attackedAnimationTimer = ATTACK_ANIMATION_LENGTH;
+
+		if (m_health <= 0.f) { Kill(); return; }
+
+		//Animate damage and add velocity.
+
+		if (attackOrigin.X != 0 && attackOrigin.Y != 0)
+		{
+			Vec2 outwardVector = Vec2::FindExplosionDestination(attackOrigin, m_position + (m_scale/2.f), 2000.f, 120.f);
+			outwardVector.Y = 0;
+
+			std::cout << outwardVector.ToString();
+
+			m_physics->AddVelocity(outwardVector);
+		}
+
 	}
 
 	void Enemy::Heal(float health)
@@ -65,7 +104,35 @@ finish_pathfind:
 
 	void Enemy::Kill()
 	{
+		m_isDead = true;
+	}
 
+	void Enemy::Render(const Vec2& cameraPostion)
+	{
+		//Either in the first or last 1/3 of the attacking animation, turn sprite red.
+		if ((m_attackedAnimationTimer > ATTACK_ANIMATION_LENGTH * (2.f / 3.f)) || (m_attackedAnimationTimer > 0.f && m_attackedAnimationTimer < ATTACK_ANIMATION_LENGTH * (1.f / 3.f)))
+		{
+			Rendering::DynamicSprite* redSprite = new Rendering::DynamicSprite(m_sprite->GetSpriteId());
+
+			Vec4 redTextureColor[4] = {
+				{1, 0.25, 0.25, 1},
+				{1, 0.25, 0.25, 1},
+				{1, 0.25, 0.25, 1},
+				{1, 0.25, 0.25, 1}
+			};
+
+			redSprite->UpdateTextureColor(redTextureColor);
+
+			redSprite->Render(cameraPostion, { m_position.X + m_scale.X, m_position.Y + m_scale.Y }, { -m_scale.X, -m_scale.Y });
+			delete redSprite;
+
+			m_attackedAnimationTimer -= Utils::Time::GameTime::GetScaledDeltaTime();
+
+			m_didRender = true;
+			return;
+		}
+
+		ActiveBoxCollisionGravityObject::Render(cameraPostion);
 	}
 
 	void Enemy::LoadState()
@@ -88,6 +155,8 @@ finish_pathfind:
 
 	Enemy::~Enemy()
 	{
+		EnemyRegistry.erase(EnemyRegistry.begin() + m_enemyIndex);
+
 		delete m_enemyAttributes;
 
 		ActiveBoxCollisionGravityObject::~ActiveBoxCollisionGravityObject();

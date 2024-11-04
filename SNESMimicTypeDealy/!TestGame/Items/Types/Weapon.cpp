@@ -10,7 +10,7 @@ namespace GAME_NAME::Items
 
 	bool Weapon::Use()
 	{
-		std::cout << "YOU USED THE " << ITEMTYPE_GetItemTypeName(m_itemType) << std::endl;
+		//std::cout << "YOU USED THE " << ITEMTYPE_GetItemTypeName(m_itemType) << std::endl;
 		return false;
 	}
 

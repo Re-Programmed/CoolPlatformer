@@ -7,8 +7,8 @@
 
 namespace GAME_NAME::Objects::Enemies
 {
-	LeftRightEnemy::LeftRightEnemy(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, Vec2 leftAnchor, Vec2 rightAnchor, LeftRightEnemyAttributes* attributes)
-		: Enemy(position, scale, sprite, attributes), m_leftAnchor(leftAnchor), m_rightAnchor(rightAnchor), m_movingLeft(std::rand() < (RAND_MAX/2))
+	LeftRightEnemy::LeftRightEnemy(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, Vec2 leftAnchor, Vec2 rightAnchor, LeftRightEnemyAttributes* attributes, size_t saveID)
+		: Enemy(position, scale, sprite, attributes, saveID), m_leftAnchor(leftAnchor), m_rightAnchor(rightAnchor), m_movingLeft(std::rand() < (RAND_MAX/2))
 	{
 
 	}

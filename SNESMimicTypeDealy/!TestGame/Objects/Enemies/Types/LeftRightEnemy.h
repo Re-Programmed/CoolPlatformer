@@ -27,7 +27,7 @@ namespace GAME_NAME::Objects::Enemies
 		/// <param name="sprite">The sprite to use for the enemy.</param>
 		/// <param name="leftAnchor">The left bound of movement for the enemy.</param>
 		/// <param name="rightAnchor">The right bound of movement for the enemy.</param>
-		LeftRightEnemy(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, Vec2 leftAnchor, Vec2 rightAnchor, LeftRightEnemyAttributes* attributes = new LeftRightEnemyAttributes());
+		LeftRightEnemy(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, Vec2 leftAnchor, Vec2 rightAnchor, LeftRightEnemyAttributes* attributes = new LeftRightEnemyAttributes(), size_t saveID = 0);
 
 		~LeftRightEnemy();
 

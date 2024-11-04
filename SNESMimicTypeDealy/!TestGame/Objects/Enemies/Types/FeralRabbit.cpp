@@ -18,8 +18,8 @@
 
 namespace GAME_NAME::Objects::Enemies
 {
-	FeralRabbit::FeralRabbit(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, int jumpingSprite, PassiveRabbitAttributes* attributes, bool beginSleeping)
-		: PassiveRabbit(position, scale, sprite, jumpingSprite, attributes), m_isAsleep(beginSleeping)
+	FeralRabbit::FeralRabbit(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, int jumpingSprite, PassiveRabbitAttributes* attributes, bool beginSleeping, size_t saveID)
+		: PassiveRabbit(position, scale, sprite, jumpingSprite, attributes, saveID), m_isAsleep(beginSleeping)
 	{
 
 	}

@@ -613,7 +613,12 @@ constexpr int PlayerBasicAttackAnim[9] = {
 				createdItem->GetPhysics()->AddRotationalVelocity(std::rand() * 30.f / RAND_MAX);
 				Renderer::InstantiateObject(Renderer::InstantiateGameObject(createdItem, true, 1, false));
 
-				m_screenInventory->SetItem(m_screenInventory->GetSelectedSlot(), nullptr);
+				m_screenInventory->SetItem(m_screenInventory->GetSelectedSlot() - 1, nullptr);
+
+				/*********************
+					TODO: without this line, wouldn't it cause a memory leak?
+					Without the line, dropping tools actually works tho...
+				**********************/
 				delete item;
 
 
@@ -636,6 +641,7 @@ constexpr int PlayerBasicAttackAnim[9] = {
 
 						m_particleEmitter->RegisterParticle(bloodParticle);
 					}
+
 
 					Renderer::InstantiateObject(Renderer::InstantiateGameObject(m_particleEmitter, true, 2, true));
 				}
@@ -783,7 +789,9 @@ constexpr int PlayerBasicAttackAnim[9] = {
 						}
 					}
 				}
-
+				
+				//If the player is not attacking, calculate animations.
+				if(m_attackCooldown <= 0)
 				{
 					
 					//Determines what animation to play currently.
@@ -1081,6 +1089,12 @@ using namespace Lighting;
 					{
 						//Completed attack.
 
+						if (!m_textureFlipped)
+						{
+							//Offset position to adjust for offset visual position in attack animation.
+							m_position += Vec2(13.f, 0);
+						}
+
 						m_frozen = false;
 						m_animator->SetCurrentAnimation(-1);
 						m_sprite = Renderer::GetSprite(DefaultPlayerSprite);
@@ -1090,25 +1104,56 @@ using namespace Lighting;
 				}
 
 				//Player is trying to attack.
-				if (InputManager::GetMouseButton(0))
+				if (InputManager::GetMouseButton(1))
 				{
 					Vec2 mousePos = InputManager::GetMouseWorldPosition(TestGame::INSTANCE->GetCamera());
 
 					if (mousePos.X < m_position.X)
 					{
+						//Offset position to adjust for offset visual position in attack animation.
+						m_position -= Vec2(13.f, 0);
 						m_textureFlipped = false;
+						
+						m_physics->AddVelocity({6.5f, 0.f});
 					}
-					else {
+					else
+					{
 						m_textureFlipped = true;
 					}
 
 					//Play attacking animation.
-					m_physics->SetVelocityX(0.f);
+					//m_physics->SetVelocityX(0.f);
 					m_animator->SetCurrentAnimation(7, this);
-					m_animator->SetSpeedMult(1.f);
+					m_animator->SetSpeedMult(2.f);
 					m_scale = { 26.f, 26.f }; //Adjust scale to that of the animation sprites.
 					m_frozen = true;
-					m_attackCooldown = 9.0 * (double)ANIM_16_SPF;
+					m_attackCooldown = (9.0 * 0.5) * (double)ANIM_16_SPF; //(frames * 1/speed * seconds_per_frame)
+
+
+					const Vec2 damageOrigin = m_position + Vec2{ (m_textureFlipped ? 12.f : -12.f), 0.f };
+
+					int AOE = 12, damage = 2;
+
+					if (GetInventory()->GetHeldItem())
+					{
+
+						const ItemData& heldItemData = ITEMTYPE_GetItemData(this->GetInventory()->GetHeldItem()->GetType());
+						if (heldItemData.Actions & WEAPON)
+						{
+							const std::string& attribute = heldItemData.Attributes.at(TOOL_ACTION::WEAPON);
+							damage = std::stoi(attribute.substr(0, attribute.find_first_of(',')));
+							AOE = std::stoi(attribute.substr(attribute.find_last_of(',') + 1));
+						}
+					}
+
+					//Handle damage.
+					for (Enemies::Enemy* enemy : Enemies::Enemy::EnemyRegistry)
+					{
+						if (Vec2::Distance(enemy->GetPosition(), damageOrigin) < AOE)
+						{
+							enemy->Damage(damage, m_position + (m_scale/2.f));
+						}
+					}
 				}
 			}
 
