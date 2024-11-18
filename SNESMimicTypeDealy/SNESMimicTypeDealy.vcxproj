@@ -151,8 +151,10 @@
     <ClCompile Include="!TestGame\Level\LevelManager.cpp" />
     <ClCompile Include="!TestGame\Mappings.cpp" />
     <ClCompile Include="!TestGame\Camera\GameCamera.cpp" />
+    <ClCompile Include="!TestGame\Objects\Collectables\BasicCollectable.cpp" />
     <ClCompile Include="!TestGame\Objects\Components\Climbable.cpp" />
     <ClCompile Include="!TestGame\Objects\Enemies\Enemy.cpp" />
+    <ClCompile Include="!TestGame\Objects\Enemies\HealthBarRenderer.cpp" />
     <ClCompile Include="!TestGame\Objects\Enemies\Types\AngryFarmer.cpp" />
     <ClCompile Include="!TestGame\Objects\Enemies\Types\FeralRabbit.cpp" />
     <ClCompile Include="!TestGame\Objects\Enemies\Types\LeftRightEnemy.cpp" />
@@ -259,7 +261,9 @@
     <ClInclude Include="!TestGame\Level\LevelManager.h" />
     <ClInclude Include="!TestGame\Mappings.h" />
     <ClInclude Include="!TestGame\Camera\GameCamera.h" />
+    <ClInclude Include="!TestGame\Objects\Collectables\BasicCollectable.h" />
     <ClInclude Include="!TestGame\Objects\Enemies\Enemy.h" />
+    <ClInclude Include="!TestGame\Objects\Enemies\HealthBarRenderer.h" />
     <ClInclude Include="!TestGame\Objects\Enemies\Types\AngryFarmer.h" />
     <ClInclude Include="!TestGame\Objects\Enemies\Types\FeralRabbit.h" />
     <ClInclude Include="!TestGame\Objects\Enemies\Types\LeftRightEnemy.h" />

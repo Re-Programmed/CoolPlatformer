@@ -42,6 +42,7 @@ namespace GAME_NAME::Objects::Enemies
 		/// </summary>
 		double m_actionTimer = 0.0;
 
+
 	private:
 		/// <summary>
 		/// Stores a pointer to the resting sprite of the rabbit.

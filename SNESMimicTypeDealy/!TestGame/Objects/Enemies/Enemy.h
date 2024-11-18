@@ -64,7 +64,7 @@ namespace GAME_NAME::Objects::Enemies
 		};
 
 		Enemy(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, EnemyAttributes* attributes = new EnemyAttributes(), size_t saveId = 0, float health = 20.f, bool allowPathfinding = true)
-			: ActiveBoxCollisionGravityObject(position, scale, sprite), GameObjectState(saveId), m_pathfind(position), m_enemyAttributes(attributes), m_pathfindTimeout{ 0.0 }, m_health(health), m_allowPathfinding(allowPathfinding)
+			: ActiveBoxCollisionGravityObject(position, scale, sprite), GameObjectState(saveId), m_pathfind(position), m_enemyAttributes(attributes), m_pathfindTimeout{ 0.0 }, m_health(health), m_maxHealth(health), m_allowPathfinding(allowPathfinding)
 		{
 			EnemyAttributes::TempAttributes startAttributes = attributes->GetInputAttributes();
 			m_physics->SetGravityStrength(startAttributes.Gravity);
@@ -87,6 +87,9 @@ namespace GAME_NAME::Objects::Enemies
 		
 		void Kill();
 	protected:
+
+		bool m_isDead = false; //Is dead?
+
 		/// <summary>
 		/// If false, the enemy will not try to pathfind anywhere.
 		/// </summary>
@@ -107,11 +110,28 @@ namespace GAME_NAME::Objects::Enemies
 														(Vec2::Distance(m_pathfind, m_position) <= PATHFINDING_PADDING))); }
 
 		float m_health;
+		/// <summary>
+		/// The health the enemy started with. Healing the enemy will never allow its health to exceed this value.
+		/// </summary>
+		const float m_maxHealth;
 
 		inline void setPathfinding(Vec2 position)
 		{
 			this->m_pathfind = position;
 		}
+
+		/// <summary>
+		/// Called when the health bar of this enemy should be rendered. Can be overriden to customize the health bar rendering.
+		/// </summary>
+		virtual void updateHealthBar();
+		/// <summary>
+		/// Called when the enemy is first damaged to create the health bar.
+		/// </summary>
+		virtual void createHealthBar();
+		/// <summary>
+		/// Called to disable the enemy health bar until create health bar is called again.
+		/// </summary>
+		virtual void destroyHealthBar();
 
 		~Enemy();
 
@@ -119,7 +139,6 @@ namespace GAME_NAME::Objects::Enemies
 	private:
 		int m_enemyIndex; //This enemy's index in the registry.
 
-		bool m_isDead = false; //Is dead?
 
 		Vec2 m_pathfind;
 

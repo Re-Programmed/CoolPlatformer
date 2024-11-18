@@ -38,9 +38,14 @@ namespace GAME_NAME
 
 			if (m_deadzoneRadius > 0.f)
 			{
+				//X Deadzone
 				if (!(playerPos.X + m_offset.X > m_position.X + resX + m_deadzoneRadius || playerPos.X + m_offset.X < m_position.X + resX - m_deadzoneRadius))
 				{
-					return;
+					//Y Deadzone
+					if (std::abs(playerPos.Y + m_offset.Y - m_position.Y - resY) < m_deadzoneRadius * 4.f)
+					{
+						return;
+					}
 				}
 	
 			}

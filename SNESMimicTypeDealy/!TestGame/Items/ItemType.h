@@ -76,10 +76,10 @@ namespace GAME_NAME
 			{ "Log", 18, NO_HELD_TEXTURE },
 			{ "Leaves", 18, NO_HELD_TEXTURE },
 			{ "Stone", 55, NO_HELD_TEXTURE },
-			{ "(Temp) Axe", 56, SpriteBase(65), CHOP & WEAPON, { { TOOL_ACTION::CHOP , "1" }, { TOOL_ACTION::WEAPON, "10,0,0.9,15" }}},
+			{ "(Temp) Axe", 56, SpriteBase(65), CHOP & WEAPON, { { TOOL_ACTION::CHOP , "1" }, { TOOL_ACTION::WEAPON, "10,0,0.9,20" }}},
 			{ "Unknown", 0, NO_HELD_TEXTURE },
 			{ "Wooden Shoes", 18, NO_HELD_TEXTURE, EQUIPMENT, { { TOOL_ACTION::EQUIPMENT, "Health:10" } } },
-			{ "Sharp Stick", SpriteBase(118), SpriteBase(118), WEAPON, {{TOOL_ACTION::WEAPON, "3,0,0.2,24"}}}
+			{ "Sharp Stick", SpriteBase(118), SpriteBase(118), WEAPON, {{TOOL_ACTION::WEAPON, "3,0,0.2,26"}}}
 		};
 
 

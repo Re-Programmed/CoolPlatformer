@@ -161,6 +161,11 @@ namespace  GAME_NAME
 				void beforeCollision() override;		//Called before any collisions are calculated to allow for resetting the jump conditions.
 
 			private:
+				/// <summary>
+				/// Used to turn the player red for some period of time when they are damaged.
+				/// </summary>
+				float m_damageAnimationTimer = 0.f;
+
 				Lighting::LightingSource* m_playerLight;
 
 				/// <summary>

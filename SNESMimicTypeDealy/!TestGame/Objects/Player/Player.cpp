@@ -31,6 +31,8 @@
 
 #define PLAYER_ANIMATION_RUN_WALK_SWITCH 180.f //When the player should switch from the walking to running animation.
 
+#define PLAYER_DAMAGE_ANIMATION_LENGTH 0.75f //How long the damage timer ticks for after the player is attacked.
+
 namespace  GAME_NAME
 {
 	namespace  Objects
@@ -287,6 +289,31 @@ constexpr int PlayerBasicAttackAnim[9] = {
 				}
 #endif
 
+				Vec4 playerColorVerts[4] = {
+					{1, 1, 1, 1},
+					{1, 1, 1, 1},
+					{1, 1, 1, 1},
+					{1, 1, 1, 1}
+				};
+				bool playerColorVertsModified = false;
+
+				if (m_damageAnimationTimer > 0.f)
+				{
+					m_damageAnimationTimer -= Utils::Time::GameTime::GetScaledDeltaTime();
+					if (m_damageAnimationTimer < (PLAYER_DAMAGE_ANIMATION_LENGTH / 3.f) || m_damageAnimationTimer > PLAYER_DAMAGE_ANIMATION_LENGTH * (2.f / 3.f))
+					{
+						for (uint8_t i = 0; i < 4; i++)
+						{
+							playerColorVerts[i].Y = 0.25f;
+							playerColorVerts[i].Z = 0.25f;
+						}
+						playerColorVertsModified = true;
+
+					}
+				}
+
+				
+
 				if (m_swimming)
 				{
 					const float sin = (std::sinf((float)glfwGetTime()) / 20.f);
@@ -301,13 +328,27 @@ constexpr int PlayerBasicAttackAnim[9] = {
 						Vec2(1.f + sin3, 0.f)
 					};
 					
-					DynamicSprite(m_sprite->GetSpriteId(), vertices).Render(cameraPosition, m_position + m_scale, m_scale, m_rotation + 180.f);
+					DynamicSprite d(m_sprite->GetSpriteId(), vertices);
+					d.UpdateTextureColor(playerColorVerts);
+					d.Render(cameraPosition, m_position + m_scale, m_scale, m_rotation + 180.f);
 					return;
 				}
 				else {
 					if (m_sprite != nullptr)
 					{
-						m_sprite->Render(cameraPosition, m_position + (m_textureFlipped ? (m_scale * Vec2::OneX) : 0), m_scale * (m_textureFlipped ? Vec2::MinusOneXOneY : 1), m_rotation);
+						//Check if the player's color should update.
+						if (playerColorVertsModified)
+						{
+							DynamicSprite* coloredSprite = new DynamicSprite(m_sprite->GetSpriteId());
+							coloredSprite->UpdateTextureColor(playerColorVerts);
+							coloredSprite->Render(cameraPosition, m_position + m_scale + (m_textureFlipped ? (m_scale * Vec2::MinusOneX) : 0), m_scale * (m_textureFlipped ? Vec2::MinusOneXOneY : 1), m_rotation + 180.f);
+							delete coloredSprite;
+						}
+						else {
+							//DEFAULT RENDER MODE.
+
+							m_sprite->Render(cameraPosition, m_position + (m_textureFlipped ? (m_scale * Vec2::OneX) : 0), m_scale * (m_textureFlipped ? Vec2::MinusOneXOneY : 1), m_rotation);
+						}
 					}
 					//Render emotions object if it should be rendered.
 					if (m_emotionsObject != nullptr)
@@ -376,6 +417,7 @@ constexpr int PlayerBasicAttackAnim[9] = {
 							break;
 						}
 
+						delete m_heldItemLastSprite; //?? memory?
 						m_heldItemLastSprite = new Sprite(baseSpriteId + frame);
 						m_heldItemDisplayFrameOffset = frame;
 						m_heldItemDisplay->SetSprite(m_heldItemLastSprite);
@@ -447,6 +489,8 @@ constexpr int PlayerBasicAttackAnim[9] = {
 				m_stats.Health -= damage;
 				m_healthProgressBar->SetPercentage(static_cast<char>(std::clamp(100.f * m_stats.Health / maxHealth, 0.f, maxHealth)));
 
+				m_damageAnimationTimer = PLAYER_DAMAGE_ANIMATION_LENGTH;
+
 				if (m_stats.Health <= 0)
 				{
 					Kill();
@@ -512,13 +556,14 @@ constexpr int PlayerBasicAttackAnim[9] = {
 					m_heldItemDisplay->SetScale({ 16, 16 });
 					//delete m_heldItemDisplay->GetSprite();
 
-					std::cout << "FOUND CUSTOM ITEM HOLD DISPLAY" << customHeldTexture << "\n";
-
 					m_heldItemDisplay->SetSprite(Renderer::GetSprite(customHeldTexture));
 					return;
 				}
 
 				m_heldItemDisplay->SetSprite(Items::ITEMTYPE_GetItemTypeTexture(item->GetType()));
+
+				//TODO: ITEM RANDOMLY CHANGES TO OTHER SPRITES WHEN THE PLAYER SWITCHES ITEMS WHILE RUNNING.
+				m_heldItemDisplayFrameOffset = 0;
 			}
 
 #define COLLISION_VEL_STOP_DAMPING 0.1f
@@ -706,14 +751,21 @@ constexpr int PlayerBasicAttackAnim[9] = {
 				*/
 				if (InputManager::GetKeyUpDown(PLAYER_OPEN_BACKPACK) & InputManager::KEY_STATE_PRESSED)
 				{
+
 					if (m_backpack->GetIsOpen())
 					{
 						//Close backpack.
 						m_backpack->Close();
 
+						//Update held item in case the player changed their current selected item.
+						m_screenInventory->SelectSlot(m_screenInventory->GetSelectedSlot());
+
 						SetFrozen(false);
 						return;
 					}
+
+					//Is the player able to open their bag?
+					if (!m_onGround) { return; }
 
 					//Open backpack GUI.
 					m_backpack->Open();
@@ -775,7 +827,7 @@ constexpr int PlayerBasicAttackAnim[9] = {
 						if (m_physics->GetVelocity().X > -PlayerSpeedCap)
 						{
 							m_physics->SetFrictionDrag(0);
-							m_physics->AddVelocity(Vec2(((float)Time::GameTime::GetScaledDeltaTime() / 0.017f) * (PlayerSpeedCap - m_physics->GetVelocity().X) * (-PlayerSpeed), 0.f));
+							m_physics->AddVelocity(Vec2(((float)Time::GameTime::GetScaledDeltaTime() / 0.017f) * (PlayerSpeedCap - m_physics->GetVelocity().X) * (-(PlayerSpeed - 0.0165F)), 0.f));
 						}
 
 						//Check if the player has begun to move to the left, play a sliding animation if slowing down, flip the sprite if moving left.
@@ -860,27 +912,32 @@ constexpr int PlayerBasicAttackAnim[9] = {
 					CHECK PLAYER ABILITIES AND ACTIONS.
 					-----
 				*/
-				if (m_stats.AbilityMeter >= 10.f)
+				if (m_skillHolder.CanUseAbility(FLIGHT))
 				{
-					//FLIGHT (GLIDING) ABILITY, DISABLE IF PLAYER IS MISSING CERTAIN ITEMS.
-					if (InputManager::GetKeyUpDown(PLAYER_JUMP) & InputManager::KEY_STATE_PRESSED)
+					if (m_stats.AbilityMeter >= 10.f)
 					{
-						if (!m_swimming && !m_isFlying && m_frozen <= 0 && m_jumpHeld != 1 && m_airTime > 0.4f /*Make sure player has to start gliding at the peak of their jump.*/)
+						//FLIGHT (GLIDING) ABILITY, DISABLE IF PLAYER IS MISSING CERTAIN ITEMS.
+						if (InputManager::GetKeyUpDown(PLAYER_JUMP) & InputManager::KEY_STATE_PRESSED)
 						{
-							//DEBUGGING
-							std::cout << "FLIGHT ENABLED" << std::endl;
+							if (!m_swimming && !m_isFlying && m_frozen <= 0 && m_jumpHeld != 1 && m_airTime > 0.4f /*Make sure player has to start gliding at the peak of their jump.*/)
+							{
+								//DEBUGGING
+								std::cout << "FLIGHT ENABLED" << std::endl;
 
-							//Subtract from ability meter based on cost of ability.
-							updateAbilityMeter(-10.f);
+								//Subtract from ability meter based on cost of ability.
+								updateAbilityMeter(-10.f);
 
-							//Set flying, "double jump" occured.
-							m_isFlying = true;
-							m_physics->SetVelocityY(200.f);
-							m_physics->SetGravityStrength(DefaultPlayerGravity - FlyingGravityReduction - 0.5f);
+								//Set flying, "double jump" occured.
+								m_isFlying = true;
+								m_physics->SetVelocityY(200.f);
+								m_physics->SetGravityStrength(DefaultPlayerGravity - FlyingGravityReduction - 0.5f);
+							}
 						}
 					}
+
 				}
-				
+
+
 			}
 
 
@@ -1044,7 +1101,7 @@ constexpr int PlayerBasicAttackAnim[9] = {
 
 					case BAG:
 					{
-						delete m_sprite;
+						//delete m_sprite;
 						m_sprite = Renderer::GetSprite(PLAYER_LOOK_BAG);
 						break;
 					}
@@ -1132,7 +1189,7 @@ using namespace Lighting;
 
 					const Vec2 damageOrigin = m_position + Vec2{ (m_textureFlipped ? 12.f : -12.f), 0.f };
 
-					int AOE = 12, damage = 2;
+					int AOE = 20, damage = 2;
 
 					if (GetInventory()->GetHeldItem())
 					{
@@ -1149,7 +1206,7 @@ using namespace Lighting;
 					//Handle damage.
 					for (Enemies::Enemy* enemy : Enemies::Enemy::EnemyRegistry)
 					{
-						if (Vec2::Distance(enemy->GetPosition(), damageOrigin) < AOE)
+						if (Vec2::Distance(enemy->GetPosition() + (enemy->GetScale()/2.f), damageOrigin) < AOE)
 						{
 							enemy->Damage(damage, m_position + (m_scale/2.f));
 						}

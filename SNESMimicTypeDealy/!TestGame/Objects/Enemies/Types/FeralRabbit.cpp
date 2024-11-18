@@ -7,7 +7,7 @@
 	--- FERAL RABBIT ATTRIBUTES ---
 */
 #define FERAL_RABBIT_AGRESSION_DISTANCE 200
-#define FERAL_RABBIT_AWAKEN_DISTANCE 100
+#define FERAL_RABBIT_AWAKEN_DISTANCE 50
 #define FERAL_RABBIT_ATTACK_DISTANCE 20
 
 #define FERAL_RABBIT_BASE_ATTACK_DAMAGE 5
@@ -26,6 +26,12 @@ namespace GAME_NAME::Objects::Enemies
 
 	void FeralRabbit::Update(GLFWwindow* window)
 	{
+		if (m_isDead) 
+		{		
+			PassiveRabbit::Update(window);
+			return;
+		}
+
 		if (m_actionTimer > 0.f)
 		{
 			m_actionTimer -= Utils::Time::GameTime::GetScaledDeltaTime();

@@ -26,7 +26,7 @@ namespace GAME_NAME
 		{
 			//Metadata is stored as first data string.
 			m_saveMetadata.Decode(data->at(0));
-			selectSlot(m_saveMetadata.SelectedSlot, false);
+			SelectSlot(m_saveMetadata.SelectedSlot, false);
 			//Remove metadata for inventory, all other data saved represents items.
 			data->erase(data->begin());
 
@@ -46,17 +46,17 @@ namespace GAME_NAME
 		{
 			if (InputManager::GetKeyUpDown(PLAYER_SCREEN_INVENTORY_SLOT_1) & InputManager::KEY_STATE_PRESSED)
 			{
-				selectSlot(1);
+				SelectSlot(1);
 			}
 
 			if (InputManager::GetKeyUpDown(PLAYER_SCREEN_INVENTORY_SLOT_2) & InputManager::KEY_STATE_PRESSED)
 			{
-				selectSlot(2);
+				SelectSlot(2);
 			}
 
 			if (InputManager::GetKeyUpDown(PLAYER_SCREEN_INVENTORY_SLOT_3) & InputManager::KEY_STATE_PRESSED)
 			{
-				selectSlot(3);
+				SelectSlot(3);
 			}
 		}
 	}
@@ -117,7 +117,7 @@ namespace GAME_NAME
 		Renderer::LoadGUIElement(m_slots[2]);
 	}
 
-	void ScreenInventory::selectSlot(InventorySlot slot, bool updatePlayerDisplay)
+	void ScreenInventory::SelectSlot(InventorySlot slot, bool updatePlayerDisplay)
 	{
 		//Update save for selected slot.
 		m_saveMetadata.SelectedSlot = slot;

@@ -8,6 +8,8 @@
 
 #include "../../../Rendering/Renderers/Renderer.h"
 
+#include "HealthBarRenderer.h"
+
 #define ATTACK_ANIMATION_LENGTH 1.2f
 
 namespace GAME_NAME::Objects::Enemies
@@ -72,6 +74,26 @@ namespace GAME_NAME::Objects::Enemies
 
 finish_pathfind:
 		ActiveBoxCollisionGravityObject::Update(window);
+
+		updateHealthBar();
+	}
+
+	void Enemy::updateHealthBar()
+	{
+		if (m_health < m_maxHealth && !m_isDead)
+		{
+			HealthBarRenderer::UpdateHealthBar(this, m_health);
+		}
+	}
+
+	void Enemy::createHealthBar()
+	{
+		HealthBarRenderer::CreateHealthBar(this, m_maxHealth, m_health);
+	}
+
+	void Enemy::destroyHealthBar()
+	{
+		HealthBarRenderer::RemoveHealthBar(this);
 	}
 
 	void Enemy::Damage(float damage, const Vec2 attackOrigin)
@@ -95,16 +117,25 @@ finish_pathfind:
 			m_physics->AddVelocity(outwardVector);
 		}
 
+		createHealthBar();
+
+		std::cout << "<ENEMY DAMAGED> Health: " << m_health << ".\n";
 	}
 
 	void Enemy::Heal(float health)
 	{
-
+		m_health += health;
+		if (m_health > m_maxHealth)
+		{
+			m_health = m_maxHealth;
+		}
 	}
 
 	void Enemy::Kill()
 	{
 		m_isDead = true;
+
+		destroyHealthBar();
 	}
 
 	void Enemy::Render(const Vec2& cameraPostion)
@@ -133,6 +164,7 @@ finish_pathfind:
 		}
 
 		ActiveBoxCollisionGravityObject::Render(cameraPostion);
+
 	}
 
 	void Enemy::LoadState()

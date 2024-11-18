@@ -43,6 +43,13 @@ namespace GAME_NAME
 		/// Shows the main display in the lower left for the players items.
 		/// </summary>
 		void ShowPlayerSlots();
+
+		/// <summary>
+		/// Selects the given slot.
+		/// </summary>
+		/// <param name="slot"></param>
+		/// <param name="updatePlayerDisplay"></param>
+		void SelectSlot(InventorySlot slot, bool updatePlayerDisplay = true);
 	private:
 		///Used to store the save data for the ScreenInventory such as the currently selected item.
 		struct ScreenInventoryMetadata
@@ -67,8 +74,6 @@ namespace GAME_NAME
 		/// Contains the sprite currently rendered for each item in its corresponding slot, nullptr for no item.
 		/// </summary>
 		GUI::StaticGUIElement* m_itemSprites[3];
-
-		void selectSlot(InventorySlot slot, bool updatePlayerDisplay = true);
 
 		void updateSave();
 		

@@ -24,6 +24,11 @@ namespace GAME_NAME::Objects::Enemies
 
 	void PassiveRabbit::Update(GLFWwindow* window)
 	{
+		if (m_isDead) { 
+			Enemy::Update(window); 
+			return; 
+		}
+
 		//If the rabbit is currently pathfinding, ignore updating anything until it reaches its destination, then begin countdown.
 		if (m_allowPathfinding)
 		{
@@ -67,6 +72,7 @@ namespace GAME_NAME::Objects::Enemies
 
 		Enemy::Update(window);
 	}
+
 
 	void PassiveRabbit::onCollision(Vec2 push, GameObject* cause)
 	{
@@ -122,5 +128,7 @@ namespace GAME_NAME::Objects::Enemies
 		}
 #pragma endregion
 	}
+
+
 
 }
