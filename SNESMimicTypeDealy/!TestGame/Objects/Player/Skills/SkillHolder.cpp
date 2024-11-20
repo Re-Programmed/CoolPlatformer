@@ -33,8 +33,11 @@ namespace GAME_NAME::Objects::Player
 
 		auto states = getStates();
 
-		//The first state listed is the current skill.
-		m_currentSkill.Decode(states->at(0));
+		if (states->size() >= 1)
+		{
+			//The first state listed is the current skill.
+			m_currentSkill.Decode(states->at(0));
+		}
 
 		delete m_skillDisplay->GetSprite();
 		m_skillDisplay->SetSprite(new Sprite(SkillHolder_GetSkillSpriteId(m_currentSkill.Skill)));

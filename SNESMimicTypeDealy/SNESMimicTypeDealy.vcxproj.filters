@@ -321,6 +321,9 @@
     <ClCompile Include="!TestGame\Objects\Enemies\HealthBarRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="!TestGame\Objects\Environment\Buildings\FrontDoor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glad\include\glad\glad.h">
@@ -614,9 +617,6 @@
     <ClInclude Include="!TestGame\Objects\LayerFlip.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="!TestGame\Objects\Rooms\FrontWall.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="!TestGame\Objects\Environment\Buildings\FrontWall.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -684,6 +684,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="!TestGame\Objects\Enemies\HealthBarRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="!TestGame\Objects\Environment\Buildings\FrontDoor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1079,6 +1082,7 @@
     <None Include="Assets\town_1\objects\blood.pk" />
     <None Include="Assets\Menus\settings.pk" />
     <None Include="Assets\Menus\settings_controls.pk" />
+    <None Include="Assets\town_1\objects\room_test.pk" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Assets\testing\music\0_test.wav">
