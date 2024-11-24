@@ -41,5 +41,10 @@ namespace GAME_NAME::Objects::Platforms
 		/// </summary>
 		const float m_fallDelay;
 		float m_fallCounter = 0.f;
+
+		/// <summary>
+		/// The Y position the platform is spawned at, used for resetting the platform after it has fallen.
+		/// </summary>
+		const float m_storedInitY;
 	};
 }
