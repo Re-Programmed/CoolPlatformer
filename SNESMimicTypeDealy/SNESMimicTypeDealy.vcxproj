@@ -244,6 +244,7 @@
     <ClInclude Include="!TestGame\Cutscenes\CutsceneManager.h" />
     <ClInclude Include="!TestGame\Cutscenes\InnerThoughtScene.h" />
     <ClInclude Include="!TestGame\InputDisplay\DisplayIconManager.h" />
+    <ClInclude Include="!TestGame\Interiors\InteriorRoom.h" />
     <ClInclude Include="!TestGame\ItemMapping.h" />
     <ClInclude Include="!TestGame\Items\FloorItem.h" />
     <ClInclude Include="!TestGame\Items\Inventories\CraftingInventory.h" />
