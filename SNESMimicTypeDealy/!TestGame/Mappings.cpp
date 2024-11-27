@@ -35,6 +35,7 @@
 
 #include "./Objects/Environment/Buildings/FrontWall.h"
 #include "./Objects/Environment/Buildings/Door.h"
+#include "./Objects/Environment/Buildings/FrontDoor.h"
 
 #include "./Objects/Environment/BreakableBlock.h"
 
@@ -133,7 +134,7 @@ std::function<void (std::vector<std::string>, size_t line)> m_mappings[MAPPINGS_
 		DebugMapper(">>> Loading StaticBoxCollisionObject");
 #endif
 		std::cout << "GOT: " << std::stoi(data[4]) << std::endl;
-		Renderer::LoadObject(new GAME_NAME::Components::Physics::Collision::StaticBoxCollisionObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4]))));
+		Renderer::LoadObject(new GAME_NAME::Components::Physics::Collision::StaticBoxCollisionObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4]))), (data.size() > 5 ? std::stoi(data[5]) : 1U));
 	},
 
 	//ActiveBoxCollisionGravityObject
@@ -369,6 +370,7 @@ using namespace Enemies;
 		Type:
 			0 - FrontWall (sprite,buildingZone_positionX,buildingZone_positionY,buildingZone_scaleX,buildingZone_scaleY)
 			1 - Door (closeSprite,openSprite,openDistance[float]=DEFAULT_DOOR_OPEN_DISTANCE,rotation[float]=0)
+			2 - FrontDoor (sprite, roomFile)
 	*/
 	[](std::vector<std::string> data, size_t n)
 	{
@@ -413,6 +415,12 @@ using namespace Objects::Environment::Buildings;
 		{
 			Door* door = new Door(STOIVEC(data[1], data[2]), STOIVEC(data[3], data[4]), Renderer::GetSprite(std::stoi(data[6])), Renderer::GetSprite(std::stoi(data[7])), (data.size() > 8 ? std::stof(data[8]) : DEFAULT_DOOR_OPEN_DISTANCE), (data.size() > 9) ? std::stof(data[9]) : 0.f);
 			Renderer::LoadObject(door, std::stoi(data[5]));
+			break;
+		}
+		case 2:
+		{
+			FrontDoor* frontDoor = new FrontDoor(STOIVEC(data[1], data[2]), STOIVEC(data[3], data[4]), Renderer::GetSprite(std::stoi(data[6])), data[7]);
+			Renderer::LoadActiveObject(frontDoor, std::stoi(data[5]));
 			break;
 		}
 		}

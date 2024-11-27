@@ -1,5 +1,6 @@
 #include "FallingPlatform.h"
 
+#include "../../TestGame.h"
 #include "../../../Utils/Time/GameTime.h"
 
 constexpr float FALLING_PLATFORM_ACCELERATION = 0.01f;
@@ -7,7 +8,7 @@ constexpr float FALLING_PLATFORM_ACCELERATION = 0.01f;
 namespace GAME_NAME::Objects::Platforms
 {
 	FallingPlatform::FallingPlatform(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, float fallDelay)
-		: StaticBoxCollisionObject(position, scale, sprite), m_fallDelay(fallDelay)
+		: StaticBoxCollisionObject(position, scale, sprite), m_fallDelay(fallDelay), m_storedInitY(position.Y)
 	{
 		SetOnCollision(onCollision);
 	}
@@ -35,8 +36,19 @@ namespace GAME_NAME::Objects::Platforms
 		//Update gravity or the fall counter.
 		if (m_fallCounter >= m_fallDelay)
 		{
-			m_position.Y -= m_gravity;
-			m_gravity += FALLING_PLATFORM_ACCELERATION;
+			if (m_position.Y < -m_scale.Y)
+			{
+				if (Vec2::Distance(TestGame::ThePlayer->GetPosition(), m_position) > 275.f)
+				{
+					m_gravity = 0;
+					m_fallCounter = 0;
+					m_position.Y = m_storedInitY;
+				}
+			}
+			else {
+				m_position.Y -= m_gravity;
+				m_gravity += FALLING_PLATFORM_ACCELERATION;
+			}
 		}
 		else if (m_fallCounter > 0)
 		{

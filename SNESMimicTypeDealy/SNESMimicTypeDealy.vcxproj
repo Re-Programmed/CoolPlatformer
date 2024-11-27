@@ -162,6 +162,7 @@
     <ClCompile Include="!TestGame\Objects\Environment\BackgroundObjects.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\BreakableBlock.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Buildings\Door.cpp" />
+    <ClCompile Include="!TestGame\Objects\Environment\Buildings\FrontDoor.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Buildings\FrontWall.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\CloudGenerator.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Effects\BloodMark.cpp" />
@@ -273,6 +274,7 @@
     <ClInclude Include="!TestGame\Objects\Environment\BGParallax.h" />
     <ClInclude Include="!TestGame\Objects\Environment\BreakableBlock.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Buildings\Door.h" />
+    <ClInclude Include="!TestGame\Objects\Environment\Buildings\FrontDoor.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Buildings\FrontWall.h" />
     <ClInclude Include="!TestGame\Objects\Environment\CloudGenerator.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Effects\BloodMark.h" />
@@ -287,7 +289,6 @@
     <ClInclude Include="!TestGame\Objects\Components\Climbable.h" />
     <ClInclude Include="!TestGame\Objects\Player\Skills\SkillHolder.h" />
     <ClInclude Include="!TestGame\Objects\Player\Skills\SkillType.h" />
-    <ClInclude Include="!TestGame\Objects\Rooms\FrontWall.h" />
     <ClInclude Include="!TestGame\SettingsManager.h" />
     <ClInclude Include="!TestGame\TestGame.h" />
     <ClInclude Include="Audio\SoundManager.h" />
@@ -533,6 +534,7 @@
     </None>
     <None Include="Assets\town_1\objects\blood.pk" />
     <None Include="Assets\town_1\objects\leaf_particle_objects.pk" />
+    <None Include="Assets\town_1\objects\room_test.pk" />
     <None Include="cpp.hint" />
     <None Include="packages.config" />
   </ItemGroup>
