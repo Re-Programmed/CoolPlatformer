@@ -324,6 +324,12 @@
     <ClCompile Include="!TestGame\Objects\Environment\Buildings\FrontDoor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="!TestGame\Objects\Collectables\CollectableTracker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="!TestGame\Objects\Collectables\ToastCollectable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glad\include\glad\glad.h">
@@ -687,6 +693,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="!TestGame\Objects\Environment\Buildings\FrontDoor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="!TestGame\Interiors\InteriorRoom.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="!TestGame\Objects\Collectables\ToastCollectable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="!TestGame\Objects\Collectables\CollectableTracker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
