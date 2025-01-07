@@ -156,6 +156,27 @@ constexpr int PlayerBasicAttackAnim[9] = {
 
 				std::thread animationUpdate([this, window] { m_animator->Update(window, this); });
 
+				float yOffset = 0;
+				//Increment timers for all attributes.
+				for (auto playerAttrib : m_currentAttribModifiers)
+				{
+					playerAttrib.second -= Time::GameTime::GetScaledDeltaTime();
+					if (playerAttrib.second < 0)
+					{
+						m_currentAttribModifiers.erase(playerAttrib.first);
+						break;
+					}
+
+					Sprite* attribModSprite = Renderer::GetSprite(4/*Change to show attrib modifier.*/);
+					StaticGUIElement* attribModElement = new StaticGUIElement(Vec2{ 112, 12 + yOffset }, Vec2{ 16, 16 }, attribModSprite->GetSpriteId());
+
+					attribModElement->Render();
+
+					delete attribModElement;
+					delete attribModSprite;
+					yOffset += 20;
+				}
+
 				//Check if the player is trying to use a weapon and use it if so.
 				if (m_screenInventory->GetHeldItem() != nullptr && InputManager::GetMouseButton(0))
 				{
@@ -533,6 +554,11 @@ constexpr int PlayerBasicAttackAnim[9] = {
 				}
 			}
 
+			void Player::ApplyAttributeModifier(ATTRIBUTE_MODIFIER attrib, float seconds)
+			{
+				m_currentAttribModifiers.emplace(std::make_pair(attrib, seconds));
+			}
+
 			//Sets the display for the held item/tool.
 			void Player::SetHeldItem(Items::InventoryItem* item)
 			{
@@ -786,7 +812,13 @@ constexpr int PlayerBasicAttackAnim[9] = {
 				//If the player is frozen, do not check any key presses.
 				if (m_frozen <= 0) 
 				{
-					
+					float addSpeedCap = 0.f;
+
+					//Check for speed modifier.
+					if (m_currentAttribModifiers.contains(ATTRIBUTE_MODIFIER::SPEED_UP))
+					{
+						addSpeedCap += PlayerSpeedCap / 2.f;
+					}
 	
 					if (InputManager::GetKey(PLAYER_MOVE_RIGHT))
 					{
@@ -798,7 +830,7 @@ constexpr int PlayerBasicAttackAnim[9] = {
 							return;
 						}
 #endif
-						if (m_physics->GetVelocity().X < PlayerSpeedCap)
+						if (m_physics->GetVelocity().X < PlayerSpeedCap + addSpeedCap)
 						{
 							m_physics->SetFrictionDrag(0.f);
 							m_physics->AddVelocity(Vec2(((float)Time::GameTime::GetScaledDeltaTime() / 0.017f) * (PlayerSpeedCap - m_physics->GetVelocity().X) * (PlayerSpeed), 0.f));
@@ -824,7 +856,7 @@ constexpr int PlayerBasicAttackAnim[9] = {
 							return;
 						}
 #endif
-						if (m_physics->GetVelocity().X > -PlayerSpeedCap)
+						if (m_physics->GetVelocity().X > -PlayerSpeedCap - addSpeedCap)
 						{
 							m_physics->SetFrictionDrag(0);
 							m_physics->AddVelocity(Vec2(((float)Time::GameTime::GetScaledDeltaTime() / 0.017f) * (PlayerSpeedCap - m_physics->GetVelocity().X) * (-(PlayerSpeed - 0.0165F)), 0.f));

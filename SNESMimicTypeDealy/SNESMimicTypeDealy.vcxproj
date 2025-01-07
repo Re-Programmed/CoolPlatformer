@@ -136,6 +136,7 @@
   <ItemGroup>
     <ClCompile Include="!TestGame\Cutscenes\CutsceneManager.cpp" />
     <ClCompile Include="!TestGame\Cutscenes\InnerThoughtScene.cpp" />
+    <ClCompile Include="!TestGame\Debug\DebugCommands.cpp" />
     <ClCompile Include="!TestGame\InputDisplay\DisplayIconManager.cpp" />
     <ClCompile Include="!TestGame\ItemMapping.cpp" />
     <ClCompile Include="!TestGame\Items\FloorItem.cpp" />
@@ -166,6 +167,7 @@
     <ClCompile Include="!TestGame\Objects\Environment\Buildings\FrontWall.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\CloudGenerator.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Effects\BloodMark.cpp" />
+    <ClCompile Include="!TestGame\Objects\Environment\Effects\Rain.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Levels\Town1Manager.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Plants\Tree.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Water.cpp" />
@@ -244,6 +246,7 @@
     <ClInclude Include="!TestGame\Cutscenes\Cutscene.h" />
     <ClInclude Include="!TestGame\Cutscenes\CutsceneManager.h" />
     <ClInclude Include="!TestGame\Cutscenes\InnerThoughtScene.h" />
+    <ClInclude Include="!TestGame\Debug\DebugCommands.h" />
     <ClInclude Include="!TestGame\InputDisplay\DisplayIconManager.h" />
     <ClInclude Include="!TestGame\ItemMapping.h" />
     <ClInclude Include="!TestGame\Items\FloorItem.h" />
@@ -277,6 +280,7 @@
     <ClInclude Include="!TestGame\Objects\Environment\Buildings\FrontWall.h" />
     <ClInclude Include="!TestGame\Objects\Environment\CloudGenerator.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Effects\BloodMark.h" />
+    <ClInclude Include="!TestGame\Objects\Environment\Effects\Rain.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Levels\Town1Manager.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Plants\Tree.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Water.h" />

@@ -8,7 +8,7 @@ namespace GAME_NAME::Objects::Particles
 {
 
 	ParticleEmitter::ParticleEmitter(Vec2 position, float maxParticleLifetime, bool allowCollision)
-		: GameObject(position, Vec2(0, 0), nullptr, 0.0F), m_maxParticleLifetime(maxParticleLifetime), m_allowCollisions(allowCollision)
+		: GameObject(position, Vec2(0, 0), nullptr, 0.0F), m_maxParticleLifetime(maxParticleLifetime), m_allowCollisions(allowCollision), m_loopTimer(0.0)
 	{
 		
 	}
@@ -36,17 +36,17 @@ namespace GAME_NAME::Objects::Particles
 		
 	}
 
-	void ParticleEmitter::SpawnParticle(Vec2 velocity, float gravity, float rotation)
+	void ParticleEmitter::SpawnParticle(Vec2 velocity, float gravity, float rotation, Vec2 offset)
 	{
 		Particle emit(m_particleCopy[std::rand() / (RAND_MAX / m_particleCopy.size())]);
 
-		emit.Position += m_position + Vec2(std::rand() * m_scale.X / RAND_MAX, std::rand() * m_scale.Y / RAND_MAX);
+		emit.Position += offset + m_position + Vec2(std::rand() * m_scale.X / RAND_MAX, std::rand() * m_scale.Y / RAND_MAX);
 		emit.Velocity += velocity;
 		emit.Gravity = gravity;
 		//emit.Rotation = rotation;
 
 		if (emit.ConstantVelocity.X != 0) {
-			emit.ConstantVelocity.X += ((float)(std::rand()) / (float)RAND_MAX) * 1.75f - 0.375f;
+			//emit.ConstantVelocity.X += ((float)(std::rand()) / (float)RAND_MAX) * 1.75f - 0.375f;
 		}
 
 		if (emit.ConstantVelocity.Y != 0) {
@@ -56,8 +56,33 @@ namespace GAME_NAME::Objects::Particles
 		m_spawned.push_back(emit);
 	}
 
+	void ParticleEmitter::SpawnParticlesLooping(double interval, uint8_t numParticles, Vec2 maxVelocity, float gravity, float rotation, Vec2 posVariation)
+	{
+		m_loopTimer = 0.0;
+		m_loop.pl_LoopInterval = interval;
+
+		m_loop.pl_NumParticles = numParticles;
+		m_loop.pl_MaxVelocity = maxVelocity;
+		m_loop.pl_Gravity = gravity;
+		m_loop.pl_Rotation = rotation;
+		m_loop.pl_posVariation = posVariation;
+	}
+
 	void ParticleEmitter::Update(GLFWwindow* window)
 	{
+
+		//Handle looping.
+		if (m_loop.pl_LoopInterval > 0.0 && m_loopTimer < 0.0)
+		{
+			//Spawn particles and restart timer.
+			SpawnParticles(m_loop.pl_NumParticles, m_loop.pl_MaxVelocity, m_loop.pl_Gravity, m_loop.pl_Rotation, m_loop.pl_posVariation);
+			m_loopTimer = m_loop.pl_LoopInterval;
+		}
+		else {
+			//Decrement the timer.
+			m_loopTimer -= Utils::Time::GameTime::GetScaledDeltaTime();
+		}
+
 using namespace GAME_NAME::Components::Physics::Collision;
 
 		if (m_allowCollisions)

@@ -29,6 +29,7 @@ namespace GAME_NAME
 			~FloorItem();
 
 			void Update(GLFWwindow* window) override; 
+			void Render(const Vec2& cameraPosition) override;
 
 			/// <summary>
 			/// Returns the physics object of this floor item. Useful for adding velocity to items that spawn in.
@@ -42,6 +43,8 @@ namespace GAME_NAME
 			void pickup();
 
 		private:
+			//The sprite used for background glow. Sprite ID is defined in FloorItem.cpp.
+			static Rendering::DynamicSprite* m_glowSprite;
 
 			/// <summary>
 			/// The contained item by this floor item.
@@ -52,6 +55,8 @@ namespace GAME_NAME
 			float m_lifetime;
 
 			bool m_pickedUp = false;
+
+			uint8_t m_renderPass = 0;
 		};
 	}
 }

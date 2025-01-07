@@ -53,9 +53,9 @@ namespace GAME_NAME::Objects::Particles
 
 		void Render(const Vec2& cameraPosition) override;
 
-		void SpawnParticle(Vec2 velocity = { 0, 0 }, float gravity = 0.f, float rotation = 0.f);
+		void SpawnParticle(Vec2 velocity = { 0, 0 }, float gravity = 0.f, float rotation = 0.f, Vec2 offset = { 0, 0 });
 
-		inline void SpawnParticles(uint8_t numParticles, Vec2 maxVelocity = { 0, 0 }, float gravity = 0.f, float rotation = 0.f)
+		inline void SpawnParticles(uint8_t numParticles, Vec2 maxVelocity = { 0, 0 }, float gravity = 0.f, float rotation = 0.f, Vec2 posVariation = { 0, 0 })
 		{
 			if (m_allowCollisions)
 			{
@@ -65,9 +65,15 @@ namespace GAME_NAME::Objects::Particles
 
 			for (uint8_t i = 0; i < numParticles; i++)
 			{
-				Vec2 velocity = { std::rand() * maxVelocity.X * 2 / RAND_MAX - maxVelocity.X, std::rand() * maxVelocity.Y / RAND_MAX };
-				this->SpawnParticle(velocity, gravity, rotation);
+				Vec2 velocity = { (float)(std::rand() * maxVelocity.X * 2) / (float)RAND_MAX - maxVelocity.X, (float)(std::rand() * maxVelocity.Y) / (float)RAND_MAX };
+				this->SpawnParticle(velocity, gravity, rotation, { (float)(std::rand() * posVariation.X / (float)RAND_MAX), (float)(std::rand() * posVariation.Y) / (float)RAND_MAX });
 			}
+		}
+
+		void SpawnParticlesLooping(double interval, uint8_t numParticles, Vec2 maxVelocity = { 0.f, 0.f }, float gravity = 0.f, float rotation = 0.f, Vec2 posVariation = { 0, 0 });
+		inline void StopLooping()
+		{
+			m_loop.pl_LoopInterval = -1.0;
 		}
 
 		inline void SetAllowCollisions(bool allowCollisions) { m_allowCollisions = allowCollisions; }
@@ -85,6 +91,24 @@ namespace GAME_NAME::Objects::Particles
 		void Update(GLFWwindow* window) override;
 	private:
 		float m_maxParticleLifetime;
+
+		/// <summary>
+		/// Used to determine at what interval particles should be spawned and when the next particle batch should appear.
+		/// </summary>
+		double m_loopTimer;
+
+		/// <summary>
+		/// Conditions set for a particle loop sequence.
+		/// </summary>
+		struct {
+			double pl_LoopInterval = -1.0; //The total time between particles spawning. Less than 0 if the ParticleEmitter is not looping.
+			uint8_t pl_NumParticles = 0;
+			Vec2 pl_MaxVelocity = Vec2::Zero;
+			float pl_Gravity = 0.f;
+			float pl_Rotation = 0.f;
+
+			Vec2 pl_posVariation = Vec2::Zero;
+		} m_loop;
 
 		std::vector<Particle> m_particleCopy;
 

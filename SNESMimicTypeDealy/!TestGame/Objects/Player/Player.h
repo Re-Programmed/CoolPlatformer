@@ -67,6 +67,15 @@ namespace  GAME_NAME
 			using namespace Animation;
 			using namespace GUI;
 
+			/// <summary>
+			/// Possible effects that can be added to the player from eating food or other events.
+			/// </summary>
+			enum ATTRIBUTE_MODIFIER
+			{
+				SPEED_UP,
+				JUMP_BOOST
+			};
+
 			class Player	//The class used for the player GameObject.
 				: public ActiveBoxCollisionGravityObject, public MiscStateGroup
 			{
@@ -110,6 +119,12 @@ namespace  GAME_NAME
 				/// Spawns random blood particles around the player. (can be used to imitate damage, is also called when Damage() is called)
 				/// </summary>
 				void CreateBloodParticle(GameObject* cause);
+
+				/// <summary>
+				/// Apply some modifier to the player for some amount of time.
+				/// </summary>
+				/// <param name="attrib"></param>
+				void ApplyAttributeModifier(ATTRIBUTE_MODIFIER attrib, float seconds);
 
 				void SetHeldItem(Items::InventoryItem* item);
 				inline void RemoveHeldItem()
@@ -161,6 +176,8 @@ namespace  GAME_NAME
 				void beforeCollision() override;		//Called before any collisions are calculated to allow for resetting the jump conditions.
 
 			private:
+				std::unordered_map<ATTRIBUTE_MODIFIER, float> m_currentAttribModifiers;
+
 				/// <summary>
 				/// Used to turn the player red for some period of time when they are damaged.
 				/// </summary>

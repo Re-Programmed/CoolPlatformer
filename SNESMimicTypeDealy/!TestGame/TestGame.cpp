@@ -28,6 +28,7 @@
 
 #if _DEBUG
 #include "../Debug/LevelBuilder/LevelBuilder.h"
+#include "./Debug/DebugCommands.h"
 #endif
 
 #include "./Level/LevelManager.h"
@@ -91,13 +92,18 @@ namespace GAME_NAME
 
 	void GAME_NAME::TestGame::Update(GLFWwindow* window)
 	{
-		//TEMP DEBUGGING
-		if (InputManager::GetKeyUpDown(PLAYER_FORCE_WALK) & InputManager::KEY_STATE_PRESSED)
+#if _DEBUG
+
+		DebugCommands::HandleCommands();
+
+		/*if (InputManager::GetKeyUpDown(PLAYER_FORCE_WALK) & InputManager::KEY_STATE_PRESSED)
 		{
 			StateSaver::SaveStates();
 			StateSaver::SaveMisc();
 		}
-		//END DEBUG
+		*/
+
+#endif
 
 		InputManager::GetJoystick();
 
@@ -159,6 +165,7 @@ namespace GAME_NAME
 	{
 #if _DEBUG
 		Debug::LevelBuilder::LevelBuilder::InitLevelBuilderAssets(this);
+		DebugCommands::RunRecieverThread();
 #endif
 
 		ThePlayer = std::make_shared<Objects::Player::Player>(level.PlayerStartPosition);

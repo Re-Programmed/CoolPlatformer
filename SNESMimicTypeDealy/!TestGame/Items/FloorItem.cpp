@@ -3,10 +3,15 @@
 #include "../../Utils/Time/GameTime.h"
 #include "../TestGame.h"
 
+#define FLOOR_ITEM_GLOW_SPRITE SpriteBase(131) //The sprite rendered behind items.
+#define ITEM_BOB_ANIMATION_SPEED 1.f
+
 namespace GAME_NAME
 {
 	namespace Items
 	{
+		Rendering::DynamicSprite* FloorItem::m_glowSprite = nullptr;
+
 		FloorItem::FloorItem(Vec2 position, ITEM_TYPE type, float pickupDelay)
 			: ActiveRotationalBoxCollisionGravityObject(position, Vec2(DF_FLOOR_ITEM_SCALE), ITEMTYPE_GetItemTypeTexture(type), RotationalCollider_Settings(
 				53.0f,		//Bounce
@@ -15,6 +20,23 @@ namespace GAME_NAME
 			)), m_inventoryItem(new InventoryItem(type)), m_lifetime(0), m_pickupDelay(pickupDelay)
 		{
 			m_physics->SetGravityStrength(m_physics->GetGravityStrength() * 7);
+
+			if (!m_glowSprite)
+			{
+				Sprite* s = Renderer::GetSprite(FLOOR_ITEM_GLOW_SPRITE);
+
+				m_glowSprite = new DynamicSprite(*s);
+				delete s;
+
+				Vec4 transparentColor[4] = { 
+					{ 1.f, 1.f, 1.f, 0.3f },
+					{ 1.f, 1.f, 1.f, 0.3f },
+					{ 1.f, 1.f, 1.f, 0.3f },
+					{ 1.f, 1.f, 1.f, 0.3f }
+				};
+
+				m_glowSprite->UpdateTextureColor(transparentColor);
+			}
 		}
 
 		FloorItem::~FloorItem()
@@ -61,6 +83,37 @@ namespace GAME_NAME
 				Renderer::DestroyActiveObjectImmediate(this);
 				//delete this;
 			}
+		}
+		
+		//Global stored oscilation values for all items to avoid recalculation.
+		float osc, osc2, osc3;
+		std::uint8_t pass = 0;
+
+		void FloorItem::Render(const Vec2& cameraPosition)
+		{
+			//Only update these oscilating values once for all items to avoid recalculation of a variable that only needs to be determined one time.
+			if (m_renderPass == pass)
+			{
+				osc = (float)std::sin(glfwGetTime() * ITEM_BOB_ANIMATION_SPEED);
+				osc2 = (float)std::sin(1.f + glfwGetTime() * ITEM_BOB_ANIMATION_SPEED * 1.5f);
+				osc3 = (float)std::sin(0.5f + glfwGetTime() * ITEM_BOB_ANIMATION_SPEED * 1.25f);
+
+				if (m_renderPass % 2 == 1)
+				{
+					pass--;
+					m_renderPass--;
+				}
+				else {
+					pass++;
+					m_renderPass++;
+				}
+			}
+
+			const Vec2 pos = m_position + Vec2{ 0.f, 1.5f + osc3 * 0.66f };
+			const Vec2 sca = m_scale + Vec2{ osc2/1.5f };
+
+			m_glowSprite->Render(cameraPosition, pos, sca); //Render glowing sprite.
+			m_sprite->Render(cameraPosition, pos, sca, osc * 4.f); //Render item.
 		}
 	}
 }
