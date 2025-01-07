@@ -21,7 +21,17 @@ namespace GAME_NAME::Objects::Collectables
 		/// </summary>
 		void SaveState() override;
 
+		void Render(const Vec2& cameraPosition) override;
+
 	protected:
+
+		/// <summary>
+		/// True if this collectable has been collected.
+		/// </summary>
+		bool m_isCollected = false;
+
 		void onInteract(std::shared_ptr<Player::Player> player, InputManager::KEY_STATE state) override;
+
+		virtual void onCollect() = 0;
 	};
 }

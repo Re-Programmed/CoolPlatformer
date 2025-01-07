@@ -153,6 +153,8 @@
     <ClCompile Include="!TestGame\Mappings.cpp" />
     <ClCompile Include="!TestGame\Camera\GameCamera.cpp" />
     <ClCompile Include="!TestGame\Objects\Collectables\BasicCollectable.cpp" />
+    <ClCompile Include="!TestGame\Objects\Collectables\CollectableTracker.cpp" />
+    <ClCompile Include="!TestGame\Objects\Collectables\ToastCollectable.cpp" />
     <ClCompile Include="!TestGame\Objects\Components\Climbable.cpp" />
     <ClCompile Include="!TestGame\Objects\Enemies\Enemy.cpp" />
     <ClCompile Include="!TestGame\Objects\Enemies\HealthBarRenderer.cpp" />
@@ -248,6 +250,7 @@
     <ClInclude Include="!TestGame\Cutscenes\InnerThoughtScene.h" />
     <ClInclude Include="!TestGame\Debug\DebugCommands.h" />
     <ClInclude Include="!TestGame\InputDisplay\DisplayIconManager.h" />
+    <ClInclude Include="!TestGame\Interiors\InteriorRoom.h" />
     <ClInclude Include="!TestGame\ItemMapping.h" />
     <ClInclude Include="!TestGame\Items\FloorItem.h" />
     <ClInclude Include="!TestGame\Items\Inventories\CraftingInventory.h" />
@@ -266,6 +269,8 @@
     <ClInclude Include="!TestGame\Mappings.h" />
     <ClInclude Include="!TestGame\Camera\GameCamera.h" />
     <ClInclude Include="!TestGame\Objects\Collectables\BasicCollectable.h" />
+    <ClInclude Include="!TestGame\Objects\Collectables\CollectableTracker.h" />
+    <ClInclude Include="!TestGame\Objects\Collectables\ToastCollectable.h" />
     <ClInclude Include="!TestGame\Objects\Enemies\Enemy.h" />
     <ClInclude Include="!TestGame\Objects\Enemies\HealthBarRenderer.h" />
     <ClInclude Include="!TestGame\Objects\Enemies\Types\AngryFarmer.h" />

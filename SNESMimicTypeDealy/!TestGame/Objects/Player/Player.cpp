@@ -791,7 +791,7 @@ constexpr int PlayerBasicAttackAnim[9] = {
 					}
 
 					//Is the player able to open their bag?
-					if (!m_onGround) { return; }
+					if (!m_onGround || m_frozen) { return; }
 
 					//Open backpack GUI.
 					m_backpack->Open();

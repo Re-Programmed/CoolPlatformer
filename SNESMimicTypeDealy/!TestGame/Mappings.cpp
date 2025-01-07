@@ -39,6 +39,8 @@
 
 #include "./Objects/Environment/BreakableBlock.h"
 
+#include "./Objects/Collectables/ToastCollectable.h"
+
 constexpr float GenesisTileSize = 8.f;
 
 std::vector<std::shared_ptr<GAME_NAME::Objects::Environment::Buildings::BuildingZone>> BUILDING_createdBuildingZones;
@@ -470,6 +472,29 @@ using namespace Cutscenes;
 		//ACTIVE?
 		//TODO: NOT ACTIVE WOULD BE BETTER BUT DOES IT SCREW UP THE SAVE DATA.
 		Renderer::LoadActiveObject(bb, std::stoi(data[5]));
+	},
+
+	/*
+		16: Collectable Object (map,type,positionX,positionY,scaleX,scaleY,sprite,layer)
+	*/
+
+	[](std::vector<std::string> data, size_t n)
+	{
+#if _DEBUG
+		DebugMapper("Loading Collectable Object");
+#endif
+
+		int type = std::stoi(data[0]);
+
+		switch (type)
+		{
+			case 0:
+			{
+				Objects::Collectables::ToastCollectable* tc = new Objects::Collectables::ToastCollectable(STOIVEC(data[1], data[2]), STOIVEC(data[3], data[4]), Renderer::GetSprite(std::stoi(data[5])), n);
+				Renderer::LoadObject(tc, std::stoi(data[6]));
+				break;
+			}
+		}
 	}
 };
 
