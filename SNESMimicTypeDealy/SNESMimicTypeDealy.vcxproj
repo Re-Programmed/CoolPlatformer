@@ -107,6 +107,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\Dependencies\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -164,12 +165,15 @@
     <ClCompile Include="!TestGame\Objects\Enemies\Types\PassiveRabbit.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\BackgroundObjects.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\BreakableBlock.cpp" />
+    <ClCompile Include="!TestGame\Objects\Environment\Buildings\Bench.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Buildings\Door.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Buildings\FrontDoor.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Buildings\FrontWall.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\CloudGenerator.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Effects\BloodMark.cpp" />
+    <ClCompile Include="!TestGame\Objects\Environment\Effects\Explosion.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Effects\Rain.cpp" />
+    <ClCompile Include="!TestGame\Objects\Environment\ExplosiveObject.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Levels\Town1Manager.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Plants\Tree.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Water.cpp" />
@@ -280,12 +284,15 @@
     <ClInclude Include="!TestGame\Objects\Environment\BackgroundObjects.h" />
     <ClInclude Include="!TestGame\Objects\Environment\BGParallax.h" />
     <ClInclude Include="!TestGame\Objects\Environment\BreakableBlock.h" />
+    <ClInclude Include="!TestGame\Objects\Environment\Buildings\Bench.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Buildings\Door.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Buildings\FrontDoor.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Buildings\FrontWall.h" />
     <ClInclude Include="!TestGame\Objects\Environment\CloudGenerator.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Effects\BloodMark.h" />
+    <ClInclude Include="!TestGame\Objects\Environment\Effects\Explosion.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Effects\Rain.h" />
+    <ClInclude Include="!TestGame\Objects\Environment\ExplosiveObject.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Levels\Town1Manager.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Plants\Tree.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Water.h" />

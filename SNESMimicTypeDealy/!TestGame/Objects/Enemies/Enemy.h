@@ -86,6 +86,16 @@ namespace GAME_NAME::Objects::Enemies
 		void Render(const Vec2& cameraPosition) override;
 		
 		void Kill();
+
+		inline void AddVelocity(Vec2 velocity)
+		{
+			m_physics->AddVelocity(velocity);
+		}
+
+		inline void AddRotationalVelocity(float rotVelocity)
+		{
+			m_physics->AddRotationalVelocity(rotVelocity);
+		}
 	protected:
 
 		bool m_isDead = false; //Is dead?

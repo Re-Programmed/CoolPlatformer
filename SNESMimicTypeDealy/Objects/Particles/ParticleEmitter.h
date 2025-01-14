@@ -23,7 +23,7 @@ namespace GAME_NAME::Objects::Particles
 
 		float Opacity, TargetOpacity;
 
-		Sprite* const PSprite;
+		Sprite* PSprite;
 
 		float Lifetime;
 
@@ -38,9 +38,22 @@ namespace GAME_NAME::Objects::Particles
 		{	
 		};
 
-		Particle& operator=(const Particle& other)
+		//Copy operator.
+		Particle& operator= (const Particle& other)
 		{
-			Particle p(other.Position, other.Scale, other.Rotation, other.Velocity, other.RotationalVelocity, other.Opacity, other.PSprite, other.Lifetime);
+			this->ConstantVelocity = other.ConstantVelocity;
+			this->Gravity = other.Gravity;
+			this->Lifetime = other.Lifetime;
+			this->Opacity = other.Opacity;
+			this->Position = other.Position;
+			this->PSprite = other.PSprite;
+			this->Rotation = other.Rotation;
+			this->RotationalVelocity = other.RotationalVelocity;
+			this->Scale = other.Scale;
+			this->TargetOpacity = other.TargetOpacity;
+			this->TargetScale = other.TargetScale;
+			this->Velocity = other.Velocity;
+
 			return *this;
 		}
 	};
@@ -59,7 +72,7 @@ namespace GAME_NAME::Objects::Particles
 		{
 			if (m_allowCollisions)
 			{
-				m_previousFrameColliders.rehash(numParticles);
+				//m_previousFrameColliders.rehash(numParticles);
 			}
 
 
@@ -88,8 +101,31 @@ namespace GAME_NAME::Objects::Particles
 			return m_particleCopy.size();
 		}
 
+		inline const size_t GetSpawnedCount()
+		{
+			return m_spawned.size();
+		}
+
 		void Update(GLFWwindow* window) override;
+
+		inline void SetOnParticleCollision(std::function<void(Particle& particle)> pFun)
+		{
+			m_onParticleCollision = pFun;
+		}
+
+		inline void SetForcedSpawnVelocity(Vec2 velocity)
+		{
+			m_forcedSpawnVelocity = velocity;
+		}
+
+	protected:
+		virtual void OnCreateParticle(Particle& particle)
+		{
+
+		}
 	private:
+		std::function<void(Particle& particle)> m_onParticleCollision;
+
 		float m_maxParticleLifetime;
 
 		/// <summary>
@@ -121,7 +157,8 @@ namespace GAME_NAME::Objects::Particles
 		/// <summary>
 		/// List of GameObjects that represent particles for collision.
 		/// </summary>
-		std::unordered_map<Components::Physics::Collision::ActiveBoxCollider*, Particle*> m_previousFrameColliders;
+		std::vector<Components::Physics::Collision::ActiveBoxCollider*> m_previousFrameColliders;
 
+		Vec2 m_forcedSpawnVelocity;
 	};
 }

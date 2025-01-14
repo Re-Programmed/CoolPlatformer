@@ -9,6 +9,6 @@ namespace GAME_NAME::Objects::Environment
 		: public GameObject
 	{
 	public:
-		BloodMark(GameObject* spawnObject, Vec2 midpoint);
+		BloodMark(GameObject* spawnObject, Vec2 midpoint, Sprite* forceSprite = nullptr, Vec2 scale = Vec2::Zero);
 	};
 }

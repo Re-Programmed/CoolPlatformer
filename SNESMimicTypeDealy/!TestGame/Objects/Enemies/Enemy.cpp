@@ -31,11 +31,17 @@ namespace GAME_NAME::Objects::Enemies
 			return;
 		}
 
+		if (m_rotation != 0)
+		{
+			float diff = m_rotation - std::lerp(m_rotation, 0.f, 0.05f);
+			SetRotationAboutCenter(diff);
+		}
+
 		if (!m_allowPathfinding)
 		{
 			m_pathfindTimeout.Timer = 0.f;
 			goto finish_pathfind;
-		}
+		}	
 
 		//Ignore Y pathfind? Check X distance.
 		if (m_enemyAttributes->IgnoreYPathfind && std::abs(m_position.X - m_pathfind.X) < PATHFINDING_PADDING)

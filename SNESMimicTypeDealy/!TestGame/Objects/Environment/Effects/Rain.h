@@ -28,5 +28,7 @@ using namespace Particles;
 		static Rain* m_loopInstance;
 
 		static ParticleEmitter* m_rainEffect;
+
+		static void OnRainParticleCollision(Particle& particle);
 	};
 }

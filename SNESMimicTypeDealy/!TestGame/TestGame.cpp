@@ -201,6 +201,8 @@ namespace GAME_NAME
 		//TODO: Add a check on weather the current level uses lighting or not.
 		//Rendering::Lighting::SimpleLightingManager::EnableLighting(DEFAULT_LEVEL_SIZE_X/10, true);
 
+		//Rendering::Lighting::SimpleLightingManager::RegisterSource(new Lighting::LightingSource({ 150.f, 27.f }, 50.f, 25.f, Lighting::POINT_LIGHT, true, true), true);
+
 		//Rendering::Lighting::SimpleLightingManager::RegisterSource(new Lighting::LightingSource(Vec2(200, 21), -100.f, -10.f, Lighting::POINT_LIGHT));
 
 	/*	

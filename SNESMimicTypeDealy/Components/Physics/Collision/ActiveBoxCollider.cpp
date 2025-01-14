@@ -2,7 +2,7 @@
 #include "../../../Utils/CollisionDetection.h"
 #include "PixelPerfectCollider.h"
 
-#define _DEBUG_DISPLAY_COLLISION_BOUNDS true
+#define _DEBUG_DISPLAY_COLLISION_BOUNDS false
 
 #if _DEBUG_DISPLAY_COLLISION_BOUNDS
 #include "../../../Rendering/DynamicSprite.h"

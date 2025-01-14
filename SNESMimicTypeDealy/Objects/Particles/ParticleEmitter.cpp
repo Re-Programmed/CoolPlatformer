@@ -8,7 +8,7 @@ namespace GAME_NAME::Objects::Particles
 {
 
 	ParticleEmitter::ParticleEmitter(Vec2 position, float maxParticleLifetime, bool allowCollision)
-		: GameObject(position, Vec2(0, 0), nullptr, 0.0F), m_maxParticleLifetime(maxParticleLifetime), m_allowCollisions(allowCollision), m_loopTimer(0.0)
+		: GameObject(position, Vec2(0, 0), nullptr, 0.0F), m_maxParticleLifetime(maxParticleLifetime), m_allowCollisions(allowCollision), m_loopTimer(0.0), m_forcedSpawnVelocity(0)
 	{
 		
 	}
@@ -38,11 +38,24 @@ namespace GAME_NAME::Objects::Particles
 
 	void ParticleEmitter::SpawnParticle(Vec2 velocity, float gravity, float rotation, Vec2 offset)
 	{
-		Particle emit(m_particleCopy[std::rand() / (RAND_MAX / m_particleCopy.size())]);
+using namespace GAME_NAME::Components::Physics::Collision;
+
+		Particle& copy = m_particleCopy[std::rand() / (RAND_MAX / m_particleCopy.size())];
+		Particle emit(copy.Position, copy.Scale, copy.Rotation, copy.Velocity, copy.RotationalVelocity, copy.Opacity, copy.PSprite, copy.Lifetime);
+		emit.TargetOpacity = copy.TargetOpacity;
+		emit.TargetScale = copy.TargetScale;
+		emit.ConstantVelocity = copy.ConstantVelocity;
 
 		emit.Position += offset + m_position + Vec2(std::rand() * m_scale.X / RAND_MAX, std::rand() * m_scale.Y / RAND_MAX);
 		emit.Velocity += velocity;
 		emit.Gravity = gravity;
+
+		if (m_forcedSpawnVelocity.X != 0 || m_forcedSpawnVelocity.Y != 0)
+		{
+			emit.Velocity = m_forcedSpawnVelocity + velocity;
+			emit.ConstantVelocity = 0;
+		}
+
 		//emit.Rotation = rotation;
 
 		if (emit.ConstantVelocity.X != 0) {
@@ -53,7 +66,17 @@ namespace GAME_NAME::Objects::Particles
 			emit.ConstantVelocity.Y += ((float)(std::rand()) / (float)RAND_MAX) * 1.75f - 0.375f;
 		}
 
+		OnCreateParticle(emit);
 		m_spawned.push_back(emit);
+
+		if (m_allowCollisions)
+		{
+			GameObject* particleRepresentation = new GameObject(emit.Position, emit.Scale, nullptr, emit.Rotation);
+			ActiveBoxCollider* abc = new ActiveBoxCollider(false);
+			abc->Init(particleRepresentation);
+
+			m_previousFrameColliders.push_back(abc);
+		}
 	}
 
 	void ParticleEmitter::SpawnParticlesLooping(double interval, uint8_t numParticles, Vec2 maxVelocity, float gravity, float rotation, Vec2 posVariation)
@@ -70,46 +93,46 @@ namespace GAME_NAME::Objects::Particles
 
 	void ParticleEmitter::Update(GLFWwindow* window)
 	{
+		using namespace GAME_NAME::Components::Physics::Collision;
 
-		//Handle looping.
-		if (m_loop.pl_LoopInterval > 0.0 && m_loopTimer < 0.0)
+		for (int i = 0; i < m_spawned.size(); ++i)
 		{
-			//Spawn particles and restart timer.
-			SpawnParticles(m_loop.pl_NumParticles, m_loop.pl_MaxVelocity, m_loop.pl_Gravity, m_loop.pl_Rotation, m_loop.pl_posVariation);
-			m_loopTimer = m_loop.pl_LoopInterval;
-		}
-		else {
-			//Decrement the timer.
-			m_loopTimer -= Utils::Time::GameTime::GetScaledDeltaTime();
-		}
 
-using namespace GAME_NAME::Components::Physics::Collision;
-
-		if (m_allowCollisions)
-		{
-			//Update each particle to their collided position.
-			for (const auto& [collider, particle] : m_previousFrameColliders)
-			{
-				particle->Position = collider->GetObject()->GetPosition();
-				delete collider->GetObject();
-				delete collider;
-			}
-
-			m_previousFrameColliders.clear();
-		}
-
-		for (int i = 0; i < m_spawned.size(); i++)
-		{
-			//Update lifetime and add randomness to make particles despawn at different times.
-			m_spawned[i].Lifetime += (float)Utils::Time::GameTime::GetScaledDeltaTime();
-
-
-			if (m_spawned[i].Lifetime >= m_maxParticleLifetime)
+			if (m_spawned[i].Lifetime < 0.f || (m_spawned[i].Lifetime >= m_maxParticleLifetime && m_maxParticleLifetime > 0.f))
 			{
 				m_spawned.erase(m_spawned.begin() + i);
-				i--;
 
+				if (m_allowCollisions)
+				{
+					delete m_previousFrameColliders[i]->GetObject();
+					delete m_previousFrameColliders[i];
+					m_previousFrameColliders.erase(m_previousFrameColliders.begin() + i);
+				}
+
+				//i++;
 				continue;
+			}
+
+			//Update lifetime
+			if (m_maxParticleLifetime > 0.f)
+			{
+				m_spawned[i].Lifetime += (float)Utils::Time::GameTime::GetScaledDeltaTime();
+			}
+
+			//Update particles based on their colliders.
+			if (m_allowCollisions && m_previousFrameColliders.size() > i)
+			{
+				if (m_onParticleCollision != nullptr)
+				{
+					//m_spawned[i].Position.X != m_previousFrameColliders[i]->GetObject()->GetPosition().X || m_spawned[i].Position.Y != m_previousFrameColliders[i]->GetObject()->GetPosition().Y
+					if (Vec2::Distance(m_spawned[i].Position, m_previousFrameColliders[i]->GetObject()->GetPosition()) > 0.5f)
+					{
+						m_onParticleCollision(m_spawned[i]);
+					}
+				}
+
+				m_spawned[i].Position = m_previousFrameColliders[i]->GetObject()->GetPosition();
+				CollisionManager::RegisterActiveColliderToBuffer(m_previousFrameColliders[i]);
 			}
 
 			//Update velocities.
@@ -141,16 +164,22 @@ using namespace GAME_NAME::Components::Physics::Collision;
 				m_spawned[i].RotationalVelocity = 0.f;
 			}
 
-			if (m_allowCollisions)
+			if (m_allowCollisions && m_previousFrameColliders.size() > i)
 			{
-				Particle& p = m_spawned[i];
-				GameObject* particleRepresentation = new GameObject(p.Position, p.Scale, nullptr, p.Rotation);
-				ActiveBoxCollider* abc = new ActiveBoxCollider(false);
-				abc->Init(particleRepresentation);
-
-				CollisionManager::RegisterActiveColliderToBuffer(abc);
-				m_previousFrameColliders.insert(std::make_pair(abc, &p));
+				m_previousFrameColliders[i]->GetObject()->SetPosition(m_spawned[i].Position);
 			}
+		}
+
+		//Handle looping.
+		if (m_loop.pl_LoopInterval > 0.0 && m_loopTimer < 0.0)
+		{
+			//Spawn particles and restart timer.
+			SpawnParticles(m_loop.pl_NumParticles, m_loop.pl_MaxVelocity, m_loop.pl_Gravity, m_loop.pl_Rotation, m_loop.pl_posVariation);
+			m_loopTimer = m_loop.pl_LoopInterval;
+		}
+		else {
+			//Decrement the timer.
+			m_loopTimer -= Utils::Time::GameTime::GetScaledDeltaTime();
 		}
 	}
 }

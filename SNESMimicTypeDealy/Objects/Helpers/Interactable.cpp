@@ -19,7 +19,7 @@ namespace GAME_NAME::Objects
 		if (m_keyStateCheck & InputManager::KEY_STATE_NONE)
 		{
 			auto player = TestGame::ThePlayer;
-			if (Vec2::Distance(player->GetPosition(), m_position) < m_interactionRadius)
+			if (Vec2::Distance(player->GetPosition() + player->GetScale()/2.f, m_position + m_scale/2.f) < m_interactionRadius)
 			{
 				onInteract(player, InputManager::GetKeyUpDown(m_interactKey));
 			}
@@ -28,7 +28,7 @@ namespace GAME_NAME::Objects
 		}else if (InputManager::GetKeyUpDown(m_interactKey) & m_keyStateCheck)
 		{
 			auto player = TestGame::ThePlayer;
-			if (Vec2::Distance(player->GetPosition(), m_position) < m_interactionRadius)
+			if (Vec2::Distance(player->GetPosition() + player->GetScale()/2.f, m_position + m_scale/2.f) < m_interactionRadius)
 			{
 				onInteract(player, m_keyStateCheck);
 			}

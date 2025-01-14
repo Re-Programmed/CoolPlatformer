@@ -14,9 +14,19 @@ namespace GAME_NAME::Objects::Environment
 		{ 32.f / 1.5f, -12.f / 1.5f }
 	};
 
-	BloodMark::BloodMark(GameObject* spawnObject, Vec2 midpoint)
+	BloodMark::BloodMark(GameObject* spawnObject, Vec2 midpoint, Sprite* forceSprite, Vec2 scale)
 		: GameObject(midpoint, 0, nullptr, 0)
 	{
+		if (forceSprite != nullptr)
+		{ 
+			m_sprite = forceSprite; 
+			m_scale = scale;
+
+			m_position -= Vec2(m_scale.X / 2.f, scale.Y);
+
+			return;
+		}
+
 		//Choose a random texture.
 		unsigned int spriteIndex = std::rand() * BloodSpriteOptionsLength / RAND_MAX;
 
@@ -25,8 +35,8 @@ namespace GAME_NAME::Objects::Environment
 		//Align sprite to top center of midpoint.
 		m_position -= Vec2(m_scale.X / 2.f, 0);
 
-		Vec2 pos = spawnObject->GetPosition();
-		Vec2 scale = spawnObject->GetScale();
+		//Vec2 pos = spawnObject->GetPosition();
+		//Vec2 scale = spawnObject->GetScale();
 
 		//const float percXM = std::clamp(1.0f - (((m_position.X + m_scale.X) - pos.X) / m_scale.X), 0.0f, 1.0f);
 		//const float percXG = std::clamp((((pos.X + scale.X) - m_position.X) / m_scale.X), 0.0f, 1.0f);

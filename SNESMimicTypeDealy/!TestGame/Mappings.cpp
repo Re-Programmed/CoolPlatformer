@@ -36,10 +36,16 @@
 #include "./Objects/Environment/Buildings/FrontWall.h"
 #include "./Objects/Environment/Buildings/Door.h"
 #include "./Objects/Environment/Buildings/FrontDoor.h"
+#include "./Objects/Environment/Buildings/Bench.h"
 
 #include "./Objects/Environment/BreakableBlock.h"
 
 #include "./Objects/Collectables/ToastCollectable.h"
+
+#include "./Objects/Environment/ExplosiveObject.h"
+
+#define COMPONENT_MAPPINGS_SIZE 1	//How many component mappings there are
+#define MAPPINGS_SIZE 18			//How many object mappings there are.
 
 constexpr float GenesisTileSize = 8.f;
 
@@ -373,6 +379,7 @@ using namespace Enemies;
 			0 - FrontWall (sprite,buildingZone_positionX,buildingZone_positionY,buildingZone_scaleX,buildingZone_scaleY)
 			1 - Door (closeSprite,openSprite,openDistance[float]=DEFAULT_DOOR_OPEN_DISTANCE,rotation[float]=0)
 			2 - FrontDoor (sprite, roomFile)
+			3 - Bench (sprite)
 	*/
 	[](std::vector<std::string> data, size_t n)
 	{
@@ -423,6 +430,12 @@ using namespace Objects::Environment::Buildings;
 		{
 			FrontDoor* frontDoor = new FrontDoor(STOIVEC(data[1], data[2]), STOIVEC(data[3], data[4]), Renderer::GetSprite(std::stoi(data[6])), data[7]);
 			Renderer::LoadActiveObject(frontDoor, std::stoi(data[5]));
+			break;
+		}
+		case 3:
+		{
+			Bench* bench = new Bench(STOIVEC(data[1], data[2]), STOIVEC(data[3], data[4]), Renderer::GetSprite(std::stoi(data[6])));
+			Renderer::LoadObject(bench, std::stoi(data[5]));
 			break;
 		}
 		}
@@ -477,7 +490,6 @@ using namespace Cutscenes;
 	/*
 		16: Collectable Object (map,type,positionX,positionY,scaleX,scaleY,sprite,layer)
 	*/
-
 	[](std::vector<std::string> data, size_t n)
 	{
 #if _DEBUG
@@ -495,6 +507,23 @@ using namespace Cutscenes;
 				break;
 			}
 		}
+	},
+
+	/*
+		17: Explosive Object (map,positionX,positionY,scaleX,scaleY,sprite,layer,explosionRadius,explosionPower,causeParams)
+			{
+			  causeParams:
+				0001 - JUMPED_ON
+			}
+	*/
+		[](std::vector<std::string> data, size_t n)
+	{
+#if _DEBUG
+		DebugMapper("Loading Explosive Object");
+#endif
+
+		Environment::ExplosiveObject* eo = new Environment::ExplosiveObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), std::stof(data[6]), std::stof(data[7]), (Environment::ExplosiveObject::EXPLOSION_REASON)(std::stoi(data[8])));
+		Renderer::LoadObject(eo, std::stoi(data[5]));
 	}
 };
 

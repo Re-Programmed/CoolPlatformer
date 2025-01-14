@@ -8,6 +8,15 @@
 #include "../../Debug/DebugLog.h"
 
 #include "../Objects/Environment/Effects/Rain.h"
+#include "../Objects/Environment/Effects/Explosion.h"
+
+#include "../../Rendering/Lighting/SimpleLightingManager.h"
+
+#include "../../Input/InputManager.h"
+
+#include "../../Utils/Time/GameTime.h"
+
+#include "../../Objects/StateSaver.h"
 
 #define DebugCommands_Log(x) DEBUG::DebugLog::Log(std::string("[Debug Commands] ").append(x), true, ";33");
 
@@ -59,9 +68,92 @@ void DebugCommands::HandleCommands()
 			GAME_NAME::Objects::Environment::Effects::Rain::EndRainEffect();
 			continue;
 		}
+
+		if (input.starts_with("explosion"))
+		{
+			std::vector<std::string> params = getParams(input);
+
+			if(params.size() < 4)
+			{
+				DebugCommands_Log("Provide a location, radius, and power for the explosion. (x,y,r,pow)");
+				continue;
+			}
+
+			Vec2 pos(std::stof(params[0]), std::stof(params[1]));
+			
+			GAME_NAME::Objects::Environment::Effects::Explosion* expl = new GAME_NAME::Objects::Environment::Effects::Explosion(pos, std::stof(params[2]), std::stof(params[3]));
+			Renderer::LoadActiveObject(expl);
+
+			std::string message("Creating Explosion at ");
+			message.append(pos.ToString());
+		    DebugCommands_Log(message);
+			continue;
+		}
+
+		if (input == "lightingon")
+		{
+			GAME_NAME::Rendering::Lighting::SimpleLightingManager::EnableLighting(DEFAULT_LEVEL_SIZE_X/10, true);
+			DebugCommands_Log("Lighting Enabled!");
+
+			continue;
+		}
+
+		if (input == "lightingoff")
+		{
+			GAME_NAME::Rendering::Lighting::SimpleLightingManager::DisableLighting();
+			DebugCommands_Log("Lighting Disabled!");
+
+			continue;
+		}
+
+		if (input == "worklight")
+		{
+			GAME_NAME::Rendering::Lighting::SimpleLightingManager::RegisterSource(new Lighting::LightingSource(GAME_NAME::InputManager::GetMouseWorldPosition(GAME_NAME::TestGame::INSTANCE->GetCamera()), 100.f, 25.f, Lighting::POINT_LIGHT));
+			DebugCommands_Log("Created work light.");
+
+			continue;
+		}
+
+		if (input.starts_with("timescale"))
+		{
+			std::vector<std::string> params = getParams(input);
+
+			if (params.size() < 1) { DebugCommands_Log("Provide a new time scale (float)."); continue; }
+
+			GAME_NAME::Utils::Time::GameTime::SetTimeScale(std::stof(params[0]));
+			DebugCommands_Log("Set timescale.");
+
+			continue;
+		}
+
+		if (input.starts_with("savestates"))
+		{
+			GAME_NAME::Objects::StateSaver::SaveStates();
+			GAME_NAME::Objects::StateSaver::SaveMisc();
+
+			DebugCommands_Log("Saved all states.");
+
+			continue;
+		}
 	}
 
 	m_queuedCommands.clear();
+}
+
+std::vector<std::string> DebugCommands::getParams(std::string input)
+{
+	std::vector<std::string> output;
+
+	std::stringstream ss(input);
+	std::string line;
+
+	while (std::getline(ss, line, ','))
+	{
+		output.push_back(line);
+	}
+
+	output.erase(output.begin());
+	return output;
 }
 
 #endif

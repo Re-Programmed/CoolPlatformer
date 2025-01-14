@@ -52,6 +52,8 @@ namespace GAME_NAME
 			float m_targetZoom;
 			float m_deadzoneRadius;
 			Vec2 m_offset;
+
+			Vec2 m_target;
 		};
 	}
 }

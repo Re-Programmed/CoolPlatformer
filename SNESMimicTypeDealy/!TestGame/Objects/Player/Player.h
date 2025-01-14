@@ -147,7 +147,8 @@ namespace  GAME_NAME
 					AT_POINT,
 					FOLLOW_MOUSE,
 					BAG,
-					FALLEN
+					FALLEN,
+					SITTING_FORWARD
 				};
 
 				/// <summary>
@@ -170,6 +171,8 @@ namespace  GAME_NAME
 					m_currentPlayerLookDirection = direction;
 					m_playerLookPoint = point;
 				}
+
+				void AddVelocity(Vec2 velocity);
 
 			protected:
 				void onCollision (Vec2 push, GameObject* gameObject) override;	//Called when a collision occurs.

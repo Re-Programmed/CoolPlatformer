@@ -28,6 +28,7 @@
 #include "../Enemies/Enemy.h"
 
 #include <thread>
+#include "../Environment/Effects/Explosion.h"
 
 #define PLAYER_ANIMATION_RUN_WALK_SWITCH 180.f //When the player should switch from the walking to running animation.
 
@@ -166,6 +167,11 @@ constexpr int PlayerBasicAttackAnim[9] = {
 						m_currentAttribModifiers.erase(playerAttrib.first);
 						break;
 					}
+
+					/*
+						FIX: DO THESE SHOW UP?
+						WHAT GIVES YOU ATTRIBUTES. POISON, FOOD, ETC
+					*/
 
 					Sprite* attribModSprite = Renderer::GetSprite(4/*Change to show attrib modifier.*/);
 					StaticGUIElement* attribModElement = new StaticGUIElement(Vec2{ 112, 12 + yOffset }, Vec2{ 16, 16 }, attribModSprite->GetSpriteId());
@@ -384,21 +390,71 @@ constexpr int PlayerBasicAttackAnim[9] = {
 
 				if (m_heldItemDisplay != nullptr && m_heldItemDisplay->GetScale().X > 8)
 				{
+					
+					const int&& baseSpriteId = Items::ITEM_DATA[m_screenInventory->GetHeldItem()->GetType()].HeldTexture;
+
+					//If the player is currently attacking, the item will be rendered outward from their body.
+					if (m_animator->GetCurrentAnimationIndex() == 7 /*Basic Attack Anim*/)
+					{
+						const int frame = 0;
+						m_heldItemLastSprite = Renderer::GetSprite(baseSpriteId + frame);
+						m_heldItemDisplayFrameOffset = frame;
+						m_heldItemDisplay->SetSprite(m_heldItemLastSprite);
+
+						//Offset position is determined by what frame of attack the player is on.
+						Vec2 offsetPosition = Vec2::Zero;
+						switch (m_animator->GetCurrentAnimation()->GetFrame())
+						{
+						case 0:
+							offsetPosition = { -6.25f, 3.f };
+							break;
+						case 1:
+							offsetPosition = { -5.33f, 2.f };
+							break;
+						case 2:
+							offsetPosition = { -5.f, 1.f };
+							break;
+						case 3:
+							offsetPosition = { -4.75f, 0.f };
+							break;
+						case 4:
+							offsetPosition = { -5.f, -1.f };
+							break;
+						case 5:
+							offsetPosition = { -5.33f, -2.f };
+							break;
+						case 6:
+							offsetPosition = { -6.25f, -3.f };
+							break;
+						default:
+							offsetPosition = { -6.25f, -4.f };
+							break;
+						}
+
+						if (m_textureFlipped)
+						{
+							
+							m_heldItemDisplay->GetSprite()->Render(cameraPosition, offsetPosition + m_position + Vec2{ 16.f + m_heldItemDisplay->GetScale().X - 7, 0 }, m_heldItemDisplay->GetScale() * Vec2 { -1, 1 }, 0.0F);
+						}
+						else {
+							m_heldItemDisplay->GetSprite()->Render(cameraPosition, m_position + Vec2{ 0.f, 0.f }, m_heldItemDisplay->GetScale(), 0.0F);
+						}
+						return;
+					}
+
 					const float playerYVel = m_physics->GetVelocity().Y + m_physics->GetGravitationalVelocity();
 					if (playerYVel > 1.5f && !m_onGround)
 					{
-						const int baseSpriteId = m_heldItemDisplay->GetSprite()->GetSpriteId() - m_heldItemDisplayFrameOffset;
 						const int frame = 0;
-						m_heldItemLastSprite = new Sprite(baseSpriteId + frame);
+						m_heldItemLastSprite = Renderer::GetSprite(baseSpriteId + frame);
 						m_heldItemDisplayFrameOffset = frame;
 						m_heldItemDisplay->SetSprite(m_heldItemLastSprite);
 
 						m_heldItemDisplay->SetPosition(m_position + (m_textureFlipped ? Vec2(6.75f, -0.5f) : Vec2(0, -0.5f)));
 					}else if (playerYVel < -1.5f && !m_onGround)
 					{
-						const int baseSpriteId = m_heldItemDisplay->GetSprite()->GetSpriteId() - m_heldItemDisplayFrameOffset;
 						const int frame = 2;
-						m_heldItemLastSprite = new Sprite(baseSpriteId + frame);
+						m_heldItemLastSprite = Renderer::GetSprite(baseSpriteId + frame);
 						m_heldItemDisplayFrameOffset = frame;
 						m_heldItemDisplay->SetSprite(m_heldItemLastSprite);
 
@@ -407,7 +463,6 @@ constexpr int PlayerBasicAttackAnim[9] = {
 					else if (m_physics->GetVelocity().X > 0.3 || m_physics->GetVelocity().X < -0.3)
 					{
 						int&& frame = m_animator->GetCurrentAnimation()->GetFrame();
-						int baseSpriteId = m_heldItemDisplay->GetSprite()->GetSpriteId() - m_heldItemDisplayFrameOffset;
 
 						//Determine what frame of item animation to show.
 						switch (frame)
@@ -439,7 +494,7 @@ constexpr int PlayerBasicAttackAnim[9] = {
 						}
 
 						delete m_heldItemLastSprite; //?? memory?
-						m_heldItemLastSprite = new Sprite(baseSpriteId + frame);
+						m_heldItemLastSprite = Renderer::GetSprite(baseSpriteId + frame);
 						m_heldItemDisplayFrameOffset = frame;
 						m_heldItemDisplay->SetSprite(m_heldItemLastSprite);
 
@@ -594,6 +649,11 @@ constexpr int PlayerBasicAttackAnim[9] = {
 
 #define COLLISION_VEL_STOP_DAMPING 0.1f
 
+			void Player::AddVelocity(Vec2 velocity)
+			{
+				m_physics->AddVelocity(velocity);
+			}
+
 			void Player::onCollision(Vec2 push, GameObject* collided)
 			{
 				if (m_swimming) { return; }
@@ -709,7 +769,7 @@ constexpr int PlayerBasicAttackAnim[9] = {
 						Particles::Particle bloodParticle = Particles::Particle(particleObj);
 
 						bloodParticle.TargetOpacity = 0;
-
+						
 						m_particleEmitter->RegisterParticle(bloodParticle);
 					}
 
@@ -717,11 +777,30 @@ constexpr int PlayerBasicAttackAnim[9] = {
 					Renderer::InstantiateObject(Renderer::InstantiateGameObject(m_particleEmitter, true, 2, true));
 				}
 
-				m_particleEmitter->SetPosition(m_position);
-				m_particleEmitter->SpawnParticles(100, { 0.5f, 0.5f }, 0.04f);
+				m_particleEmitter->SetPosition(m_position + m_scale/2);
+				m_particleEmitter->SetAllowCollisions(true);
+				
 
 				//Create blood on floor if the player fell.
-				if (cause == nullptr) { return; }
+				if (cause == nullptr)
+				{
+					m_particleEmitter->SetForcedSpawnVelocity(0);
+					m_particleEmitter->SpawnParticles(75, { 0.5f, 0.5f }, 0.04f);
+					return;
+				}
+
+				if (instanceof<Environment::Effects::Explosion>(cause))
+				{
+					Environment::BloodMark* floorMark = new Environment::BloodMark(this, m_position + Vec2(m_scale.X / 2.f, 0.f));
+					Renderer::LoadObject(floorMark, 1);
+					m_particleEmitter->SetForcedSpawnVelocity(Vec2{ ((m_position.X + m_scale.X/2) - cause->GetPosition().X) / 5.f , ((m_position.Y + m_scale.Y/2) - cause->GetPosition().Y) / 5.f});
+					m_particleEmitter->SpawnParticles(75, { 0.5f, 0.5f }, 0.04f);
+					return;
+				}
+
+
+
+				//ONLY CONTINUE TO HERE IF THE CAUSE OF DAMAGE WAS FALLING.
 
 				//Freeze player after falling from a great height.
 				SetFrozen(true, FALLEN);
@@ -735,6 +814,15 @@ constexpr int PlayerBasicAttackAnim[9] = {
 
 			void Player::readKeys()
 			{
+				//Jump to stop sitting on a bench.
+				if (m_currentPlayerLookDirection == SITTING_FORWARD)
+				{
+					if (InputManager::GetKey(PLAYER_JUMP))
+					{
+						SetFrozen(false);
+					}
+				}
+
 				m_physics->SetFrictionDrag(Drag);
 
 				//TESTING: REMOVE
@@ -1138,6 +1226,15 @@ constexpr int PlayerBasicAttackAnim[9] = {
 						break;
 					}
 
+					case SITTING_FORWARD:
+					{
+						//TODO: Animate sitting down.
+
+						m_physics->SetVelocity(0);
+
+						break;
+					}
+
 					default:
 					{
 						m_scale = Vec2(16, 26);
@@ -1170,6 +1267,7 @@ using namespace Lighting;
 
 			void Player::handleAttack()
 			{
+
 				if (m_attackCooldown > 0)
 				{
 					m_attackCooldown -= Utils::Time::GameTime::GetScaledDeltaTime();
@@ -1195,6 +1293,7 @@ using namespace Lighting;
 				//Player is trying to attack.
 				if (InputManager::GetMouseButton(1))
 				{
+					if (m_frozen) { return; }
 					Vec2 mousePos = InputManager::GetMouseWorldPosition(TestGame::INSTANCE->GetCamera());
 
 					if (mousePos.X < m_position.X)
@@ -1216,7 +1315,7 @@ using namespace Lighting;
 					m_animator->SetSpeedMult(2.f);
 					m_scale = { 26.f, 26.f }; //Adjust scale to that of the animation sprites.
 					m_frozen = true;
-					m_attackCooldown = (9.0 * 0.5) * (double)ANIM_16_SPF; //(frames * 1/speed * seconds_per_frame)
+					m_attackCooldown = (8.0 * 0.5) * (double)ANIM_16_SPF; //(frames * 1/speed * seconds_per_frame)
 
 
 					const Vec2 damageOrigin = m_position + Vec2{ (m_textureFlipped ? 12.f : -12.f), 0.f };
