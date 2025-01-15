@@ -17,6 +17,7 @@
 #include "../../Utils/Time/GameTime.h"
 
 #include "../../Objects/StateSaver.h"
+#include "../Mappings.h"
 
 #define DebugCommands_Log(x) DEBUG::DebugLog::Log(std::string("[Debug Commands] ").append(x), true, ";33");
 
@@ -132,6 +133,31 @@ void DebugCommands::HandleCommands()
 			GAME_NAME::Objects::StateSaver::SaveMisc();
 
 			DebugCommands_Log("Saved all states.");
+
+			continue;
+		}
+
+		if (input.starts_with("loadlevel"))
+		{
+			std::vector<std::string> params = getParams(input);
+
+			if (params.size() < 1) { DebugCommands_Log("Provide a level path."); continue; }
+
+			GAME_NAME::Resources::SaveManager::SetCurrentFile("default_s");
+
+			GAME_NAME::Renderer::ClearObjects();
+			GAME_NAME::TestGame::INSTANCE->ClearLevel(GAME_NAME::TestGame::LEVEL_DATA_ALL);
+
+			GAME_NAME::TestGame::INSTANCE->LoadLevel(params[0].c_str(), GAME_NAME::TestGame::LEVEL_DATA_TEXTURES_BACKGROUND);
+
+			GAME_NAME::TestGame::INSTANCE->LoadLevel("/global_assets", GAME_NAME::TestGame::LEVEL_DATA_TEXTURES_SPRITES);
+
+			GAME_NAME::TestGame::INSTANCE->LoadLevel(params[0].c_str(), (GAME_NAME::Game::Game::LEVEL_DATA)(GAME_NAME::TestGame::LEVEL_DATA_TEXTURES_BACKGROUND xor GAME_NAME::TestGame::LEVEL_DATA_ALL));
+
+			GAME_NAME::Mappings::LoadObjectsWithDefaultMapping(params[0].c_str());
+			GAME_NAME::TestGame::INSTANCE->RenderFront = true;
+
+			DebugCommands_Log("Loaded a level.");
 
 			continue;
 		}

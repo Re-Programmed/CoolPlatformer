@@ -522,7 +522,7 @@ using namespace Cutscenes;
 		DebugMapper("Loading Explosive Object");
 #endif
 
-		Environment::ExplosiveObject* eo = new Environment::ExplosiveObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), std::stof(data[6]), std::stof(data[7]), (Environment::ExplosiveObject::EXPLOSION_REASON)(std::stoi(data[8])));
+		Environment::ExplosiveObject* eo = new Environment::ExplosiveObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), std::stof(data[6]), std::stof(data[7]), (Environment::ExplosiveObject::EXPLOSION_REASON)(std::stoi(data[8])), n);
 		Renderer::LoadObject(eo, std::stoi(data[5]));
 	}
 };

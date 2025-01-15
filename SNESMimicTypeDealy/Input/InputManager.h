@@ -14,7 +14,7 @@
 #define KEY_ARRAY_SIZE 14
 #endif
 
-const std::string KeybindNames[KEY_ARRAY_SIZE] {
+const std::string_view KeybindNames[KEY_ARRAY_SIZE] {
 	"PLAYER_MOVE_UP",
 	"PLAYER_MOVE_DOWN",
 	"PLAYER_MOVE_LEFT",

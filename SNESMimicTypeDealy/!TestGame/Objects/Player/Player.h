@@ -179,6 +179,7 @@ namespace  GAME_NAME
 				void beforeCollision() override;		//Called before any collisions are calculated to allow for resetting the jump conditions.
 
 			private:
+
 				std::unordered_map<ATTRIBUTE_MODIFIER, float> m_currentAttribModifiers;
 
 				/// <summary>

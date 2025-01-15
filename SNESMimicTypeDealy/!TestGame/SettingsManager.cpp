@@ -81,7 +81,7 @@ using namespace GUI::Text;
 
 		for (int i = 0; i < KEY_ARRAY_SIZE; i++)
 		{
-			std::string name = KeybindNames[i];
+			std::string name = KeybindNames[i].data();
 			std::replace(name.begin(), name.end(), '_', ' ');
 			TextRenderer::RenderedWord keyName = TextRenderer::RenderWord(name, Vec2(24, 102.f - (i * 16.f)), 8.f, 0.f, 2);
 			m_currentPageElements.insert(m_currentPageElements.begin(), keyName.begin(), keyName.end());

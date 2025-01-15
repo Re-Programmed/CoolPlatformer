@@ -8,6 +8,8 @@
 #define PARTICLE_VELOCITY_DAMP 0.002f
 #define MAX_PARTICLE_VELOCITY 100.f
 
+#define MAX_EXPLOSION_LAUNCH_VELOCITY 525.f
+
 #define EXPLOSION_DAMAGE_CONSTANT 10
 
 #define DEFAULT_EXPLOSION_SPRITES_COUNT 1
@@ -52,7 +54,14 @@ namespace GAME_NAME::Objects::Environment::Effects
 		const Vec2 playerPos = TestGame::ThePlayer->GetPosition() + TestGame::ThePlayer->GetScale()/2.f;
 		if (Vec2::Distance(playerPos, m_position) < radius)
 		{
-			TestGame::ThePlayer->AddVelocity(calculateExplosionVelocity(playerPos));
+			Vec2 vel = calculateExplosionVelocity(playerPos);
+
+			if (vel.X > MAX_EXPLOSION_LAUNCH_VELOCITY) { vel.X = MAX_EXPLOSION_LAUNCH_VELOCITY; }
+			if (vel.X < -MAX_EXPLOSION_LAUNCH_VELOCITY) { vel.X = -MAX_EXPLOSION_LAUNCH_VELOCITY; }
+			if (vel.Y > MAX_EXPLOSION_LAUNCH_VELOCITY) { vel.Y = MAX_EXPLOSION_LAUNCH_VELOCITY; }
+			if (vel.Y < -MAX_EXPLOSION_LAUNCH_VELOCITY) { vel.Y = -MAX_EXPLOSION_LAUNCH_VELOCITY; }
+
+			TestGame::ThePlayer->AddVelocity(vel);
 			TestGame::ThePlayer->Damage(calculateExplosionDamage(playerPos), this);
 		}
 

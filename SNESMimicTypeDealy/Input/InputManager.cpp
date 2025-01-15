@@ -116,7 +116,7 @@ namespace GAME_NAME
 	{
 		for (int i = 0; i < KEY_ARRAY_SIZE; i++)
 		{
-			AppData::AppDataFileManager::SetValue("settings\\keybinds.dat", KeybindNames[i], std::to_string(m_keys[i]));
+			AppData::AppDataFileManager::SetValue("settings\\keybinds.dat", KeybindNames[i].data(), std::to_string(m_keys[i]));
 		}
 	}
 
@@ -126,7 +126,7 @@ namespace GAME_NAME
 		return GetMouseScreenPosition() + camera->GetPosition();
 	}
 
-#define LoadKey(bind, default_k) m_keys[bind] = std::stoi(AppData::AppDataFileManager::GetValue("settings\\keybinds.dat", KeybindNames[bind], std::to_string(default_k)));
+#define LoadKey(bind, default_k) m_keys[bind] = std::stoi(AppData::AppDataFileManager::GetValue("settings\\keybinds.dat", KeybindNames[bind].data(), std::to_string(default_k)));
 
 	void InputManager::loadDefaultKeys()
 	{
