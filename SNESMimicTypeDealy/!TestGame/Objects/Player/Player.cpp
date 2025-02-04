@@ -821,7 +821,7 @@ namespace  GAME_NAME
 					Renderer::InstantiateObject(Renderer::InstantiateGameObject(m_particleEmitter, true, 2, true));
 				}
 
-				m_particleEmitter->SetPosition(m_position + m_scale/2);
+				m_particleEmitter->SetPosition(m_position);
 				m_particleEmitter->SetAllowCollisions(true);
 				
 
