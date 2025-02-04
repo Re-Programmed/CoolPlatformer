@@ -30,6 +30,8 @@
 #include <thread>
 #include "../Environment/Effects/Explosion.h"
 
+#include "../../../Utils/CollisionDetection.h"
+
 #define PLAYER_ANIMATION_RUN_WALK_SWITCH 180.f //When the player should switch from the walking to running animation.
 
 #define PLAYER_DAMAGE_ANIMATION_LENGTH 0.75f //How long the damage timer ticks for after the player is attacked.
@@ -47,9 +49,9 @@ namespace  GAME_NAME
 				m_textureData.base
 
 
-#define PLAYER_NO_HEAD_SPRITE TextureDataBase(BagTurnaround) - 1
-#define PLAYER_LOOK_BEHIND_SPRITE TextureDataBase(BagTurnaround) + 1
-#define PLAYER_LOOK_BAG TextureDataBase(BagTurnaround)
+#define PLAYER_NO_HEAD_SPRITE TextureDataBase(BagTurnaround) - 2
+#define PLAYER_LOOK_BAG TextureDataBase(BagTurnaround) - 1
+#define PLAYER_LOOK_BEHIND_SPRITE TextureDataBase(BagTurnaround)
 #define PLAYER_FALLEN_SPRITE TextureDataBase(Fall)
 
 #define DefaultPlayerSprite TextureDataBase(DefaultSpites)		//The default sprite to use for the player.
@@ -85,6 +87,8 @@ namespace  GAME_NAME
 #define PlayerBasicAttackAnim {																																																																						\
 	TextureDataBase(BasicAttack), TextureDataBase(BasicAttack) + 1, TextureDataBase(BasicAttack) + 2, TextureDataBase(BasicAttack) + 3, TextureDataBase(BasicAttack) + 4, TextureDataBase(BasicAttack) + 5, TextureDataBase(BasicAttack) + 6, TextureDataBase(BasicAttack) + 7, TextureDataBase(BasicAttack) + 8	\
 }
+
+			constexpr double PLAYER_CLIMBING_SPEED = 40;
 
 			typedef int8_t PlayerEmotion;
 			
@@ -674,6 +678,15 @@ namespace  GAME_NAME
 				m_physics->AddVelocity(velocity);
 			}
 
+			void Player::SetClimbing(GameObject* climbing)
+			{
+				//Update the player to be climbing a given object, frozen so they can't move using the normal movement info, and gravity to 0.
+				m_climbing = climbing;
+				SetFrozen(true, CLIMBING_BACK);
+				m_physics->SetGravityStrength(0.f);
+				m_physics->SetGravitationalVelocity(0.f);
+			}
+
 			void Player::onCollision(Vec2 push, GameObject* collided)
 			{
 				if (m_swimming) { return; }
@@ -864,6 +877,49 @@ namespace  GAME_NAME
 					if (InputManager::GetKey(PLAYER_JUMP))
 					{
 						SetFrozen(false);
+					}
+				}
+
+				if (m_climbing)
+				{
+					if (InputManager::GetKey(PLAYER_MOVE_UP))
+					{
+						if (m_climbing->GetPosition().Y + m_climbing->GetScale().Y > m_position.Y + 6.5f)
+						{
+							Translate({ 0.f, (float)(Utils::Time::GameTime::GetScaledDeltaTime() * PLAYER_CLIMBING_SPEED) });
+						}
+					}
+					else if (InputManager::GetKey(PLAYER_MOVE_DOWN))
+					{
+						if (m_climbing->GetPosition().Y < m_position.Y + m_scale.Y - 6.5f)
+						{
+							Translate({ 0.f, (float)(-Utils::Time::GameTime::GetScaledDeltaTime() * PLAYER_CLIMBING_SPEED) });
+						}
+					}
+					else if(InputManager::GetKey(PLAYER_MOVE_LEFT))
+					{
+						if (m_climbing->GetPosition().X < m_position.X + 3.5f)
+						{
+							Translate({ (float)(-Utils::Time::GameTime::GetScaledDeltaTime() * PLAYER_CLIMBING_SPEED), 0.f });
+						}
+					}
+					else if(InputManager::GetKey(PLAYER_MOVE_RIGHT))
+					{
+						if (m_climbing->GetPosition().X + m_climbing->GetScale().X > m_position.X + m_scale.X - 6.5f)
+						{
+							Translate({ (float)(Utils::Time::GameTime::GetScaledDeltaTime() * PLAYER_CLIMBING_SPEED), 0.f });
+						}
+					}
+
+					
+					if (InputManager::GetKey(PLAYER_JUMP) || InputManager::GetKey(PLAYER_INTERACT))
+					{
+						m_climbing = nullptr;
+						SetFrozen(false);
+						m_physics->SetGravityStrength(DefaultPlayerGravity);
+					}
+					else {
+						return;
 					}
 				}
 

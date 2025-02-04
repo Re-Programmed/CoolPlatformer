@@ -44,8 +44,10 @@
 
 #include "./Objects/Environment/ExplosiveObject.h"
 
+#include "./Objects/Environment/ClimbableObject.h"
+
 #define COMPONENT_MAPPINGS_SIZE 1	//How many component mappings there are
-#define MAPPINGS_SIZE 18			//How many object mappings there are.
+#define MAPPINGS_SIZE 19			//How many object mappings there are.
 
 constexpr float GenesisTileSize = 8.f;
 
@@ -524,6 +526,19 @@ using namespace Cutscenes;
 
 		Environment::ExplosiveObject* eo = new Environment::ExplosiveObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), std::stof(data[6]), std::stof(data[7]), (Environment::ExplosiveObject::EXPLOSION_REASON)(std::stoi(data[8])), n);
 		Renderer::LoadObject(eo, std::stoi(data[5]));
+	},
+
+		/*
+		18: Climbable (map,positionX,positionY,scaleX,scaleY,sprite,layer)
+		*/
+		[](std::vector<std::string> data, size_t n)
+	{
+#if _DEBUG
+		DebugMapper("Loading Climbable Object");
+#endif
+
+		Environment::ClimbableObject* co = new Environment::ClimbableObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])));
+		Renderer::LoadObject(co, std::stoi(data[5]));
 	}
 };
 

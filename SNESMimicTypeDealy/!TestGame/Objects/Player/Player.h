@@ -164,7 +164,8 @@ namespace  GAME_NAME
 					FOLLOW_MOUSE,
 					BAG,
 					FALLEN,
-					SITTING_FORWARD
+					SITTING_FORWARD,
+					CLIMBING_BACK	//Climbing with back turned to the camera.
 				};
 
 				/// <summary>
@@ -190,11 +191,24 @@ namespace  GAME_NAME
 
 				void AddVelocity(Vec2 velocity);
 
+				/// <summary>
+				/// Set what object the player is currently climbing.
+				/// </summary>
+				/// <param name="climbing"></param>
+				void SetClimbing(GameObject* climbing);
+
+				inline GameObject* GetClimbing()
+				{
+					return m_climbing;
+				}
+
 			protected:
 				void onCollision (Vec2 push, GameObject* gameObject) override;	//Called when a collision occurs.
 				void beforeCollision() override;		//Called before any collisions are calculated to allow for resetting the jump conditions.
 
 			private:
+				GameObject* m_climbing = nullptr;
+
 				/// <summary>
 				/// The player's current texture reference. Can be changed to use different textures.
 				/// </summary>
