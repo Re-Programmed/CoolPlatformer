@@ -41,23 +41,50 @@ namespace  GAME_NAME
 		namespace Player
 		{
 
-constexpr int PLAYER_NO_HEAD_SPRITE = SpriteBase(105);
-constexpr int PLAYER_LOOK_BEHIND_SPRITE = SpriteBase(107);
-constexpr int PLAYER_LOOK_BAG = SpriteBase(106);
-constexpr int PLAYER_FALLEN_SPRITE = SpriteBase(109);
 
-constexpr int PlayerFallOverAnim[4] = {
-	SpriteBase(110), SpriteBase(111), SpriteBase(112), PLAYER_FALLEN_SPRITE
-};
-constexpr int PlayerGetUpAnim[4] = {
-	SpriteBase(113), SpriteBase(114), SpriteBase(115), SpriteBase(116)
-};
-
-constexpr int PlayerBasicAttackAnim[9] = {
-	SpriteBase(122), SpriteBase(123), SpriteBase(124), SpriteBase(125), SpriteBase(126), SpriteBase(127), SpriteBase(128), SpriteBase(129), SpriteBase(130)
-};
+///Used to define a texture variable in whatever the 
+#define TextureDataBase(base)\
+				m_textureData.base
 
 
+#define PLAYER_NO_HEAD_SPRITE TextureDataBase(BagTurnaround) - 1
+#define PLAYER_LOOK_BEHIND_SPRITE TextureDataBase(BagTurnaround) + 1
+#define PLAYER_LOOK_BAG TextureDataBase(BagTurnaround)
+#define PLAYER_FALLEN_SPRITE TextureDataBase(Fall)
+
+#define DefaultPlayerSprite TextureDataBase(DefaultSpites)		//The default sprite to use for the player.
+
+#define PlayerWalkAnim {																																													\
+	DefaultPlayerSprite + 1, DefaultPlayerSprite + 2, DefaultPlayerSprite + 3, DefaultPlayerSprite + 2, DefaultPlayerSprite + 1, DefaultPlayerSprite + 4, DefaultPlayerSprite + 5, DefaultPlayerSprite + 4	\
+}
+
+#define PlayerRunAnim {																																														\
+	DefaultPlayerSprite + 6,DefaultPlayerSprite + 7,DefaultPlayerSprite + 8,DefaultPlayerSprite + 9,DefaultPlayerSprite + 10,DefaultPlayerSprite + 11,DefaultPlayerSprite + 12,DefaultPlayerSprite + 13		\
+}
+
+#define PlayerJumpAnim {																																			\
+	DefaultPlayerSprite + 14,DefaultPlayerSprite + 15,DefaultPlayerSprite + 16,DefaultPlayerSprite + 17																\
+}
+
+#define PlayerFallAnim {																																			\
+	DefaultPlayerSprite + 18,DefaultPlayerSprite + 19,DefaultPlayerSprite + 20,DefaultPlayerSprite + 21																\
+}
+
+#define PlayerSkidAnim {																																			\
+	DefaultPlayerSprite + 22,DefaultPlayerSprite + 23,DefaultPlayerSprite + 24,DefaultPlayerSprite + 25																\
+}
+
+#define PlayerFallOverAnim {																															\
+	PLAYER_FALLEN_SPRITE + 1, PLAYER_FALLEN_SPRITE + 2, PLAYER_FALLEN_SPRITE + 3, PLAYER_FALLEN_SPRITE													\
+}
+
+#define PlayerGetUpAnim {																																\
+	PLAYER_FALLEN_SPRITE + 4, PLAYER_FALLEN_SPRITE + 5, PLAYER_FALLEN_SPRITE + 6, PLAYER_FALLEN_SPRITE + 7												\
+}
+
+#define PlayerBasicAttackAnim {																																																																						\
+	TextureDataBase(BasicAttack), TextureDataBase(BasicAttack) + 1, TextureDataBase(BasicAttack) + 2, TextureDataBase(BasicAttack) + 3, TextureDataBase(BasicAttack) + 4, TextureDataBase(BasicAttack) + 5, TextureDataBase(BasicAttack) + 6, TextureDataBase(BasicAttack) + 7, TextureDataBase(BasicAttack) + 8	\
+}
 
 			typedef int8_t PlayerEmotion;
 			
@@ -67,6 +94,10 @@ constexpr int PlayerBasicAttackAnim[9] = {
 			};
 
 			using namespace Utils;
+
+			const Player::PlayerTextureData Player::TextureData[1] = {
+				Player::PlayerTextureData() //Default Sprites (0)
+			};
 
 			Player::Player(Vec2 position)
 				: ActiveBoxCollisionGravityObject(position, Vec2(DefaultPlayerScaleX, DefaultPlayerScaleY), Rendering::Renderer::GetSprite(DefaultPlayerSprite)), m_screenInventory(new ScreenInventory()),
@@ -80,9 +111,12 @@ constexpr int PlayerBasicAttackAnim[9] = {
 				)),
 				MiscStateGroup("pl"), m_saveState(new PlayerSaveState(this)),
 				m_particleEmitter(new Particles::ParticleEmitter(position)),
-				m_backpack(new Backpack(0)),	//Create default backpack (load save in constructor).
-				m_skillHolder({ 62.f, 7.f })		//Skill holder (manages update and display of current skill and equipment effects)
+				m_backpack(new Backpack(0)),		//Create default backpack (load save in constructor).
+				m_skillHolder({ 62.f, 7.f }),		//Skill holder (manages update and display of current skill and equipment effects)
+				m_textureData(TextureData[0])
 			{
+
+				
 #if _DEBUG 
 				PlayerLogger("Initilized Player");
 #endif
@@ -97,27 +131,7 @@ constexpr int PlayerBasicAttackAnim[9] = {
 				Renderer::LoadGUIElement(m_abilityMeterProgressBar, 0);
 
 				//Register animations
-
-#define RegisterAnimation(data_name, data_source, data_out, spf) AnimData data_name; \
-				for(int i : data_source){ data_name.Sprites.push_back(Renderer::GetSprite(i)); }; \
-				std::shared_ptr<GAME_NAME::Components::Animation::Animation> data_out(new GAME_NAME::Components::Animation::Animation(data_name, spf)); 
-
-#pragma region Init Animation
-
-				RegisterAnimation(walk_data, PlayerWalkAnim, walk_anim, ANIM_12_SPF);						  //0
-				RegisterAnimation(run_data, PlayerRunAnim, run_anim, ANIM_16_SPF);							  //1
-				RegisterAnimation(fall_data, PlayerFallAnim, fall_anim, ANIM_12_SPF);						  //2
-				RegisterAnimation(jump_data, PlayerJumpAnim, jump_anim, ANIM_12_SPF);						  //3
-				RegisterAnimation(skid_data, PlayerSkidAnim, skid_anim, ANIM_12_SPF);						  //4 
-				RegisterAnimation(fall_over_data, PlayerFallOverAnim, fall_over_anim, ANIM_6_SPF);			  //5
-				RegisterAnimation(get_up_data, PlayerGetUpAnim, get_up_anim, ANIM_6_SPF);					  //6
-				RegisterAnimation(basic_attack_data, PlayerBasicAttackAnim, basic_attack_anim, ANIM_16_SPF);  //7
-
-#pragma endregion
-
-				std::vector<std::shared_ptr<GAME_NAME::Components::Animation::Animation>> anims{ walk_anim, run_anim, fall_anim, jump_anim, skid_anim, fall_over_anim, get_up_anim, basic_attack_anim };
-				
-				m_animator = new AnimatorComponent(anims);
+				registerAnimations();
 
 				m_physics->SetGravityStrength(DefaultPlayerGravity);
 
@@ -609,6 +623,12 @@ constexpr int PlayerBasicAttackAnim[9] = {
 				}
 			}
 
+			void Player::SetPlayerTextureData(TEXTURE_OFFSETS offsets)
+			{
+				m_textureData = TextureData[offsets];
+				registerAnimations();
+			}
+
 			void Player::ApplyAttributeModifier(ATTRIBUTE_MODIFIER attrib, float seconds)
 			{
 				m_currentAttribModifiers.emplace(std::make_pair(attrib, seconds));
@@ -754,6 +774,30 @@ constexpr int PlayerBasicAttackAnim[9] = {
 
 
 				return true;
+			}
+
+			void Player::registerAnimations()
+			{
+#define RegisterAnimation(data_name, data_source, data_out, spf) AnimData data_name; \
+				for(int i : data_source){ data_name.Sprites.push_back(Renderer::GetSprite(i)); }; \
+				std::shared_ptr<GAME_NAME::Components::Animation::Animation> data_out(new GAME_NAME::Components::Animation::Animation(data_name, spf)); 
+
+#pragma region Init Animation
+
+				RegisterAnimation(walk_data, PlayerWalkAnim, walk_anim, ANIM_12_SPF);						  //0
+				RegisterAnimation(run_data, PlayerRunAnim, run_anim, ANIM_16_SPF);							  //1
+				RegisterAnimation(fall_data, PlayerFallAnim, fall_anim, ANIM_12_SPF);						  //2
+				RegisterAnimation(jump_data, PlayerJumpAnim, jump_anim, ANIM_12_SPF);						  //3
+				RegisterAnimation(skid_data, PlayerSkidAnim, skid_anim, ANIM_12_SPF);						  //4 
+				RegisterAnimation(fall_over_data, PlayerFallOverAnim, fall_over_anim, ANIM_6_SPF);			  //5
+				RegisterAnimation(get_up_data, PlayerGetUpAnim, get_up_anim, ANIM_6_SPF);					  //6
+				RegisterAnimation(basic_attack_data, PlayerBasicAttackAnim, basic_attack_anim, ANIM_16_SPF);  //7
+
+#pragma endregion
+
+				std::vector<std::shared_ptr<GAME_NAME::Components::Animation::Animation>> anims{ walk_anim, run_anim, fall_anim, jump_anim, skid_anim, fall_over_anim, get_up_anim, basic_attack_anim };
+
+				m_animator = new AnimatorComponent(anims);
 			}
 
 			void Player::CreateBloodParticle(GameObject* cause)

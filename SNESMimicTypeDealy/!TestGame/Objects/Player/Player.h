@@ -22,23 +22,6 @@
 constexpr float DefaultPlayerScaleX = 16.f;	//The default size for the player.
 constexpr float DefaultPlayerScaleY = 26.f;	//The default size for the player.
 
-constexpr int DefaultPlayerSprite = GLOBAL_SPRITE_BASE;		//The default sprite to use for the player.
-constexpr int PlayerWalkAnim[8] = {
-	SpriteBase(1), SpriteBase(2), SpriteBase(3), SpriteBase(2), SpriteBase(1), SpriteBase(4), SpriteBase(5), SpriteBase(4)
-};
-constexpr int PlayerRunAnim[8] = {
-	SpriteBase(6),SpriteBase(7),SpriteBase(8),SpriteBase(9),SpriteBase(10),SpriteBase(11),SpriteBase(12),SpriteBase(13)
-};
-
-constexpr int PlayerJumpAnim[4] = {
-	SpriteBase(14),SpriteBase(15),SpriteBase(16),SpriteBase(17)
-};
-constexpr int PlayerFallAnim[4] = {
-	SpriteBase(18),SpriteBase(19),SpriteBase(20),SpriteBase(21)
-};
-constexpr int PlayerSkidAnim[4] = {
-	SpriteBase(22),SpriteBase(23),SpriteBase(24),SpriteBase(25)
-};
 
 constexpr float PlayerSpeed = .04f;			//The amount of velocity to add for each frame the player is moving.
 constexpr float PlayerSpeedCap = 200.f;		//The maximum amount of velocity the player can accelerate at (ignoring gravity).
@@ -120,6 +103,39 @@ namespace  GAME_NAME
 				/// </summary>
 				void CreateBloodParticle(GameObject* cause);
 
+				enum TEXTURE_OFFSETS
+				{
+					DEFAULT_BIRB = 0
+				};
+
+				struct PlayerTextureData
+				{
+					int DefaultSpites = GLOBAL_SPRITE_BASE;	//First sprite for standing still, followed by sprites for walking, running, jumping, falling in air, skidding, and emotions.
+					int BagTurnaround = SpriteBase(107);		//The sprite for the player opening their bag, followed by the player facing backwards, and preceeded by the player with no head.
+					int Fall = SpriteBase(109);				//The player lying on the ground followed by the player falling over and the player getting up.
+					int BasicAttack = SpriteBase(122);		//A basic punching animation.
+
+					PlayerTextureData& operator= (const PlayerTextureData& other)
+					{
+						DefaultSpites = other.DefaultSpites;
+						BagTurnaround = other.BagTurnaround;
+						Fall = other.Fall;
+						BasicAttack = other.BasicAttack;
+
+						return *this;
+					}
+				};
+
+				/// <summary>
+				/// A list of all possible texture palettes the player could have, indexed based on TEXTURE_OFFSETS.
+				/// </summary>
+				static const PlayerTextureData TextureData[1];
+
+				/// <summary>
+				/// Updates the player's texture to use these offsets.
+				/// </summary>
+				void SetPlayerTextureData(TEXTURE_OFFSETS offsets);
+
 				/// <summary>
 				/// Apply some modifier to the player for some amount of time.
 				/// </summary>
@@ -179,6 +195,10 @@ namespace  GAME_NAME
 				void beforeCollision() override;		//Called before any collisions are calculated to allow for resetting the jump conditions.
 
 			private:
+				/// <summary>
+				/// The player's current texture reference. Can be changed to use different textures.
+				/// </summary>
+				Player::PlayerTextureData m_textureData;
 
 				std::unordered_map<ATTRIBUTE_MODIFIER, float> m_currentAttribModifiers;
 
@@ -253,6 +273,11 @@ namespace  GAME_NAME
 				/// </summary>
 				/// <returns></returns>
 				bool dropHeldItem();
+
+				/// <summary>
+				/// Updates all the player's animations to use the current m_textureData.
+				/// </summary>
+				void registerAnimations();
 
 				/// <summary>
 				/// If the player is frozen they cannot move but can still be affected by gravity or other objects.
