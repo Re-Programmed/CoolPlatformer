@@ -3,7 +3,7 @@
 namespace GAME_NAME::Objects
 {
 	Interactable::Interactable(keyRef interactKey, InputManager::KEY_STATE keyStateCheck, Vec2 position, Vec2 scale, Rendering::Sprite* sprite, float rotation)
-		: GameObject(position, scale, sprite, rotation), m_interactionRadius(scale.X / 2), m_interactKey(interactKey), m_keyStateCheck(keyStateCheck)
+		: GameObject(position, scale, sprite, rotation), m_interactionRadius(std::abs(scale.X) / 1.5), m_interactKey(interactKey), m_keyStateCheck(keyStateCheck)
 	{
 
 	}

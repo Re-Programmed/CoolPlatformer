@@ -101,6 +101,12 @@ namespace GAME_NAME
 		//Returns KEY_STATE_PRESSED if the key was just pressed, KEY_STATE_RELEASED if the key was just released, KEY_STATE_HELD if the key is held, and KEY_STATE_NONE if the key is not pressed.
 		static const KEY_STATE GetKeyUpDown(keyRef key);
 
+		/// <summary>
+		/// Updates all current key up and down information.
+		/// </summary>
+		/// <returns></returns>
+		static const void UpdateKeyStates();
+
 		static const float GetJoystick();
 
 		//Gets the current state of a mouse button.
@@ -148,7 +154,7 @@ namespace GAME_NAME
 
 		static GLFWwindow* m_window;					//Window pointer. :)
 
-		static bool m_keysDown[KEY_ARRAY_SIZE];			//Stores which keys are held.
+		static KEY_STATE m_keysDown[KEY_ARRAY_SIZE];	//Stores which keys are held.
 	};
 
 }

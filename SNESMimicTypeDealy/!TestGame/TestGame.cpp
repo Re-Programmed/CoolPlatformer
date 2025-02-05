@@ -105,6 +105,8 @@ namespace GAME_NAME
 
 #endif
 
+		//Update input manager stuff.
+		InputManager::UpdateKeyStates();
 		InputManager::GetJoystick();
 
 		//Update all cutscenes detection.

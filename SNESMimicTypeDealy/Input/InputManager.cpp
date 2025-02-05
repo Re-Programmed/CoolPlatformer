@@ -7,7 +7,7 @@ namespace GAME_NAME
 	int InputManager::m_keys[KEY_ARRAY_SIZE];
 	GLFWwindow* InputManager::m_window;
 
-	bool InputManager::m_keysDown[KEY_ARRAY_SIZE];
+	InputManager::KEY_STATE InputManager::m_keysDown[KEY_ARRAY_SIZE];
 
 	void InputManager::Init(GLFWwindow* window)
 	{
@@ -38,29 +38,35 @@ namespace GAME_NAME
 		return glfwGetKey(m_window, key);
 	}
 
+	const void GAME_NAME::InputManager::UpdateKeyStates()
+	{
+		for (int i = 0; i < KEY_ARRAY_SIZE; i++)
+		{
+			if (glfwGetKey(m_window, m_keys[i]))
+			{
+				if (m_keysDown[i] & (KEY_STATE_NONE | KEY_STATE_RELEASED))
+				{
+					m_keysDown[i] = KEY_STATE_PRESSED;
+					continue;
+				}
 
+				m_keysDown[i] = KEY_STATE_HELD;
+				continue;
+			}
+
+			if (m_keysDown[i] & (KEY_STATE_HELD | KEY_STATE_PRESSED))
+			{
+				m_keysDown[i] = KEY_STATE_RELEASED;
+				continue;
+			}
+
+			m_keysDown[i] = KEY_STATE_NONE;
+		}
+	}
 
 	const GAME_NAME::InputManager::KEY_STATE InputManager::GetKeyUpDown(keyRef key)
 	{
-		if (glfwGetKey(m_window, m_keys[key]))
-		{
-			if(!m_keysDown[key])
-			{
-				m_keysDown[key] = true;
-
-				return KEY_STATE_PRESSED;
-			}
-
-			return KEY_STATE_HELD;
-		}
-
-		if (m_keysDown[key])
-		{
-			m_keysDown[key] = false;
-			return KEY_STATE_RELEASED;
-		}
-
-		return KEY_STATE_NONE;
+		return m_keysDown[key];
 	}
 
 	const float InputManager::GetJoystick()

@@ -189,6 +189,11 @@ namespace  GAME_NAME
 					m_playerLookPoint = point;
 				}
 
+				inline PLAYER_LOOK_DIRECTION GetLookDirection()
+				{
+					return m_currentPlayerLookDirection;
+				}
+
 				void AddVelocity(Vec2 velocity);
 
 				/// <summary>

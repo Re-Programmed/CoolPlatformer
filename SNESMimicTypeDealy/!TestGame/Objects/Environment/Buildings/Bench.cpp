@@ -11,10 +11,15 @@ namespace GAME_NAME::Objects::Environment::Buildings
 	}
 
 	void Bench::onInteract(std::shared_ptr<Player::Player> player, InputManager::KEY_STATE state)
-	{
+	{		
+		//Ensure player is "slow enough to engage legs to plop on a bench."
 		if (player->GetVelocity().X < 7)
 		{
-			player->SetFrozen(true, Player::Player::SITTING_FORWARD);
+			//Player is not already sitting.
+			if (player->GetLookDirection() != Player::Player::SITTING_FORWARD)
+			{
+				player->SetFrozen(true, Player::Player::SITTING_FORWARD);
+			}
 		}
 	}
 }
