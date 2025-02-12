@@ -169,6 +169,7 @@
     <ClCompile Include="!TestGame\Objects\Environment\Buildings\Door.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Buildings\FrontDoor.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Buildings\FrontWall.cpp" />
+    <ClCompile Include="!TestGame\Objects\Environment\Buildings\SaggingObject.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\ClimbableObject.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\CloudGenerator.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Effects\BloodMark.cpp" />
@@ -297,6 +298,7 @@
     <ClInclude Include="!TestGame\Objects\Environment\ExplosiveObject.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Levels\Town1Manager.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Plants\Tree.h" />
+    <ClInclude Include="!TestGame\Objects\Environment\Buildings\SaggingObject.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Water.h" />
     <ClInclude Include="!TestGame\Objects\LayerFlip.h" />
     <ClInclude Include="!TestGame\Objects\Platforms\FallingPlatform.h" />

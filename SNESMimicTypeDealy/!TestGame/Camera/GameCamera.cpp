@@ -51,7 +51,7 @@ namespace GAME_NAME
 				}
 			}
 			else {
-				m_target = Vec2{ playerPos.X + m_offset.X, playerPos.Y + m_offset.Y };
+				m_target = Vec2{ playerPos.X - m_offset.X, playerPos.Y + m_offset.Y };
 			}
 
 			float deadzoneXAdj = (playerPos.X > m_position.X + resX ? -m_deadzoneRadius : m_deadzoneRadius);

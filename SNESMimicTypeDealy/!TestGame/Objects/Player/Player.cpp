@@ -685,6 +685,7 @@ namespace  GAME_NAME
 				SetFrozen(true, CLIMBING_BACK);
 				m_physics->SetGravityStrength(0.f);
 				m_physics->SetGravitationalVelocity(0.f);
+				m_physics->SetVelocity(Vec2::Zero);
 			}
 
 			void Player::onCollision(Vec2 push, GameObject* collided)
