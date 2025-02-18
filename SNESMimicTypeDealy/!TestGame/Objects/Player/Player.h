@@ -24,7 +24,7 @@ constexpr float DefaultPlayerScaleY = 26.f;	//The default size for the player.
 
 
 constexpr float PlayerSpeed = .04f;			//The amount of velocity to add for each frame the player is moving.
-constexpr float PlayerSpeedCap = 200.f;		//The maximum amount of velocity the player can accelerate at (ignoring gravity).
+constexpr float PlayerSpeedCap = 160.f;		//The maximum amount of velocity the player can accelerate at (ignoring gravity).
 
 constexpr float PlayerJumpHeight = 60.f;	//The vertical velocity applied on the inital press of jump.
 constexpr float PlayerJumpBonus = 13.f;		//How vertical velocity to add for every frame the jump button is held after the inital jump.

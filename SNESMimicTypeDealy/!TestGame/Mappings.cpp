@@ -37,6 +37,7 @@
 #include "./Objects/Environment/Buildings/Door.h"
 #include "./Objects/Environment/Buildings/FrontDoor.h"
 #include "./Objects/Environment/Buildings/Bench.h"
+#include "./Objects/Environment/Buildings/SaggingObject.h"
 
 #include "./Objects/Environment/BreakableBlock.h"
 
@@ -382,6 +383,7 @@ using namespace Enemies;
 			1 - Door (closeSprite,openSprite,openDistance[float]=DEFAULT_DOOR_OPEN_DISTANCE,rotation[float]=0)
 			2 - FrontDoor (sprite, roomFile)
 			3 - Bench (sprite)
+			4 - Sagging Object (sprite, segmentCount)
 	*/
 	[](std::vector<std::string> data, size_t n)
 	{
@@ -438,6 +440,12 @@ using namespace Objects::Environment::Buildings;
 		{
 			Bench* bench = new Bench(STOIVEC(data[1], data[2]), STOIVEC(data[3], data[4]), Renderer::GetSprite(std::stoi(data[6])));
 			Renderer::LoadObject(bench, std::stoi(data[5]));
+			break;
+		}
+		case 4:
+		{
+			SaggingObject* sag = new SaggingObject(STOIVEC(data[1], data[2]), STOIVEC(data[3], data[4]), Renderer::GetSprite(std::stoi(data[6])), std::stoi(data[7]));
+			Renderer::LoadObject(sag, std::stoi(data[5]));
 			break;
 		}
 		}

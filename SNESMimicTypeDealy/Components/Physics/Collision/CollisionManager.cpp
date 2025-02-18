@@ -19,6 +19,14 @@ namespace GAME_NAME
 
 				void CollisionManager::UpdateAndClearBuffers()
 				{
+					for(StaticCollider* staticCollider : m_staticColliders)
+					{
+						if (staticCollider->BeforeCollision)
+						{
+							staticCollider->BeforeCollision(staticCollider->GetObject());
+						}
+					}
+
 					for (ActiveCollider* activeCollider : m_activeColliders)
 					{
 						activeCollider->BeforeUpdate();

@@ -1,5 +1,6 @@
 #pragma once
 #include "../../IComponent.h"
+#include "../../../Objects/GameObject.h"
 
 namespace GAME_NAME
 {
@@ -34,6 +35,11 @@ namespace GAME_NAME
 						return m_object;
 					}
 
+					inline void SetBeforeCollision(void(*beforeCollision)(Objects::GameObject* self))
+					{
+						BeforeCollision = beforeCollision;
+					}
+
 					inline void SetOnCollision(bool(*onCollision)(GAME_NAME::MathUtils::Vec2 push, Objects::GameObject*, Objects::GameObject*))
 					{
 						OnCollision = onCollision;
@@ -41,6 +47,8 @@ namespace GAME_NAME
 
 					//OnCollision is called when a collision occurs. It should return false if the collision occuring should be canceled. (push = how the object is being moved out of the collider.) (GameObject = this object)
 					bool(*OnCollision)(GAME_NAME::MathUtils::Vec2 push, Objects::GameObject*, Objects::GameObject*);
+
+					void(*BeforeCollision)(Objects::GameObject* self);
 				protected:
 					Objects::GameObject* m_object;
 

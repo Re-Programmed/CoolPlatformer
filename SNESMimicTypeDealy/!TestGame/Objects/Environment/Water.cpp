@@ -119,10 +119,10 @@ namespace GAME_NAME
 						texture[3] = Vec2(percXG, percYG);	
 					}
 					else {
-						vertices[0] = Vec2(percXG + sin * check, percYM);
-						vertices[1] = Vec2(percXG + sin1 * check, percYG);
-						vertices[2] = Vec2(percXM + sin2 * check, percYG);
-						vertices[3] = Vec2(percXM + sin3 * check, percYM);
+						vertices[2] = Vec2(percXM + sin * check, percYG);
+						vertices[3] = Vec2(percXM + sin1 * check, percYM);
+						vertices[0] = Vec2(percXG + sin2 * check, percYM);
+						vertices[1] = Vec2(percXG + sin3 * check, percYG);
 
 						texture[0] = Vec2(percXG, percYM);
 						texture[1] = Vec2(percXG, percYG);
