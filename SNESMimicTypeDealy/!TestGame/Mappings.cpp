@@ -444,7 +444,7 @@ using namespace Objects::Environment::Buildings;
 		}
 		case 4:
 		{
-			SaggingObject* sag = new SaggingObject(STOIVEC(data[1], data[2]), STOIVEC(data[3], data[4]), Renderer::GetSprite(std::stoi(data[6])), std::stoi(data[7]));
+			SaggingObject* sag = new SaggingObject(STOIVEC(data[1], data[2]), STOIVEC(data[3], data[4]), Renderer::GetSprite(std::stoi(data[6])), std::stoi(data[7]), std::stoi(data[8]) == 1);
 			Renderer::LoadObject(sag, std::stoi(data[5]));
 			break;
 		}

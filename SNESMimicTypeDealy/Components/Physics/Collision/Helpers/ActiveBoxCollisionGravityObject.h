@@ -60,6 +60,11 @@ namespace GAME_NAME
 						return m_physics->GetVelocity() + Vec2(0, m_physics->GetGravitationalVelocity());
 					}
 
+					inline GravityComponent* const GetPhysics()
+					{
+						return m_physics;
+					}
+
 					void Render(const Vec2& cameraPosition) override
 					{
 						m_didRender = true;

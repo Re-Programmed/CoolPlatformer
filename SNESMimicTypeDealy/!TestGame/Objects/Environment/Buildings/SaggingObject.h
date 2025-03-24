@@ -12,7 +12,7 @@ using namespace Rendering;
 		: public GameObject
 	{
 	public:
-		SaggingObject(Vec2 position, Vec2 scale, Sprite* sprite, uint8_t sagSegments);
+		SaggingObject(Vec2 position, Vec2 scale, Sprite* sprite, uint8_t sagSegments, bool bouncy = false);
 
 		void Update(GLFWwindow* window) override;
 		void Render(const Vec2& cameraPosition) override;
@@ -40,7 +40,10 @@ using namespace Rendering;
 
 			int IsColliding;
 
+
 		};
+
+		bool m_isBouncy; uint8_t m_bounceTimer;
 
 
 		std::vector<SaggingSegment*> m_sagObjects;

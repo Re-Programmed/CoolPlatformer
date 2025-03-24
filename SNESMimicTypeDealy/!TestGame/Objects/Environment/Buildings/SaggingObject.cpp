@@ -2,6 +2,7 @@
 
 #include "../../../../Utils/CollisionDetection.h"
 #include "../../../../Rendering/DynamicSprite.h"
+#include "../../../../Components/Physics/Collision/Helpers/ActiveBoxCollisionGravityObject.h"
 
 namespace GAME_NAME::Objects::Environment::Buildings
 {
@@ -11,8 +12,8 @@ namespace GAME_NAME::Objects::Environment::Buildings
 	constexpr float SAG_SEGMENTS_7[7] = { 0.5f, 1.f, 2.f, 3.f, 2.f, 1.f, 0.5f };
 
 	
-	SaggingObject::SaggingObject(Vec2 position, Vec2 scale, Sprite* sprite, uint8_t sagSegments)
-		: GameObject(position, scale, sprite)
+	SaggingObject::SaggingObject(Vec2 position, Vec2 scale, Sprite* sprite, uint8_t sagSegments, bool bouncy)
+		: GameObject(position, scale, sprite), m_isBouncy(bouncy)
 	{
 		//Limit segment count to the defined arrays above.
 		if (sagSegments % 2 == 0) { sagSegments++; }
@@ -127,12 +128,28 @@ namespace GAME_NAME::Objects::Environment::Buildings
 				if (sag < 0.f)
 				{
 					segment->UnsagDelay = 5.f;
+
+					if (segment->PreventUnsag)
+						{
+						this->m_bounceTimer++;
+
+						if (this->m_bounceTimer > 5.f)
+						{
+							Components::Physics::Collision::ActiveBoxCollisionGravityObject* abcgo = dynamic_cast<Components::Physics::Collision::ActiveBoxCollisionGravityObject*>(segment->PreventUnsag);
+							if (abcgo)
+							{
+								abcgo->GetPhysics()->AddVelocity(Vec2(0, 20.f));
+							}
+						}
+					}
 				}
 				else if (segment->UnsagDelay > 0.f) {
 					segment->UnsagDelay--;
 
 					//New sag position is the last sag position, nothing should change.
 					sag = segment->PreviousSag;
+
+					this->m_bounceTimer = 0.f;
 				}
 
 

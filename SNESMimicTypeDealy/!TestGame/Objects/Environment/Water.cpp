@@ -88,6 +88,11 @@ namespace GAME_NAME
 
 				for (GameObject* obj : Renderer::GetAllActiveObjectsInArea(m_reflectionPosition, m_scale))
 				{
+					if (obj == nullptr || obj->GetSprite() == nullptr)
+					{
+						continue;
+					}
+
 					const Vec2 pos = obj->GetPosition();
 					Vec2 scale = obj->GetScale();
 
