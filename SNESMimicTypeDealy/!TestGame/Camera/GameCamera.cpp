@@ -2,6 +2,10 @@
 #include "../../Utils/Time/GameTime.h"
 #include "../../Rendering/Sprite.h"
 
+#if _DEBUG
+#include "../../Input/InputManager.h"
+#endif
+
 namespace GAME_NAME
 {
 	namespace Camera
@@ -17,7 +21,17 @@ namespace GAME_NAME
 
 		void GameCamera::Update(const Vec2& playerPos)
 		{
+#if _DEBUG
+			if (InputManager::GetKey(GLFW_KEY_L))
+			{
+				SetTargetZoom(1.f);
+			}
 
+			if (InputManager::GetKey(GLFW_KEY_K))
+			{
+				SetTargetZoom(0.25f);
+			}
+#endif
 
 			/*if (m_followPlayerExact)
 			{

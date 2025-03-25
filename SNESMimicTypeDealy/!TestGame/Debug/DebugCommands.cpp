@@ -19,6 +19,8 @@
 #include "../../Objects/StateSaver.h"
 #include "../Mappings.h"
 
+#include "../Camera/LevelBuilderCam.h"
+
 #define DebugCommands_Log(x) DEBUG::DebugLog::Log(std::string("[Debug Commands] ").append(x), true, ";33");
 
 std::vector<std::string> DebugCommands::m_queuedCommands = std::vector<std::string>(2);
@@ -51,6 +53,17 @@ void DebugCommands::HandleCommands()
 		if (input == "ping")
 		{
 			DEBUG::DebugLog::Log("[Debug Commands] Pong", true, ";33");
+			continue;
+		}
+
+		if (input == "dcam")
+		{
+			DebugCommands_Log("Enabled Debug Camera.");
+
+			GAME_NAME::Camera::LevelBuilderCam* lbc = new GAME_NAME::Camera::LevelBuilderCam(GAME_NAME::TestGame::INSTANCE->GetCamera()->GetPosition(), GAME_NAME::TestGame::INSTANCE->GetCamera()->GetZoom());
+
+			GAME_NAME::TestGame::INSTANCE->SetCamera(lbc);
+
 			continue;
 		}
 

@@ -32,7 +32,7 @@
 
 #include "../../../Utils/CollisionDetection.h"
 
-#define PLAYER_ANIMATION_RUN_WALK_SWITCH 180.f //When the player should switch from the walking to running animation.
+#define PLAYER_ANIMATION_RUN_WALK_SWITCH 142.f //When the player should switch from the walking to running animation.
 
 #define PLAYER_DAMAGE_ANIMATION_LENGTH 0.75f //How long the damage timer ticks for after the player is attacked.
 

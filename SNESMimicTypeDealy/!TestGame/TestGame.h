@@ -52,6 +52,16 @@ namespace GAME_NAME
 		{
 			return m_globalLevelData;
 		}
+
+		/// <summary>
+		/// Deletes the old camera and sets the current game camera to the provided newCam.
+		/// </summary>
+		inline void SetCamera(GAME_NAME::Camera::GameCamera* newCam)
+		{
+			delete m_gameCamera;
+			m_gameCamera = newCam;
+		}
+
 	private:
 		GAME_NAME::Camera::GameCamera* m_gameCamera = nullptr;		//Pointer to the camera.
 

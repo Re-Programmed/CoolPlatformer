@@ -10,3 +10,21 @@ Texture Coordinate Rendering
 
 DRAWING RESOURCES
 WRITING MUSIC
+
+
+
+TEMPLATE:
+
+#pragma once
+
+#include "../../../../Objects/GameObject.h"
+
+namespace GAME_NAME::Objects::Environment::Effects
+{
+	class GlitchEffect
+		: GameObject
+	{
+	public:
+		GlitchEffect();
+	};
+}

@@ -47,8 +47,10 @@
 
 #include "./Objects/Environment/ClimbableObject.h"
 
+#include "./Objects/Environment/Effects/GlitchEffect.h"
+
 #define COMPONENT_MAPPINGS_SIZE 1	//How many component mappings there are
-#define MAPPINGS_SIZE 19			//How many object mappings there are.
+#define MAPPINGS_SIZE 20			//How many object mappings there are.
 
 constexpr float GenesisTileSize = 8.f;
 
@@ -547,6 +549,20 @@ using namespace Cutscenes;
 
 		Environment::ClimbableObject* co = new Environment::ClimbableObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])));
 		Renderer::LoadObject(co, std::stoi(data[5]));
+	},
+
+		/*
+		19: Glitch Effect (map,positionX,positionY,scaleX,scaleY,layer)
+		*/
+
+		[](std::vector<std::string> data, size_t n)
+	{
+#if _DEBUG
+		DebugMapper("Loading Glitch Object");
+#endif
+
+		Environment::Effects::GlitchEffect* ge = new Environment::Effects::GlitchEffect(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]));
+		Renderer::LoadObject(ge, std::stoi(data[4]), true);
 	}
 };
 
