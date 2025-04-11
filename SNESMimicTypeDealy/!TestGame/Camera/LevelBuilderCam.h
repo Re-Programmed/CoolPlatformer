@@ -24,6 +24,10 @@ namespace GAME_NAME
 			/// </summary>
 			/// <param name="playerPos"></param>
 			void Update(const Vec2& playerPos);
+		private:
+			float m_targetZoom;
+			Vec2 m_offset;
+			Vec2 m_targetPos;
 		};
 	}
 }

@@ -1,16 +1,102 @@
 --TODO--
 
-Jumping + On Ground Detection
-Cutscene Based Camera
-Pixel Perfect Collisions
-GUI
-GUI ELEMENTS
+**************************
 
-Texture Coordinate Rendering
+6. Plan out level 1 (parkour and challenges [enemies & plaforming & a mix of both]) *******
 
-DRAWING RESOURCES
-WRITING MUSIC
+> Ladders.
+> Bench sitting texture.
+> Idle animation.
 
+> Rollable Objects
+
+
+- Dizzy animation / effect.
+
+- Interiors / Inside buildings.
+
+- Diving from expolosions.
+
+ITEMS:
+    Kelp / Seaweed.
+    Rope.
+    Logs. 
+
+LEVEL 1 ENEMIES:
+    - Angry Farmer
+    - Cat
+    - Glitch electric evilp animals effect.
+    - Crows
+
+2. Weapons / (attacks (wing attack, kick attack, smash(mario) attack))
+LEVEL 1 WEAPONS:
+    - Sharp Stick
+    - Stone Dagger
+
+> House Area [Build stuff, upgrade house]
+
+3. Toast / Coins(or whatever gltich stuff) / Items
+    - BasicCollectable [V]
+4. Food and attribute modifiers
+5. Power lines (bounce and shock)
+5.1. Music Sync Objects!
+> First Boss
+7. Shopping & (stylized based on previous level) level hubs / house begining level
+8. Figure out how abilities will play a role (Not applying until later levels)
+9. Glitchy bits and glitch world. (Useful how? Adds to story but must also have a reason for the player)
+10. Player House World (Editable and Buildings)
+12. Lvl. 1 Cutscenes & Story Intro
+11. Building materials & crafting
+10. Figure out gimmick for lvl. 2
+- Underground Ores
+> Conveyor Belts
+> Cars
+> Stop Signs [Explode when run through]
+13. Explosions & Barrels
+14. Fluids and fluid effects (poison, etc.) [Stick to walls]
+15. Machines that you can build / unlock in the hub store house world.
+16. Add new items etc.
+17. Add Science Player
+...
+n. Multiplayer
+
+--&-- Construction Area for your house (build a mansion w/ friends as explore)
+
+> Conveyor Belts
+
+> Score and Timer
+
+> Super Position Objects
+> Quantum Entangled Objects
+
+- Ideas from zombie map.
+
+> Stunned on hit, cannot attack.
+> Waterfalls you go down.
+> Many paths, all valid.
+
+> Driveable Car
+> Waterslide
+> Rollercoaster
+
+> Zipline / Tightrope
+> Ice / sliding
+
+> Exploding Stop Signs
+
+> Cars
+
+> Underground ores
+
+- Add science guy.
+
+BUGS:
+    - Dropping items dosen't update slot GUI right...
+
+FUTURE LEVEL IDEAS:
+    - __ City
+    - __ Factory
+    - Nuclear Lab [END LEVEL]
 
 
 TEMPLATE:
