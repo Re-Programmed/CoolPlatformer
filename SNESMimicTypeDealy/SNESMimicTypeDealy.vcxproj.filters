@@ -1457,9 +1457,6 @@
     <None Include="Assets\Menus\stat_overlay.pk" />
     <None Include="Assets\town_1\objects\leaf_particle_objects.pk" />
     <None Include="cpp.hint" />
-    <None Include="Assets\player_house_1_1\chunk.pk" />
-    <None Include="Assets\player_house_1_1\level.dat" />
-    <None Include="Assets\player_house_1_1\object.pk" />
     <None Include="Assets\town_1\objects\blood.pk" />
     <None Include="Assets\Menus\settings.pk" />
     <None Include="Assets\Menus\settings_controls.pk" />

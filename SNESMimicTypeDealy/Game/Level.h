@@ -2,6 +2,9 @@
 #include "../Audio/SoundManager.h"
 #include "../Utils/Math/Vec2.h"
 #include "../Utils/Math/Vec3.h"
+#include <set>
+
+#define LEVEL_NO_PLAYER_FLAG "NO_PLAYER"
 
 
 namespace GAME_NAME
@@ -29,6 +32,13 @@ namespace GAME_NAME
 			Vec2 PlayerStartPosition = Vec2::Zero;
 
 			Vec3 BackgroundColor = Vec3(0,0,0);
+
+			/// <summary>
+			/// Flags that the level has set. Can be used to modify what happens on level load in the Game class.
+			/// Usable flags for TEST_GAME:
+			///		NO_PLAYER
+			/// </summary>
+			std::set<std::string> Flags;
 		};
 	}
 }

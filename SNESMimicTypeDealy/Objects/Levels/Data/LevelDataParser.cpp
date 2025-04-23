@@ -93,6 +93,17 @@ namespace GAME_NAME
 						}
 
 						Objects::Environment::CloudGenerator::SetData(skyStart, cloudCount);
+					},
+
+					[](std::string flags, Game::Level& level)
+					{
+						std::stringstream read(flags);
+						std::string flag;
+
+						while (std::getline(read, flag, ','))
+						{
+							level.Flags.emplace(flag);
+						}
 					}
 			};
 

@@ -120,7 +120,8 @@ namespace GAME_NAME
 
 		MusicSync::MusicSync::Update();	//Update things that sync to the beat of the current song.
 
-		m_gameCamera->Update(ThePlayer->GetPosition());
+		//If the player exists, update the game camera with the player's position.
+		m_gameCamera->Update(ThePlayer == nullptr ? Vec2(0) : ThePlayer->GetPosition());
 
 		//std::cout << Time::GameTime::GetScaledDeltaTime() << std::endl;
 	}
@@ -171,11 +172,15 @@ namespace GAME_NAME
 		DebugCommands::RunRecieverThread();
 #endif
 
-		ThePlayer = std::make_shared<Objects::Player::Player>(level.PlayerStartPosition);
-		Rendering::Renderer::LoadActiveObject(ThePlayer.get(), 2); //Spawn in the player on Active Layer 2.
+		if (!level.Flags.contains(LEVEL_NO_PLAYER_FLAG))
+		{
+			ThePlayer = std::make_shared<Objects::Player::Player>(level.PlayerStartPosition);
+			Rendering::Renderer::LoadActiveObject(ThePlayer.get(), 2); //Spawn in the player on Active Layer 2.
+		}
 
 		srand((unsigned int)time(NULL));
 
+		//TEST
 		MusicSync::MusicSync::SetCurrentSong(134, 2);
 
 		glClearColor(level.BackgroundColor.X, level.BackgroundColor.Y, level.BackgroundColor.Z, 1.f);
