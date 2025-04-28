@@ -128,6 +128,7 @@ namespace GAME_NAME
 
 	void TestGame::Init(GLFWwindow* window)
 	{
+		srand(time(NULL));
 
 		INSTANCE = this;
 		m_gameCamera = new GAME_NAME::Camera::GameCamera();
@@ -174,11 +175,12 @@ namespace GAME_NAME
 
 		if (!level.Flags.contains(LEVEL_NO_PLAYER_FLAG))
 		{
-			ThePlayer = std::make_shared<Objects::Player::Player>(level.PlayerStartPosition);
+			ThePlayer = std::make_shared<Objects::Player::Player>(Vec2(-20, level.PlayerStartPosition.Y));
+			ThePlayer->QueueTargetEvent(Objects::Player::Player::TargetEvent(level.PlayerStartPosition, true, true, 0.6));
+
 			Rendering::Renderer::LoadActiveObject(ThePlayer.get(), 2); //Spawn in the player on Active Layer 2.
 		}
 
-		srand((unsigned int)time(NULL));
 
 		//TEST
 		MusicSync::MusicSync::SetCurrentSong(134, 2);

@@ -7,6 +7,7 @@
 #include <functional>
 #include <cassert>
 
+
 constexpr const char* AssetPath = "./Assets";			//Path to the Asset folder that contains all level data.
 constexpr const char* SpriteSubfolder = "/sprite";		//Path within a level to its sprites.
 constexpr const char* BGSubfolder = "/bg";				//Path within a level to its background sprites.
@@ -82,80 +83,7 @@ namespace GAME_NAME
 			static volatile int m_currentThreadLoadCountINT;
 			static std::vector<std::string> m_loadAtEnd; //Objects that must be loaded last, like water that must bake reflections.
 		public:
-			static inline void loadObjectDataThread(std::string line, size_t lineId, const std::function<void(std::vector<std::string>, size_t)> mappings[], int expectedLoadValue = 0, bool expectLoad = false)
-			{
-				std::stringstream linestream(line);
-				std::string component;
-
-				const std::function<void(std::vector<std::string>, size_t line)>* mapping{};
-
-				std::vector <std::string> v;
-
-				int c = 0;
-				while (std::getline(linestream, component, ','))
-				{
-
-					if (c == 0) { mapping = &mappings[std::stoi(component)]; }
-					else {
-						//Allows for the use of "5|4+" to mean 5+4=9 and plug 9 in for that variable in object.pk.
-						int decodedComponent = 0;
-
-						if (component.ends_with("+"))
-						{
-							component.erase(component.length() - 1);
-
-							std::string decodedAddition = "";
-							while (!component.ends_with("|"))
-							{
-								decodedAddition = component.at(component.length() - 1) + decodedAddition;
-								component.erase(component.length() - 1);
-							}
-
-							component.erase(component.length() - 1);
-
-							if (component.ends_with("t"))
-							{
-								component = std::to_string(std::stoi(component) * 8);
-							}
-
-							decodedComponent = std::stoi(decodedAddition) + std::stoi(component);
-						}
-
-						v.push_back(decodedComponent != 0 ? std::to_string(decodedComponent) : component);
-
-					}
-					c++; //C++ AHHAHAHAHAHAHH Like the language :)L::):)
-				}
-
-				//If we are expecting to load from the file, await for the array to be given the previous object in order to maintain load and render order.
-				/*if (expectLoad)
-				{
-					std::cout << "THREAD " << expectedLoadValue << " WAITING\n";
-
-					auto atmVal = m_currentThreadLoadCount.load(std::memory_order_relaxed);
-					while (expectedLoadValue != atmVal)
-					{
-						//std::cout << "AWAITING " << expectedLoadValue << "!=" << atmVal << std::endl;
-						atmVal = m_currentThreadLoadCount.load(std::memory_order_relaxed);
-					}
-
-					while (atmVal == expectedLoadValue)
-					{
-						if (!m_currentThreadLoadCount.compare_exchange_weak(atmVal, atmVal + 1, std::memory_order_release, std::memory_order_relaxed))
-						{
-							break;
-						}
-					}
-
-					std::cout << "THREAD " << expectedLoadValue << " LOADED" << std::endl;
-				}*/
-
-				assert(mapping != NULL);
-
-				(*mapping)(v, lineId);
-
-				//delete mapping;	
-			}
+			static void loadObjectDataThread(std::string line, size_t lineId, const std::function<void(std::vector<std::string>, size_t)> mappings[], int expectedLoadValue = 0, bool expectLoad = false);
 
 		};
 	}

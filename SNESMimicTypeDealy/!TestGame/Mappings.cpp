@@ -49,6 +49,8 @@
 
 #include "./Objects/Environment/Effects/GlitchEffect.h"
 
+#include "./Objects/Environment/Movement/Trampoline.h"
+
 #define COMPONENT_MAPPINGS_SIZE 1	//How many component mappings there are
 #define MAPPINGS_SIZE 20			//How many object mappings there are.
 
@@ -528,42 +530,41 @@ using namespace Cutscenes;
 				0001 - JUMPED_ON
 			}
 	*/
-		[](std::vector<std::string> data, size_t n)
-	{
+	[](std::vector<std::string> data, size_t n)
+{
 #if _DEBUG
-		DebugMapper("Loading Explosive Object");
+	DebugMapper("Loading Explosive Object");
 #endif
 
-		Environment::ExplosiveObject* eo = new Environment::ExplosiveObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), std::stof(data[6]), std::stof(data[7]), (Environment::ExplosiveObject::EXPLOSION_REASON)(std::stoi(data[8])), n);
-		Renderer::LoadObject(eo, std::stoi(data[5]));
-	},
+	Environment::ExplosiveObject* eo = new Environment::ExplosiveObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), std::stof(data[6]), std::stof(data[7]), (Environment::ExplosiveObject::EXPLOSION_REASON)(std::stoi(data[8])), n);
+	Renderer::LoadObject(eo, std::stoi(data[5]));
+},
 
-		/*
-		18: Climbable (map,positionX,positionY,scaleX,scaleY,sprite,layer)
-		*/
-		[](std::vector<std::string> data, size_t n)
-	{
+	/*
+	18: Climbable (map,positionX,positionY,scaleX,scaleY,sprite,layer)
+	*/
+	[](std::vector<std::string> data, size_t n)
+{
 #if _DEBUG
-		DebugMapper("Loading Climbable Object");
+	DebugMapper("Loading Climbable Object");
 #endif
 
-		Environment::ClimbableObject* co = new Environment::ClimbableObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])));
-		Renderer::LoadObject(co, std::stoi(data[5]));
-	},
+	Environment::ClimbableObject* co = new Environment::ClimbableObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])));
+	Renderer::LoadObject(co, std::stoi(data[5]));
+},
 
-		/*
-		19: Glitch Effect (map,positionX,positionY,scaleX,scaleY,layer)
-		*/
-
-		[](std::vector<std::string> data, size_t n)
-	{
+	/*
+	19: Glitch Effect (map,positionX,positionY,scaleX,scaleY,layer)
+	*/
+	[](std::vector<std::string> data, size_t n)
+{
 #if _DEBUG
-		DebugMapper("Loading Glitch Object");
+	DebugMapper("Loading Glitch Object");
 #endif
 
-		Environment::Effects::GlitchEffect* ge = new Environment::Effects::GlitchEffect(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]));
-		Renderer::LoadObject(ge, std::stoi(data[4]), true);
-	}
+	Environment::Effects::GlitchEffect* ge = new Environment::Effects::GlitchEffect(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]));
+	Renderer::LoadObject(ge, std::stoi(data[4]), true);
+}
 };
 
 void GAME_NAME::Mappings::LoadObjectsWithDefaultMapping(const char* levelPath)
@@ -578,9 +579,30 @@ void GAME_NAME::Mappings::LoadObjectsWithDefaultMapping(const char* levelPath)
 
 GameObject* GAME_NAME::Mappings::LoadObjectWithDefaultMapping(std::string objectCode)
 {
+	
 	Resources::AssetManager::loadObjectDataThread(objectCode, 0, m_mappings);
 
 	BUILDING_createdBuildingZones.clear();
 
 	return Renderer::GetLastLoadedObject();
+}
+
+void GAME_NAME::Mappings::LoadOver20Switch(int index, std::vector<std::string> data, size_t saveIndex)
+{
+	switch (index)
+	{
+		/*
+			20: Trampoline (map,positionX,positionY,scaleX,scaleY,sprite,layer,bounceFactor)
+		*/
+	case 20:
+	{
+#if _DEBUG
+		DebugMapper("Loading Trampoline");
+#endif
+
+		Environment::Trampoline* t = new Environment::Trampoline(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), Renderer::GetSprite(std::stoi(data[4])), std::stof(data[6]));
+		Renderer::LoadObject(t, std::stoi(data[5]), true);
+		break;
+	}
+	}
 }

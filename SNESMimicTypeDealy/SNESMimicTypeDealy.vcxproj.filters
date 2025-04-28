@@ -357,6 +357,9 @@
     <ClCompile Include="!TestGame\Objects\Environment\Effects\GlitchEffect.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="!TestGame\Objects\Environment\Movement\Trampoline.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glad\include\glad\glad.h">
@@ -756,6 +759,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="!TestGame\Camera\LevelBuilderCam.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="!TestGame\Objects\Environment\Movement\Trampoline.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

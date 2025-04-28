@@ -72,6 +72,30 @@ namespace  GAME_NAME
 
 				void Render(const Vec2& cameraPosition) override;	
 
+				struct TargetEvent
+				{
+					Vec2 WalkTo;
+					bool IgnoreGravity = false;
+					bool Sprinting = true;
+					double Delay = 0.0;
+					double StartTime;
+
+					TargetEvent(Vec2 walkTo, bool ignoreGravity = false, bool sprinting = true, double delay = 0.0)
+						: WalkTo(walkTo), IgnoreGravity(ignoreGravity), Sprinting(sprinting), Delay(delay), StartTime(glfwGetTime())
+					{
+
+					}
+				};
+
+				/// <summary>
+				/// Queues a new target for the player to reach.
+				/// </summary>
+				/// <param name="te"></param>
+				inline void QueueTargetEvent(TargetEvent te)
+				{
+					m_targetSequence.push_back(te);
+				}
+
 #if _DEBUG
 				inline bool GetDebug() { return m_debug; }
 
@@ -114,6 +138,8 @@ namespace  GAME_NAME
 					int BagTurnaround = SpriteBase(107);		//The sprite for the player opening their bag, followed by the player facing backwards, and preceeded by the player with no head.
 					int Fall = SpriteBase(109);				//The player lying on the ground followed by the player falling over and the player getting up.
 					int BasicAttack = SpriteBase(122);		//A basic punching animation.
+					int Climbing = SpriteBase(134);			//Climbing backwards animation.
+					int IdleAnimations = SpriteBase(148);	//The beginning of all idle animations.
 
 					PlayerTextureData& operator= (const PlayerTextureData& other)
 					{
@@ -121,6 +147,8 @@ namespace  GAME_NAME
 						BagTurnaround = other.BagTurnaround;
 						Fall = other.Fall;
 						BasicAttack = other.BasicAttack;
+						Climbing = other.Climbing;
+						IdleAnimations = other.IdleAnimations;
 
 						return *this;
 					}
@@ -141,6 +169,11 @@ namespace  GAME_NAME
 				/// </summary>
 				/// <param name="attrib"></param>
 				void ApplyAttributeModifier(ATTRIBUTE_MODIFIER attrib, float seconds);
+
+				inline void SetAirTime(float airTime)
+				{
+					m_airTime = airTime;
+				}
 
 				void SetHeldItem(Items::InventoryItem* item);
 				inline void RemoveHeldItem()
@@ -207,11 +240,24 @@ namespace  GAME_NAME
 					return m_climbing;
 				}
 
+				void Dive(Vec2 direction, float damage);
+
 			protected:
 				void onCollision (Vec2 push, GameObject* gameObject) override;	//Called when a collision occurs.
 				void beforeCollision() override;		//Called before any collisions are calculated to allow for resetting the jump conditions.
 
 			private:
+
+				/// <summary>
+				/// If the player is currently taking a dive.
+				/// </summary>
+				float m_diving = 0.f;
+
+				/// <summary>
+				/// A list of the positions the player is currently animating to. (Used to program in sequenced events).
+				/// </summary>
+				std::vector<TargetEvent> m_targetSequence;
+
 				GameObject* m_climbing = nullptr;
 
 				/// <summary>
@@ -334,6 +380,8 @@ namespace  GAME_NAME
 				bool m_swimming = false;				//If the player is swimming.
 				int m_jumpHeld = 0;						//Used for determining how many frames the jump button has been held after the player jumps.
 				bool m_begunMotion = false;				//Used for animation checks.
+				double m_playingIdleAnimation = 0;		//Set to a timer if the player is engaged in an idle activity (e.g. tapping toe).
+				double m_timeSpentNotMoving = 0;		//The amount of time the player has spent not moving.
 
 				double m_airTime = 0;					//Time the player has spent in the air. (Used to calculate fall damage)
 
@@ -345,6 +393,7 @@ namespace  GAME_NAME
 				void readKeys();						//Called to determine what buttons are pressed and apply velocity based on those buttons.
 				void setAnimations(bool playerIsSkidding, float& anim_momentum);	//Called to determine what animation the player should be playing.
 				void updateLookDirection();				//Used to update player look state.
+
 
 #if _DEBUG
 				bool m_debug = false, m_debugKey = false, m_flight = false;

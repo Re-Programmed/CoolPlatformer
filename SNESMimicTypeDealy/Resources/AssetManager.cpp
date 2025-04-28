@@ -7,6 +7,7 @@
 #include "../Settings/SettingsGlobals.h"
 #include <regex>
 //regex for std::regex_replace
+#include "../!TestGame/Mappings.h"
 
 #if _DEBUG
 #include "../Debug/DebugLog.h"
@@ -295,6 +296,98 @@ namespace GAME_NAME
 			m_currentThreadLoadCount.store(0);
 
 			//delete[definedMacrosCount] definedMacros;
+		}
+
+		void AssetManager::loadObjectDataThread(std::string line, size_t lineId, const std::function<void(std::vector<std::string>, size_t)> mappings[], int expectedLoadValue, bool expectLoad)
+		{
+			std::stringstream linestream(line);
+			std::string component;
+
+			const std::function<void(std::vector<std::string>, size_t line)>* mapping{};
+
+			std::vector <std::string> v;
+
+			int c = 0;
+			while (std::getline(linestream, component, ','))
+			{
+
+				if (c == 0)
+				{
+					int map = std::stoi(component);
+
+					if (map > 19) 
+					{ 
+						mapping = nullptr;
+					}
+					else {
+						mapping = &mappings[map];
+					}
+
+				}
+				else {
+					//Allows for the use of "5|4+" to mean 5+4=9 and plug 9 in for that variable in object.pk.
+					int decodedComponent = 0;
+
+					if (component.ends_with("+"))
+					{
+						component.erase(component.length() - 1);
+
+						std::string decodedAddition = "";
+						while (!component.ends_with("|"))
+						{
+							decodedAddition = component.at(component.length() - 1) + decodedAddition;
+							component.erase(component.length() - 1);
+						}
+
+						component.erase(component.length() - 1);
+
+						if (component.ends_with("t"))
+						{
+							component = std::to_string(std::stoi(component) * 8);
+						}
+
+						decodedComponent = std::stoi(decodedAddition) + std::stoi(component);
+					}
+
+					v.push_back(decodedComponent != 0 ? std::to_string(decodedComponent) : component);
+
+				}
+				c++; //C++ AHHAHAHAHAHAHH Like the language :)L::):)
+			}
+
+			//If we are expecting to load from the file, await for the array to be given the previous object in order to maintain load and render order.
+			/*if (expectLoad)
+			{
+				std::cout << "THREAD " << expectedLoadValue << " WAITING\n";
+
+				auto atmVal = m_currentThreadLoadCount.load(std::memory_order_relaxed);
+				while (expectedLoadValue != atmVal)
+				{
+					//std::cout << "AWAITING " << expectedLoadValue << "!=" << atmVal << std::endl;
+					atmVal = m_currentThreadLoadCount.load(std::memory_order_relaxed);
+				}
+
+				while (atmVal == expectedLoadValue)
+				{
+					if (!m_currentThreadLoadCount.compare_exchange_weak(atmVal, atmVal + 1, std::memory_order_release, std::memory_order_relaxed))
+					{
+						break;
+					}
+				}
+
+				std::cout << "THREAD " << expectedLoadValue << " LOADED" << std::endl;
+			}*/
+
+			if (mapping == nullptr)
+			{
+				Mappings::LoadOver20Switch(std::stoi(line.substr(0, line.find_first_of(","))), v, lineId);
+
+				return;
+			}
+
+			(*mapping)(v, lineId);
+
+			//delete mapping;	
 		}
 
 

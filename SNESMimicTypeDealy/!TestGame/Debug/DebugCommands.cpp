@@ -21,9 +21,13 @@
 
 #include "../Camera/LevelBuilderCam.h"
 
+#include "../TestGame.h"
+
 #define DebugCommands_Log(x) DEBUG::DebugLog::Log(std::string("[Debug Commands] ").append(x), true, ";33");
 
 std::vector<std::string> DebugCommands::m_queuedCommands = std::vector<std::string>(2);
+
+#define DecodePos(x,val) x == "p" ? GAME_NAME::TestGame::ThePlayer->GetPosition().val : std::stof(x)
 
 void DebugCommands::RunRecieverThread()
 {
@@ -93,7 +97,7 @@ void DebugCommands::HandleCommands()
 				continue;
 			}
 
-			Vec2 pos(std::stof(params[0]), std::stof(params[1]));
+			Vec2 pos(DecodePos(params[0], X), DecodePos(params[1], Y));
 			
 			GAME_NAME::Objects::Environment::Effects::Explosion* expl = new GAME_NAME::Objects::Environment::Effects::Explosion(pos, std::stof(params[2]), std::stof(params[3]));
 			Renderer::LoadActiveObject(expl);

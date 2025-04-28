@@ -61,8 +61,8 @@ namespace GAME_NAME::Objects::Environment::Effects
 			if (vel.Y > MAX_EXPLOSION_LAUNCH_VELOCITY) { vel.Y = MAX_EXPLOSION_LAUNCH_VELOCITY; }
 			if (vel.Y < -MAX_EXPLOSION_LAUNCH_VELOCITY) { vel.Y = -MAX_EXPLOSION_LAUNCH_VELOCITY; }
 
-			TestGame::ThePlayer->AddVelocity(vel);
-			TestGame::ThePlayer->Damage(calculateExplosionDamage(playerPos), this);
+			TestGame::ThePlayer->Dive(vel, calculateExplosionDamage(playerPos));
+			//TestGame::ThePlayer->Damage(calculateExplosionDamage(playerPos), this);
 		}
 
 		for (GameObject* activeObject : Renderer::GetAllActiveObjectsInArea(this->m_position - Vec2{ radius }, radius * 2.f))

@@ -88,6 +88,25 @@ namespace  GAME_NAME
 	TextureDataBase(BasicAttack), TextureDataBase(BasicAttack) + 1, TextureDataBase(BasicAttack) + 2, TextureDataBase(BasicAttack) + 3, TextureDataBase(BasicAttack) + 4, TextureDataBase(BasicAttack) + 5, TextureDataBase(BasicAttack) + 6, TextureDataBase(BasicAttack) + 7, TextureDataBase(BasicAttack) + 8	\
 }
 
+#define PlayerClimbingBehindAnim {																																																										\
+	TextureDataBase(Climbing), TextureDataBase(Climbing) + 1, TextureDataBase(Climbing) + 2, TextureDataBase(Climbing) + 3, TextureDataBase(Climbing) + 4, TextureDataBase(Climbing) + 5, TextureDataBase(Climbing) + 6, TextureDataBase(Climbing) + 7					\
+}
+
+#define PLAYER_SIT_TEXTURE TextureDataBase(Climbing) + 8
+
+#define PlayerSittingPuffAnim {																																						\
+	TextureDataBase(Climbing) + 9, TextureDataBase(Climbing) + 10, TextureDataBase(Climbing) + 11, TextureDataBase(Climbing) + 12, TextureDataBase(Climbing) + 13					\
+}
+
+#define PlayerIdleTapToe {																																		\
+	TextureDataBase(IdleAnimations), TextureDataBase(IdleAnimations) + 1, TextureDataBase(IdleAnimations) + 2, TextureDataBase(IdleAnimations) + 1				\
+}
+
+#define PlayerIdleStomp {																																		\
+	TextureDataBase(IdleAnimations) + 3, TextureDataBase(IdleAnimations) + 4, TextureDataBase(IdleAnimations) + 5, TextureDataBase(IdleAnimations) + 6, TextureDataBase(IdleAnimations) + 7, TextureDataBase(IdleAnimations) + 8, TextureDataBase(IdleAnimations) + 8				\
+}
+
+
 			constexpr double PLAYER_CLIMBING_SPEED = 40;
 
 			typedef int8_t PlayerEmotion;
@@ -171,7 +190,7 @@ namespace  GAME_NAME
 			float m_curr = 0;
 			void Player::Update(GLFWwindow* window)
 			{
-				std::thread playerInput([this] { readKeys(); });
+				std::thread playerInput([this] {  std::srand(time(0)) /*Must reseed because thread dosen't carry over.*/; readKeys(); });
 
 				std::thread animationUpdate([this, window] { m_animator->Update(window, this); });
 
@@ -391,6 +410,7 @@ namespace  GAME_NAME
 						}
 						else {
 							//DEFAULT RENDER MODE.
+
 
 							m_sprite->Render(cameraPosition, m_position + (m_textureFlipped ? (m_scale * Vec2::OneX) : 0), m_scale * (m_textureFlipped ? Vec2::MinusOneXOneY : 1), m_rotation);
 						}
@@ -688,12 +708,26 @@ namespace  GAME_NAME
 				m_physics->SetVelocity(Vec2::Zero);
 			}
 
+			void Player::Dive(Vec2 direction, float damage)
+			{
+				m_position += Vec2(0, 2.f);
+				AddVelocity(direction);
+				m_diving = damage;
+			}
+
 			void Player::onCollision(Vec2 push, GameObject* collided)
 			{
 				if (m_swimming) { return; }
 				if (m_foundCollisionInTick) { return; }
 				if (push.Y > 0)
 				{
+					if (m_diving > 0.f)
+					{
+						Damage(m_diving, collided);
+						m_airTime = 0.f;
+						m_diving = 0.f;
+					}
+
 					if (m_isFlying)
 					{
 						//Reset flying graivty.
@@ -706,11 +740,11 @@ namespace  GAME_NAME
 					m_physics->SetVelocityY(0.f);
 
 					//Calculate fall damage.
-					if (m_airTime > 1.85f)
+					if (m_airTime > 1.35f)
 					{
 						std::cout << m_airTime << std::endl;
 
-						Damage(((float)m_airTime - 1.85f) * 10.f, collided);
+						Damage(((float)m_airTime - 1.35f) * 10.f, collided);
 					}
 
 					m_airTime = 0;
@@ -806,10 +840,15 @@ namespace  GAME_NAME
 				RegisterAnimation(fall_over_data, PlayerFallOverAnim, fall_over_anim, ANIM_6_SPF);			  //5
 				RegisterAnimation(get_up_data, PlayerGetUpAnim, get_up_anim, ANIM_6_SPF);					  //6
 				RegisterAnimation(basic_attack_data, PlayerBasicAttackAnim, basic_attack_anim, ANIM_16_SPF);  //7
+				RegisterAnimation(climbing_behind_data, PlayerClimbingBehindAnim, climbing_behind_anim, ANIM_12_SPF);	//8
+				RegisterAnimation(player_sitting_puff_data, PlayerSittingPuffAnim, player_sitting_puff_anim, ANIM_6_SPF); //9
+				RegisterAnimation(player_idle_tap_toe_data, PlayerIdleTapToe, player_idle_tap_toe_anim, ANIM_6_SPF); //10
+				RegisterAnimation(player_idle_stomp_data, PlayerIdleStomp, player_idle_stomp_anim, ANIM_6_SPF); //11
+
 
 #pragma endregion
 
-				std::vector<std::shared_ptr<GAME_NAME::Components::Animation::Animation>> anims{ walk_anim, run_anim, fall_anim, jump_anim, skid_anim, fall_over_anim, get_up_anim, basic_attack_anim };
+				std::vector<std::shared_ptr<GAME_NAME::Components::Animation::Animation>> anims{ walk_anim, run_anim, fall_anim, jump_anim, skid_anim, fall_over_anim, get_up_anim, basic_attack_anim, climbing_behind_anim, player_sitting_puff_anim, player_idle_tap_toe_anim, player_idle_stomp_anim };
 
 				m_animator = new AnimatorComponent(anims);
 			}
@@ -872,6 +911,47 @@ namespace  GAME_NAME
 
 			void Player::readKeys()
 			{
+				//Setting these values to true causes the player to walk in that direction this frame.
+				bool animateMoveRight = false, animateMoveLeft = false;
+
+				//The player is currently locked in an animation sequence.
+				if (m_targetSequence.size() > 0)
+				{
+					if (m_targetSequence[0].IgnoreGravity)
+					{
+						m_physics->SetGravityStrength(0);
+						m_airTime = 0.f;
+					}
+
+					if (glfwGetTime() - m_targetSequence[0].StartTime > m_targetSequence[0].Delay)
+					{
+						Vec2& walkTo = m_targetSequence[0].WalkTo;
+
+						//Player has not reached the target location (currently excludes the Y position [CHANGE LATER]).
+						if (std::abs(m_position.X - walkTo.X) > 1.f)
+						{
+							animateMoveRight = m_position.X - walkTo.X < 0.f;
+							animateMoveLeft = !animateMoveRight;
+
+						}
+						else {
+							//This step is complete.
+
+							if (m_targetSequence[0].IgnoreGravity)
+							{
+								m_physics->SetGravityStrength(DefaultPlayerGravity);
+							}
+
+							m_targetSequence.erase(m_targetSequence.begin());
+
+							if (m_targetSequence.size() > 0)
+							{
+								m_targetSequence[0].StartTime = glfwGetTime();
+							}
+						}
+					}	
+				}
+
 				//Jump to stop sitting on a bench.
 				if (m_currentPlayerLookDirection == SITTING_FORWARD)
 				{
@@ -883,11 +963,15 @@ namespace  GAME_NAME
 
 				if (m_climbing)
 				{
+					m_airTime = 0;
+					m_animator->SetSpeedMult(0);
+
 					if (InputManager::GetKey(PLAYER_MOVE_UP))
 					{
 						if (m_climbing->GetPosition().Y + m_climbing->GetScale().Y > m_position.Y + 6.5f)
 						{
 							Translate({ 0.f, (float)(Utils::Time::GameTime::GetScaledDeltaTime() * PLAYER_CLIMBING_SPEED) });
+							m_animator->SetSpeedMult(1);
 						}
 					}
 					else if (InputManager::GetKey(PLAYER_MOVE_DOWN))
@@ -895,13 +979,15 @@ namespace  GAME_NAME
 						if (m_climbing->GetPosition().Y < m_position.Y + m_scale.Y - 6.5f)
 						{
 							Translate({ 0.f, (float)(-Utils::Time::GameTime::GetScaledDeltaTime() * PLAYER_CLIMBING_SPEED) });
+							m_animator->SetSpeedMult(1);
 						}
 					}
 					else if(InputManager::GetKey(PLAYER_MOVE_LEFT))
 					{
-						if (m_climbing->GetPosition().X < m_position.X + 3.5f)
+						if (m_climbing->GetPosition().X < m_position.X + 6.5f)
 						{
 							Translate({ (float)(-Utils::Time::GameTime::GetScaledDeltaTime() * PLAYER_CLIMBING_SPEED), 0.f });
+							m_animator->SetSpeedMult(1);
 						}
 					}
 					else if(InputManager::GetKey(PLAYER_MOVE_RIGHT))
@@ -909,6 +995,7 @@ namespace  GAME_NAME
 						if (m_climbing->GetPosition().X + m_climbing->GetScale().X > m_position.X + m_scale.X - 6.5f)
 						{
 							Translate({ (float)(Utils::Time::GameTime::GetScaledDeltaTime() * PLAYER_CLIMBING_SPEED), 0.f });
+							m_animator->SetSpeedMult(1);
 						}
 					}
 
@@ -924,7 +1011,13 @@ namespace  GAME_NAME
 					}
 				}
 
-				m_physics->SetFrictionDrag(Drag);
+				if (m_diving)
+				{
+					m_physics->SetFrictionDrag(0);
+				}
+				else {
+					m_physics->SetFrictionDrag(Drag);
+				}
 
 				//TESTING: REMOVE
 				//Fake damage by pressing TAB
@@ -999,7 +1092,7 @@ namespace  GAME_NAME
 
 
 				//If the player is frozen, do not check any key presses.
-				if (m_frozen <= 0) 
+				if ((m_diving <= 0.f && m_frozen <= 0.f) || animateMoveLeft || animateMoveRight)
 				{
 					float addSpeedCap = 0.f;
 
@@ -1009,7 +1102,7 @@ namespace  GAME_NAME
 						addSpeedCap += PlayerSpeedCap / 2.f;
 					}
 	
-					if (InputManager::GetKey(PLAYER_MOVE_RIGHT))
+					if (!animateMoveLeft && (animateMoveRight || InputManager::GetKey(PLAYER_MOVE_RIGHT)))
 					{
 
 #if _DEBUG
@@ -1036,7 +1129,7 @@ namespace  GAME_NAME
 						}
 					}
 
-					if (InputManager::GetKey(PLAYER_MOVE_LEFT))
+					if (!animateMoveRight && (animateMoveLeft || InputManager::GetKey(PLAYER_MOVE_LEFT)))
 					{
 #if _DEBUG
 						if (m_flight)
@@ -1072,7 +1165,7 @@ namespace  GAME_NAME
 					setAnimations(playerIsSkidding, anim_momentum);
 
 					//Check if the user is holding the FORCE_WALK [Left Shift] key and damps the player's speed to 1/2 walking speed.
-					if (InputManager::GetKey(PLAYER_FORCE_WALK))
+					if (InputManager::GetKey(PLAYER_FORCE_WALK) || ((animateMoveLeft || animateMoveRight) && !m_targetSequence[0].Sprinting))
 					{
 						if (anim_momentum > (PLAYER_ANIMATION_RUN_WALK_SWITCH/2))
 						{
@@ -1098,7 +1191,7 @@ namespace  GAME_NAME
 
 
 				//Check if player is jumping and not frozen.
-				if (m_frozen <= 0 && InputManager::GetKey(PLAYER_JUMP))
+				if (m_diving <= 0 && m_frozen <= 0 && InputManager::GetKey(PLAYER_JUMP) && !animateMoveLeft && !animateMoveRight)
 				{
 					unsigned char checks = m_physics->GetUpdatesThisFrame();
 					while (checks > 0)
@@ -1164,18 +1257,26 @@ namespace  GAME_NAME
 
 			void Player::setAnimations(bool playerIsSkidding, float& anim_momentum)
 			{
+				//Rand to fix issue with seed getting set every single time.
+				std::rand();
+
 				anim_momentum = std::abs(m_physics->GetVelocity().X);	//X Speed of player.
 
-				if (m_onGround)
+				if (m_onGround || (m_targetSequence.size() > 0 && m_targetSequence[0].IgnoreGravity))
 				{
+					//Don't allow the player to try to play idle animations while in a sequence.
+					if (m_targetSequence.size() > 0) { m_timeSpentNotMoving = 0; }
+
 					if (playerIsSkidding && anim_momentum > 60.f)
 					{
+						m_timeSpentNotMoving = 0.0;
 						m_animator->SetCurrentAnimation(4); //Skidding Animation
 						return;
 					}
 
-					if (anim_momentum > 0.1f && m_onGround && !m_swimming)	//Check if player is moving a certain speed, is on the ground, and is not swimming.
+					if (anim_momentum > 0.1f && (m_onGround || (m_targetSequence.size() > 0 && m_targetSequence[0].IgnoreGravity)) && !m_swimming)	//Check if player is moving a certain speed, is on the ground, and is not swimming.
 					{
+						m_timeSpentNotMoving = 0.0;
 						m_animator->SetSpeedMult((double)anim_momentum / 100.0);
 						if (anim_momentum > PLAYER_ANIMATION_RUN_WALK_SWITCH)
 						{
@@ -1188,14 +1289,70 @@ namespace  GAME_NAME
 						return;
 					}
 					
-					if (m_begunMotion)
+
+					//Is currently in an idle animation.
+					if (m_playingIdleAnimation > 0)
 					{
+						//If this is the stomping animation, freeze the animation on the last frame.
+						if (m_animator->GetCurrentAnimationIndex() == 11 && m_animator->GetCurrentAnimation()->GetFrame() > 5)
+						{
+							m_animator->SetSpeedMult(0);
+						}
+
+						m_playingIdleAnimation -= Utils::Time::GameTime::GetScaledDeltaTime();
+						return;
+					}
+
+					m_timeSpentNotMoving += Time::GameTime::DeltaTime::GetDeltaTime();
+
+					//Reset sprite to default sprite if it needs to be changed.
+					if (m_begunMotion || (m_playingIdleAnimation < 0 && m_animator->GetCurrentAnimationIndex() > 9))
+					{
+						//if (m_sprite != nullptr) { delete m_sprite; } //TODO: Maybe.
+
 						m_animator->SetCurrentAnimation(-1); //No Animation
 						m_sprite = Renderer::GetSprite(DefaultPlayerSprite);
 						m_begunMotion = false;
 					}
+
+					if (m_timeSpentNotMoving < 3.1) { return; }
+
+					/*
+						-- Random checks to determine if the player should begin an idle animation.
+						These become more likely as the player stands still.
+					*/
+
+					int myRand = std::rand();
+
+					if (myRand < RAND_MAX / std::abs(800 - m_timeSpentNotMoving * 50))
+					{
+						int ran = std::rand();
+						int chosen = (int)(std::floor((float)(ran) / (float)(RAND_MAX) * 4));
+
+						m_timeSpentNotMoving = 0.0;
+						switch (chosen)
+						{
+						case 1:	//TAP TOE
+							m_animator->SetCurrentAnimation(10);
+							m_animator->SetSpeedMult(1.2f);
+							m_playingIdleAnimation = 4.0;
+							break;
+						case 2:	//STOMP
+							m_animator->SetCurrentAnimation(11);
+							m_animator->SetSpeedMult(1.f);
+							m_playingIdleAnimation = 4.25;
+							break;
+							
+						default:
+							break;
+						}
+					}
+
+
 					return;
 				}
+
+				m_timeSpentNotMoving = 0.0;
 
 
 				m_animator->SetSpeedMult(1.0);
@@ -1322,16 +1479,62 @@ namespace  GAME_NAME
 
 					case BAG:
 					{
-						//delete m_sprite;
+						delete m_sprite;
 						m_sprite = Renderer::GetSprite(PLAYER_LOOK_BAG);
 						break;
 					}
 
 					case SITTING_FORWARD:
 					{
-						//TODO: Animate sitting down.
 
+
+						m_scale = Vec2(17, 24.5f);
+
+						if (m_animator->GetCurrentAnimationIndex() != 9)
+						{
+							//Do a puff animation.
+							if (std::rand() < RAND_MAX / 525)
+							{
+								m_animator->SetCurrentAnimation(9);
+								m_animator->SetSpeedMult(1);
+							}
+							else {
+								Sprite* nSprite = Renderer::GetSprite(PLAYER_SIT_TEXTURE);
+								if (m_sprite->GetSpriteId() == nSprite->GetSpriteId())
+								{
+									delete nSprite;
+								}
+								else {
+									m_sprite = nSprite;
+								}
+							}
+						}
+						else if(m_animator->GetCurrentAnimation()->GetFrame() == 4) {
+							m_animator->GetCurrentAnimation()->IncrementFrame(this);
+							m_animator->SetCurrentAnimation(0);
+							m_animator->SetSpeedMult(0);
+						}
+						
+
+						//Just started sitting, force puff animation.
+						if (m_scale.X != 17)
+						{
+							m_animator->SetCurrentAnimation(9);
+							m_animator->SetSpeedMult(1);
+						}
+
+						SetTextureFlipped(true);
+						m_airTime = 0;
 						m_physics->SetVelocity(0);
+
+						break;
+					}
+
+					case CLIMBING_BACK:
+					{
+						//TODO: Animate climbing.
+
+						m_animator->SetCurrentAnimation(8);
 
 						break;
 					}
