@@ -461,7 +461,7 @@ namespace GAME_NAME
 						if (m_guiGameObjects[currLayer][i] != nullptr && i < m_guiGameObjects[currLayer].size())
 						{
 							try {
-								m_guiGameObjects[currLayer][i]->Render();
+								m_guiGameObjects[currLayer][i]->Render(camera->GetZoom());
 							}
 							catch (...)
 							{

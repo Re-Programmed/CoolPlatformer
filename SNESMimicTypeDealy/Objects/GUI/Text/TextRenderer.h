@@ -35,6 +35,18 @@ namespace GAME_NAME::Objects::GUI::Text
 		/// </summary>
 		typedef std::vector<Letter> RenderedWord;
 
+		struct ExpectedLetter {
+			std::mutex letterLock;
+			Letter letter;
+
+
+		};
+
+
+		/// <summary>
+		/// Not all the letters in an ExpectedRendereedWord have appeared yet, the letters that haven't appeared will have a scale of 0, so if they are modified the mutex letterLock must be avaiable to avoid conflicts.
+		/// </summary>
+		typedef std::vector<ExpectedLetter*> ExpectedRenderedWord;
 
 		/// <summary>
 		/// Draws a digit to the screen at the given position with the given scale.
@@ -43,9 +55,9 @@ namespace GAME_NAME::Objects::GUI::Text
 		/// <param name="position">The position to draw the digit.</param>
 		/// <param name="scale">The scale to draw the digit.</param>
 		/// <returns></returns>
-		static StaticGUIElement* RenderDigit(digit digit, Vec2& position, const float scale);
+		static StaticGUIElement* RenderDigit(digit digit, Vec2& position, const float scale, int font = TEXT_RENDERER_ZERO_DIGIT_SPRITE_ID);
 
-		static RenderedDigit RenderNumber(uint16_t number, Vec2& firstDigitPosition, const float scale, const float digitPadding, uint8_t minimumDigits = 0);
+		static RenderedDigit RenderNumber(uint16_t number, Vec2& firstDigitPosition, const float scale, const float digitPadding, uint8_t minimumDigits = 0, int font = TEXT_RENDERER_ZERO_DIGIT_SPRITE_ID);
 
 		/// <summary>
 		/// Renders the given char as a texture offset from the "DEFAULT_FONT_RENDER_A_SPRITE_ID."
@@ -55,7 +67,7 @@ namespace GAME_NAME::Objects::GUI::Text
 		/// <param name="position"></param>
 		/// <param name="scale"></param>
 		/// <returns></returns>
-		static Letter RenderLetter(char letter, const Vec2& position, const float scale, int layer = 1);
+		static Letter RenderLetter(char letter, const Vec2& position, const float scale, int layer = 1, int font = DEFAULT_FONT_RENDER_A_SPRITE_ID);
 
 		/// <summary>
 		/// Renders a word with given scale, position, and letterPadding based on texture offset from "DEFAULT_FONT_RENDER_A_SPRITE_ID."
@@ -65,7 +77,10 @@ namespace GAME_NAME::Objects::GUI::Text
 		/// <param name="scale">[const float] - The size of all the letters.</param>
 		/// <param name="letterPadding">[const float&amp;&amp;] - The space between each letter.</param>
 		/// <returns>[RenderedWord] - The word that was rendered.</returns>
-		static RenderedWord RenderWord(std::string word, Vec2 position, const float scale, const float&& letterPadding, int layer = 1);
+		static RenderedWord RenderWord(std::string word, Vec2 position, const float scale, const float&& letterPadding, int layer = 1, int font = DEFAULT_FONT_RENDER_A_SPRITE_ID);
+
+		static ExpectedRenderedWord RenderWordCaseSensitive(std::string word, Vec2 position, const float scale, const float&& letterPadding, int layer = 1, int uppercaseFont = DEFAULT_FONT_RENDER_A_SPRITE_ID, int lowercaseFont = DEFAULT_FONT_RENDER_LOWERCASE_A_SPRITE_ID, std::chrono::milliseconds letterAppearanceSpeed = std::chrono::milliseconds(0));
+
 
 	private:
 		/// <summary>

@@ -62,7 +62,7 @@ namespace GAME_NAME
 				/// <summary>
 				/// Draw the element.
 				/// </summary>
-				void Render();
+				void Render(float zoom);
 			protected:
 				Vec2 m_position;
 				Vec2 m_scale;

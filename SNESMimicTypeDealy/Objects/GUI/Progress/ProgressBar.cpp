@@ -15,7 +15,7 @@ namespace GAME_NAME::Objects::GUI
 		}
 	}
 
-	void ProgressBar::Render()
+	void ProgressBar::Render(float zoom)
 	{
 		if (m_percentage != m_displayPercentage)
 		{
@@ -37,7 +37,7 @@ namespace GAME_NAME::Objects::GUI
 			m_sprite = new DynamicSprite(retrievedSpriteID, textureCoords, textureCoords);
 		}
 
-		StaticGUIElement::Render();
+		StaticGUIElement::Render(zoom);
 	}
 
 

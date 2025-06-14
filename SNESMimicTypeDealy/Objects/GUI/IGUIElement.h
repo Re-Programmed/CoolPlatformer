@@ -9,7 +9,7 @@ namespace GAME_NAME
 			__interface IGUIElement
 			{
 			public:
-				void Render();
+				void Render(float zoom);
 			};
 		}
 	}

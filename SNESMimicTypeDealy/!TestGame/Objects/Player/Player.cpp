@@ -213,7 +213,7 @@ namespace  GAME_NAME
 					Sprite* attribModSprite = Renderer::GetSprite(4/*Change to show attrib modifier.*/);
 					StaticGUIElement* attribModElement = new StaticGUIElement(Vec2{ 112, 12 + yOffset }, Vec2{ 16, 16 }, attribModSprite->GetSpriteId());
 
-					attribModElement->Render();
+					attribModElement->Render(TestGame::INSTANCE->GetCamera()->GetZoom());
 
 					delete attribModElement;
 					delete attribModSprite;

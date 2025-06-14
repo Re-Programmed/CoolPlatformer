@@ -69,7 +69,7 @@ namespace GAME_NAME
 					return m_baseColor;
 				}
 
-				void Render() override;	//Overriden to have detection for hovering.
+				void Render(float zoom) override;	//Overriden to have detection for hovering.
 
 			private:
 				/// <summary>

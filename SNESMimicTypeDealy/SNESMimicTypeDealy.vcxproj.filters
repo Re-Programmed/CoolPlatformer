@@ -360,6 +360,9 @@
     <ClCompile Include="!TestGame\Objects\Environment\Movement\Trampoline.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="!TestGame\Cutscenes\DialogueManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glad\include\glad\glad.h">
@@ -762,6 +765,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="!TestGame\Objects\Environment\Movement\Trampoline.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="!TestGame\Cutscenes\DialogueManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="!TestGame\Cutscenes\DialogueSequence.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

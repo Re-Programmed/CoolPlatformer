@@ -16,7 +16,7 @@ namespace GAME_NAME
 	{
 		namespace GUI
 		{
-			void GUIButton::Render()
+			void GUIButton::Render(float zoom)
 			{
 				Vec2 mousePos = InputManager::GetMouseScreenPosition();
 

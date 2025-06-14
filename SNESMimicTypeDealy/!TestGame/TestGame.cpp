@@ -18,6 +18,8 @@
 #include "./InputDisplay/DisplayIconManager.h"
 #include "../Objects/Particles/ParticleEmitter.h"
 
+#include "./Cutscenes/DialogueManager.h"
+
 #include "./Objects/Environment/Levels/Town1Manager.h"
 
 #include "./Items/Inventories/InventoryContainerRenderer.h"
@@ -137,6 +139,9 @@ namespace GAME_NAME
 
 		m_camera = m_gameCamera;
 
+		//Initilize dialogue systems.
+		Cutscenes::DialogueManager::Init();
+
 		SaveManager::SetCurrentFile("default_s");
 
 		LoadLevel("/green_region", LEVEL_DATA_TEXTURES_BACKGROUND);
@@ -154,9 +159,7 @@ namespace GAME_NAME
 
 		SaveManager::SaveString("testing string", "data_0");
 
-
 		Input::DisplayIconManager::CreateKeyDisplayObjects();
-
 	}
 
 	void TestGame::LateUpdate(GLFWwindow* window)
@@ -180,7 +183,6 @@ namespace GAME_NAME
 
 			Rendering::Renderer::LoadActiveObject(ThePlayer.get(), 2); //Spawn in the player on Active Layer 2.
 		}
-
 
 		//TEST
 		MusicSync::MusicSync::SetCurrentSong(134, 2);
@@ -271,6 +273,15 @@ namespace GAME_NAME
 		//MusicSync::MusicSync::Subscribe(testAudioUpdate);
 
 		//TODO: add music sync to everything.
+
+		GameObject* test = new GameObject({ 400, 50 }, { 25 }, Renderer::GetSprite(24));
+		Renderer::LoadActiveObject(test);
+
+		Cutscenes::DialogueManager::INSTANCE->PlayDialogueSequence(Cutscenes::DialogueSequence(3,
+			Cutscenes::DialogueSequence::DialogueEvent("Hey! You look like you need\nsome cash... Check out my Pyramid Scheme!!", test, 1.f),
+			Cutscenes::DialogueSequence::DialogueEvent("[Man, this guy has some nerve...]", ThePlayer.get(), 1.4f),
+			Cutscenes::DialogueSequence::DialogueEvent("Uhh... Yea! You should buy \none million toothbrushes from me.", test, 1.f)
+		));
 	}
 
 

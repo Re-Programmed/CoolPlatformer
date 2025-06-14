@@ -38,7 +38,7 @@ namespace GAME_NAME::Objects::GUI
 			return m_percentage;
 		}
 
-		void Render() override;
+		void Render(float zoom) override;
 
 	private:
 		/// <summary>

@@ -137,6 +137,7 @@
   <ItemGroup>
     <ClCompile Include="!TestGame\Camera\LevelBuilderCam.cpp" />
     <ClCompile Include="!TestGame\Cutscenes\CutsceneManager.cpp" />
+    <ClCompile Include="!TestGame\Cutscenes\DialogueManager.cpp" />
     <ClCompile Include="!TestGame\Cutscenes\InnerThoughtScene.cpp" />
     <ClCompile Include="!TestGame\Debug\DebugCommands.cpp" />
     <ClCompile Include="!TestGame\InputDisplay\DisplayIconManager.cpp" />
@@ -257,6 +258,8 @@
     <ClInclude Include="!TestGame\Camera\LevelBuilderCam.h" />
     <ClInclude Include="!TestGame\Cutscenes\Cutscene.h" />
     <ClInclude Include="!TestGame\Cutscenes\CutsceneManager.h" />
+    <ClInclude Include="!TestGame\Cutscenes\DialogueManager.h" />
+    <ClInclude Include="!TestGame\Cutscenes\DialogueSequence.h" />
     <ClInclude Include="!TestGame\Cutscenes\InnerThoughtScene.h" />
     <ClInclude Include="!TestGame\Debug\DebugCommands.h" />
     <ClInclude Include="!TestGame\InputDisplay\DisplayIconManager.h" />
