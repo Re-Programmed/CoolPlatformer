@@ -37,19 +37,19 @@ using namespace GAME_NAME::Components::Physics::Collision;
 			switch (index)
 			{
 			case 0:
-				v.push_back(Renderer::InstantiateGameObject(new StaticBoxCollisionObject(Vec2::Zero, Vec2(32, 21), Rendering::Renderer::GetSprite(6)), false, 2, false));
-				v.push_back(Renderer::InstantiateGameObject(new GameObject(Vec2(0, 21), Vec2(32, 4), Rendering::Renderer::GetSprite(12)), false, 3, false));
+				v.emplace_back(new StaticBoxCollisionObject(Vec2::Zero, Vec2(32, 21), Rendering::Renderer::GetSprite(6)), false, 2, false);
+				v.emplace_back(new GameObject(Vec2(0, 21), Vec2(32, 4), Rendering::Renderer::GetSprite(12)), false, 3, false);
 				break;
 			case 1:
-				v.push_back(Renderer::InstantiateGameObject(new GameObject(Vec2::Zero, Vec2(32, 30), Rendering::Renderer::GetSprite(23)), false, 2, false));
+				v.emplace_back(new GameObject(Vec2::Zero, Vec2(32, 30), Rendering::Renderer::GetSprite(23)), false, 2, false);
 				break;
 			case 2:
-				v.push_back(Renderer::InstantiateGameObject(new GameObject(Vec2::Zero, Vec2(32, 21), Rendering::Renderer::GetSprite(6)), false, 2, false));
-				v.push_back(Renderer::InstantiateGameObject(new GameObject(Vec2(0, 21), Vec2(32, 4), Rendering::Renderer::GetSprite(12)), false, 3, false));
-				v.push_back(Renderer::InstantiateGameObject(new StaticBoxCollisionObject(Vec2(0, 18.5), Vec2(32, 2.5), Rendering::Renderer::GetSprite(1)), false, 2, false)); //MAKE NOT HIT FROM BOTTOM
+				v.emplace_back(new GameObject(Vec2::Zero, Vec2(32, 21), Rendering::Renderer::GetSprite(6)), false, 2, false);
+				v.emplace_back(new GameObject(Vec2(0, 21), Vec2(32, 4), Rendering::Renderer::GetSprite(12)), false, 3, false);
+				v.emplace_back(new StaticBoxCollisionObject(Vec2(0, 18.5), Vec2(32, 2.5), Rendering::Renderer::GetSprite(1)), false, 2, false); //MAKE NOT HIT FROM BOTTOM
 				break;
 			default:
-				v.push_back(Renderer::InstantiateGameObject(new StaticBoxCollisionObject(Vec2::Zero, Vec2(32, 21), Rendering::Renderer::GetSprite(6)), false, 2, false));
+				v.emplace_back(new StaticBoxCollisionObject(Vec2::Zero, Vec2(32, 21), Rendering::Renderer::GetSprite(6)), false, 2, false);
 				break;
 			}
 

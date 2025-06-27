@@ -23,13 +23,11 @@ namespace GAME_NAME::Objects::Enemies
 	{
 		if (TestGame::ThePlayer->GetDebug())
 		{
-			Sprite* const startPoint = Renderer::GetSprite(SpriteBase(53));
+			auto const startPoint = Renderer::GetSprite(SpriteBase(53));
 			startPoint->Render(cameraPosition, m_leftAnchor + Vec2{ 0, 8 + (m_movingLeft * 5.f) }, {16, 16});
-			delete startPoint;
 
-			Sprite* const endPoint = Renderer::GetSprite(SpriteBase(54));
+			auto const endPoint = Renderer::GetSprite(SpriteBase(54));
 			endPoint->Render(cameraPosition, m_rightAnchor + Vec2{ 0, 8 + ((!m_movingLeft) * 5.f) }, { 16, 16 });
-			delete endPoint;
 		}
 
 		GameObject::Render(cameraPosition);

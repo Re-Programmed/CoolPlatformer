@@ -20,7 +20,7 @@ namespace GAME_NAME::Objects::Environment
 
 		if (result != "f")
 		{
-			explode(false);
+			Explode(false);
 		}
 	}
 
@@ -38,16 +38,18 @@ namespace GAME_NAME::Objects::Environment
 
 	void ExplosiveObject::Update(GLFWwindow* window)
 	{
+		if (TestGame::ThePlayer == nullptr) { return; }
+
 		if (m_reason & JUMPED_ON)
 		{
 			if (Vec2::Distance(TestGame::ThePlayer->GetPosition() + TestGame::ThePlayer->GetScale() / 2, m_position + m_scale / 2) < 1.f + m_scale.X / 2)
 			{
-				explode();
+				Explode();
 			}
 		}
 	}
 
-	void ExplosiveObject::explode(bool createExplosion)
+	void ExplosiveObject::Explode(bool createExplosion)
 	{
 using namespace Effects;
 

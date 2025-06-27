@@ -13,10 +13,10 @@ namespace GAME_NAME
 		public:
 			void SetPosition(Vec2 position);
 			Vec2 GetPosition();
-			void Translate(Vec2 translate);			//Move the object's position.
-			void Translate(float x, float y);		//Move the object's position.
+			void Translate(const Vec2& translate);			//Move the object's position.
+			void Translate(const float& x, const float& y);		//Move the object's position.
 
-			void SetPositionAndScale(Vec2& position, Vec2& scale, Rendering::Sprite* sprite = nullptr);	//Allows the setting of the position, scale, and sprite all in one! 
+			void SetPositionAndScale(Vec2& position, Vec2& scale, std::shared_ptr<Rendering::Sprite> sprite = nullptr);	//Allows the setting of the position, scale, and sprite all in one! 
 
 			void SetScale(Vec2 scale);
 			Vec2 GetScale();
@@ -30,9 +30,11 @@ namespace GAME_NAME
 			void RotateAboutCenter(float rotation);
 			void SetRotationAboutCenter(float rotation);
 
-			Rendering::Sprite* GetSprite();
+			const std::shared_ptr<Rendering::Sprite> GetSprite();
 			void SetSprite(Rendering::Sprite* sprite);
-			
+			void SetSprite(std::shared_ptr<Rendering::Sprite> sprite);
+			void SetSpriteId(const unsigned int& ID);
+
 			/// <summary>
 			/// Flips the texture accross the Y axis.
 			/// </summary>
@@ -47,8 +49,8 @@ namespace GAME_NAME
 				return m_textureFlipped;
 			}
 
-			GameObject(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, float rotation = 0.f) : m_position(position), m_sprite(sprite), m_scale(scale), m_rotation(rotation), m_rotationOffset(0), m_textureFlipped(false) {};
-
+			GameObject(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, float rotation = 0.f) : m_position(position), m_sprite(std::shared_ptr<Rendering::Sprite>(sprite)), m_scale(scale), m_rotation(rotation), m_rotationOffset(0), m_textureFlipped(false) {};
+			GameObject(Vec2 position, Vec2 scale, std::shared_ptr<Rendering::Sprite> sprite, float rotation = 0.f) : m_position(position), m_sprite(sprite), m_scale(scale), m_rotation(rotation), m_rotationOffset(0), m_textureFlipped(false) {};
 
 			GameObject();
 
@@ -64,7 +66,7 @@ namespace GAME_NAME
 		protected:
 			Vec2 m_position;
 			Vec2 m_scale;
-			Rendering::Sprite* m_sprite;
+			std::shared_ptr<Rendering::Sprite> m_sprite;
 			float m_rotation;
 
 			bool m_textureFlipped;

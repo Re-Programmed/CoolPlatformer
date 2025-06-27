@@ -136,6 +136,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="!TestGame\Camera\LevelBuilderCam.cpp" />
+    <ClCompile Include="!TestGame\Cutscenes\Character\AnimatingCharacter.cpp" />
     <ClCompile Include="!TestGame\Cutscenes\CutsceneManager.cpp" />
     <ClCompile Include="!TestGame\Cutscenes\DialogueManager.cpp" />
     <ClCompile Include="!TestGame\Cutscenes\InnerThoughtScene.cpp" />
@@ -153,6 +154,7 @@
     <ClCompile Include="!TestGame\Level\GlobalLevelData.cpp" />
     <ClCompile Include="!TestGame\Level\LevelInfoDisplay.cpp" />
     <ClCompile Include="!TestGame\Level\LevelManager.cpp" />
+    <ClCompile Include="!TestGame\Level\MainMenu\MainMenuManager.cpp" />
     <ClCompile Include="!TestGame\Mappings.cpp" />
     <ClCompile Include="!TestGame\Camera\GameCamera.cpp" />
     <ClCompile Include="!TestGame\Objects\Collectables\BasicCollectable.cpp" />
@@ -176,6 +178,7 @@
     <ClCompile Include="!TestGame\Objects\Environment\CloudGenerator.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Effects\BloodMark.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Effects\Explosion.cpp" />
+    <ClCompile Include="!TestGame\Objects\Environment\Effects\GlitchedRegion.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Effects\GlitchEffect.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Effects\Rain.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\ExplosiveObject.cpp" />
@@ -256,6 +259,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="!TestGame\Camera\LevelBuilderCam.h" />
+    <ClInclude Include="!TestGame\Cutscenes\Character\AnimatingCharacter.h" />
     <ClInclude Include="!TestGame\Cutscenes\Cutscene.h" />
     <ClInclude Include="!TestGame\Cutscenes\CutsceneManager.h" />
     <ClInclude Include="!TestGame\Cutscenes\DialogueManager.h" />
@@ -279,6 +283,8 @@
     <ClInclude Include="!TestGame\Level\GlobalLevelData.h" />
     <ClInclude Include="!TestGame\Level\LevelInfoDisplay.h" />
     <ClInclude Include="!TestGame\Level\LevelManager.h" />
+    <ClInclude Include="!TestGame\Level\LevelSystem.h" />
+    <ClInclude Include="!TestGame\Level\MainMenu\MainMenuManager.h" />
     <ClInclude Include="!TestGame\Mappings.h" />
     <ClInclude Include="!TestGame\Camera\GameCamera.h" />
     <ClInclude Include="!TestGame\Objects\Collectables\BasicCollectable.h" />
@@ -301,6 +307,7 @@
     <ClInclude Include="!TestGame\Objects\Environment\CloudGenerator.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Effects\BloodMark.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Effects\Explosion.h" />
+    <ClInclude Include="!TestGame\Objects\Environment\Effects\GlitchedRegion.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Effects\GlitchEffect.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Effects\Rain.h" />
     <ClInclude Include="!TestGame\Objects\Environment\ExplosiveObject.h" />

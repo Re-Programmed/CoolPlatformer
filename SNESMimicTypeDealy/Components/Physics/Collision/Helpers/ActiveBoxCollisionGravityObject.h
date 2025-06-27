@@ -30,6 +30,15 @@ namespace GAME_NAME
 						m_boxCollider->SetBeforeUpdate(beforeUpdate);
 					}
 
+					ActiveBoxCollisionGravityObject(Vec2 position, Vec2 scale, std::shared_ptr<GAME_NAME::Rendering::Sprite> sprite)
+						: GameObject(position, scale, sprite), m_boxCollider(new ActiveBoxCollider()), m_physics(new GravityComponent())
+					{
+						m_boxCollider->Init(this);
+						m_physics->Init(this);
+						m_boxCollider->SetOnCollision(onCollisionS);
+						m_boxCollider->SetBeforeUpdate(beforeUpdate);
+					}
+
 					~ActiveBoxCollisionGravityObject()
 					{
 						//delete m_boxCollider;

@@ -23,6 +23,8 @@
 
 #include "../TestGame.h"
 
+#include "../Level/LevelManager.h"
+
 #define DebugCommands_Log(x) DEBUG::DebugLog::Log(std::string("[Debug Commands] ").append(x), true, ";33");
 
 std::vector<std::string> DebugCommands::m_queuedCommands = std::vector<std::string>(2);
@@ -175,6 +177,15 @@ void DebugCommands::HandleCommands()
 			GAME_NAME::TestGame::INSTANCE->RenderFront = true;
 
 			DebugCommands_Log("Loaded a level.");
+
+			continue;
+		}
+
+		if (input == "wipe")
+		{
+			GAME_NAME::Level::LevelManager::LevelCircleAnimation(GAME_NAME::TestGame::ThePlayer->GetPosition() - GAME_NAME::TestGame::INSTANCE->GetCamera()->GetPosition());
+			
+			DebugCommands_Log("Played circle wipe.");
 
 			continue;
 		}

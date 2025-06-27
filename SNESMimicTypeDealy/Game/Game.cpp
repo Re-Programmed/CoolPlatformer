@@ -42,9 +42,7 @@ namespace GAME_NAME
 
 			if ((dataToLoad & LEVEL_DATA_DATA_CHUNKS) != 0)
 			{
-				std::vector<int> data;
-				data = AssetManager::GetChunkData(levelPath);
-
+				auto data = AssetManager::GetChunkData(levelPath);
 				Renderer::InitChunks(data);
 			}
 			

@@ -40,7 +40,6 @@ namespace GAME_NAME::Objects::Environment::Buildings
 		~Door()
 		{
 			delete m_boxCollider;
-			delete m_openSprite;
 			GameObject::~GameObject();
 		};
 	private:
@@ -56,7 +55,7 @@ namespace GAME_NAME::Objects::Environment::Buildings
 		/// <summary>
 		/// Holds a pointer to the opposite sprite of what the doors current state is. Ex. if the door is open, the m_openSprite will be the closed one.
 		/// </summary>
-		Rendering::Sprite* m_openSprite;
+		std::shared_ptr<GAME_NAME::Rendering::Sprite> m_openSprite;
 
 		/// <summary>
 		/// True if the door is open.

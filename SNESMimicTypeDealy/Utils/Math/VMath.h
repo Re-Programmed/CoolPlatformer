@@ -16,6 +16,13 @@ namespace GAME_NAME
 #define MATHUTILS_INVSQRT2 0.707106781187 //STORED FOR EFFICIENCY: 1/sqrt(2)
 #define MATHUTILS_INVSQRT2f 0.707106781187f //STORED FOR EFFICIENCY: 1/sqrt(2)
 
+		//Gives the number of digits taken up by the given number in base 10.
+		inline int num_digitsi(int number)
+		{
+			if (number <= 0) { return 0; }
+			return std::ceil(std::log10(number));
+		}
+
 		///Silly function some guy came up with that maybe is fast but probably dosent matter on modern devices.
 		inline float inv_sqrtf(float number)
 		{

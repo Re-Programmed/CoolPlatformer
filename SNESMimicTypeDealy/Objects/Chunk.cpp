@@ -49,9 +49,9 @@ namespace GAME_NAME
 			return m_objects;
 		}
 
-		std::vector<GameObject*>* Chunk::GetFrontObjects()
+		std::vector<GameObject*>& Chunk::GetFrontObjects()
 		{
-			return &m_frontObjects;
+			return m_frontObjects;
 		}
 
 		void Chunk::Render(const Vec2 cameraPosition, const int chunkSize, RENDER_LAYER layer, GLFWwindow* window, int microLayer)

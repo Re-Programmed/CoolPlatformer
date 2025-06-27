@@ -15,6 +15,8 @@ namespace GAME_NAME::Components
 	{
 	public:
 		ChildGameObject(Vec2 relPosition, Vec2 scale, Rendering::Sprite* sprite, GameObject* parent, float rotation = 0.f) : GameObject(relPosition + parent->GetPosition(), scale, sprite, rotation), m_parent(parent), m_relPosition(relPosition) {};
+		ChildGameObject(Vec2 relPosition, Vec2 scale, std::shared_ptr<Rendering::Sprite> sprite, GameObject* parent, float rotation = 0.f) : GameObject(relPosition + parent->GetPosition(), scale, sprite, rotation), m_parent(parent), m_relPosition(relPosition) {};
+
 		ChildGameObject() : m_parent(nullptr), m_relPosition(Vec2(0)) {};
 
 		~ChildGameObject()

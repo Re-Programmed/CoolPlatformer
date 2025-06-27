@@ -11,11 +11,17 @@ namespace GAME_NAME
 		namespace Environment
 		{
 			struct BakedReflection {		//Baked reflection stores an object and a DynamicSprite that can be updated to apply ripples to reflections.
-				GameObject Object;
-				std::unique_ptr<Rendering::DynamicSprite> Sprite;
+				std::shared_ptr<GameObject> Object;
+				std::shared_ptr<Rendering::DynamicSprite> Sprite;
 
 				Vec4 Perc;
 				float Check;
+
+				BakedReflection(std::shared_ptr<GameObject> object, std::shared_ptr<Rendering::DynamicSprite> sprite, Vec4 perc, float check)
+					: Object(object), Sprite(sprite), Perc(perc), Check(check)
+				{
+
+				}
 			};
 
 			constexpr int8_t WaterSprite = 37;	//Default sprite for water to use.

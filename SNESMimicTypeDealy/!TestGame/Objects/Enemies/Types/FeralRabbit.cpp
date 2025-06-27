@@ -42,7 +42,7 @@ namespace GAME_NAME::Objects::Enemies
 		if (m_isAsleep)
 		{
 			//delete m_sprite; //Cannot delete original sprite since it is used by PassiveRabbit as m_baseSprite.
-			m_sprite = Renderer::GetSprite(95);
+			m_sprite.reset(Renderer::GetSprite(95));
 			
 			if (distanceToPlayer < FERAL_RABBIT_AWAKEN_DISTANCE)
 			{

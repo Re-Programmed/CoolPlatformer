@@ -88,7 +88,7 @@ namespace GAME_NAME
 		/// </summary>
 		/// <param name="itemType">The type of item to get the texture of.</param>
 		/// <returns>The texture relating to the given item type.</returns>
-		inline Rendering::Sprite* const ITEMTYPE_GetItemTypeTexture(ITEM_TYPE itemType)
+		inline Sprite* const ITEMTYPE_GetItemTypeTexture(ITEM_TYPE itemType)
 		{
 			return Renderer::GetSprite(ITEM_DATA[itemType].Texture);
 		}

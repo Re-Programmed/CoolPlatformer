@@ -18,8 +18,8 @@ namespace GAME_NAME::Objects::Environment::Plants
 		LoadState();
 
 		AnimData rustleData;
-		rustleData.Sprites.push_back(new Sprite(m_sprite->GetSpriteId() + 1));
-		rustleData.Sprites.push_back(new Sprite(m_sprite->GetSpriteId() + 2));
+		rustleData.Sprites.emplace_back(std::make_shared<Sprite>(m_sprite->GetSpriteId() + 1));
+		rustleData.Sprites.emplace_back(std::make_shared<Sprite>(m_sprite->GetSpriteId() + 2));
 		std::shared_ptr<GAME_NAME::Components::Animation::Animation> rustle(new GAME_NAME::Components::Animation::Animation(rustleData, 0.2f));
 
 		std::vector<std::shared_ptr<GAME_NAME::Components::Animation::Animation>> anims{ rustle };
@@ -174,9 +174,8 @@ using namespace Particles;
 		m_isChopped = chopped;
 
 		//FLIP m_choppedSprite and m_sprite
-		Rendering::Sprite* const spCpy = new Rendering::Sprite(m_choppedSprite->GetSpriteId());
+		const std::shared_ptr<Rendering::Sprite> spCpy = std::shared_ptr<Rendering::Sprite>(new Rendering::Sprite(m_choppedSprite->GetSpriteId()));
 
-		delete m_choppedSprite;
 		this->m_choppedSprite = m_sprite;
 
 		m_sprite = spCpy;

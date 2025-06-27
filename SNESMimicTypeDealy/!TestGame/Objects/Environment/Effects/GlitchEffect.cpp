@@ -22,7 +22,7 @@ namespace GAME_NAME::Objects::Environment::Effects
 			m_purples[i]->Translate(Vec2{ std::sinf(2 * glfwGetTime() + i)/10.5f, std::cosf(glfwGetTime() + i) / 20.5f });
 		}
 
-		Rendering::DynamicSprite* tSprite = Rendering::Renderer::GetDynamicSprite((std::rand() * RAND_TEXTURE_RANGE) / RAND_MAX);
+		auto tSprite = Rendering::Renderer::GetDynamicSprite((std::rand() * RAND_TEXTURE_RANGE) / RAND_MAX);
 
 		float r = (float)std::rand() / (float)RAND_MAX, g = (float)std::rand() / (float)RAND_MAX, b = (float)std::rand() / (float)RAND_MAX;
 
@@ -40,8 +40,6 @@ namespace GAME_NAME::Objects::Environment::Effects
 		tSprite->UpdateTextureColor(PERC_75_VERTS);
 
 		tSprite->Render(cameraPosition, m_position, m_scale, m_rotation);
-
-		delete tSprite;
 	}
 
 

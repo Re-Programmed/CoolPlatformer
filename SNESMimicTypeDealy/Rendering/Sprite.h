@@ -94,6 +94,14 @@ namespace GAME_NAME
 			}
 #endif
 
+			/// <summary>
+			///  *** Should only really be used by prerender executions hoping to modify the sprite before it is rendered. If a new sprite should be drawn to the screen, a new Sprite() should be created.
+			/// </summary>
+			inline void SetSpriteId(unsigned int id)
+			{
+				m_spriteId = id;
+			}
+
 			static void SetResolution(Vec2 res);														//Sets the resolution scale of all sprites. This determines how to scale the sprites based on the resizing of the window. [Maintains scale no matter your resolution]
 
 			const unsigned int GetSpriteId();															//Returns the sprite buffer index currently used.
@@ -123,7 +131,7 @@ namespace GAME_NAME
 
 			static Vec2 m_resolutionScale;																//Resolution scale of all sprites.
 
-			const unsigned int m_spriteId;																//Current sprite buffer ID.
+			 unsigned int m_spriteId;																//Current sprite buffer ID.
 		};
 	}
 }

@@ -146,7 +146,7 @@ namespace  GAME_NAME
 				m_particleEmitter->SetScale(m_scale);
 
 				//INIT WATER MUSIC
-				Audio::SoundManager::WaterMusic = Audio::SoundManager::Play(Audio::UnderwaterMusicID, Audio::SoundManager::BGMusic, -1.0F, 0.0F, true);
+				//Audio::SoundManager::WaterMusic = Audio::SoundManager::Play(Audio::UnderwaterMusicID, Audio::SoundManager::BGMusic, -1.0F, 0.0F, true);
 
 				//Load the stat overlay menu that contains sprites for health and inventory.
 				GUI::Menus::GUIMenu::LoadMenu("/stat_overlay", nullptr);
@@ -210,13 +210,12 @@ namespace  GAME_NAME
 						WHAT GIVES YOU ATTRIBUTES. POISON, FOOD, ETC
 					*/
 
-					Sprite* attribModSprite = Renderer::GetSprite(4/*Change to show attrib modifier.*/);
+					auto attribModSprite = Renderer::GetSprite(4/*Change to show attrib modifier.*/);
 					StaticGUIElement* attribModElement = new StaticGUIElement(Vec2{ 112, 12 + yOffset }, Vec2{ 16, 16 }, attribModSprite->GetSpriteId());
 
 					attribModElement->Render(TestGame::INSTANCE->GetCamera()->GetZoom());
 
 					delete attribModElement;
-					delete attribModSprite;
 					yOffset += 20;
 				}
 
@@ -247,7 +246,7 @@ namespace  GAME_NAME
 					{
 						SetFrozen(false);
 						//delete m_sprite; NO CAUSES ERROR (DELETING ANIMATION SPRITES)
-						m_sprite = Renderer::GetSprite(SpriteBase(0));
+						m_sprite.reset(Renderer::GetSprite(SpriteBase(0)));
 
 						m_rotation = 0.f;
 					}
@@ -410,8 +409,7 @@ namespace  GAME_NAME
 						}
 						else {
 							//DEFAULT RENDER MODE.
-
-
+							
 							m_sprite->Render(cameraPosition, m_position + (m_textureFlipped ? (m_scale * Vec2::OneX) : 0), m_scale * (m_textureFlipped ? Vec2::MinusOneXOneY : 1), m_rotation);
 						}
 					}
@@ -435,7 +433,7 @@ namespace  GAME_NAME
 					if (m_animator->GetCurrentAnimationIndex() == 7 /*Basic Attack Anim*/)
 					{
 						const int frame = 0;
-						m_heldItemLastSprite = Renderer::GetSprite(baseSpriteId + frame);
+						m_heldItemLastSprite = std::shared_ptr<Sprite>(Renderer::GetSprite(baseSpriteId + frame));
 						m_heldItemDisplayFrameOffset = frame;
 						m_heldItemDisplay->SetSprite(m_heldItemLastSprite);
 
@@ -484,7 +482,7 @@ namespace  GAME_NAME
 					if (playerYVel > 1.5f && !m_onGround)
 					{
 						const int frame = 0;
-						m_heldItemLastSprite = Renderer::GetSprite(baseSpriteId + frame);
+						m_heldItemLastSprite.reset(Renderer::GetSprite(baseSpriteId + frame));
 						m_heldItemDisplayFrameOffset = frame;
 						m_heldItemDisplay->SetSprite(m_heldItemLastSprite);
 
@@ -492,7 +490,7 @@ namespace  GAME_NAME
 					}else if (playerYVel < -1.5f && !m_onGround)
 					{
 						const int frame = 2;
-						m_heldItemLastSprite = Renderer::GetSprite(baseSpriteId + frame);
+						m_heldItemLastSprite.reset(Renderer::GetSprite(baseSpriteId + frame));
 						m_heldItemDisplayFrameOffset = frame;
 						m_heldItemDisplay->SetSprite(m_heldItemLastSprite);
 
@@ -531,8 +529,7 @@ namespace  GAME_NAME
 							break;
 						}
 
-						delete m_heldItemLastSprite; //?? memory?
-						m_heldItemLastSprite = Renderer::GetSprite(baseSpriteId + frame);
+						m_heldItemLastSprite = std::shared_ptr<Sprite>(Renderer::GetSprite(baseSpriteId + frame));
 						m_heldItemDisplayFrameOffset = frame;
 						m_heldItemDisplay->SetSprite(m_heldItemLastSprite);
 
@@ -827,7 +824,7 @@ namespace  GAME_NAME
 			void Player::registerAnimations()
 			{
 #define RegisterAnimation(data_name, data_source, data_out, spf) AnimData data_name; \
-				for(int i : data_source){ data_name.Sprites.push_back(Renderer::GetSprite(i)); }; \
+				for(int i : data_source){ data_name.Sprites.emplace_back(std::shared_ptr<Sprite>(Renderer::GetSprite(i))); }; \
 				std::shared_ptr<GAME_NAME::Components::Animation::Animation> data_out(new GAME_NAME::Components::Animation::Animation(data_name, spf)); 
 
 #pragma region Init Animation
@@ -1311,7 +1308,7 @@ namespace  GAME_NAME
 						//if (m_sprite != nullptr) { delete m_sprite; } //TODO: Maybe.
 
 						m_animator->SetCurrentAnimation(-1); //No Animation
-						m_sprite = Renderer::GetSprite(DefaultPlayerSprite);
+						m_sprite.reset(Renderer::GetSprite(DefaultPlayerSprite));
 						m_begunMotion = false;
 					}
 
@@ -1380,8 +1377,7 @@ namespace  GAME_NAME
 
 				if (m_currentPlayerLookDirection == FOLLOW_MOUSE)
 				{
-					delete m_sprite;
-					m_sprite = Renderer::GetSprite(PLAYER_NO_HEAD_SPRITE);
+					m_sprite = std::shared_ptr<Sprite>(Renderer::GetSprite(PLAYER_NO_HEAD_SPRITE));
 
 					if (m_emotionsObject == nullptr)
 					{
@@ -1418,7 +1414,7 @@ namespace  GAME_NAME
 					case BEHIND:
 					{
 						//delete m_sprite;
-						m_sprite = Renderer::GetSprite(PLAYER_LOOK_BEHIND_SPRITE);
+						m_sprite.reset(Renderer::GetSprite(PLAYER_LOOK_BEHIND_SPRITE));
 						break;
 					}
 
@@ -1466,7 +1462,7 @@ namespace  GAME_NAME
 							m_animator->SetSpeedMult(0.f);
 
 							//delete m_sprite;
-							m_sprite = Renderer::GetSprite(PLAYER_FALLEN_SPRITE);
+							m_sprite.reset(Renderer::GetSprite(PLAYER_FALLEN_SPRITE));
 							m_rotation = -11.f;
 
 						}
@@ -1479,8 +1475,7 @@ namespace  GAME_NAME
 
 					case BAG:
 					{
-						delete m_sprite;
-						m_sprite = Renderer::GetSprite(PLAYER_LOOK_BAG);
+						m_sprite.reset(Renderer::GetSprite(PLAYER_LOOK_BAG));
 						break;
 					}
 
@@ -1499,13 +1494,10 @@ namespace  GAME_NAME
 								m_animator->SetSpeedMult(1);
 							}
 							else {
-								Sprite* nSprite = Renderer::GetSprite(PLAYER_SIT_TEXTURE);
-								if (m_sprite->GetSpriteId() == nSprite->GetSpriteId())
+								auto nSprite = Renderer::GetSprite(PLAYER_SIT_TEXTURE);
+								if (m_sprite->GetSpriteId() != nSprite->GetSpriteId())
 								{
-									delete nSprite;
-								}
-								else {
-									m_sprite = nSprite;
+									m_sprite.reset(nSprite);
 								}
 							}
 						}
@@ -1588,7 +1580,7 @@ using namespace Lighting;
 
 						m_frozen = false;
 						m_animator->SetCurrentAnimation(-1);
-						m_sprite = Renderer::GetSprite(DefaultPlayerSprite);
+						m_sprite.reset(Renderer::GetSprite(DefaultPlayerSprite));
 					}
 
 					return;

@@ -50,8 +50,7 @@ namespace GAME_NAME::Objects::Environment::Buildings
 
 	void Door::flipSprite()
 	{
-		Rendering::Sprite* const temp = new Rendering::Sprite(*m_sprite);
-		delete m_sprite;
+		const std::shared_ptr<Rendering::Sprite> temp = std::make_shared<Sprite>(m_sprite->GetSpriteId());
 
 		m_sprite = m_openSprite;
 		m_openSprite = temp;

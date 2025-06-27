@@ -21,7 +21,6 @@ namespace GAME_NAME::Objects::GUI
 		{
 			//Save the sprite ID as m_sprite will be deleted.
 			const unsigned int retrievedSpriteID = m_sprite->GetSpriteId();
-			delete m_sprite;
 
 			//Smoothly update display percentage.
 			m_displayPercentage = (float)std::lerp(m_displayPercentage, m_percentage, 0.01f);
@@ -34,7 +33,7 @@ namespace GAME_NAME::Objects::GUI
 				Vec2(((float)m_displayPercentage) / 100.f, 0.f)
 			};
 
-			m_sprite = new DynamicSprite(retrievedSpriteID, textureCoords, textureCoords);
+			m_sprite = std::shared_ptr<Sprite>(new DynamicSprite(retrievedSpriteID, textureCoords, textureCoords));
 		}
 
 		StaticGUIElement::Render(zoom);

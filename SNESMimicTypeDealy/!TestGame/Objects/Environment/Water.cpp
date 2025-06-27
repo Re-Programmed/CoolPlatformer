@@ -48,7 +48,14 @@ namespace GAME_NAME
 					};
 					const float check = std::clamp((m_scale.X / 2) - ((scale.X / 2) + std::abs((pos.X + scale.X / 2) - (m_position.X + m_scale.X / 2))), 0.f, 25.f) / 25.f;
 
-					m_bakedReflections.push_back(std::make_unique<BakedReflection>(GameObject(Vec2(pos.X, (2 * m_reflectionPosition.Y) - pos.Y - scale.Y), scale, obj->GetSprite()), std::make_unique<DynamicSprite>(obj->GetSprite()->GetSpriteId(), vertices, vertices, textureColor), Vec4(percXM, percXG, percYM, percYG), check));
+					BakedReflection* br = new BakedReflection(
+						std::make_shared<GameObject>(Vec2(pos.X, (2 * m_reflectionPosition.Y) - pos.Y - scale.Y), scale, obj->GetSprite()),	//Object
+						std::make_shared<DynamicSprite>(obj->GetSprite()->GetSpriteId(), vertices, vertices, textureColor),					//Sprite
+						Vec4(percXM, percXG, percYM, percYG),																				//Perc
+						check																												//Check
+					);
+
+					m_bakedReflections.emplace_back(std::unique_ptr<BakedReflection>(br));
 				
 					r++;
 				}
@@ -82,8 +89,8 @@ namespace GAME_NAME
 
 
 					m_bakedReflections[i]->Sprite->UpdateVertices(vertices);
-					GameObject object = m_bakedReflections[i]->Object;
-					m_bakedReflections[i]->Sprite->Render(camPos, object.GetPosition(), object.GetScale(), object.GetRotation());
+					std::shared_ptr<GameObject> object = m_bakedReflections[i]->Object;
+					m_bakedReflections[i]->Sprite->Render(camPos, object->GetPosition(), object->GetScale(), object->GetRotation());
 				}
 
 				for (GameObject* obj : Renderer::GetAllActiveObjectsInArea(m_reflectionPosition, m_scale))

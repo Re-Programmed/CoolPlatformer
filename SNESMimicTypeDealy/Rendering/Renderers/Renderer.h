@@ -9,6 +9,8 @@
 #include "../../Objects/GUI/IGUIElement.h"
 #include "../DynamicSprite.h"
 
+#include <array>
+
 #include "../../EngineCompileOptions.h"
 
 #define SpriteBase(x) (GLOBAL_SPRITE_BASE+x)  //Returns the offset of a sprite from the sprite base.
@@ -46,8 +48,20 @@ namespace GAME_NAME
 
 			//Load a file to the sprite buffer.
 			static GLuint LoadSprite(const char* file);
+
+			struct TextureData { unsigned char* Data; int Width, Height; };
+			static inline GLuint LoadSpriteFromData(const TextureData& data) 
+			{
+				return LoadSpriteFromData(data.Data, data.Width, data.Height);
+			}
+
+			//Load a sprite into the buffer from given pixel data.
+			static GLuint LoadSpriteFromData(unsigned char* data, const int& width, const int& height);
+
 			//Load a file to the BG buffer.
 			static GLuint LoadBG(const char* file);
+
+			static const TextureData GetTextureData(GLuint textureID, GLuint mipmapLevel = 0);
 
 			/// <summary>
 			/// Removes all loaded buffers after the given index.
@@ -194,7 +208,7 @@ namespace GAME_NAME
 			/// <summary>
 			/// Must be called before the creation of any objects.
 			/// </summary>
-			static void InitChunks(std::vector<int> chunkData);
+			static void InitChunks(const std::array<int, DEFAULT_LEVEL_SIZE_X* DEFAULT_LEVEL_SIZE_Y>& chunkData);
 
 			/// <summary>
 			/// Sets a constant to add to all sprite texture indices. (For loading multiple levels at once. The last loaded level will always use positive indices with other levels having negative values.)
@@ -214,10 +228,16 @@ namespace GAME_NAME
 				return lastFileOff;
 			}
 
+			static inline const int GetTextureIndexFromID(const GLuint& ID)
+			{
+				//(ID = index - bgCount + lastFileOff)
+				return ID - bgCount - lastFileOff;
+			}
+
 			/// <summary>
-			/// Returns the GL sprite buffer from a given sprite index.
+			/// Returns the GL sprite buffer from a given sprite index. *****DOES NOT ADHERE TO SPRITE_BASE.*****
 			/// </summary>
-			static inline const GLuint GetTextureIDFromIndex(const unsigned int index)
+			static inline const GLuint GetTextureIDFromIndex(const unsigned int& index)
 			{
 #if _DEBUG
 				if (m_textureIDs.size() <= index)
@@ -229,6 +249,10 @@ namespace GAME_NAME
 				return m_textureIDs[index - 1];
 			}
 
+			static inline const unsigned int GetImageCount()
+			{
+				return imageCount;
+			}
 
 		private:
 			/// <summary>
@@ -241,6 +265,7 @@ namespace GAME_NAME
 
 			//The number of sprites loaded.
 			static unsigned int spriteCount, bgCount, imageCount;
+
 
 			/// <summary>
 			/// Loads a texture to a buffer.

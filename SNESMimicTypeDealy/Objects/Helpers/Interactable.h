@@ -13,7 +13,9 @@ namespace GAME_NAME::Objects
 	{
 	public:
 		Interactable(keyRef interactKey, InputManager::KEY_STATE keyStateCheck, Vec2 position, Vec2 scale, Rendering::Sprite* sprite, float rotation = 0.f, bool useBoundingBox = false);
+		Interactable(keyRef interactKey, InputManager::KEY_STATE keyStateCheck, Vec2 position, Vec2 scale, std::shared_ptr<Rendering::Sprite> sprite, float rotation = 0.f, bool useBoundingBox = false);
 		Interactable(keyRef interactKey, InputManager::KEY_STATE keyStateCheck, float interactionRadius, Vec2 position, Vec2 scale, Rendering::Sprite* sprite, float rotation = 0.f);
+		Interactable(keyRef interactKey, InputManager::KEY_STATE keyStateCheck, float interactionRadius, Vec2 position, Vec2 scale, std::shared_ptr<Rendering::Sprite> sprite, float rotation = 0.f);
 
 		void Update(GLFWwindow* window) override;
 	protected:

@@ -68,6 +68,13 @@ namespace GAME_NAME
 			return loadImage(file);
 		}
 
+		GLuint Renderer::LoadSpriteFromData(unsigned char* data, const int& width, const int& height)
+		{
+			spriteCount++;
+			GLuint val = loadImageData(data, width, height);
+			return val;
+		}
+
 		GLuint Renderer::LoadBG(const char* file)
 		{
 			///DEBUGGING
@@ -76,6 +83,20 @@ namespace GAME_NAME
 #endif
 			bgCount++;
 			return loadImage(file);
+		}
+
+		const Renderer::TextureData Renderer::GetTextureData(GLuint textureID, GLuint mipmapLevel)
+		{
+			glBindTexture(GL_TEXTURE_2D, textureID);
+
+			GLint w, h;
+			glGetTexLevelParameteriv(GL_TEXTURE_2D, mipmapLevel, GL_TEXTURE_WIDTH, &w);
+			glGetTexLevelParameteriv(GL_TEXTURE_2D, mipmapLevel, GL_TEXTURE_HEIGHT, &h);
+
+			unsigned char* imageData = static_cast<unsigned char*>(malloc(w * h * 4 * sizeof(unsigned char)));
+			glGetTexImage(GL_TEXTURE_2D, mipmapLevel, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
+			
+			return { imageData, w, h };
 		}
 
 		void Renderer::ClearGUIObjects(uint16_t startIndex, uint8_t layer)
@@ -182,12 +203,12 @@ namespace GAME_NAME
 			for (int layer = 0; layer < MICRO_RENDER_LAYER_COUNT; layer++)
 			{
 				int index = 0;
-				std::vector<GameObject*>* objs = &m_activeGameObjects[layer];
-				for (GameObject* obj : *objs)
+				std::vector<GameObject*>& objs = m_activeGameObjects[layer];
+				for (GameObject* obj : objs)
 				{
 					if (obj == des)
 					{
-						objs->erase(objs->begin() + index);
+						objs.erase(objs.begin() + index);
 						return;
 					}
 
@@ -226,36 +247,11 @@ namespace GAME_NAME
 
 		void Renderer::ClearObjects()
 		{
-			for (int i = 0; i < MICRO_RENDER_LAYER_COUNT; i++)
+			for (int i = 0; i < levelSizeX * levelSizeY; i++)
 			{
-				//for (GameObject* obj : m_activeGameObjects[i])
-				//{
-				//	delete obj;
-
-				//}
-
-				m_activeGameObjects[i].clear();
-
-				for (Chunk c : m_chunks)
-				{
-					//for (GameObject* obj : c.GetObjects()[i])
-					//{
-						//delete obj;
-					//}
-
-					c.GetObjects()[i].clear();
-				}
+				m_chunks[i].ClearObjects();
 			}
 
-			for (Chunk c : m_chunks)
-			{
-				//for (int i = 0; i < c.GetFrontObjects()->size(); i++)
-				//{
-					//delete (*c.GetFrontObjects())[i];
-				//}
-
-				c.GetFrontObjects()->clear();
-			}
 
 			for (int i = 0; i < MICRO_GUI_LAYER_COUNT; i++)
 			{
@@ -267,7 +263,15 @@ namespace GAME_NAME
 				m_guiGameObjects[i].clear();
 			}
 
-			
+			for (int i = 0; i < 4; i++)
+			{
+				/*for (GameObject* obj : m_activeGameObjects[i])
+				{
+					delete obj;
+				}*/
+
+				m_activeGameObjects[i].clear();
+			}
 		}
 
 		/*
@@ -346,18 +350,22 @@ namespace GAME_NAME
 
 		GLuint Renderer::loadImageData(unsigned char* data, const int& width, const int& height, bool freeData)
 		{
+			if (m_textureIDs.size() < 1)
+			{
+				m_textureIDs.reserve(120);
+			}
+
 			if (data == NULL)
 			{
 				std::cout << stbi_failure_reason() << std::endl;
 			}
 
-			GLuint textureBuffer;
+			//Add the texture to the list of textures.
+			GLuint& textureBuffer = m_textureIDs.emplace_back(0);
+
 			//Create the texture ID and assign the image to that ID.
 			glGenTextures(1, &textureBuffer);
 			glBindTexture(GL_TEXTURE_2D, textureBuffer);
-
-			//Add the texture to the list of textures.
-			m_textureIDs.push_back(textureBuffer);
 
 			//Parameters for transparency, height, width, etc.
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
@@ -384,7 +392,7 @@ namespace GAME_NAME
 			return (GLuint)m_textureIDs.size() - 1;
 		}
 
-		void Renderer::InitChunks(std::vector<int> chunkData)
+		void Renderer::InitChunks(const std::array<int, DEFAULT_LEVEL_SIZE_X * DEFAULT_LEVEL_SIZE_Y>& chunkData)
 		{
 			for (int x = levelSizeX - 1; x >= 0; x--)
 			{
@@ -485,6 +493,8 @@ namespace GAME_NAME
 			if (layer == RENDER_LAYER_ACTIVE_OBJECTS)
 			{
 				std::vector<GameObject*> renderBuffer;
+				//Reserve all the space needed for the buffer.
+				renderBuffer.reserve(m_activeGameObjects[1].size() + m_activeGameObjects[2].size() + m_activeGameObjects[3].size());
 
 				Vec2 cameraPositionPadding = cameraPosition - cameraBoundsPadding / 2.f;
 				Vec2 cameraBounds = Vec2(static_cast<const float>(cameraBoundingBox.GetX()), static_cast<const float>(cameraBoundingBox.GetY()));
@@ -508,7 +518,7 @@ namespace GAME_NAME
 
 						if (Utils::CollisionDetection::BoxWithinBox(obj->GetPosition(), obj->GetScale(), cameraPositionPadding, cameraBounds))
 						{
-							renderBuffer.push_back(obj);
+							renderBuffer.emplace_back(obj);
 						}
 
 					}
@@ -568,7 +578,9 @@ namespace GAME_NAME
 			if (layer == RENDER_LAYER_BG)
 			{
 				std::vector<GameObject*> renderBuffer;
+				renderBuffer.reserve(m_activeGameObjects->size());
 
+				//Two loops are used to ensure that all objects render, and then all objects update.
 				for (GameObject* bg2Object : m_activeGameObjects[0])
 				{
 					if (UpdateObjects)
@@ -645,7 +657,7 @@ namespace GAME_NAME
 							}
 						}
 
-						for (GameObject* add : *m_chunks[start + (x * levelSizeY) + y].GetFrontObjects())
+						for (GameObject* add : m_chunks[start + (x * levelSizeY) + y].GetFrontObjects())
 						{
 							if (boxOverlap ? Utils::CollisionDetection::BoxWithinBox(bottomLeft, scale, add->GetPosition(), add->GetScale()) : Utils::CollisionDetection::PointWithinBoxBL(add->GetPosition(), bottomLeft, scale))
 							{

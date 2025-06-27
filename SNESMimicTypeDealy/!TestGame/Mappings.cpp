@@ -105,14 +105,14 @@ std::function<void (std::vector<std::string>, size_t line)> m_mappings[MAPPINGS_
 #endif
 		uint8_t layer = (data.size() > 5) ? std::stoi(data[5]) : 1;
 
-		Sprite* finalSprite = nullptr;
+		std::shared_ptr<Sprite> finalSprite = nullptr;
 
 		if (data[4].starts_with("sb_"))
 		{
-			finalSprite = Renderer::GetSprite(SpriteBase(std::stoi(data[4].substr(3))));
+			finalSprite = std::shared_ptr<Sprite>(Renderer::GetSprite(SpriteBase(std::stoi(data[4].substr(3)))));
 		}
 		else {
-			finalSprite = Renderer::GetSprite(std::stoi(data[4]));
+			finalSprite = std::shared_ptr<Sprite>(Renderer::GetSprite(std::stoi(data[4])));
 		}
 
 		Renderer::LoadObject(new Objects::GameObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), finalSprite), layer, (data.size() > 6) ? std::stoi(data[6]) > 0 : false);

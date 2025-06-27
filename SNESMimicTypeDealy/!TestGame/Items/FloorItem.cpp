@@ -10,7 +10,7 @@ namespace GAME_NAME
 {
 	namespace Items
 	{
-		Rendering::DynamicSprite* FloorItem::m_glowSprite = nullptr;
+		std::shared_ptr<Rendering::DynamicSprite> FloorItem::m_glowSprite = nullptr;
 
 		FloorItem::FloorItem(Vec2 position, ITEM_TYPE type, float pickupDelay)
 			: ActiveRotationalBoxCollisionGravityObject(position, Vec2(DF_FLOOR_ITEM_SCALE), ITEMTYPE_GetItemTypeTexture(type), RotationalCollider_Settings(
@@ -23,10 +23,9 @@ namespace GAME_NAME
 
 			if (!m_glowSprite)
 			{
-				Sprite* s = Renderer::GetSprite(FLOOR_ITEM_GLOW_SPRITE);
+				auto s = Renderer::GetSprite(FLOOR_ITEM_GLOW_SPRITE);
 
-				m_glowSprite = new DynamicSprite(*s);
-				delete s;
+				m_glowSprite = std::make_shared<DynamicSprite>(s->GetSpriteId());
 
 				Vec4 transparentColor[4] = { 
 					{ 1.f, 1.f, 1.f, 0.3f },
@@ -36,6 +35,8 @@ namespace GAME_NAME
 				};
 
 				m_glowSprite->UpdateTextureColor(transparentColor);
+
+				delete s;
 			}
 		}
 

@@ -6,6 +6,8 @@
 #include "../Objects/GameObject.h"
 #include <functional>
 #include <cassert>
+#include <array>
+#include "../Rendering/Renderers/Renderer.h"
 
 
 constexpr const char* AssetPath = "./Assets";			//Path to the Asset folder that contains all level data.
@@ -67,7 +69,7 @@ namespace GAME_NAME
 			/// Returns the chunk data for a level.
 			/// </summary>
 			/// <param name="subfolder">The directory within the assets folder to load.</param>
-			static std::vector<int> GetChunkData(const char* subfolder);
+			static std::array<int, DEFAULT_LEVEL_SIZE_X * DEFAULT_LEVEL_SIZE_Y> GetChunkData(const char* subfolder);
 
 			/// <summary>
 			/// Loads the object data for a level.

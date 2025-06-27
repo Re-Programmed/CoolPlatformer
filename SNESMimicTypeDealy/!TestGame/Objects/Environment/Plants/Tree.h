@@ -50,7 +50,7 @@ namespace GAME_NAME::Objects::Environment::Plants
 		/// <summary>
 		/// The sprite that displays after the tree has been chopped, or, if the tree is already chopped, the sprite to display when the tree is alive.
 		/// </summary>
-		Rendering::Sprite* m_choppedSprite;
+		std::shared_ptr<Rendering::Sprite> m_choppedSprite;
 		
 		/// <summary>
 		/// Is the tree cut down already?

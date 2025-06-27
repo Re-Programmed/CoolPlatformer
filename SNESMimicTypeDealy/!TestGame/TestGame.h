@@ -5,7 +5,7 @@
 #include "./Objects/Player/Player.h"
 #include "./Camera/GameCamera.h"
 #include "Level/GlobalLevelData.h"
-
+#include "Level/LevelSystem.h"
 
 namespace GAME_NAME
 {
@@ -62,7 +62,14 @@ namespace GAME_NAME
 			m_gameCamera = newCam;
 		}
 
+		static inline const LevelSystem* GetCurrentLevelSystem()
+		{
+			return m_currentLevelSystem.get();
+		}
+
 	private:
+		static std::unique_ptr<LevelSystem> m_currentLevelSystem;
+
 		GAME_NAME::Camera::GameCamera* m_gameCamera = nullptr;		//Pointer to the camera.
 
 		/// <summary>

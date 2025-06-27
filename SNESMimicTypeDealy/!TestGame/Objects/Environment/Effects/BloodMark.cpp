@@ -19,7 +19,7 @@ namespace GAME_NAME::Objects::Environment
 	{
 		if (forceSprite != nullptr)
 		{ 
-			m_sprite = forceSprite; 
+			m_sprite = std::shared_ptr<Sprite>(forceSprite);
 			m_scale = scale;
 
 			m_position -= Vec2(m_scale.X / 2.f, scale.Y);
@@ -53,8 +53,8 @@ namespace GAME_NAME::Objects::Environment
 			Vec2(percXG, 0.f)
 		};*/
 
-		Sprite* sprite = Renderer::GetSprite(BloodSpriteOptions[spriteIndex]);
-		m_sprite = new DynamicSprite(sprite->GetSpriteId()/*, vertices, vertices*/);
+		auto sprite = Renderer::GetSprite(BloodSpriteOptions[spriteIndex]);
+		m_sprite = std::shared_ptr<Sprite>(new DynamicSprite(sprite->GetSpriteId()/*, vertices, vertices*/));
 		delete sprite;
 	}
 }

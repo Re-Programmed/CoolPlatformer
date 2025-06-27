@@ -17,18 +17,18 @@ namespace GAME_NAME
             return m_position;
         }
 
-        void GameObject::Translate(Vec2 translate)
+        void GameObject::Translate(const Vec2& translate)
         {
             SetPosition(m_position + translate);
         }
 
-        void GameObject::Translate(float x, float y)
+        void GameObject::Translate(const float& x, const float& y)
         {
             m_position.X += x;
             m_position.Y += y;
         }
 
-        void GameObject::SetPositionAndScale(Vec2& position, Vec2& scale, Rendering::Sprite* sprite)
+        void GameObject::SetPositionAndScale(Vec2& position, Vec2& scale, std::shared_ptr<Rendering::Sprite> sprite)
         {
             m_position = position;
             m_scale = scale;
@@ -80,14 +80,26 @@ namespace GAME_NAME
             RotateAboutCenter(rotation - m_rotation);
         }
 
-        Rendering::Sprite* GameObject::GetSprite()
+        const std::shared_ptr<Rendering::Sprite> GameObject::GetSprite()
         {
             return m_sprite;
         }
 
         void GameObject::SetSprite(Rendering::Sprite* sprite)
         {
+            //delete m_sprite;
+            m_sprite.reset(sprite);
+            //m_sprite = std::shared_ptr<Rendering::Sprite>(sprite);
+        }
+
+        void GameObject::SetSprite(std::shared_ptr<Rendering::Sprite> sprite)
+        {
             m_sprite = sprite;
+        }
+
+        void GameObject::SetSpriteId(const unsigned int& ID)
+        {
+            m_sprite->SetSpriteId(ID);
         }
 
 

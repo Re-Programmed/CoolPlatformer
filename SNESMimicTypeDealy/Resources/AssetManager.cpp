@@ -1,5 +1,4 @@
 #include "AssetManager.h"
-#include "../Rendering/Renderers/Renderer.h"
 #include <string>
 #include <fstream>
 #include "../Audio/SoundManager.h"
@@ -8,6 +7,8 @@
 #include <regex>
 //regex for std::regex_replace
 #include "../!TestGame/Mappings.h"
+
+#include <array>
 
 #if _DEBUG
 #include "../Debug/DebugLog.h"
@@ -140,7 +141,7 @@ namespace GAME_NAME
 
 		}
 
-		std::vector<int> AssetManager::GetChunkData(const char* subfolder)
+		std::array<int, DEFAULT_LEVEL_SIZE_X * DEFAULT_LEVEL_SIZE_Y> AssetManager::GetChunkData(const char* subfolder)
 		{
 			std::string filePath = AssetPath;
 			filePath += subfolder;
@@ -149,11 +150,28 @@ namespace GAME_NAME
 			std::ifstream ChunkFile(filePath);
 			std::string text;
 
-			std::vector<int> data;
+			std::array<int, DEFAULT_LEVEL_SIZE_Y * DEFAULT_LEVEL_SIZE_X> data;
+			data.fill(0);
+
+			size_t i = 0;
 
 			while (std::getline(ChunkFile, text, ' '))
 			{
-				data.push_back(std::stoi(text));
+				if (i >= DEFAULT_LEVEL_SIZE_X * DEFAULT_LEVEL_SIZE_Y) 
+				{
+#if _DEBUG
+					DEBUG::DebugLog::LogWarning("AssetManager.cpp:162 - Chunk texture data file is larger than the given level size.");
+#endif	
+					return data;
+				}
+				data[i++] = std::stoi(text);
+			}
+
+			if (i < DEFAULT_LEVEL_SIZE_X * DEFAULT_LEVEL_SIZE_Y - 1)
+			{
+#if _DEBUG
+				DEBUG::DebugLog::LogError("AssetManager.cpp:170 - Chunk texture data file is too small for the given level size!");
+#endif	
 			}
 
 			return data;
@@ -171,8 +189,10 @@ namespace GAME_NAME
 			std::string line;
 
 			std::vector<std::string> definedMacros;	//Stores a list of strings representing the templates that macros will use.
-
+			definedMacros.reserve(5);
+				
 			std::vector<std::thread*> threads;
+			threads.reserve(10);
 			int thCurr = 0;
 
 			bool declaringMacro = false;

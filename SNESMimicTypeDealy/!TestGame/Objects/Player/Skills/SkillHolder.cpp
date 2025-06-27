@@ -39,7 +39,6 @@ namespace GAME_NAME::Objects::Player
 			m_currentSkill.Decode(states->at(0));
 		}
 
-		delete m_skillDisplay->GetSprite();
 		m_skillDisplay->SetSprite(new Sprite(SkillHolder_GetSkillSpriteId(m_currentSkill.Skill)));
 
 		//The current skill will always be the first state saved.
@@ -68,7 +67,6 @@ namespace GAME_NAME::Objects::Player
 	{
 		m_currentSkill.Skill = type;
 
-		delete m_skillDisplay->GetSprite();
 		m_skillDisplay->SetSprite(new Sprite(SkillHolder_GetSkillSpriteId(type)));
 	}
 

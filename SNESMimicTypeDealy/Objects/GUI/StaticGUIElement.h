@@ -19,7 +19,7 @@ namespace GAME_NAME
 			{
 			public:
 				StaticGUIElement(Vec2 position, Vec2 scale, GLuint texture)
-					:m_position(position), m_scale(scale), m_sprite(new Sprite(texture))
+					: m_position(position), m_scale(scale), m_sprite(std::make_shared<Sprite>(texture))
 				{
 					
 				}
@@ -49,15 +49,19 @@ namespace GAME_NAME
 
 				inline void SetSprite(Sprite* sprite)
 				{
-					m_sprite = sprite;
+					m_sprite = std::shared_ptr<Sprite>(sprite);
 				}
 
-				inline Sprite* GetSprite()
+				inline std::shared_ptr<Rendering::Sprite> GetSprite()
 				{
 					return m_sprite;
 				}
 #pragma endregion
 
+				~StaticGUIElement()
+				{
+					//delete m_sprite;
+				}
 
 				/// <summary>
 				/// Draw the element.
@@ -66,7 +70,7 @@ namespace GAME_NAME
 			protected:
 				Vec2 m_position;
 				Vec2 m_scale;
-				Rendering::Sprite* m_sprite;
+				std::shared_ptr<Rendering::Sprite> m_sprite;
 			};
 		}
 	}

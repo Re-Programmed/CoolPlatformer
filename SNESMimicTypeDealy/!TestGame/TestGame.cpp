@@ -20,6 +20,8 @@
 
 #include "./Cutscenes/DialogueManager.h"
 
+#include "./Objects/Environment/Effects/GlitchedRegion.h"
+
 #include "./Objects/Environment/Levels/Town1Manager.h"
 
 #include "./Items/Inventories/InventoryContainerRenderer.h"
@@ -42,12 +44,16 @@
 
 #include "./SettingsManager.h"
 
+#include "./Level/MainMenu/MainMenuManager.h"
+
 //TESTING:
 #include "./Objects/Environment/Buildings/Door.h"
 #include "./Objects/Environment/Buildings/FrontWall.h"
 
 #include "../Objects/GUI/GUIManager.h"
 #include "../Rendering/Lighting/SimpleLightingManager.h"
+
+#define SKIP_MAIN_MENU
 
 namespace GAME_NAME
 {
@@ -56,6 +62,8 @@ namespace GAME_NAME
 	using namespace Resources;
 
 	TestGame* GAME_NAME::TestGame::INSTANCE(nullptr);
+
+	std::unique_ptr<LevelSystem> TestGame::m_currentLevelSystem;
 
 	std::shared_ptr<Objects::Player::Player> TestGame::ThePlayer;
 
@@ -123,9 +131,12 @@ namespace GAME_NAME
 		MusicSync::MusicSync::Update();	//Update things that sync to the beat of the current song.
 
 		//If the player exists, update the game camera with the player's position.
-		m_gameCamera->Update(ThePlayer == nullptr ? Vec2(0) : ThePlayer->GetPosition());
+		m_gameCamera->Update(ThePlayer == nullptr ? (m_gameCamera->GetPosition() + Vec2{TargetResolutionX/2, TargetResolutionY/2}) : ThePlayer->GetPosition());
 
-		//std::cout << Time::GameTime::GetScaledDeltaTime() << std::endl;
+		if (m_currentLevelSystem != nullptr)
+		{
+			m_currentLevelSystem->Update(window);
+		}
 	}
 
 	void TestGame::Init(GLFWwindow* window)
@@ -144,6 +155,22 @@ namespace GAME_NAME
 
 		SaveManager::SetCurrentFile("default_s");
 
+#ifdef SKIP_MAIN_MENU
+		LoadLevel("/green_region", LEVEL_DATA_TEXTURES_BACKGROUND);
+		LoadLevel("/global_assets", LEVEL_DATA_TEXTURES_SPRITES);
+		LoadLevel("/green_region", static_cast<GAME_NAME::Game::Game::LEVEL_DATA>(LEVEL_DATA_ALL xor LEVEL_DATA_TEXTURES_BACKGROUND xor LEVEL_DATA_DATA_LEVEL));
+		Mappings::LoadObjectsWithDefaultMapping("/green_region");
+		LoadLevel("/green_region", static_cast<GAME_NAME::Game::Game::LEVEL_DATA>(LEVEL_DATA_DATA_LEVEL));
+		RenderFront = true;
+#else
+		LoadLevel("/main_menu", LEVEL_DATA_TEXTURES_BACKGROUND);
+		LoadLevel("/global_assets", LEVEL_DATA_TEXTURES_SPRITES);
+		LoadLevel("/main_menu", static_cast<GAME_NAME::Game::Game::LEVEL_DATA>(LEVEL_DATA_TEXTURES_BACKGROUND xor LEVEL_DATA_ALL));
+		Mappings::LoadObjectsWithDefaultMapping("/main_menu");
+		RenderFront = true;
+#endif
+
+		/* TESTING OTHER LEVELS
 		LoadLevel("/green_region", LEVEL_DATA_TEXTURES_BACKGROUND);
 
 		LoadLevel("/global_assets", LEVEL_DATA_TEXTURES_SPRITES);
@@ -152,6 +179,7 @@ namespace GAME_NAME
 
 		Mappings::LoadObjectsWithDefaultMapping("/green_region");
 		RenderFront = true;
+		*/
 
 		//SAVE DATA TEST.
 		std::string data_0("null");
@@ -185,7 +213,7 @@ namespace GAME_NAME
 		}
 
 		//TEST
-		MusicSync::MusicSync::SetCurrentSong(134, 2);
+		//MusicSync::MusicSync::SetCurrentSong(134, 2);
 
 		glClearColor(level.BackgroundColor.X, level.BackgroundColor.Y, level.BackgroundColor.Z, 1.f);
 		/*glColor3f(/ X / Y / Z); CREATES A REALLY COOL FOG EFFECT!*/
@@ -208,7 +236,24 @@ namespace GAME_NAME
 		Environment::CloudGenerator::GenerateClouds();
 		
 		//CHNAGE TO DETECT WHAT LEVEL IS BEING LOADED AND CALL THE APPROPRIATE FUNCTION.
-		Objects::Environment::Levels::Town1Manager::InitLevel();
+		//Objects::Environment::Levels::Town1Manager::InitLevel();
+
+		m_currentLevelSystem = nullptr;
+		switch (level.ID.World)
+		{
+		case 0:
+			{
+				switch (level.ID.Level)
+				{
+				case 0:
+					//Main Menu
+					m_currentLevelSystem = std::unique_ptr<LevelSystem>(new MainMenuManager());
+					break;
+				}
+				break;
+			}
+		}
+
 
 		//TODO: Add a check on weather the current level uses lighting or not.
 		//Rendering::Lighting::SimpleLightingManager::EnableLighting(DEFAULT_LEVEL_SIZE_X/10, true);
@@ -274,17 +319,25 @@ namespace GAME_NAME
 
 		//TODO: add music sync to everything.
 
-		GameObject* test = new GameObject({ 400, 50 }, { 25 }, Renderer::GetSprite(24));
-		Renderer::LoadActiveObject(test);
+		//GameObject* test = new GameObject({ 400, 50 }, { 25 }, Renderer::GetSprite(24));
+		//Renderer::LoadActiveObject(test);
 
-		Cutscenes::DialogueManager::INSTANCE->PlayDialogueSequence(Cutscenes::DialogueSequence(3,
+		/*std::shared_ptr<Cutscenes::DialogueSequence> opt1(new Cutscenes::DialogueSequence(1, Cutscenes::DialogueSequence::DialogueEvent("Thanks, it will be great!", nullptr)));
+		std::shared_ptr<Cutscenes::DialogueSequence> opt2(new Cutscenes::DialogueSequence(1, Cutscenes::DialogueSequence::DialogueEvent("Wow you suck.", nullptr)));
+
+		Cutscenes::DialogueSequence mainSequence(2,
 			Cutscenes::DialogueSequence::DialogueEvent("Hey! You look like you need\nsome cash... Check out my Pyramid Scheme!!", test, 1.f),
-			Cutscenes::DialogueSequence::DialogueEvent("[Man, this guy has some nerve...]", ThePlayer.get(), 1.4f),
-			Cutscenes::DialogueSequence::DialogueEvent("Uhh... Yea! You should buy \none million toothbrushes from me.", test, 1.f)
-		));
+			Cutscenes::DialogueSequence::DialogueEvent("That is Awesome!/Freak no!", test, 1.f, 2, opt1, opt2)
+		);
+		
+		
+
+		Cutscenes::DialogueManager::INSTANCE->PlayDialogueSequence(mainSequence);*/
+
+		//Testing Glitch Area
+		GlitchedRegion* gr = new GlitchedRegion(Vec2(80, 0), Vec2(300, 100));
+		Renderer::LoadObject(gr, 2, false);
 	}
-
-
 
 	void TestGame::TogglePauseState()
 	{

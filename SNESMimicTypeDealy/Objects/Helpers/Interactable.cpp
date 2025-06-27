@@ -10,7 +10,20 @@ namespace GAME_NAME::Objects
 
 	}
 
+	Interactable::Interactable(keyRef interactKey, InputManager::KEY_STATE keyStateCheck, Vec2 position, Vec2 scale, std::shared_ptr<Rendering::Sprite> sprite, float rotation, bool useBoundingBox)
+		: GameObject(position, scale, sprite, rotation), m_interactionRadius(std::abs(scale.X) / 1.5), m_interactKey(interactKey), m_keyStateCheck(keyStateCheck), m_useBoundingBox(useBoundingBox)
+	{
+
+	}
+
+
 	Interactable::Interactable(keyRef interactKey, InputManager::KEY_STATE keyStateCheck, float interactionRadius, Vec2 position, Vec2 scale, Rendering::Sprite* sprite, float rotation)
+		: GameObject(position, scale, sprite, rotation), m_interactionRadius(interactionRadius), m_interactKey(interactKey), m_keyStateCheck(keyStateCheck), m_useBoundingBox(false)
+	{
+
+	}
+
+	Interactable::Interactable(keyRef interactKey, InputManager::KEY_STATE keyStateCheck, float interactionRadius, Vec2 position, Vec2 scale, std::shared_ptr<Rendering::Sprite> sprite, float rotation)
 		: GameObject(position, scale, sprite, rotation), m_interactionRadius(interactionRadius), m_interactKey(interactKey), m_keyStateCheck(keyStateCheck), m_useBoundingBox(false)
 	{
 

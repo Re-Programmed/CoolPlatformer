@@ -103,14 +103,8 @@ namespace GAME_NAME::Objects::Enemies
 				m_lastOddFrameX = inc8Frame;
 				m_oddFrame = !m_oddFrame;
 
-				//If the last sprite was not the base sprite, we don't need it anymore.
-				if (m_sprite != m_baseSprite)
-				{
-					delete m_sprite;
-				}
-
 				//Alternate between the jumping sprite and 1 after the jumping sprite.
-				m_sprite = Renderer::GetSprite(m_jumpingSprite + m_oddFrame);
+				m_sprite = std::shared_ptr<Sprite>(Renderer::GetSprite(m_jumpingSprite + m_oddFrame));
 			}
 			//The rabbit is jumping.
 		}
@@ -118,12 +112,11 @@ namespace GAME_NAME::Objects::Enemies
 		{
 			if (m_sprite == m_baseSprite)
 			{
-				m_sprite = Rendering::Renderer::GetSprite(m_jumpingSprite);
+				m_sprite = std::shared_ptr<Sprite>(Rendering::Renderer::GetSprite(m_jumpingSprite));
 			}
 		}
 		else if (m_sprite != m_baseSprite)
 		{
-			delete m_sprite;
 			m_sprite = m_baseSprite;
 		}
 #pragma endregion

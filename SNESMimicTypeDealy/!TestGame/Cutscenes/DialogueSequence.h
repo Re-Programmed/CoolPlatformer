@@ -17,11 +17,26 @@ namespace GAME_NAME::Cutscenes
 			GameObject* FocusObject;
 
 			float Zoom;
+			std::vector<std::shared_ptr<DialogueSequence>> Options;
 
-			DialogueEvent(std::string text, GameObject* focusObject, float zoom = -1.f)
+			DialogueEvent(std::string text, GameObject* focusObject = nullptr, float zoom = 1.f)
 				: Text(text), FocusObject(focusObject), Zoom(zoom)
 			{
 
+			}
+
+			DialogueEvent(std::string text, GameObject* focusObject, float zoom, int numOptions, std::shared_ptr<DialogueSequence> options...)
+				: Text(text), FocusObject(focusObject), Zoom(zoom)
+			{
+				va_list args;
+				va_start(args, numOptions);
+
+				for (unsigned int i = 0; i < numOptions; i++)
+				{
+					Options.push_back(va_arg(args, std::shared_ptr<DialogueSequence>));
+				}
+
+				va_end(args);
 			}
 		};
 
@@ -50,7 +65,7 @@ namespace GAME_NAME::Cutscenes
 		/// <returns></returns>
 		inline DialogueEvent Next()
 		{
-			if (m_dialogueEvents.empty()) { return DialogueEvent("", nullptr); };
+			if (m_dialogueEvents.empty()) { return DialogueEvent(""); };
 
 			DialogueEvent de = m_dialogueEvents.front();
 			m_dialogueEvents.pop();

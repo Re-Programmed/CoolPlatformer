@@ -5,6 +5,10 @@
 #include "../../../EngineCompileOptions.h"
 #include <algorithm>
 
+#include "../../../Utils/Math/VMath.h"
+
+#include "../../../Input/InputManager.h"
+
 namespace GAME_NAME::Objects::GUI::Text
 {
 
@@ -21,6 +25,7 @@ namespace GAME_NAME::Objects::GUI::Text
 	GAME_NAME::Objects::GUI::Text::TextRenderer::RenderedDigit TextRenderer::RenderNumber(uint16_t number, Vec2& firstDigitPosition, const float scale, const float digitPadding, uint8_t minimumDigits, int font)
 	{
 		RenderedDigit finalDigit;
+		finalDigit.reserve(num_digitsi(number));
 
 		uint8_t currentDigit = 0;
 		while (number > 0)
@@ -112,6 +117,7 @@ namespace GAME_NAME::Objects::GUI::Text
 		});
 
 		RenderedWord wordRet;
+		wordRet.reserve(word.size());
 
 		for (size_t i = 0; i < word.size(); i++)
 		{
@@ -186,6 +192,7 @@ namespace GAME_NAME::Objects::GUI::Text
 	TextRenderer::ExpectedRenderedWord TextRenderer::RenderWordCaseSensitive(std::string word, Vec2 position, const float scale, const float&& letterPadding, int layer, int uppercaseFont, int lowercaseFont, std::chrono::milliseconds letterAppearanceSpeed)
 	{
 		ExpectedRenderedWord wordRet;
+		wordRet.reserve(word.size());
 
 		Vec2 currentPosition = position;
 
@@ -242,7 +249,14 @@ namespace GAME_NAME::Objects::GUI::Text
 				//Potentially issues, but used later to check if dialogue can be advanced. Lock mutex here.
 				word[i]->letterLock.lock();
 
-				std::this_thread::sleep_for(speed);
+				//Right click to speed up text.
+				if (!InputManager::GetMouseButton(1))
+				{
+					std::this_thread::sleep_for(speed);
+				}
+				else {
+					std::this_thread::sleep_for(std::chrono::milliseconds(2));
+				}
 
 				word[i]->letter->SetScale(Vec2{ -expectedScale, expectedScale });
 

@@ -171,9 +171,10 @@ namespace GAME_NAME
 
 	void ScreenInventory::createItemSpriteDisplay(uint8_t slot, Items::InventoryItem& item)
 	{
-		Sprite* sprite = Items::ITEMTYPE_GetItemTypeTexture(item.GetType());
+		Sprite* const sprite = Items::ITEMTYPE_GetItemTypeTexture(item.GetType());
 		GUI::StaticGUIElement* itemDisplay = new GUI::StaticGUIElement(m_slots[slot]->GetPosition() + (INVENTORY_SLOT_PADDING / 2.f), m_slots[slot]->GetScale() - Vec2(INVENTORY_SLOT_PADDING), sprite->GetSpriteId());
 		delete sprite;
+
 		Renderer::LoadGUIElement(itemDisplay, 1);
 
 		m_itemSprites[slot] = itemDisplay;

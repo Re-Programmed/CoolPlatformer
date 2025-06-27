@@ -29,14 +29,16 @@ namespace GAME_NAME::Objects::Environment
 		ExplosiveObject(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, float explosionRadius, float explosionPower, EXPLOSION_REASON sensitivity, size_t saveID);
 
 		void Update(GLFWwindow* window) override;
-	private:
-		const float m_explosionRadius, m_explosionPower;
-		const EXPLOSION_REASON m_reason;
 
 		/// <summary>
 		/// Explodes this object.
 		/// </summary>
 		/// <param name="createExplosion"> - if false, it will just leave the floor mark and delete itself. Setting to false will also not save the current state.</param>
-		void explode(bool createExplosion = true);
+		void Explode(bool createExplosion = true);
+	private:
+		const float m_explosionRadius, m_explosionPower;
+		const EXPLOSION_REASON m_reason;
+
+	
 	};
 }

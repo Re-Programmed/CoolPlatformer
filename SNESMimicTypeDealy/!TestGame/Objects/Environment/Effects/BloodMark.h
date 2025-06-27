@@ -2,6 +2,8 @@
 #include "../../../../Objects/GameObject.h"
 #include "../../../../Rendering/Renderers/Renderer.h"
 
+#include <memory>
+
 namespace GAME_NAME::Objects::Environment
 {
 

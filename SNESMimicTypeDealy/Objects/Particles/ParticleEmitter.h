@@ -23,11 +23,14 @@ namespace GAME_NAME::Objects::Particles
 
 		float Opacity, TargetOpacity;
 
-		Sprite* PSprite;
+		std::shared_ptr<Sprite> PSprite;
 
 		float Lifetime;
 
 		Particle(Vec2 position, Vec2 scale, float rotation, Vec2 velocity, float rotationalVelocity, float opacity, Sprite* const sprite, float InitialLifetime = 0.f) : Position(position), Scale(scale), Rotation(rotation), Velocity(velocity),
+			RotationalVelocity(rotationalVelocity), Opacity(opacity), PSprite(sprite), Lifetime(InitialLifetime), ConstantVelocity(0), TargetOpacity(opacity), TargetScale(scale), Gravity(0.f) {};
+
+		Particle(Vec2 position, Vec2 scale, float rotation, Vec2 velocity, float rotationalVelocity, float opacity, const std::shared_ptr<Sprite> sprite, float InitialLifetime = 0.f) : Position(position), Scale(scale), Rotation(rotation), Velocity(velocity),
 			RotationalVelocity(rotationalVelocity), Opacity(opacity), PSprite(sprite), Lifetime(InitialLifetime), ConstantVelocity(0), TargetOpacity(opacity), TargetScale(scale), Gravity(0.f) {};
 
 		Particle(GameObject* gameObject) : Position(gameObject->GetPosition()), Scale(gameObject->GetScale()), Rotation(gameObject->GetRotation()), Velocity(Vec2::Zero), RotationalVelocity(0.f), Opacity(1.f), PSprite(gameObject->GetSprite()),

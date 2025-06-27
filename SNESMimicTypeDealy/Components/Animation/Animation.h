@@ -18,7 +18,7 @@ namespace GAME_NAME
 
 			struct AnimData						//Stores the data used for sprites in an animation.
 			{
-				std::vector<Sprite*> Sprites;	//A list of pointers to the sprites that will be used in the animation.
+				std::vector<std::shared_ptr<Sprite>> Sprites;	//A list of pointers to the sprites that will be used in the animation.
 
 				~AnimData()
 				{

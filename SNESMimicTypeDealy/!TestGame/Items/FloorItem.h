@@ -44,7 +44,7 @@ namespace GAME_NAME
 
 		private:
 			//The sprite used for background glow. Sprite ID is defined in FloorItem.cpp.
-			static Rendering::DynamicSprite* m_glowSprite;
+			static std::shared_ptr<Rendering::DynamicSprite> m_glowSprite;
 
 			/// <summary>
 			/// The contained item by this floor item.

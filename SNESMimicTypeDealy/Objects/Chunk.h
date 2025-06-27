@@ -31,7 +31,12 @@ namespace GAME_NAME
 		{
 		public:
 			Chunk();
-			Chunk(Vec2 position, Sprite* bgSprite) : m_position(position), m_bgSprite(bgSprite) {};
+			Chunk(Vec2 position, Sprite* bgSprite) : m_position(position), m_bgSprite(bgSprite)
+			{
+				m_objects[0].reserve(5);
+				m_objects[1].reserve(8);
+				m_objects[2].reserve(3);
+			};
 
 			//Copy constructor. (adding mutex made c++ forgor how to copy a Chunk object...)
 			Chunk(const Chunk& other)
@@ -51,7 +56,7 @@ namespace GAME_NAME
 			void Instantiate(GameObject* object, uint8_t layer = 1, bool front = false);	//Load an object to this chunk.
 
 			std::vector<GameObject*>* GetObjects();						//Get all the objects in this chunk.
-			std::vector<GameObject*>* GetFrontObjects();				//Get all the front in this chunk.
+			std::vector<GameObject*>& GetFrontObjects();				//Get all the front in this chunk.
 
 			void Render(const Vec2 cameraPosition, const int chunkSize, RENDER_LAYER layer, GLFWwindow* window, int microLayer = -1);
 
@@ -74,6 +79,26 @@ namespace GAME_NAME
 				other.m_position = NULL;
 
 				return *this;
+			}
+
+			inline void ClearObjects()
+			{
+				for (int i = 0; i < CHUNK_OBJECT_RENDER_LAYER_COUNT; i++)
+				{
+					for (GameObject* go : m_objects[i])
+					{
+						delete go;
+					}
+
+					m_objects[i].clear();
+				}
+
+				for (GameObject* go : m_frontObjects)
+				{
+					delete go;
+				}
+
+				m_frontObjects.clear();
 			}
 
 		private:

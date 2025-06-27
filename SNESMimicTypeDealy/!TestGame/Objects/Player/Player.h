@@ -96,6 +96,11 @@ namespace  GAME_NAME
 					m_targetSequence.push_back(te);
 				}
 
+				inline void ClearTargetEvents()
+				{
+					m_targetSequence.clear();
+				}
+
 #if _DEBUG
 				inline bool GetDebug() { return m_debug; }
 
@@ -358,7 +363,7 @@ namespace  GAME_NAME
 
 				GameObject* m_heldItemDisplay;				//Follows the player to display the current held item.
 				int m_heldItemDisplayFrameOffset = 0;		//How many sprite difference from the default held item sprite to its current animation frame.
-				Sprite* m_heldItemLastSprite;
+				std::shared_ptr<Sprite> m_heldItemLastSprite;
 
 				ScreenInventory* const m_screenInventory;	//Player's three main inventory slots.
 

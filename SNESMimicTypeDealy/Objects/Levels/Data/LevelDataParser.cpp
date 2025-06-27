@@ -21,6 +21,7 @@ namespace GAME_NAME
 			/// playerX
 			/// playerY
 			/// Background Color (r,g,b) (255)
+			/// flags
 			/// </summary>
 			const std::function<void(std::string,Game::Level&)> LevelDataParser::m_ops[LevelDataSize] {
 					[](std::string title,Game::Level& level) { level.Name = title; },
@@ -97,6 +98,8 @@ namespace GAME_NAME
 
 					[](std::string flags, Game::Level& level)
 					{
+						level.Flags.clear();
+
 						std::stringstream read(flags);
 						std::string flag;
 

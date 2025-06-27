@@ -58,13 +58,16 @@ namespace GAME_NAME
 
 				/// <summary>
 				/// Register a button so it can get clicked.
+				/// Setting configureButtonId to false will cause the button to retain whatever buttonId it was initilized with. When this variable 
+				/// is true, the button id is set according to how many buttons exist, ensuring that configured buttons have unique ids.
 				/// </summary>
 				/// <param name="btn"></param>
+				/// 
 				/// <returns></returns>
-				static inline unsigned int RegisterButton(GUIButton* btn)
+				static inline unsigned int RegisterButton(GUIButton* btn, bool configureButtonId = true)
 				{
 					m_buttons.push_back(btn);
-					btn->SetButtonId(static_cast<unsigned int>(m_buttons.size()) - 1);
+					if (configureButtonId) { btn->SetButtonId(static_cast<unsigned int>(m_buttons.size()) - 1); }
 					return static_cast<unsigned int>(m_buttons.size()) - 1;
 				}
 

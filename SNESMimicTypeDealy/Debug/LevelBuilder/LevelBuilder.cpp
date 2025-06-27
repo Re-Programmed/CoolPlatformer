@@ -72,10 +72,9 @@ namespace GAME_NAME::Debug::LevelBuilder
 
 	void LevelBuilder::DrawObjectMenu()
 	{
-		DynamicSprite* ds = Renderer::GetDynamicSprite(SpriteBase(-1));
+		auto ds = Renderer::GetDynamicSprite(SpriteBase(-1));
 		Rendering::Camera::Camera* c = sv_currentLevelBuilder->m_currentGame->GetCamera();
 		ds->Render(c->GetPosition(), c->UIToGlobal(Vec2(0.f, 0.f)), Vec2(TargetResolutionX/5.5f, TargetResolutionY));
-		delete ds;
 
 using namespace GUI;
 
