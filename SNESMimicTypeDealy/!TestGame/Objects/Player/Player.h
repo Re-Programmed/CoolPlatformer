@@ -14,6 +14,8 @@
 
 #include "../../../Rendering/Lighting/LightingSource.h"
 
+#include "../Environment/Effects/GlitchableObject.h"
+
 
 #ifndef _PLAYERDEF
 #define _PLAYERDEF
@@ -49,6 +51,7 @@ namespace  GAME_NAME
 			using namespace Collision;
 			using namespace Animation;
 			using namespace GUI;
+			using namespace Environment::Effects;
 
 			/// <summary>
 			/// Possible effects that can be added to the player from eating food or other events.
@@ -60,7 +63,7 @@ namespace  GAME_NAME
 			};
 
 			class Player	//The class used for the player GameObject.
-				: public ActiveBoxCollisionGravityObject, public MiscStateGroup
+				: public ActiveBoxCollisionGravityObject, public MiscStateGroup, public GlitchableObject
 			{
 			public:
 				Player(Vec2 position);
@@ -71,6 +74,8 @@ namespace  GAME_NAME
 				void SetSwimming(bool swimming);		//Enables low gravity and swimming mode. (Sets m_swimming to true)
 
 				void Render(const Vec2& cameraPosition) override;	
+
+				void SetGlitched(bool glitched) override;
 
 				struct TargetEvent
 				{
@@ -134,26 +139,85 @@ namespace  GAME_NAME
 
 				enum TEXTURE_OFFSETS
 				{
-					DEFAULT_BIRB = 0
+					DEFAULT_BIRB = 0,
+					PIXEL_BIRB = 1
+				};
+
+				struct AnimationOverride
+				{
+					int* anim;
+					int size;
+					float speed = 0.f;
+
+					~AnimationOverride()
+					{
+						//delete[size] anim;
+					}
+				};
+
+				struct PlayerAnimationData
+				{
+					AnimationOverride walk_anim, run_anim, jump_anim, fall_anim, skid_anim, fall_over_anim, get_up_anim, basic_attack_anim, climbing_behind_anim, player_sitting_puff_anim, player_idle_tap_toe_anim, player_idle_stomp_anim;
+
+					/// <summary>
+					/// Creates a player animation system that can be used by registerAnimations when changing sprite "pallettes".
+					/// </summary>
+					/// <param name="walk_anim_data"></param>
+					/// <param name="run_anim"></param>
+					/// <param name="jump_anim"></param>
+					/// <param name="fall_anim"></param>
+					/// <param name="skid_anim"></param>
+					/// <param name="fall_over_anim"></param>
+					/// <param name="get_up_anim"></param>
+					/// <param name="basic_attack_anim"></param>
+					/// <param name="climbing_behind_anim"></param>
+					/// <param name="player_sitting_puff_anim"></param>
+					/// <param name="player_idle_tap_toe_anim"></param>
+					/// <param name="player_idle_stomp_anim"></param>
+					PlayerAnimationData(AnimationOverride walk_anim_data, AnimationOverride run_anim = AnimationOverride(0, 0), AnimationOverride jump_anim = AnimationOverride(0, 0), AnimationOverride fall_anim = AnimationOverride(0, 0),
+						AnimationOverride skid_anim = AnimationOverride(0, 0), AnimationOverride fall_over_anim = AnimationOverride(0, 0), AnimationOverride get_up_anim = AnimationOverride(0, 0), AnimationOverride basic_attack_anim = AnimationOverride(0, 0),
+						AnimationOverride climbing_behind_anim = AnimationOverride(0, 0), AnimationOverride player_sitting_puff_anim = AnimationOverride(0, 0), AnimationOverride player_idle_tap_toe_anim = AnimationOverride(0, 0), AnimationOverride player_idle_stomp_anim = AnimationOverride(0, 0))
+						: walk_anim(walk_anim_data), run_anim(run_anim), jump_anim(jump_anim), fall_anim(fall_anim), skid_anim(skid_anim), fall_over_anim(fall_over_anim), get_up_anim(get_up_anim), basic_attack_anim(basic_attack_anim),
+						climbing_behind_anim(climbing_behind_anim), player_sitting_puff_anim(player_sitting_puff_anim), player_idle_tap_toe_anim(player_idle_tap_toe_anim), player_idle_stomp_anim(player_idle_stomp_anim)
+						//		:(
+					{
+						
+					}
 				};
 
 				struct PlayerTextureData
 				{
-					int DefaultSpites = GLOBAL_SPRITE_BASE;	//First sprite for standing still, followed by sprites for walking, running, jumping, falling in air, skidding, and emotions.
+					int DefaultSprites = GLOBAL_SPRITE_BASE;	//First sprite for standing still, followed by sprites for walking, running, jumping, falling in air, skidding, and emotions.
 					int BagTurnaround = SpriteBase(107);		//The sprite for the player opening their bag, followed by the player facing backwards, and preceeded by the player with no head.
 					int Fall = SpriteBase(109);				//The player lying on the ground followed by the player falling over and the player getting up.
 					int BasicAttack = SpriteBase(122);		//A basic punching animation.
 					int Climbing = SpriteBase(134);			//Climbing backwards animation.
 					int IdleAnimations = SpriteBase(148);	//The beginning of all idle animations.
 
+					PlayerAnimationData* AnimationOverride = nullptr;
+
+					PlayerTextureData() {};
+
+					~PlayerTextureData()
+					{
+						delete AnimationOverride;
+					}
+
+					PlayerTextureData(int defaultSprite, int bagTurnaround, int fall, int basicAttack, int climbing, int idleAnimation, PlayerAnimationData* animationOverride = nullptr)
+						: DefaultSprites(defaultSprite), BagTurnaround(bagTurnaround), Fall(fall), BasicAttack(basicAttack), Climbing(climbing), IdleAnimations(idleAnimation), AnimationOverride(animationOverride)
+					{
+
+					}
+
 					PlayerTextureData& operator= (const PlayerTextureData& other)
 					{
-						DefaultSpites = other.DefaultSpites;
+						DefaultSprites = other.DefaultSprites;
 						BagTurnaround = other.BagTurnaround;
 						Fall = other.Fall;
 						BasicAttack = other.BasicAttack;
 						Climbing = other.Climbing;
 						IdleAnimations = other.IdleAnimations;
+						AnimationOverride = other.AnimationOverride;
 
 						return *this;
 					}
@@ -162,7 +226,7 @@ namespace  GAME_NAME
 				/// <summary>
 				/// A list of all possible texture palettes the player could have, indexed based on TEXTURE_OFFSETS.
 				/// </summary>
-				static const PlayerTextureData TextureData[1];
+				static const PlayerTextureData TextureData[2];
 
 				/// <summary>
 				/// Updates the player's texture to use these offsets.
@@ -247,11 +311,21 @@ namespace  GAME_NAME
 
 				void Dive(Vec2 direction, float damage);
 
+				/// <summary>
+				/// Call this after loading the player to remove all HUD overlays.
+				/// </summary>
+				void HideAllUI();
+
 			protected:
 				void onCollision (Vec2 push, GameObject* gameObject) override;	//Called when a collision occurs.
 				void beforeCollision() override;		//Called before any collisions are calculated to allow for resetting the jump conditions.
 
 			private:
+
+				/// <summary>
+				/// Multiplied by all scale variables to allow for relative scaling. m_scale is utilized to scale the player based on the current sprite, maintaining a similar size.
+				/// </summary>
+				float m_scaleMultiplier = 1.f;
 
 				/// <summary>
 				/// If the player is currently taking a dive.

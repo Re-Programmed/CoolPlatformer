@@ -198,6 +198,7 @@ namespace GAME_NAME::Objects::GUI::Text
 
 		for (size_t i = 0; i < word.size(); i++)
 		{
+
 			if (word.at(i) == '\n')
 			{
 				currentPosition.Y -= scale + 1;

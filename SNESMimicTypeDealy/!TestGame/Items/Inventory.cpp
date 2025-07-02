@@ -10,7 +10,7 @@ namespace GAME_NAME::Items
 
 	Inventory::ReturnItem Inventory::GetItem(uint8_t slot)
 	{
-		if (m_items.size() <= slot) { return { nullptr, true }; }
+		if (m_items.empty() || m_items.size() <= slot) { return { nullptr, true }; }
 		if (m_items[slot] == nullptr) { return { nullptr, true }; }
 
 		return { m_items[slot], false };

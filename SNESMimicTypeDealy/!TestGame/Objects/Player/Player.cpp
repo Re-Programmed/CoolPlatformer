@@ -54,7 +54,7 @@ namespace  GAME_NAME
 #define PLAYER_LOOK_BEHIND_SPRITE TextureDataBase(BagTurnaround)
 #define PLAYER_FALLEN_SPRITE TextureDataBase(Fall)
 
-#define DefaultPlayerSprite TextureDataBase(DefaultSpites)		//The default sprite to use for the player.
+#define DefaultPlayerSprite TextureDataBase(DefaultSprites)		//The default sprite to use for the player.
 
 #define PlayerWalkAnim {																																													\
 	DefaultPlayerSprite + 1, DefaultPlayerSprite + 2, DefaultPlayerSprite + 3, DefaultPlayerSprite + 2, DefaultPlayerSprite + 1, DefaultPlayerSprite + 4, DefaultPlayerSprite + 5, DefaultPlayerSprite + 4	\
@@ -106,6 +106,9 @@ namespace  GAME_NAME
 	TextureDataBase(IdleAnimations) + 3, TextureDataBase(IdleAnimations) + 4, TextureDataBase(IdleAnimations) + 5, TextureDataBase(IdleAnimations) + 6, TextureDataBase(IdleAnimations) + 7, TextureDataBase(IdleAnimations) + 8, TextureDataBase(IdleAnimations) + 8				\
 }
 
+#pragma region LowqAnimations
+
+#pragma endregion
 
 			constexpr double PLAYER_CLIMBING_SPEED = 40;
 
@@ -118,12 +121,27 @@ namespace  GAME_NAME
 
 			using namespace Utils;
 
-			const Player::PlayerTextureData Player::TextureData[1] = {
-				Player::PlayerTextureData() //Default Sprites (0)
+			//TODO: Pixel Birb sitting animation is glitched because of weird offset issues from climbing sprites :(
+			const Player::PlayerTextureData Player::TextureData[2] = {
+				Player::PlayerTextureData(), //Default Sprites (0)
+				Player::PlayerTextureData(SpriteBase(191), SpriteBase(217), SpriteBase(204), SpriteBase(212), SpriteBase(219), SpriteBase(225), new Player::PlayerAnimationData(	//Pixel Birb (1)
+					Player::AnimationOverride(new int[4] { 1, 2, 1, 3 }, 4, ANIM_6_SPF * 1.33f),		//Walking 
+					Player::AnimationOverride(new int[4] { 4, 5, 6, 7 }, 4, ANIM_6_SPF),				//Running
+					Player::AnimationOverride(new int[2] { 8, 9 }, 2, ANIM_6_SPF),						//Jumping
+					Player::AnimationOverride(new int[2] { 10, 11 }, 2, ANIM_6_SPF),					//Falling
+					Player::AnimationOverride(new int[1] { 12 }, 1, ANIM_12_SPF),						//Skidding (changing direction)
+					Player::AnimationOverride(new int[4] { 1, 2, 3, 0 }, 4, ANIM_6_SPF),				//Fall over
+					Player::AnimationOverride(new int[4] { 0, 4, 5, 6 }, 4, ANIM_6_SPF),				//Get up
+					Player::AnimationOverride(new int[4] { 0, 1, 2, 3 }, 4, ANIM_12_SPF * 1.5f),		//Basic attack
+					Player::AnimationOverride(new int[4] { 0, 1, 0, 2 }, 4, ANIM_6_SPF),				//Climbing back
+					Player::AnimationOverride(new int[6] { 4, 5, 4, 6, 4, 7 }, 6, ANIM_6_SPF * 1.5f),	//Sitting idle
+					Player::AnimationOverride(new int[2] { 0, 1 }, 2, ANIM_12_SPF * 1.5f),				//Idle 1
+					Player::AnimationOverride(new int[2] { 2, 3 }, 2, ANIM_12_SPF * 1.5f)				//Idle 2
+				))
 			};
 
 			Player::Player(Vec2 position)
-				: ActiveBoxCollisionGravityObject(position, Vec2(DefaultPlayerScaleX, DefaultPlayerScaleY), Rendering::Renderer::GetSprite(DefaultPlayerSprite)), m_screenInventory(new ScreenInventory()),
+				: ActiveBoxCollisionGravityObject(position, Vec2(DefaultPlayerScaleX, DefaultPlayerScaleY), NULL), m_screenInventory(new ScreenInventory()),
 				m_heldItemLastSprite(nullptr),
 				m_playerLight(nullptr),
 				m_healthProgressBar(new ProgressBar(
@@ -134,12 +152,13 @@ namespace  GAME_NAME
 				)),
 				MiscStateGroup("pl"), m_saveState(new PlayerSaveState(this)),
 				m_particleEmitter(new Particles::ParticleEmitter(position)),
-				m_backpack(new Backpack(0)),		//Create default backpack (load save in constructor).
+				m_backpack(new Backpack(18)),		//Create default backpack (load save in constructor).
 				m_skillHolder({ 62.f, 7.f }),		//Skill holder (manages update and display of current skill and equipment effects)
 				m_textureData(TextureData[0])
 			{
 
-				
+				//Change to load based on what sprite the player should be using from the selected kit.
+				SetSprite(Rendering::Renderer::GetSprite(DefaultPlayerSprite));
 #if _DEBUG 
 				PlayerLogger("Initilized Player");
 #endif
@@ -174,6 +193,10 @@ namespace  GAME_NAME
 				
 				//TEMP TESTING TODO:REMOVE
 				m_skillHolder.UnlockSkill(FLIGHT);
+
+				//Test item.
+				//m_screenInventory->AddItem(new InventoryItem(WOODEN_SHOES));
+
 			}
 
 			Player::~Player()
@@ -278,7 +301,7 @@ namespace  GAME_NAME
 
 				if (m_playerLight != nullptr)
 				{
-					m_playerLight->SetPosition(m_position + (m_scale / 2.f));
+					m_playerLight->SetPosition(m_position + ((m_scale * m_scaleMultiplier) / 2.f));
 				}
 
 #if _DEBUG
@@ -393,7 +416,7 @@ namespace  GAME_NAME
 					
 					DynamicSprite d(m_sprite->GetSpriteId(), vertices);
 					d.UpdateTextureColor(playerColorVerts);
-					d.Render(cameraPosition, m_position + m_scale, m_scale, m_rotation + 180.f);
+					d.Render(cameraPosition, m_position + (m_scale * m_scaleMultiplier), (m_scale * m_scaleMultiplier), m_rotation + 180.f);
 					return;
 				}
 				else {
@@ -404,13 +427,13 @@ namespace  GAME_NAME
 						{
 							DynamicSprite* coloredSprite = new DynamicSprite(m_sprite->GetSpriteId());
 							coloredSprite->UpdateTextureColor(playerColorVerts);
-							coloredSprite->Render(cameraPosition, m_position + m_scale + (m_textureFlipped ? (m_scale * Vec2::MinusOneX) : 0), m_scale * (m_textureFlipped ? Vec2::MinusOneXOneY : 1), m_rotation + 180.f);
+							coloredSprite->Render(cameraPosition, m_position + (m_scale * m_scaleMultiplier) + (m_textureFlipped ? ((m_scale * m_scaleMultiplier) * Vec2::MinusOneX) : 0), (m_scale * m_scaleMultiplier) * (m_textureFlipped ? Vec2::MinusOneXOneY : 1), m_rotation + 180.f);
 							delete coloredSprite;
 						}
 						else {
 							//DEFAULT RENDER MODE.
 							
-							m_sprite->Render(cameraPosition, m_position + (m_textureFlipped ? (m_scale * Vec2::OneX) : 0), m_scale * (m_textureFlipped ? Vec2::MinusOneXOneY : 1), m_rotation);
+							m_sprite->Render(cameraPosition, m_position + (m_textureFlipped ? ((m_scale * m_scaleMultiplier) * Vec2::OneX) : 0), (m_scale * m_scaleMultiplier) * (m_textureFlipped ? Vec2::MinusOneXOneY : 1), m_rotation);
 						}
 					}
 					//Render emotions object if it should be rendered.
@@ -554,6 +577,23 @@ namespace  GAME_NAME
 				}
 
 
+			}
+
+			void Player::SetGlitched(bool glitched)
+			{
+				//Update to use new sprites.
+
+				if (glitched)
+				{
+					SetPlayerTextureData(PIXEL_BIRB);
+					m_scaleMultiplier = 0.66f;
+				}
+				else {
+					SetPlayerTextureData(DEFAULT_BIRB);
+					m_scaleMultiplier = 1.f;
+				}
+
+				GlitchableObject::SetGlitched(glitched);
 			}
 
 #if _DEBUG
@@ -712,6 +752,15 @@ namespace  GAME_NAME
 				m_diving = damage;
 			}
 
+			void Player::HideAllUI()
+			{
+				m_screenInventory->HidePlayerSlots();
+				Renderer::UnloadGUIElement(m_abilityMeterProgressBar, 0);
+				Renderer::UnloadGUIElement(m_healthProgressBar, 0);
+
+				GUI::Menus::GUIMenu::RemoveLastMenu();
+			}
+
 			void Player::onCollision(Vec2 push, GameObject* collided)
 			{
 				if (m_swimming) { return; }
@@ -804,7 +853,7 @@ namespace  GAME_NAME
 
 				//FIX, DROPPING WRONG ITEM FOR SOME REASON.
 				//Create the object for the item.
-				Items::FloorItem* createdItem = new Items::FloorItem(m_position + (m_scale / 2), item->GetType(), 3.5F);
+				Items::FloorItem* createdItem = new Items::FloorItem(m_position + ((m_scale * m_scaleMultiplier) / 2), item->GetType(), 3.5F);
 				createdItem->GetPhysics()->AddVelocity(m_textureFlipped ? Vec2{ 1.f, 0.3f } : Vec2{ -1.f, 0.3f });
 				createdItem->GetPhysics()->AddRotationalVelocity(std::rand() * 30.f / RAND_MAX);
 				Renderer::InstantiateObject(Renderer::InstantiateGameObject(createdItem, true, 1, false));
@@ -823,24 +872,38 @@ namespace  GAME_NAME
 
 			void Player::registerAnimations()
 			{
-#define RegisterAnimation(data_name, data_source, data_out, spf) AnimData data_name; \
-				for(int i : data_source){ data_name.Sprites.emplace_back(std::shared_ptr<Sprite>(Renderer::GetSprite(i))); }; \
-				std::shared_ptr<GAME_NAME::Components::Animation::Animation> data_out(new GAME_NAME::Components::Animation::Animation(data_name, spf)); 
+#define RegisterAnimation(data_name, data_source, data_out, spf, baseRef) AnimData data_name;									\
+				speed = spf;																								\
+				if(m_textureData.AnimationOverride != nullptr && m_textureData.AnimationOverride->data_out.size > 0)			\
+				{																												\
+					for(int i = 0; i < m_textureData.AnimationOverride->data_out.size; i++)																\
+					{																																	\
+						data_name.Sprites.emplace_back(std::shared_ptr<Sprite>(Renderer::GetSprite(m_textureData.AnimationOverride->data_out.anim[i] + baseRef)));\
+					}																											\
+				if (m_textureData.AnimationOverride->data_out.speed > 0) { speed = m_textureData.AnimationOverride->data_out.speed; } \
+				}else{																											\
+					for (int i : data_source) { data_name.Sprites.emplace_back(std::shared_ptr<Sprite>(Renderer::GetSprite(i))); }; \
+				}																												\
+																																\
+				std::shared_ptr<GAME_NAME::Components::Animation::Animation> data_out(new GAME_NAME::Components::Animation::Animation(data_name, speed)); 
 
 #pragma region Init Animation
 
-				RegisterAnimation(walk_data, PlayerWalkAnim, walk_anim, ANIM_12_SPF);						  //0
-				RegisterAnimation(run_data, PlayerRunAnim, run_anim, ANIM_16_SPF);							  //1
-				RegisterAnimation(fall_data, PlayerFallAnim, fall_anim, ANIM_12_SPF);						  //2
-				RegisterAnimation(jump_data, PlayerJumpAnim, jump_anim, ANIM_12_SPF);						  //3
-				RegisterAnimation(skid_data, PlayerSkidAnim, skid_anim, ANIM_12_SPF);						  //4 
-				RegisterAnimation(fall_over_data, PlayerFallOverAnim, fall_over_anim, ANIM_6_SPF);			  //5
-				RegisterAnimation(get_up_data, PlayerGetUpAnim, get_up_anim, ANIM_6_SPF);					  //6
-				RegisterAnimation(basic_attack_data, PlayerBasicAttackAnim, basic_attack_anim, ANIM_16_SPF);  //7
-				RegisterAnimation(climbing_behind_data, PlayerClimbingBehindAnim, climbing_behind_anim, ANIM_12_SPF);	//8
-				RegisterAnimation(player_sitting_puff_data, PlayerSittingPuffAnim, player_sitting_puff_anim, ANIM_6_SPF); //9
-				RegisterAnimation(player_idle_tap_toe_data, PlayerIdleTapToe, player_idle_tap_toe_anim, ANIM_6_SPF); //10
-				RegisterAnimation(player_idle_stomp_data, PlayerIdleStomp, player_idle_stomp_anim, ANIM_6_SPF); //11
+				float speed;
+				//Not all should be DefaultPlayerSprite...
+
+				RegisterAnimation(walk_data, PlayerWalkAnim, walk_anim, ANIM_12_SPF, DefaultPlayerSprite);						  //0
+				RegisterAnimation(run_data, PlayerRunAnim, run_anim, ANIM_16_SPF, DefaultPlayerSprite);							  //1
+				RegisterAnimation(fall_data, PlayerFallAnim, fall_anim, ANIM_12_SPF, DefaultPlayerSprite);						  //2
+				RegisterAnimation(jump_data, PlayerJumpAnim, jump_anim, ANIM_12_SPF, DefaultPlayerSprite);						  //3
+				RegisterAnimation(skid_data, PlayerSkidAnim, skid_anim, ANIM_12_SPF, DefaultPlayerSprite);						  //4 
+				RegisterAnimation(fall_over_data, PlayerFallOverAnim, fall_over_anim, ANIM_6_SPF, TextureDataBase(Fall));			  //5
+				RegisterAnimation(get_up_data, PlayerGetUpAnim, get_up_anim, ANIM_6_SPF, TextureDataBase(Fall));					  //6
+				RegisterAnimation(basic_attack_data, PlayerBasicAttackAnim, basic_attack_anim, ANIM_16_SPF, TextureDataBase(BasicAttack)); //7
+				RegisterAnimation(climbing_behind_data, PlayerClimbingBehindAnim, climbing_behind_anim, ANIM_12_SPF, TextureDataBase(Climbing));	    //8
+				RegisterAnimation(player_sitting_puff_data, PlayerSittingPuffAnim, player_sitting_puff_anim, ANIM_6_SPF, TextureDataBase(Climbing));  //9
+				RegisterAnimation(player_idle_tap_toe_data, PlayerIdleTapToe, player_idle_tap_toe_anim, ANIM_6_SPF, TextureDataBase(IdleAnimations));		//10
+				RegisterAnimation(player_idle_stomp_data, PlayerIdleStomp, player_idle_stomp_anim, ANIM_6_SPF, TextureDataBase(IdleAnimations));		    //11
 
 
 #pragma endregion
@@ -885,9 +948,9 @@ namespace  GAME_NAME
 
 				if (instanceof<Environment::Effects::Explosion>(cause))
 				{
-					Environment::BloodMark* floorMark = new Environment::BloodMark(this, m_position + Vec2(m_scale.X / 2.f, 0.f));
+					Environment::BloodMark* floorMark = new Environment::BloodMark(this, m_position + Vec2((m_scale * m_scaleMultiplier).X / 2.f, 0.f));
 					Renderer::LoadObject(floorMark, 1);
-					m_particleEmitter->SetForcedSpawnVelocity(Vec2{ ((m_position.X + m_scale.X/2) - cause->GetPosition().X) / 5.f , ((m_position.Y + m_scale.Y/2) - cause->GetPosition().Y) / 5.f});
+					m_particleEmitter->SetForcedSpawnVelocity(Vec2{ ((m_position.X + (m_scale * m_scaleMultiplier).X/2) - cause->GetPosition().X) / 5.f , ((m_position.Y + (m_scale * m_scaleMultiplier).Y/2) - cause->GetPosition().Y) / 5.f});
 					m_particleEmitter->SpawnParticles(75, { 0.5f, 0.5f }, 0.04f);
 					return;
 				}
@@ -900,7 +963,7 @@ namespace  GAME_NAME
 				SetFrozen(true, FALLEN);
 				m_frozenTimer = 5.f;
 
-				Environment::BloodMark* floorMark = new Environment::BloodMark(cause, m_position + Vec2(m_scale.X / 2.f, 0.f));
+				Environment::BloodMark* floorMark = new Environment::BloodMark(cause, m_position + Vec2((m_scale * m_scaleMultiplier).X / 2.f, 0.f));
 				Renderer::LoadObject(floorMark, 1);
 				//Renderer::InstantiateObject(Renderer::InstantiateGameObject(floorMark, false, 2, false));
 			}
@@ -973,7 +1036,7 @@ namespace  GAME_NAME
 					}
 					else if (InputManager::GetKey(PLAYER_MOVE_DOWN))
 					{
-						if (m_climbing->GetPosition().Y < m_position.Y + m_scale.Y - 6.5f)
+						if (m_climbing->GetPosition().Y < m_position.Y + (m_scale * m_scaleMultiplier).Y - 6.5f)
 						{
 							Translate({ 0.f, (float)(-Utils::Time::GameTime::GetScaledDeltaTime() * PLAYER_CLIMBING_SPEED) });
 							m_animator->SetSpeedMult(1);
@@ -989,7 +1052,7 @@ namespace  GAME_NAME
 					}
 					else if(InputManager::GetKey(PLAYER_MOVE_RIGHT))
 					{
-						if (m_climbing->GetPosition().X + m_climbing->GetScale().X > m_position.X + m_scale.X - 6.5f)
+						if (m_climbing->GetPosition().X + m_climbing->GetScale().X > m_position.X + (m_scale * m_scaleMultiplier).X - 6.5f)
 						{
 							Translate({ (float)(Utils::Time::GameTime::GetScaledDeltaTime() * PLAYER_CLIMBING_SPEED), 0.f });
 							m_animator->SetSpeedMult(1);
@@ -1060,24 +1123,26 @@ namespace  GAME_NAME
 					if (m_backpack->GetIsOpen())
 					{
 						//Close backpack.
-						m_backpack->Close();
+						if (m_backpack->Close())
+						{
+							//Update held item in case the player changed their current selected item.
+							m_screenInventory->SelectSlot(m_screenInventory->GetSelectedSlot());
 
-						//Update held item in case the player changed their current selected item.
-						m_screenInventory->SelectSlot(m_screenInventory->GetSelectedSlot());
-
-						SetFrozen(false);
-						return;
+							SetFrozen(false);
+							return;
+						}				
 					}
 
 					//Is the player able to open their bag?
 					if (!m_onGround || m_frozen) { return; }
 
 					//Open backpack GUI.
-					m_backpack->Open();
-
-					//Freeze player inputs and use bag sprite.
-					SetFrozen(true, BAG);
-					return;
+					if (m_backpack->Open())
+					{
+						//Freeze player inputs and use bag sprite.
+						SetFrozen(true, BAG);
+						return;
+					}
 				}
 
 
@@ -1575,7 +1640,7 @@ using namespace Lighting;
 						if (!m_textureFlipped)
 						{
 							//Offset position to adjust for offset visual position in attack animation.
-							m_position += Vec2(13.f, 0);
+							m_position += Vec2(13.f, 0) * m_scaleMultiplier;
 						}
 
 						m_frozen = false;
@@ -1595,7 +1660,7 @@ using namespace Lighting;
 					if (mousePos.X < m_position.X)
 					{
 						//Offset position to adjust for offset visual position in attack animation.
-						m_position -= Vec2(13.f, 0);
+						m_position -= Vec2(13.f, 0) * m_scaleMultiplier;
 						m_textureFlipped = false;
 						
 						m_physics->AddVelocity({6.5f, 0.f});

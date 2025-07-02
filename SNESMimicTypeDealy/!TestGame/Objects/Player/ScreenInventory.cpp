@@ -8,6 +8,7 @@
 
 #define INVENTORY_SLOT_PADDING 5.f
 
+
 namespace GAME_NAME
 {
 

@@ -254,6 +254,11 @@ namespace GAME_NAME
 				return imageCount;
 			}
 
+			static inline const unsigned int GetIDCount()
+			{
+				return m_textureIDs.size();
+			}
+
 		private:
 			/// <summary>
 			/// Used to relate a sprite index back to a GL sprite buffer.

@@ -45,17 +45,9 @@ namespace GAME_NAME::Items::Inventories
 		/// </summary>
 		static void UpdateCurrentInventoryContainer();
 	private:
-		static bool m_hidingTooltip;
-
 		static InventoryContainer* m_currentContainer;
 		static std::vector<std::shared_ptr<StaticGUIElement>> m_renderedSlots;
 		static std::vector<std::shared_ptr<StaticGUIElement>> m_renderedSlotItems;
-
-		static StaticGUIElement* m_tooltip;
-		/// <summary>
-		/// The objects that make up the parts of the tooltip.
-		/// </summary>
-		static std::vector<StaticGUIElement*> m_tooltipComponents;
 
 		static StaticGUIElement* const m_backgroundCover;
 
@@ -66,7 +58,6 @@ namespace GAME_NAME::Items::Inventories
 		static void createSlot(uint8_t index, Inventory::ReturnItem item, float addXOffset = 0.f);
 		
 		static void clickSlot(uint8_t index);
-		
-		static void updateTooltip(uint8_t index, bool clearTooltip = false);
+
 	};
 }

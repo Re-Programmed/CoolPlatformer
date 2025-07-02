@@ -5,6 +5,7 @@
 #include <set>
 
 #define LEVEL_NO_PLAYER_FLAG "NO_PLAYER"
+#define LEVEL_NO_PLAYER_INTRO_FLAG "NO_PLAYER_INTRO"
 
 
 namespace GAME_NAME

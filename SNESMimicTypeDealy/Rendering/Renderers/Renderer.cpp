@@ -697,6 +697,14 @@ namespace GAME_NAME
 								ret.push_back(add);
 							}
 						}
+
+						for (GameObject* add : m_chunks[start + (x * levelSizeY) + y].GetFrontObjects())
+						{
+							if (Utils::CollisionDetection::BoxWithinBox(add->GetPosition(), add->GetScale(), bottomLeft, scale))
+							{
+								ret.push_back(add);
+							}
+						}
 					}
 				}
 			}

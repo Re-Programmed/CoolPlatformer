@@ -10,7 +10,13 @@
 
 #include "../../../TestGame.h"
 
-#define BACKPACK_SLOT_ITEM_SCALEDOWN 4.f
+#include "../../../../Utils/CollisionDetection.h"
+
+#include "../../../Items/Inventories/InventoryTooltip.h"
+
+using namespace GAME_NAME::Items::Inventories;
+
+#define BACKPACK_SLOT_ITEM_SCALEDOWN 3.0f
 
 namespace GAME_NAME::Objects::Player
 {
@@ -20,6 +26,9 @@ namespace GAME_NAME::Objects::Player
 	StaticGUIElement* Backpack::m_cursorItemDisplay = nullptr;
 
 	StaticGUIElement* Backpack::m_playerSlots[3] { nullptr, nullptr, nullptr };
+
+	bool Backpack::m_animating = false;
+	std::mutex Backpack::m_animatingMutex;
 
 	double Backpack::m_clickDelay = 0.0;
 
@@ -49,9 +58,10 @@ namespace GAME_NAME::Objects::Player
 		}
 	}
 
-	void Backpack::Open(bool ignoreAnimation)
+	bool Backpack::Open(bool ignoreAnimation)
 	{
-		if (GUI::GUIManager::PreventMenus) { return; }
+		if (GUI::GUIManager::PreventMenus) { return false; }
+		if (m_animating && (m_generalSlots.size() > 0 && m_generalSlots[0] != nullptr)) { return false; }
 
 		GUI::GUIManager::PreventMenus = true;
 
@@ -62,7 +72,12 @@ namespace GAME_NAME::Objects::Player
 
 		if (!ignoreAnimation)
 		{
+			m_animatingMutex.lock();
+			m_animating = true;
+			m_animatingMutex.unlock();
+
 			//Smoothly bring the equipment backing and slots onto the screen.
+			m_isOpen = true;
 			std::thread moveInThread([equipmentSlotsBacking, this]() {
 				while (equipmentSlotsBacking->GetPosition().X > 326.f && m_isOpen)
 				{
@@ -87,14 +102,25 @@ namespace GAME_NAME::Objects::Player
 					for (uint8_t i = 0; i < m_generalSlots.size(); i++)
 					{
 						m_generalSlots[i]->SetBaseColor(Vec4::LerpBetween(m_generalSlots[i]->GetBaseColor(), { 1.f, 1.f, 1.f, 1.f }, 0.05));
-
+						/*
+						Vec2 previousScale = m_generalSlots[i]->GetScale();
+						m_generalSlots[i]->SetScale({ static_cast<float>(std::lerp(previousScale.X, 20.f, 0.15)), static_cast<float>(std::lerp(previousScale.Y, 20.f, 0.05)) });
+						m_generalSlots[i]->SetPosition({ m_generalSlots[i]->GetPosition().X + (previousScale.X - m_generalSlots[i]->GetScale().X)/2.f, m_generalSlots[i]->GetPosition().Y + (previousScale.Y - m_generalSlots[i]->GetScale().Y) / 2.f});*/
 					}
-
 
 					std::this_thread::sleep_for(std::chrono::microseconds(1));
 				}
-				});
+
+				//We are done animating.
+				m_animatingMutex.lock();
+				m_animating = false;
+				m_animatingMutex.unlock();
+
+			});
 			moveInThread.detach();
+		}
+		else {
+			m_isOpen = true;
 		}
 
 		m_displayFeatures.push_back(equipmentSlotsBacking);
@@ -102,7 +128,7 @@ namespace GAME_NAME::Objects::Player
 		//Create slots for backpack size.
 		for (uint8_t i = 0; i < m_size - BACKPACK_NUM_EQUIPMENT_SLOTS; i++)
 		{
-			GUIButton* backpackItemSlot = new GUIButton(Vec2(20.f + ((i % 5) * 20.f), 140.f - (20.f * (i / 5))), Vec2(16.f, 16.f), Renderer::GetSprite(SpriteBase(53))->GetSpriteId(), new std::function(clickGeneralItemSlot), { 1.f, 1.f, 1.f, ignoreAnimation ? 1.f : 0.f });
+			GUIButton* backpackItemSlot = new GUIButton(Vec2(20.f + ((i % 5) * 19.f), 140.f - (19.f * (i / 5))), Vec2(20.f, 20.f), Renderer::GetSprite(SpriteBase(229))->GetSpriteId(), new std::function(clickGeneralItemSlot), {1.f, 1.f, 1.f, ignoreAnimation ? 1.f : 0.f});
 			Renderer::LoadGUIElement(backpackItemSlot, 2);
 			GUIManager::RegisterButton(backpackItemSlot);
 
@@ -112,7 +138,7 @@ namespace GAME_NAME::Objects::Player
 
 			if (m_items.size() > index && m_items[index] != nullptr)
 			{
-				StaticGUIElement* itemDisplay = new StaticGUIElement(Vec2(backpackItemSlot->GetPosition().X + BACKPACK_SLOT_ITEM_SCALEDOWN / 2.f, backpackItemSlot->GetPosition().Y + BACKPACK_SLOT_ITEM_SCALEDOWN / 2.f), Vec2(16.f - BACKPACK_SLOT_ITEM_SCALEDOWN, 16.f - BACKPACK_SLOT_ITEM_SCALEDOWN), ITEMTYPE_GetItemTypeTexture(m_items[index]->GetType())->GetSpriteId());
+				StaticGUIElement* itemDisplay = new StaticGUIElement(Vec2(backpackItemSlot->GetPosition().X + 10.f /* Slot scale/2 */ - (16.f - BACKPACK_SLOT_ITEM_SCALEDOWN)/2.f, backpackItemSlot->GetPosition().Y + 10.f - (16.f - BACKPACK_SLOT_ITEM_SCALEDOWN)/2.f), Vec2(16.f - BACKPACK_SLOT_ITEM_SCALEDOWN, 16.f - BACKPACK_SLOT_ITEM_SCALEDOWN), ITEMTYPE_GetItemTypeTexture(m_items[index]->GetType())->GetSpriteId());
 				Renderer::LoadGUIElement(itemDisplay, 2);
 
 				m_generalDisplayItems.push_back(itemDisplay);
@@ -123,14 +149,19 @@ namespace GAME_NAME::Objects::Player
 		}
 
 		loadEquipmentSlots(ignoreAnimation);
-		m_isOpen = true;
 
 		//Player Slots.
 		createPlayerSlots();
+
+		InventoryTooltip::CreateTooltip();
+
+		return true;
 	}
 
-	void Backpack::Close(bool ignoreAnimation)
+	bool Backpack::Close(bool ignoreAnimation)
 	{
+		if (m_animating) { return false; }
+
 		GUI::GUIManager::PreventMenus = false;
 
 		if (CurrentOpenBackpack == this)
@@ -140,6 +171,31 @@ namespace GAME_NAME::Objects::Player
 
 		if (!ignoreAnimation)
 		{
+			m_animatingMutex.lock();
+			m_animating = true;
+			m_animatingMutex.unlock();
+			m_isOpen = false;
+
+
+			//Remove all item textures before playing fade animation.
+			for (uint8_t i = 0; i < m_generalDisplayItems.size(); i++)
+			{
+				if (m_generalDisplayItems[i] != nullptr)
+				{
+					Renderer::UnloadGUIElement(m_generalDisplayItems[i], 2);
+					delete m_generalDisplayItems[i];
+				}
+			}
+
+			//Unregister buttons to prevent hovering changing the button texture while fading.
+			for (uint8_t i = 0; i < m_generalSlots.size(); i++)
+			{
+				GUIManager::UnregisterButton(m_generalSlots[i]);
+				m_generalSlots[i]->SetHoverColor(Vec4{ 0.f, 0.f, 0.f, 0.f });
+			}
+
+			m_generalDisplayItems.clear();
+
 			//Smoothly exit the equipment backing and slots off the screen.
 			std::thread moveOutThread([this]() {
 
@@ -170,6 +226,10 @@ namespace GAME_NAME::Objects::Player
 					std::this_thread::sleep_for(std::chrono::microseconds(1));
 				}
 
+				m_animatingMutex.lock();
+				m_animating = false;
+				m_animatingMutex.unlock();
+
 				//Delete all equipment slots.
 				for (uint8_t i = 0; i < BACKPACK_NUM_EQUIPMENT_SLOTS; i++)
 				{
@@ -197,21 +257,10 @@ namespace GAME_NAME::Objects::Player
 				for (uint8_t i = 0; i < m_generalSlots.size(); i++)
 				{
 					Renderer::UnloadGUIElement(m_generalSlots[i], 2);
-					GUIManager::UnregisterButton(m_generalSlots[i]);
 
 					delete m_generalSlots[i];
 				}
 
-				for (uint8_t i = 0; i < m_generalDisplayItems.size(); i++)
-				{
-					if (m_generalDisplayItems[i] != nullptr)
-					{
-						Renderer::UnloadGUIElement(m_generalDisplayItems[i], 2);
-						delete m_generalDisplayItems[i];
-					}
-				}
-
-				m_generalDisplayItems.clear();
 				m_displayFeatures.clear();
 				m_generalSlots.clear();
 				});
@@ -263,9 +312,11 @@ namespace GAME_NAME::Objects::Player
 			m_generalDisplayItems.clear();
 			m_displayFeatures.clear();
 			m_generalSlots.clear();
+
+			m_isOpen = false;
 		}
 
-		m_isOpen = false;
+		InventoryTooltip::RemoveTooltip();
 
 		removePlayerSlots();
 
@@ -282,6 +333,8 @@ namespace GAME_NAME::Objects::Player
 				assignState(item);
 			}
 		}
+
+		return true;
 	}
 
 	void Backpack::Render()
@@ -290,11 +343,62 @@ namespace GAME_NAME::Objects::Player
 		UpdateCursorItemDisplay();
 	}
 
+
 	void Backpack::UpdateCursorItemDisplay()
 	{
 		if (m_cursorItemDisplay != nullptr)
 		{
 			m_cursorItemDisplay->SetPosition(InputManager::GetMouseScreenPosition() - Vec2(0.f, 12.f));
+		}
+
+		if (m_isOpen)
+		{
+			//Equipment slots.
+			for (int i = 0; i < 3; i++)
+			{
+				GUIButton*& slot = m_equipmentSlots[i];
+
+				ReturnItem item = this->GetItem(i);
+
+				//Slot is hovered.
+				if (!item.ri_IsNull && Utils::CollisionDetection::PointWithinBoxBL(InputManager::GetMouseScreenPosition(), slot->GetPosition(), slot->GetScale()))
+				{
+					InventoryTooltip::UpdateTooltip(i, item, false, true);
+					return;
+				}
+			}
+
+			//Player slots.
+			for (int i = 0; i < 3; i++)
+			{
+				StaticGUIElement*& slot = m_playerSlots[i];
+
+				ReturnItem item = TestGame::ThePlayer->GetInventory()->GetItem(i);
+
+				//Slot is hovered.
+				if (!item.ri_IsNull && Utils::CollisionDetection::PointWithinBoxBL(InputManager::GetMouseScreenPosition(), slot->GetPosition(), slot->GetScale()))
+				{
+					InventoryTooltip::UpdateTooltip(i, item, false);
+					return;
+				}
+			}
+
+			//General slots tooltip.
+			for (int i = 0; i < m_generalSlots.size(); i++)
+			{
+				GUIButton*& slot = m_generalSlots[i];
+
+				ReturnItem item = this->GetItem(i + 3 /*First 3 slots are equipment slots, skip over these.*/);
+
+				//Slot is hovered.
+				if (!item.ri_IsNull && Utils::CollisionDetection::PointWithinBoxBL(InputManager::GetMouseScreenPosition(), slot->GetPosition(), slot->GetScale()))
+				{
+					InventoryTooltip::UpdateTooltip(i, item, false);
+					return;
+				}
+			}
+
+			InventoryTooltip::UpdateTooltip(0, {}, true);
 		}
 	}
 

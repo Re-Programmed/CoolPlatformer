@@ -36,7 +36,7 @@ namespace GAME_NAME::Level
 			//Load main level area or whatever.
 			//[Continue Game]
 
-			LevelManager::LoadLevelData("/green_region", true);
+			LevelManager::LoadLevelData("/introduction", true);
 			LevelManager::LevelCircleAnimation(Vec2{ -1.f }, true);
 
 			return;

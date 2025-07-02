@@ -36,11 +36,11 @@ namespace GAME_NAME::Objects::Player
 		/// <summary>
 		/// Renders the backpack inventory to the screen.
 		/// </summary>
-		void Open(bool ignoreAnimation = false);
+		bool Open(bool ignoreAnimation = false);
 		/// <summary>
 		/// Closes the backpack. (if it is currently open)
 		/// </summary>
-		void Close(bool ignoreAnimation = false);
+		bool Close(bool ignoreAnimation = false);
 
 		/// <summary>
 		/// Should be called each frame to update the rendering of items and cursor display (no need to call UpdateHeldItemDisplay).
@@ -140,6 +140,12 @@ namespace GAME_NAME::Objects::Player
 		static StaticGUIElement* m_playerSlots[3];
 		static void createPlayerSlots();
 		static void removePlayerSlots();
+
+		/// <summary>
+		/// True if the fade of the slots is currently occuring, should prevent interactions with the bag.
+		/// </summary>
+		static bool m_animating;
+		static std::mutex m_animatingMutex;
 
 	};
 }

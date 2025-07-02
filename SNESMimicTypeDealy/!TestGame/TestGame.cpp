@@ -45,6 +45,7 @@
 #include "./SettingsManager.h"
 
 #include "./Level/MainMenu/MainMenuManager.h"
+#include "./Level/Introduction/IntroductionLevelManager.h"
 
 //TESTING:
 #include "./Objects/Environment/Buildings/Door.h"
@@ -107,12 +108,12 @@ namespace GAME_NAME
 
 		DebugCommands::HandleCommands();
 
-		/*if (InputManager::GetKeyUpDown(PLAYER_FORCE_WALK) & InputManager::KEY_STATE_PRESSED)
+		if (InputManager::GetKeyUpDown(DEBUG_SET_OBJECT_Y) & InputManager::KEY_STATE_PRESSED)
 		{
 			StateSaver::SaveStates();
 			StateSaver::SaveMisc();
 		}
-		*/
+		
 
 #endif
 
@@ -156,11 +157,11 @@ namespace GAME_NAME
 		SaveManager::SetCurrentFile("default_s");
 
 #ifdef SKIP_MAIN_MENU
-		LoadLevel("/green_region", LEVEL_DATA_TEXTURES_BACKGROUND);
+		LoadLevel("/introduction", LEVEL_DATA_TEXTURES_BACKGROUND);
 		LoadLevel("/global_assets", LEVEL_DATA_TEXTURES_SPRITES);
-		LoadLevel("/green_region", static_cast<GAME_NAME::Game::Game::LEVEL_DATA>(LEVEL_DATA_ALL xor LEVEL_DATA_TEXTURES_BACKGROUND xor LEVEL_DATA_DATA_LEVEL));
-		Mappings::LoadObjectsWithDefaultMapping("/green_region");
-		LoadLevel("/green_region", static_cast<GAME_NAME::Game::Game::LEVEL_DATA>(LEVEL_DATA_DATA_LEVEL));
+		LoadLevel("/introduction", static_cast<GAME_NAME::Game::Game::LEVEL_DATA>(LEVEL_DATA_ALL xor LEVEL_DATA_TEXTURES_BACKGROUND xor LEVEL_DATA_DATA_LEVEL));
+		Mappings::LoadObjectsWithDefaultMapping("/introduction");
+		LoadLevel("/introduction", static_cast<GAME_NAME::Game::Game::LEVEL_DATA>(LEVEL_DATA_DATA_LEVEL));
 		RenderFront = true;
 #else
 		LoadLevel("/main_menu", LEVEL_DATA_TEXTURES_BACKGROUND);
@@ -204,10 +205,23 @@ namespace GAME_NAME
 		DebugCommands::RunRecieverThread();
 #endif
 
+		//If the LEVEL_NO_PLAYER_FLAG is set, the player will not be created.
 		if (!level.Flags.contains(LEVEL_NO_PLAYER_FLAG))
 		{
 			ThePlayer = std::make_shared<Objects::Player::Player>(Vec2(-20, level.PlayerStartPosition.Y));
-			ThePlayer->QueueTargetEvent(Objects::Player::Player::TargetEvent(level.PlayerStartPosition, true, true, 0.6));
+
+			//If this is false we must have loaded a save file, so don't run in from the left.
+			if (ThePlayer->GetPosition().X <= level.PlayerStartPosition.X + 2)
+			{
+				//If the LEVEL_NO_PLAYER_INTRO_FLAG is set, just spawn the player at the given location rather than having them run onto the screen from the left.
+				if (!level.Flags.contains(LEVEL_NO_PLAYER_INTRO_FLAG))
+				{
+					ThePlayer->QueueTargetEvent(Objects::Player::Player::TargetEvent(level.PlayerStartPosition, true, true, 0.6));
+				}
+				else {
+					ThePlayer->SetPosition({ level.PlayerStartPosition.X, level.PlayerStartPosition.Y });
+				}
+			}
 
 			Rendering::Renderer::LoadActiveObject(ThePlayer.get(), 2); //Spawn in the player on Active Layer 2.
 		}
@@ -248,6 +262,17 @@ namespace GAME_NAME
 				case 0:
 					//Main Menu
 					m_currentLevelSystem = std::unique_ptr<LevelSystem>(new MainMenuManager());
+					break;
+				}
+				break;
+			}
+		case 1:
+			{
+				switch (level.ID.Level)
+				{
+				case 0:
+					//Introduction.
+					m_currentLevelSystem = std::unique_ptr<LevelSystem>(new IntroductionLevelManager());
 					break;
 				}
 				break;
@@ -335,8 +360,12 @@ namespace GAME_NAME
 		Cutscenes::DialogueManager::INSTANCE->PlayDialogueSequence(mainSequence);*/
 
 		//Testing Glitch Area
-		GlitchedRegion* gr = new GlitchedRegion(Vec2(80, 0), Vec2(300, 100));
-		Renderer::LoadObject(gr, 2, false);
+		//GlitchedRegion* gr = new GlitchedRegion(Vec2(80, 0), Vec2(300, 100));
+		//Renderer::LoadObject(gr, 2, false);
+		
+		//Test Chest
+		//Renderer::LoadObject(new GAME_NAME::Items::Inventories::InventoryContainer("Test Chest", 10, { 100, 21 }, { 12, 8 }, Renderer::GetSprite(19), 0), 2);
+
 	}
 
 	void TestGame::TogglePauseState()

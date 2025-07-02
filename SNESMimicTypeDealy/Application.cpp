@@ -67,6 +67,7 @@ int main()
 		ApplicationWindow->Render();
 	}
 
+
 	std::exit(0);
 }
 

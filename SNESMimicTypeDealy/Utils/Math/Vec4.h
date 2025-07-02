@@ -17,6 +17,12 @@ namespace GAME_NAME
                 W = w;
             }
 
+            Vec4(float xyzw)
+                : Vec3(xyzw, xyzw, xyzw)
+            {
+                W = xyzw;
+            }
+
             /// <summary>
             /// Returns a new Vec4 that represents the Vec4 (percentage) amount between (first) and (second).
             /// </summary>

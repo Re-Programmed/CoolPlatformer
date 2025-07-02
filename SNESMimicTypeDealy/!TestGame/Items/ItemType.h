@@ -64,6 +64,10 @@ namespace GAME_NAME
 			/// Stores data about the items actions like its strength.
 			/// </summary>
 			const std::unordered_map<TOOL_ACTION, std::string> Attributes;
+			/// <summary>
+			/// Whatever you want.
+			/// </summary>
+			const std::string Description;
 		};
 
 #define NO_HELD_TEXTURE GLOBAL_SPRITE_BASE
@@ -73,13 +77,13 @@ namespace GAME_NAME
 		/// </summary>
 		const ItemData ITEM_DATA[ITEM_COUNT]
 		{
-			{ "Log", 18, NO_HELD_TEXTURE },
-			{ "Leaves", 18, NO_HELD_TEXTURE },
-			{ "Stone", 55, NO_HELD_TEXTURE },
-			{ "(Temp) Axe", 56, SpriteBase(65), WEAPON | CHOP, { { TOOL_ACTION::CHOP , "1" }, { TOOL_ACTION::WEAPON, "10,0,0.9,20" }}},
-			{ "Unknown", 0, NO_HELD_TEXTURE },
-			{ "Wooden Shoes", 18, NO_HELD_TEXTURE, EQUIPMENT, { { TOOL_ACTION::EQUIPMENT, "Health:10" } } },
-			{ "Sharp Stick", SpriteBase(118), SpriteBase(117), WEAPON, {{TOOL_ACTION::WEAPON, "3,0,0.2,26"}}}
+			{ "Log", 18, NO_HELD_TEXTURE, 0, {}, "Probably from a tree." },
+			{ "Leaves", 18, NO_HELD_TEXTURE, 0, {}, "" },
+			{ "Stone", 55, NO_HELD_TEXTURE, 0, {}, "" },
+			{ "(Temp) Axe", 56, SpriteBase(65), WEAPON | CHOP, { { TOOL_ACTION::CHOP , "1" }, { TOOL_ACTION::WEAPON, "10,0,0.9,20" }}, ""},
+			{ "Unknown", 0, NO_HELD_TEXTURE, 0, {}, "" },
+			{ "Wooden Shoes", 18, NO_HELD_TEXTURE, EQUIPMENT, { { TOOL_ACTION::EQUIPMENT, "Health:10" } }, "" },
+			{ "Sharp Stick", SpriteBase(118), SpriteBase(117), WEAPON, {{TOOL_ACTION::WEAPON, "3,0,0.2,26"}}, ""}
 		};
 
 

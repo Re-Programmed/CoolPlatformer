@@ -2,6 +2,9 @@
 
 #include "../../../../Objects/GameObject.h"
 #include "../../../../Rendering/Renderers/Renderer.h"
+#include "GlitchableObject.h"
+
+#include <map>
 
 namespace GAME_NAME::Objects
 {
@@ -23,5 +26,7 @@ namespace GAME_NAME::Objects
 		{
 			return textureID + m_spriteCountBeforePixelated;
 		};
+
+		std::unordered_map<GameObject*, Environment::Effects::GlitchableObject*> m_currentlyActiveGlitchables;
 	};
 }
