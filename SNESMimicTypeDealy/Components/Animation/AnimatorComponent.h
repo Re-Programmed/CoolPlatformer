@@ -48,6 +48,11 @@ namespace GAME_NAME
 					if (m_currentAnimation < 0) { return nullptr; }
 					return m_animations[m_currentAnimation];
 				}
+				
+				inline void SetAllowLooping(bool allowLooping)
+				{
+					m_allowLooping = allowLooping;
+				}
 			private:
 				std::vector<std::shared_ptr<Animation>> m_animations;					//List of all possible animations this object can have.
 				int8_t m_currentAnimation = -1;											//Current animation to use.
@@ -55,6 +60,8 @@ namespace GAME_NAME
 				double m_speedMult = 1.0;												//Speed multiplier for controling animation speed based on events. (Lower values result in longer frames.)
 
 				double m_tick = 0.0;													//Storage for when to advance to the next frame.
+
+				bool m_allowLooping = true;
 			};
 
 

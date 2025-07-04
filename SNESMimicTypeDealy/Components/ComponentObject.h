@@ -34,9 +34,20 @@ namespace GAME_NAME
 				}
 			}
 
+
 			~ComponentObject()
 			{
 
+			}
+
+			inline IComponent* GetComponent(unsigned int index)
+			{
+				if (m_components.size() <= index)
+				{
+					return nullptr;
+				}
+
+				return m_components[index];
 			}
 
 		private:

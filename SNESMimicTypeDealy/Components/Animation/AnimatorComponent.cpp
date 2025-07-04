@@ -25,6 +25,18 @@ namespace GAME_NAME
 
 				if (m_tick * m_speedMult >= m_animations[m_currentAnimation]->GetSpeed())
 				{
+					if (!m_allowLooping)
+					{
+						//Trying to loop.
+						if (m_animations[m_currentAnimation]->GetFrame() + 1 >= m_animations[m_currentAnimation]->GetNumberOfFrames())
+						{
+							//Cancels the current animation now that it has finished.
+							m_tick = 0.0;
+							m_currentAnimation = -1;
+							return;
+						}
+					}
+
 					m_animations[m_currentAnimation]->IncrementFrame(object);
 					m_tick = 0.0;
 				}
