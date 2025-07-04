@@ -1489,6 +1489,84 @@
     <Image Include="Assets\green_region\bg\1011_hills_t3_b.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Assets\introduction\sprite\1001_blank.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\introduction\sprite\1002_player_hands_up.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\introduction\sprite\1003_1_cloud.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\introduction\sprite\1004_2_cloud.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\introduction\sprite\1005_3_cloud.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\introduction\sprite\1006_grass.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\introduction\sprite\1007_grass.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\introduction\sprite\1008_grass.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\introduction\sprite\1009_grass.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\introduction\sprite\1010_bg_hill.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\introduction\sprite\1011_gear_platform.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\introduction\sprite\1012_grass_top_1006.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\introduction\sprite\1013_grass_top_1007.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\introduction\sprite\1014_grass_top_1008.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\introduction\sprite\1015_grass_top_1009.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\introduction\sprite\1016_square_hill_end.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\introduction\sprite\1017_square_hill_mid.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\introduction\sprite\1018_cork_plank.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\introduction\sprite\1019_cork_half_plank.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\introduction\sprite\1020_spotted_hill_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\introduction\sprite\1021_spotted_hill_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\introduction\sprite\1022_spotted_hill_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\introduction\sprite\1023_dirt_30px.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\introduction\sprite\1024_bed.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\introduction\sprite\1025_wood_board_floor.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\introduction\sprite\1026_bed_lowq.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\testing\chunk.pk" />
