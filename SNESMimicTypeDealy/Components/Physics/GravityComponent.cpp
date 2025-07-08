@@ -14,6 +14,8 @@ namespace GAME_NAME
 			*/
 			void GravityComponent::physicsTick(GLFWwindow* window, Objects::GameObject* object)
 			{
+				
+
 				/* ---RENDER UPDATE COUNTER---
 				{
 					renderCalls++;

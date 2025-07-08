@@ -375,6 +375,12 @@ namespace  GAME_NAME
 				}
 #endif
 
+				//Rendering disabled, just ignore everything.
+				if (!m_enableRendering)
+				{
+					return;
+				}
+
 				Vec4 playerColorVerts[4] = {
 					{1, 1, 1, 1},
 					{1, 1, 1, 1},

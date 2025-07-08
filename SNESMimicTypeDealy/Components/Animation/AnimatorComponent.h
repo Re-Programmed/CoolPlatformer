@@ -36,6 +36,7 @@ namespace GAME_NAME
 				{
 					m_currentAnimation = animation;
 					if(forceFirstFrame != nullptr){m_animations[m_currentAnimation]->InitFrame(forceFirstFrame);}
+					if (m_speedMult < 0.0 && forceFirstFrame != nullptr) { m_animations[m_currentAnimation]->DecrementFrame(forceFirstFrame); };
 				}		
 
 				inline int8_t GetCurrentAnimationIndex()

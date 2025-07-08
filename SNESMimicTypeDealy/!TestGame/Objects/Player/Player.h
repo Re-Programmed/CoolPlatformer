@@ -280,6 +280,15 @@ namespace  GAME_NAME
 					SetLookDirection(direction, point);
 				}
 
+				/// <summary>
+				/// Sets if the player should be rendered to the screen. Useful during cutscenes or events where the player is frozen and shouldn't be seen.
+				/// </summary>
+				/// <param name="render"></param>
+				inline void SetEnableRendering(bool render)
+				{
+					m_enableRendering = render;
+				}
+
 				inline Backpack* const GetBackpack()
 				{
 					return m_backpack;
@@ -321,6 +330,11 @@ namespace  GAME_NAME
 				void beforeCollision() override;		//Called before any collisions are calculated to allow for resetting the jump conditions.
 
 			private:
+
+				/// <summary>
+				/// Used to hide the player during certain events...
+				/// </summary>
+				bool m_enableRendering = true;
 
 				/// <summary>
 				/// Multiplied by all scale variables to allow for relative scaling. m_scale is utilized to scale the player based on the current sprite, maintaining a similar size.

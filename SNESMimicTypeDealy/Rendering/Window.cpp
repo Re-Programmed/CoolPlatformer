@@ -66,6 +66,7 @@ namespace GAME_NAME
 		return m_glWindow;
 	}
 
+	
 
 	Window::Window(bool fullscreen, GAME_NAME::Game::Game* game) : m_game(game), m_fullscreen(fullscreen)
 	{
