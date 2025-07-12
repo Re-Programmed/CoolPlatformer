@@ -25,6 +25,8 @@
 
 #include "../Level/LevelManager.h"
 
+#include "../Items/Crafting/CraftingMenuManager.h"
+
 #define DebugCommands_Log(x) DEBUG::DebugLog::Log(std::string("[Debug Commands] ").append(x), true, ";33");
 
 std::vector<std::string> DebugCommands::m_queuedCommands = std::vector<std::string>(2);
@@ -183,6 +185,15 @@ void DebugCommands::HandleCommands()
 			
 			DebugCommands_Log("Played circle wipe.");
 
+			continue;
+		}
+		
+		if (input == "crafting_menu")
+		{
+			GAME_NAME::Items::Crafting::CraftingMenuManager::OpenCraftingMenu();
+
+			DebugCommands_Log("Opened crafting menu.");
+			
 			continue;
 		}
 	}

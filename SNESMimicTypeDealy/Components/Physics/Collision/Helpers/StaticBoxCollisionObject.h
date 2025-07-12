@@ -66,13 +66,13 @@ namespace GAME_NAME
 
 					void Render(const Vec2& cameraPosition) override
 					{
-						if (m_trueRenderScale.X != m_scale.Y || m_trueRenderScale.Y != m_scale.Y)
+						if (m_trueRenderScale.X != m_scale.X || m_trueRenderScale.Y != m_scale.Y)
 						{
 							Vec2 colliderScale = this->m_scale;
-							this->m_position -= Vec2{ 0.f, this->m_scale.Y - colliderScale.Y };
+							this->m_position -= Vec2{ 0.f, colliderScale.Y - colliderScale.Y };
 							this->m_scale = m_trueRenderScale;
 							GameObject::Render(cameraPosition);
-							this->m_position += Vec2{ 0.f, this->m_scale.Y - colliderScale.Y };
+							this->m_position += Vec2{ 0.f, colliderScale.Y - colliderScale.Y };
 							this->m_scale = colliderScale;
 						}
 						else {

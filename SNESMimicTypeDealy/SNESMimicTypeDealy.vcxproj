@@ -143,6 +143,7 @@
     <ClCompile Include="!TestGame\Debug\DebugCommands.cpp" />
     <ClCompile Include="!TestGame\InputDisplay\DisplayIconManager.cpp" />
     <ClCompile Include="!TestGame\ItemMapping.cpp" />
+    <ClCompile Include="!TestGame\Items\Crafting\CraftingMenuManager.cpp" />
     <ClCompile Include="!TestGame\Items\FloorItem.cpp" />
     <ClCompile Include="!TestGame\Items\Inventories\CraftingInventory.cpp" />
     <ClCompile Include="!TestGame\Items\Inventories\InventoryContainer.cpp" />
@@ -271,6 +272,7 @@
     <ClInclude Include="!TestGame\InputDisplay\DisplayIconManager.h" />
     <ClInclude Include="!TestGame\Interiors\InteriorRoom.h" />
     <ClInclude Include="!TestGame\ItemMapping.h" />
+    <ClInclude Include="!TestGame\Items\Crafting\CraftingMenuManager.h" />
     <ClInclude Include="!TestGame\Items\FloorItem.h" />
     <ClInclude Include="!TestGame\Items\Inventories\CraftingInventory.h" />
     <ClInclude Include="!TestGame\Items\Inventories\InventoryContainer.h" />

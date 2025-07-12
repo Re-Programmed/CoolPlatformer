@@ -263,7 +263,7 @@ namespace GAME_NAME::Level
 			if (ilm_player_flying == nullptr)
 			{
 				//Create flying player.
-				ilm_player_flying = new ActiveBoxCollisionGravityObject(Vec2{ 1089, 138 }, Vec2{ -45.f / 1.5f, 41.f / 1.5f }, Renderer::GetSprite(SpriteBase(232)));
+				ilm_player_flying = new ActiveBoxCollisionGravityObject(Vec2{ 1089, 138 }, Vec2{ -45.f / 1.75f, 41.f / 1.75f }, Renderer::GetSprite(SpriteBase(232)));
 				ilm_player_flying->GetPhysics()->SetGravityStrength(2.f);
 				ilm_player_flying->GetPhysics()->AddVelocity(Vec2{ -190.f, 20.f });
 				Renderer::InstantiateObject(Renderer::InstantiateGameObject(ilm_player_flying, true, 2, false));
@@ -279,7 +279,7 @@ namespace GAME_NAME::Level
 			}
 		}
 
-		if (m_rubeTimer > 31.82)
+		if (m_rubeTimer > 31.81)
 		{
 			if (!ilm_rube_flag)
 			{

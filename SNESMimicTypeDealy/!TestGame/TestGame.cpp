@@ -54,7 +54,8 @@
 #include "../Objects/GUI/GUIManager.h"
 #include "../Rendering/Lighting/SimpleLightingManager.h"
 
-#define SKIP_MAIN_MENU
+//#define SKIP_MAIN_MENU
+//#define SKIP_INTRODUCTION
 
 namespace GAME_NAME
 {
@@ -157,12 +158,21 @@ namespace GAME_NAME
 		SaveManager::SetCurrentFile("default_s");
 
 #ifdef SKIP_MAIN_MENU
+#ifdef SKIP_INTRODUCTION
+		LoadLevel("/green_region", LEVEL_DATA_TEXTURES_BACKGROUND);
+		LoadLevel("/global_assets", LEVEL_DATA_TEXTURES_SPRITES);
+		LoadLevel("/green_region", static_cast<GAME_NAME::Game::Game::LEVEL_DATA>(LEVEL_DATA_ALL xor LEVEL_DATA_TEXTURES_BACKGROUND xor LEVEL_DATA_DATA_LEVEL));
+		Mappings::LoadObjectsWithDefaultMapping("/green_region");
+		LoadLevel("/green_region", static_cast<GAME_NAME::Game::Game::LEVEL_DATA>(LEVEL_DATA_DATA_LEVEL));
+		RenderFront = true;
+#else
 		LoadLevel("/introduction", LEVEL_DATA_TEXTURES_BACKGROUND);
 		LoadLevel("/global_assets", LEVEL_DATA_TEXTURES_SPRITES);
 		LoadLevel("/introduction", static_cast<GAME_NAME::Game::Game::LEVEL_DATA>(LEVEL_DATA_ALL xor LEVEL_DATA_TEXTURES_BACKGROUND xor LEVEL_DATA_DATA_LEVEL));
 		Mappings::LoadObjectsWithDefaultMapping("/introduction");
 		LoadLevel("/introduction", static_cast<GAME_NAME::Game::Game::LEVEL_DATA>(LEVEL_DATA_DATA_LEVEL));
 		RenderFront = true;
+#endif
 #else
 		LoadLevel("/main_menu", LEVEL_DATA_TEXTURES_BACKGROUND);
 		LoadLevel("/global_assets", LEVEL_DATA_TEXTURES_SPRITES);

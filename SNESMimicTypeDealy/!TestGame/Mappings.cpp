@@ -160,7 +160,7 @@ std::function<void (std::vector<std::string>, size_t line)> m_mappings[MAPPINGS_
 			finalSprite = Renderer::GetSprite(std::stoi(data[4]));
 		}
 
-		Renderer::LoadObject(new GAME_NAME::Components::Physics::Collision::StaticBoxCollisionObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), finalSprite, (data.size() > 5 ? std::stoi(data[5]) : 1U)));
+		Renderer::LoadObject(new GAME_NAME::Components::Physics::Collision::StaticBoxCollisionObject(STOIVEC(data[0], data[1]), STOIVEC(data[2], data[3]), finalSprite), (data.size() > 5 ? std::stoi(data[5]) : 1U));
 	},
 
 	//ActiveBoxCollisionGravityObject
