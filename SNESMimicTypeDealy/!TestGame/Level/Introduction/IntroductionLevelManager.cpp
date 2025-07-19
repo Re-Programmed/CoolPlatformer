@@ -2,7 +2,14 @@
 
 #include "../../TestGame.h"
 
+#include "../../../Objects/GUI/Menus/GUIMenu.h"
 #include "../../../Utils/Time/GameTime.h"
+
+#include "../../Cutscenes/DialogueManager.h"
+
+using namespace GAME_NAME::Cutscenes;
+
+constexpr const char* INTROMNGR_INTRO_DIALOGUE = "OutOfBed";
 
 constexpr unsigned int INTROMNGR_PULLEY_SPRITE = 31;
 constexpr unsigned int INTROMNGR_ROPE_SPRITE = 30;
@@ -258,7 +265,7 @@ namespace GAME_NAME::Level
 		
 		}
 
-		if (m_rubeTimer > 30.81)
+		if (m_rubeTimer > 30.81 && m_rubeTimer < 32.08)
 		{
 			if (ilm_player_flying == nullptr)
 			{
@@ -279,7 +286,7 @@ namespace GAME_NAME::Level
 			}
 		}
 
-		if (m_rubeTimer > 31.81)
+		if (m_rubeTimer > 31.81 && m_rubeTimer < 32.08)
 		{
 			if (!ilm_rube_flag)
 			{
@@ -288,10 +295,68 @@ namespace GAME_NAME::Level
 				(dynamic_cast<AnimatorComponent*>(m_rubePulleys[2]->GetComponent(0)))->SetCurrentAnimation(-1);
 				(dynamic_cast<AnimatorComponent*>(m_rubePulleys[3]->GetComponent(0)))->SetCurrentAnimation(-1);
 
-				//Player splat animation.
 				ilm_player_flying->GetPhysics()->SetVelocity(Vec2::Zero);
 				ilm_player_flying->GetPhysics()->SetGravityStrength(0.f);
 			}
+
+			return;
+		}
+
+		//Player is splatted on the floor...
+		if (m_rubeTimer > 32.08 && m_rubeTimer < 35.44)
+		{
+			if (ilm_rube_flag)
+			{
+				ilm_rube_flag = false;
+
+				ilm_player_flying->SetScale(Vec2{ 26, 26 });
+				ilm_player_flying->SetPosition(ilm_player_flying->GetPosition() + Vec2{ -29, 0 });
+				ilm_player_flying->SetSprite(Renderer::GetSprite(GAME_NAME::Objects::Player::Player::TextureData[GAME_NAME::Objects::Player::Player::DEFAULT_BIRB].Fall));
+			}
+		}
+
+#define FallenSprite GAME_NAME::Objects::Player::Player::TextureData[GAME_NAME::Objects::Player::Player::DEFAULT_BIRB].Fall + 4
+
+		if (m_rubeTimer > 35.44 && m_rubeTimer < 36.5)
+		{
+			if (!ilm_rube_flag)
+			{
+				ilm_player_flying->SetSprite(Renderer::GetSprite(FallenSprite));
+				ilm_rube_flag = true;
+			}
+			else {
+				m_rubeSubTimer += dTime;
+				if (m_rubeSubTimer > 0.215)
+				{
+					if (ilm_player_flying->GetSprite()->GetSpriteId() < FallenSprite + 5 + (-SpriteBase(0)))
+					{
+						ilm_player_flying->SetSprite(new Sprite(ilm_player_flying->GetSprite()->GetSpriteId() + 1));
+					}
+
+					m_rubeSubTimer = 0;
+				}
+			}
+
+			return;
+		}
+
+		if (m_rubeTimer > 36.5)
+		{
+			if (!ilm_rube_flag) { return; }
+			ilm_rube_flag = false;
+
+			Renderer::DestroyActiveObject(ilm_player_flying);
+			
+			TestGame::ThePlayer->SetPosition(ilm_player_flying->GetPosition() + Vec2{ 7.25f, 0.f });
+			TestGame::ThePlayer->SetEnableRendering(true);
+			TestGame::ThePlayer->SetFrozen(false);
+
+			TestGame::ThePlayer->SetControlType(Objects::Player::Player::ControlType::ROOM);
+
+			GUI::Menus::GUIMenu::OpenMenu();
+			DialogueManager::INSTANCE->PlayDialogueSequence(DialogueManager::INSTANCE->GetDialogueSequence(INTROMNGR_INTRO_DIALOGUE));
+
+			m_rubeBed->SetSprite(Renderer::GetSprite(64)); //Bed Empty Sprite
 		}
 	}
 }

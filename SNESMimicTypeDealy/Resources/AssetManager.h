@@ -17,6 +17,8 @@ constexpr const char* ObjectSubfolder = "/Objects";		//Path within a level to it
 
 constexpr const char* MenuSubfolder = "/Menus";			//Path within assets to the folder containing menus.
 
+constexpr const char* DialogueFile = "/dialogue.pk";	//Path to the file containing what all the dialogue is.
+
 constexpr const char* ChunkFileName = "/chunk.pk";		//Path within a level to its chunk.pk file.
 constexpr const char* LevelFileName = "/level.dat";		//Path within a level to its level.dat file.
 constexpr const char* ObjectFileName = "/object.pk";	//Path within a level to its object.pk file.
@@ -64,6 +66,14 @@ namespace GAME_NAME
 			/// <param name="subfolder">The directory within the assets folder to load.</param>
 			/// <param name="data">Output file.</param>
 			static void GetLevelData(const char* subfolder, std::string data[Objects::Levels::LevelDataSize]);
+
+
+			/// <summary>
+			/// Gets the dialogue data for the given level and returns it as a map of each sequence to its informational string.
+			/// </summary>
+			/// <param name="subfolder"></param>
+			/// <returns></returns>
+			static std::unordered_map<std::string, std::string> GetDialogueData(const char* subfolder);
 
 			/// <summary>
 			/// Returns the chunk data for a level.

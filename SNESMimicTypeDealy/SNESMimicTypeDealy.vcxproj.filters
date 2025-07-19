@@ -381,6 +381,12 @@
     <ClCompile Include="!TestGame\Items\Crafting\CraftingMenuManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="!TestGame\Items\Crafting\CraftingDataManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="!TestGame\Cutscenes\DialogueSequence.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glad\include\glad\glad.h">
@@ -813,6 +819,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="!TestGame\Items\Crafting\CraftingMenuManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="!TestGame\Items\Crafting\CraftingDataManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

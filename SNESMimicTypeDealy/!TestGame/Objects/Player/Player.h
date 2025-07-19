@@ -325,11 +325,25 @@ namespace  GAME_NAME
 				/// </summary>
 				void HideAllUI();
 
+				enum ControlType
+				{
+					PLATFORMER, //Default
+					ROOM		//Move up and down as well.
+				};
+
+				inline void SetControlType(ControlType type) { m_controlType = type; if (type == ROOM) { m_storedRoomHeight = this->m_position.Y; m_onGround = true; } }
+
 			protected:
 				void onCollision (Vec2 push, GameObject* gameObject) override;	//Called when a collision occurs.
 				void beforeCollision() override;		//Called before any collisions are calculated to allow for resetting the jump conditions.
 
 			private:
+				ControlType m_controlType = ControlType::PLATFORMER;
+
+				/// <summary>
+				/// Used for room ControlType to store where the player is vertically standing in the room.
+				/// </summary>
+				int m_storedRoomHeight = 0;
 
 				/// <summary>
 				/// Used to hide the player during certain events...

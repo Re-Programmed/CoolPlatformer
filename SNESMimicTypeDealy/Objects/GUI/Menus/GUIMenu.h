@@ -27,6 +27,11 @@ namespace GAME_NAME::Objects::GUI::Menus
 			m_lastRegisteredButtonIds.push_back(id);
 			m_asyncAddLock.unlock();
 		}
+		
+		/// <summary>
+		/// Used when opening a menu not from a file but created by loading objects. This must be called to tell the renderer that there is, in fact, GUI on the screen.
+		/// </summary>
+		static void OpenMenu();
 	protected:
 		static uint8_t m_menusOpen;
 		static uint16_t m_lastMenuObjects[3];

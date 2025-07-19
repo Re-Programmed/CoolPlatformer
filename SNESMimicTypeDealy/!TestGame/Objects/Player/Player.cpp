@@ -32,6 +32,8 @@
 
 #include "../../../Utils/CollisionDetection.h"
 
+#define PLAYER_ROOM_SPEED 40	//How fast the player moves vertically in room control mode.
+
 #define PLAYER_ANIMATION_RUN_WALK_SWITCH 142.f //When the player should switch from the walking to running animation.
 
 #define PLAYER_DAMAGE_ANIMATION_LENGTH 0.75f //How long the damage timer ticks for after the player is attacked.
@@ -977,6 +979,29 @@ namespace  GAME_NAME
 
 			void Player::readKeys()
 			{
+				if (m_controlType == ControlType::ROOM)
+				{
+					m_airTime = 0;
+
+					if (m_frozen <= 0)
+					{
+						if (InputManager::GetKey(PLAYER_MOVE_UP))
+						{
+							Translate(Vec2{ 0, static_cast<float>(Utils::Time::GameTime::GetScaledDeltaTime()) * PLAYER_ROOM_SPEED });
+						}
+
+						if (InputManager::GetKey(PLAYER_MOVE_DOWN))
+						{
+							Translate(Vec2{ 0, static_cast<float>(Utils::Time::GameTime::GetScaledDeltaTime()) * -PLAYER_ROOM_SPEED });
+						}
+
+						if (m_onGround)
+						{
+							m_storedRoomHeight = m_position.Y;
+						}
+					}
+				}
+
 				//Setting these values to true causes the player to walk in that direction this frame.
 				bool animateMoveRight = false, animateMoveLeft = false;
 
@@ -1315,6 +1340,27 @@ namespace  GAME_NAME
 								m_physics->SetGravityStrength(DefaultPlayerGravity - FlyingGravityReduction - 0.5f);
 							}
 						}
+					}
+
+				}
+
+				if (m_controlType == ROOM)
+				{
+
+					if (m_position.Y <= m_storedRoomHeight)
+					{
+						m_onGround = true;
+						m_position.Y = m_storedRoomHeight;
+						m_physics->SetGravitationalVelocity(0.f);
+						m_physics->SetVelocityY(0.f);
+					}
+					
+					if (m_onGround)
+					{
+						m_physics->SetGravityStrength(0.f);
+					}
+					else {
+						m_physics->SetGravityStrength(DefaultPlayerGravity);
 					}
 
 				}

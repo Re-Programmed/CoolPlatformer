@@ -25,7 +25,7 @@ namespace GAME_NAME::Cutscenes
 
 			}
 
-			DialogueEvent(std::string text, GameObject* focusObject, float zoom, int numOptions, std::shared_ptr<DialogueSequence> options...)
+			DialogueEvent(std::string text, GameObject* focusObject, float zoom, int numOptions, /*std::shared_ptr<DialogueSequence> options*/...)
 				: Text(text), FocusObject(focusObject), Zoom(zoom)
 			{
 				va_list args;
@@ -33,19 +33,47 @@ namespace GAME_NAME::Cutscenes
 
 				for (unsigned int i = 0; i < numOptions; i++)
 				{
-					Options.push_back(va_arg(args, std::shared_ptr<DialogueSequence>));
+					Options.emplace_back(va_arg(args, std::shared_ptr<DialogueSequence>));
 				}
 
 				va_end(args);
 			}
+
+
+			inline void SetFocusObject(GameObject*& focus)
+			{
+				FocusObject = focus;
+			}
+
+			inline void SetZoom(const float& zoom)
+			{
+				Zoom = zoom;
+			}
+
+			void AddOption(const std::string& option);
+
+			inline void AddOption(std::shared_ptr<DialogueSequence>& option)
+			{
+				Options.push_back(option);
+			}
 		};
+
+		inline bool IsEmpty() { return this->m_dialogueEvents.empty(); }
+
+		/// <summary>
+		/// Create an empty sequence.
+		/// </summary>
+		DialogueSequence()
+		{
+
+		}
 
 		/// <summary>
 		/// Creates a dialogue sequence with the given events.
 		/// </summary>
 		/// <param name="numEvents">How many dialogue events are listed.</param>
 		/// <param name="...">A list of dialogue events.</param>
-		DialogueSequence(unsigned int numEvents, DialogueEvent events...)
+		DialogueSequence(unsigned int numEvents, ...)
 		{
 			va_list args;
 			va_start(args, numEvents);
@@ -58,6 +86,10 @@ namespace GAME_NAME::Cutscenes
 			va_end(args);
 		}
 
+		inline void AddDialogueEvent(const DialogueEvent& event)
+		{
+			m_dialogueEvents.emplace(event);
+		}
 
 		/// <summary>
 		/// Returns the next dialogue event and pops it from the dialogue queue.

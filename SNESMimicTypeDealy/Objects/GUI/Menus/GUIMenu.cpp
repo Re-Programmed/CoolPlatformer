@@ -200,5 +200,11 @@ using namespace Text;
 		}
 	}
 
+	void GUIMenu::OpenMenu()
+	{
+		m_menusOpen++;
+		GUIManager::MenuIsOpen = true;
+	}
+
 }
 

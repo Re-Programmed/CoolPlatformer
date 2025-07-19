@@ -2,6 +2,7 @@
 
 #include "../../Input/InputManager.h"
 
+#include "../../Resources/AssetManager.h"
 
 #include "../Camera/GameCamera.h"
 
@@ -110,6 +111,77 @@ namespace GAME_NAME::Cutscenes
 				advancingDialogue = false;
 			}
 		}
+	}
+
+	DialogueSequence DialogueManager::GetDialogueSequence(std::string sequenceName)
+	{
+		if (m_storedDialogueSequences.contains(sequenceName))
+		{
+			std::stringstream ss(m_storedDialogueSequences[sequenceName]);
+			std::string line;
+
+			std::vector<DialogueSequence::DialogueEvent> events;
+			while (std::getline(ss, line, '&'))
+			{
+				float zoom = 1.f;
+
+				//Asterisk means zoom value.
+				if (line.starts_with("*"))
+				{
+					std::string zoomStr = line.substr(1, line.find_last_of('*'));
+					zoom = std::stof(zoomStr);
+
+					line = line.substr(line.find_last_of("*") + 1);
+				}
+
+				//Options deliniated by pipe. "|"
+				if (line.find("|") != std::string::npos)
+				{
+					DialogueSequence::DialogueEvent event(line.substr(0, line.find_first_of('|')), nullptr, zoom);
+
+					std::stringstream optionStream(line);
+					std::string option;
+
+					uint8_t i = 0;
+					while (std::getline(optionStream, option, '|'))
+					{
+						if (i < 1)
+						{
+							i++;
+							continue;
+						}
+
+						event.AddOption(option);
+						i++;
+					}
+
+					events.push_back(event);
+				}
+				else {
+					events.push_back(DialogueSequence::DialogueEvent(line, nullptr, zoom));
+				}
+
+			}
+
+			DialogueSequence sequence;
+			for (DialogueSequence::DialogueEvent de : events)
+			{
+				sequence.AddDialogueEvent(de);
+			}
+
+			return sequence;
+		}
+
+#if _DEBUG
+		DEBUG::DebugLog::LogError("Failed to find a dialogue sequence \"" + sequenceName + ".\" (DialogueManager.h:87)");
+#endif
+
+		return NULL;
+	}
+
+	void DialogueManager::LoadStoredDialogueSequences(std::string path)
+	{
+		m_storedDialogueSequences = Resources::AssetManager::GetDialogueData(path.c_str());
 	}
 
 	bool DialogueManager::advanceDialogue()

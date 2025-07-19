@@ -2,9 +2,11 @@
 #include "../../../Objects/GUI/StaticGUIElement.h"
 #include "../ItemType.h"
 
+#include "./CraftingDataManager.h"
+
 namespace GAME_NAME::Items::Crafting
 {
-#define RECIPE_ELEMENT_COUNT 4
+#define CRAFTING_MENU_MANAGER_RECIPE_ELEMENT_COUNT 4
 
 using namespace GUI;
 
@@ -15,8 +17,10 @@ using namespace GUI;
 
 	private:
 		static StaticGUIElement* const m_backgroundCover;
-		static std::array<std::array<IGUIElement*, RECIPE_ELEMENT_COUNT>, 4> m_recipeDisplays;
+		static std::array<std::array<IGUIElement*, CRAFTING_MENU_MANAGER_RECIPE_ELEMENT_COUNT>, CRAFTING_DATA_NUM_RECIPES> m_recipeDisplays;
 
-		static void addRecipeOption(ITEM_TYPE inputItem);
+		static std::array<IGUIElement*, CRAFTING_MENU_MANAGER_RECIPE_ELEMENT_COUNT> addRecipeOption(const ITEM_TYPE& inputItem, const ITEM_TYPE& inputItem2, const ITEM_TYPE& inputItem3, const ITEM_TYPE& returnItem, const int& index);
+
+		static void recipeOptionButtonCallback(int buttonId);
 	};
 }

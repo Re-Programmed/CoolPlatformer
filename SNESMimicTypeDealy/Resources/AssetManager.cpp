@@ -141,6 +141,45 @@ namespace GAME_NAME
 
 		}
 
+		std::unordered_map<std::string, std::string> AssetManager::GetDialogueData(const char* subfolder)
+		{
+			std::unordered_map<std::string, std::string> data;
+
+			std::string filePath = AssetPath;
+			filePath += subfolder;
+			filePath += DialogueFile;
+
+			std::ifstream DialogueFile(filePath);
+			std::string line;
+
+			std::string key = "", info = "";
+
+			while (std::getline(DialogueFile, line, '\n'))
+			{
+				if (line.starts_with(">"))
+				{
+					if (!key.empty())
+					{
+						data.emplace(key, info.substr(0, info.length() - 1));
+						info = "";
+					}
+
+					key = line.substr(1);
+				}
+				else if (!key.empty())
+				{
+					info.append(line).append("&");
+				}
+			}
+
+			if (!key.empty())
+			{
+				data.emplace(key, info.substr(0, info.length() - 1));
+			}
+
+			return data;
+		}
+
 		std::array<int, DEFAULT_LEVEL_SIZE_X * DEFAULT_LEVEL_SIZE_Y> AssetManager::GetChunkData(const char* subfolder)
 		{
 			std::string filePath = AssetPath;

@@ -71,7 +71,22 @@ namespace GAME_NAME::Cutscenes
 		/// </summary>
 		void Update(GLFWwindow* window) override;
 
+		/// <summary>
+		/// Returns a dialouge sequence that is stored in a text file from its given key.
+		/// </summary>
+		/// <param name="sequenceName">What dialogue sequence to get.</param>
+		/// <returns></returns>
+		DialogueSequence GetDialogueSequence(std::string sequenceName);
+
+		/// <summary>
+		/// Loads the dialogue sequences that are stored in the given level files.
+		/// </summary>
+		void LoadStoredDialogueSequences(std::string path);
+
 	private:
+		//Dialogue loaded from the current level that is stored. Dialogue text is stored by separating each event with an ampersand "&."
+		std::unordered_map<std::string, std::string> m_storedDialogueSequences;
+
 		/// <summary>
 		/// True if a dialogue sequence is playing.
 		/// </summary>

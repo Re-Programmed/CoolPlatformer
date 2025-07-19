@@ -54,7 +54,7 @@
 #include "../Objects/GUI/GUIManager.h"
 #include "../Rendering/Lighting/SimpleLightingManager.h"
 
-//#define SKIP_MAIN_MENU
+#define SKIP_MAIN_MENU
 //#define SKIP_INTRODUCTION
 
 namespace GAME_NAME
@@ -164,6 +164,7 @@ namespace GAME_NAME
 		LoadLevel("/green_region", static_cast<GAME_NAME::Game::Game::LEVEL_DATA>(LEVEL_DATA_ALL xor LEVEL_DATA_TEXTURES_BACKGROUND xor LEVEL_DATA_DATA_LEVEL));
 		Mappings::LoadObjectsWithDefaultMapping("/green_region");
 		LoadLevel("/green_region", static_cast<GAME_NAME::Game::Game::LEVEL_DATA>(LEVEL_DATA_DATA_LEVEL));
+		Cutscenes::DialogueManager::INSTANCE->LoadStoredDialogueSequences("/green_region");
 		RenderFront = true;
 #else
 		LoadLevel("/introduction", LEVEL_DATA_TEXTURES_BACKGROUND);
@@ -171,6 +172,7 @@ namespace GAME_NAME
 		LoadLevel("/introduction", static_cast<GAME_NAME::Game::Game::LEVEL_DATA>(LEVEL_DATA_ALL xor LEVEL_DATA_TEXTURES_BACKGROUND xor LEVEL_DATA_DATA_LEVEL));
 		Mappings::LoadObjectsWithDefaultMapping("/introduction");
 		LoadLevel("/introduction", static_cast<GAME_NAME::Game::Game::LEVEL_DATA>(LEVEL_DATA_DATA_LEVEL));
+		Cutscenes::DialogueManager::INSTANCE->LoadStoredDialogueSequences("/introduction");
 		RenderFront = true;
 #endif
 #else
