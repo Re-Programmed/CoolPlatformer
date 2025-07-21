@@ -42,6 +42,7 @@ namespace GAME_NAME
 
 					void Update(GLFWwindow* window)
 					{
+						if (!m_enabled) { return; }
 						CollisionManager::RegisterStaticColliderToBuffer(m_boxCollider);
 					}
 
@@ -53,6 +54,11 @@ namespace GAME_NAME
 					inline void SetOnCollision(bool(*onCollision)(Vec2, Objects::GameObject*, Objects::GameObject*))
 					{
 						m_boxCollider->SetOnCollision(onCollision);
+					}
+
+					inline void SetEnabled(bool enabled)
+					{
+						m_enabled = enabled;
 					}
 
 					/// <summary>
@@ -82,6 +88,8 @@ namespace GAME_NAME
 
 				private:
 					StaticBoxCollider* const m_boxCollider;
+
+					bool m_enabled = true;
 
 					Vec2 m_trueRenderScale;
 				};

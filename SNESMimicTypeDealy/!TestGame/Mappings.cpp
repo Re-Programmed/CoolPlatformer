@@ -50,6 +50,7 @@
 #include "./Objects/Environment/Effects/GlitchEffect.h"
 
 #include "./Objects/Environment/Movement/Trampoline.h"
+#include "Objects/Environment/Buildings/InteriorDoor.h"
 
 #define COMPONENT_MAPPINGS_SIZE 1	//How many component mappings there are
 #define MAPPINGS_SIZE 20			//How many object mappings there are.
@@ -399,6 +400,7 @@ using namespace Enemies;
 			2 - FrontDoor (sprite, roomFile)
 			3 - Bench (sprite)
 			4 - Sagging Object (sprite, segmentCount)
+			5 - InteriorDoor (sprite,destination,playerExitX,playerExitY,shouldLoadOnlyObjects=false)
 	*/
 	[](std::vector<std::string> data, size_t n)
 	{
@@ -461,6 +463,12 @@ using namespace Objects::Environment::Buildings;
 		{
 			SaggingObject* sag = new SaggingObject(STOIVEC(data[1], data[2]), STOIVEC(data[3], data[4]), Renderer::GetSprite(std::stoi(data[6])), std::stoi(data[7]), std::stoi(data[8]) == 1);
 			Renderer::LoadObject(sag, std::stoi(data[5]));
+			break;
+		}
+		case 5:
+		{
+			InteriorDoor* interiorDoor = new InteriorDoor(STOIVEC(data[1], data[2]), STOIVEC(data[3], data[4]), Renderer::GetSprite(std::stoi(data[6])), data[7], STOIVEC(data[8], data[9]), data.size() >= 11 ? (std::stoi(data[10]) == 1) : false);
+			Renderer::LoadObject(interiorDoor, std::stoi(data[5]));
 			break;
 		}
 		}

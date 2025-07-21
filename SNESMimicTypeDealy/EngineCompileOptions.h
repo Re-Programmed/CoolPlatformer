@@ -4,6 +4,8 @@
 	This file contains settings that you will need to change based on what features you use in the engine and where you put certain files.
 */
 
+#define SHOW_WINDOWS_ERROR_POPUPS
+
 #pragma region Renderer	
 	
 	/*

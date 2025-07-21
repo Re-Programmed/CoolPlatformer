@@ -178,6 +178,7 @@
     <ClCompile Include="!TestGame\Objects\Environment\Buildings\Door.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Buildings\FrontDoor.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Buildings\FrontWall.cpp" />
+    <ClCompile Include="!TestGame\Objects\Environment\Buildings\InteriorDoor.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Buildings\SaggingObject.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\ClimbableObject.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\CloudGenerator.cpp" />
@@ -234,6 +235,7 @@
     <ClCompile Include="Objects\MiscStateGroup.cpp" />
     <ClCompile Include="Objects\Particles\ParticleEmitter.cpp" />
     <ClCompile Include="Objects\StateSaver.cpp" />
+    <ClCompile Include="Objects\Tags\ObjectTagManager.cpp" />
     <ClCompile Include="Rendering\DynamicSprite.cpp" />
     <ClCompile Include="Rendering\Lighting\LightingSource.cpp" />
     <ClCompile Include="Rendering\Lighting\SimpleLightingManager.cpp" />
@@ -312,6 +314,7 @@
     <ClInclude Include="!TestGame\Objects\Environment\Buildings\Door.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Buildings\FrontDoor.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Buildings\FrontWall.h" />
+    <ClInclude Include="!TestGame\Objects\Environment\Buildings\InteriorDoor.h" />
     <ClInclude Include="!TestGame\Objects\Environment\ClimbableObject.h" />
     <ClInclude Include="!TestGame\Objects\Environment\CloudGenerator.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Effects\BloodMark.h" />
@@ -386,6 +389,7 @@
     <ClInclude Include="Objects\Levels\Data\LevelDataParser.h" />
     <ClInclude Include="Objects\GameObjectState.h" />
     <ClInclude Include="Objects\Particles\ParticleEmitter.h" />
+    <ClInclude Include="Objects\Tags\ObjectTagManager.h" />
     <ClInclude Include="Rendering\DynamicSprite.h" />
     <ClInclude Include="Rendering\Lighting\LightingSource.h" />
     <ClInclude Include="Rendering\Lighting\SimpleLightingManager.h" />

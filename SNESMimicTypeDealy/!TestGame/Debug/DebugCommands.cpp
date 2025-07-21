@@ -167,8 +167,9 @@ void DebugCommands::HandleCommands()
 			GAME_NAME::Resources::SaveManager::SetCurrentFile("default_s");
 
 			GAME_NAME::Renderer::ClearObjects();
+			GAME_NAME::Renderer::ClearTextures();
 
-			GAME_NAME::TestGame::INSTANCE->LoadLevel(params[0].c_str(), GAME_NAME::TestGame::LEVEL_DATA_TEXTURES_BACKGROUND);
+			GAME_NAME::TestGame::INSTANCE->LoadLevel(params[0].c_str(), GAME_NAME::TestGame::LEVEL_DATA_TEXTURES_BACKGROUND, true);
 			GAME_NAME::TestGame::INSTANCE->LoadLevel("/global_assets", GAME_NAME::TestGame::LEVEL_DATA_TEXTURES_SPRITES);
 			GAME_NAME::TestGame::INSTANCE->LoadLevel(params[0].c_str(), static_cast<GAME_NAME::Game::Game::LEVEL_DATA>(GAME_NAME::TestGame::LEVEL_DATA_ALL xor GAME_NAME::TestGame::LEVEL_DATA_TEXTURES_BACKGROUND xor GAME_NAME::TestGame::LEVEL_DATA_DATA_LEVEL));
 			GAME_NAME::Mappings::LoadObjectsWithDefaultMapping(params[0].c_str());

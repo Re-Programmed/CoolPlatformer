@@ -45,3 +45,5 @@ Putting T on any vec2s or parameters specified in the mapping will multiply the 
 
 --PREFIXES--
 _m_ - Prefix for load object last.
+
+|string| - Tags the object with the specified tag. (In this case it would be tagged with "string")

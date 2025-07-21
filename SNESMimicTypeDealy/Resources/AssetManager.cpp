@@ -7,6 +7,7 @@
 #include <regex>
 //regex for std::regex_replace
 #include "../!TestGame/Mappings.h"
+#include "../Objects/Tags/ObjectTagManager.h"
 
 #include <array>
 
@@ -23,6 +24,14 @@ namespace GAME_NAME
 
 	namespace Resources
 	{
+		inline void CreateResoruceErrorMessage(std::string message)
+		{
+#ifdef SHOW_WINDOWS_ERROR_POPUPS
+			std::wstring stemp = std::wstring(message.begin(), message.end());
+			MessageBox(nullptr, stemp.c_str(), TEXT("Resource Error"), MB_OK);	
+#endif
+		}
+
 		std::vector<std::string> AssetManager::m_loadAtEnd;
 		volatile std::atomic<int> AssetManager::m_currentThreadLoadCount;
 		volatile int AssetManager::m_currentThreadLoadCountINT = 0;
@@ -46,10 +55,16 @@ namespace GAME_NAME
 				filePath += (textureLoad == SPRITES ? SpriteSubfolder : BGSubfolder);
 			}
 
-			
+			if (!std::filesystem::exists(filePath))
+			{
+				std::string message = "Missing directory: \"" + filePath + "\"";
+				CreateResoruceErrorMessage(message);
+				return;
+			}
 
 			unsigned int i = 0;
 			using recursive_directory_iterator = std::filesystem::recursive_directory_iterator;
+			
 			for (const auto& file : recursive_directory_iterator(filePath))
 			{
 				if (file.is_regular_file())
@@ -108,6 +123,13 @@ namespace GAME_NAME
 
 			if (reloadMusic) { Audio::SoundManager::ClearSources(); }
 
+			if (!std::filesystem::exists(filePath))
+			{
+				std::string message = "Missing directory: \"" + filePath + "\"";
+				CreateResoruceErrorMessage(message);
+				return;
+			}
+
 			using recursive_directory_iterator = std::filesystem::recursive_directory_iterator;
 
 			for (const auto& file : recursive_directory_iterator(filePath))
@@ -129,6 +151,13 @@ namespace GAME_NAME
 			filePath += subfolder;
 			filePath += LevelFileName;
 
+			if (!std::filesystem::exists(filePath))
+			{
+				std::string message = "Missing level data file: \"" + filePath + "\"";
+				CreateResoruceErrorMessage(message);
+				return;
+			}
+
 			std::ifstream LevelFile(filePath);
 
 			int8_t i = 0;
@@ -148,6 +177,13 @@ namespace GAME_NAME
 			std::string filePath = AssetPath;
 			filePath += subfolder;
 			filePath += DialogueFile;
+
+			if (!std::filesystem::exists(filePath))
+			{
+				std::string message = "Missing dialogue file: \"" + filePath + "\"";
+				CreateResoruceErrorMessage(message);
+				return data;
+			}
 
 			std::ifstream DialogueFile(filePath);
 			std::string line;
@@ -185,6 +221,13 @@ namespace GAME_NAME
 			std::string filePath = AssetPath;
 			filePath += subfolder;
 			filePath += ChunkFileName;
+
+			if (!std::filesystem::exists(filePath))
+			{
+				std::string message = "Missing chunk data file: \"" + filePath + "\"";
+				CreateResoruceErrorMessage(message);
+				return std::array<int, DEFAULT_LEVEL_SIZE_X* DEFAULT_LEVEL_SIZE_Y>();
+			}
 
 			std::ifstream ChunkFile(filePath);
 			std::string text;
@@ -224,6 +267,13 @@ namespace GAME_NAME
 			filePath += subfolder;
 			filePath += ObjectFileName;
 
+			if (!std::filesystem::exists(filePath))
+			{
+				std::string message = "Missing object file: \"" + filePath + "\"";
+				CreateResoruceErrorMessage(message);
+				return;
+			}
+
 			std::ifstream ObjectFile(filePath);
 			std::string line;
 
@@ -238,6 +288,8 @@ namespace GAME_NAME
 
 			size_t lineID = 0;
 
+			//Clear the object tags since we are loading a new level.
+			Tags::ObjectTagManager::ClearTaggedObjects();
 
 			while (std::getline(ObjectFile, line, '\n'))
 			{
@@ -357,8 +409,19 @@ namespace GAME_NAME
 			//delete[definedMacrosCount] definedMacros;
 		}
 
+		/*/
+			TODO: ADD ERROR HANDLING WITH SPECIFIC MESSAGE POPUPS TO THIS SYSTEM TO ENSURE IT IS OBVIOUS WHAT HAS OCCURED.
+		*/
 		void AssetManager::loadObjectDataThread(std::string line, size_t lineId, const std::function<void(std::vector<std::string>, size_t)> mappings[], int expectedLoadValue, bool expectLoad)
 		{
+			std::string objectTag = "";
+
+			if (line.starts_with('|'))
+			{
+				objectTag = line.substr(1, line.find_last_of('|') - 1);
+				line = line.substr(line.find_last_of('|') + 1);
+			}
+
 			std::stringstream linestream(line);
 			std::string component;
 
@@ -369,7 +432,6 @@ namespace GAME_NAME
 			int c = 0;
 			while (std::getline(linestream, component, ','))
 			{
-
 				if (c == 0)
 				{
 					int map = std::stoi(component);
@@ -441,10 +503,16 @@ namespace GAME_NAME
 			{
 				Mappings::LoadOver20Switch(std::stoi(line.substr(0, line.find_first_of(","))), v, lineId);
 
+				if (!objectTag.empty())
+				{
+					Tags::ObjectTagManager::TagObject(Renderer::GetLastLoadedObject(), objectTag);
+				}
+
 				return;
 			}
 
 			(*mapping)(v, lineId);
+			Tags::ObjectTagManager::TagObject(Renderer::GetLastLoadedObject(), objectTag);
 
 			//delete mapping;	
 		}

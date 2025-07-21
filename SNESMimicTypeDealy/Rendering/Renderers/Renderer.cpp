@@ -240,6 +240,8 @@ namespace GAME_NAME
 			spriteCount = startIndex == 0 ? 0 : (spriteCount < startIndex) ? 0 : startIndex - bgCount;
 			imageCount = startIndex == 0 ? 1 : startIndex;
 
+			m_textureIDs.clear();
+
 #if _DEBUG
 			DebugLog::Log("Cleared " + std::to_string(removedSprites) + " sprites.", true);
 #endif

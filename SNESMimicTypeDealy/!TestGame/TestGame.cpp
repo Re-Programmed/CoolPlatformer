@@ -77,6 +77,8 @@ namespace GAME_NAME
 
 	std::vector<StaticGUIElement*> TestGame::m_pauseMenuObjects;
 
+	std::string Game_nextLevelToLoad = ""; bool Game_nextLevelIsOnlyObjects = false; Vec2 Game_playerNewPos = Vec2{ -1 };
+	
 	unsigned int pauseMenu_buttonIdOffset = 0; //UNUSED???????
 	void pauseMenu_guiCallback(int id)
 	{
@@ -105,6 +107,40 @@ namespace GAME_NAME
 
 	void GAME_NAME::TestGame::Update(GLFWwindow* window)
 	{
+		if (!Game_nextLevelToLoad.empty())
+		{
+			if (Game_nextLevelIsOnlyObjects)
+			{
+				GAME_NAME::Resources::SaveManager::SetCurrentFile("default_s");
+
+				GAME_NAME::Renderer::ClearObjects();
+				Mappings::LoadObjectsWithDefaultMapping(Game_nextLevelToLoad.c_str());
+
+				ThePlayer = std::make_shared<Objects::Player::Player>(Game_playerNewPos);
+				Rendering::Renderer::LoadActiveObject(ThePlayer.get(), 2); //Spawn in the player on Active Layer 2.
+				LevelManager::LevelCircleAnimation(Vec2{-1}, true);
+			}
+			else {
+				GAME_NAME::Resources::SaveManager::SetCurrentFile("default_s");
+
+				GAME_NAME::Renderer::ClearObjects();
+				GAME_NAME::Renderer::ClearTextures();
+
+				LoadLevel(Game_nextLevelToLoad.c_str(), LEVEL_DATA_TEXTURES_BACKGROUND, true);
+				LoadLevel("/global_assets", LEVEL_DATA_TEXTURES_SPRITES);
+				LoadLevel(Game_nextLevelToLoad.c_str(), static_cast<GAME_NAME::Game::Game::LEVEL_DATA>(LEVEL_DATA_ALL xor LEVEL_DATA_TEXTURES_BACKGROUND xor LEVEL_DATA_DATA_LEVEL));
+				Mappings::LoadObjectsWithDefaultMapping(Game_nextLevelToLoad.c_str());
+				LoadLevel(Game_nextLevelToLoad.c_str(), static_cast<GAME_NAME::Game::Game::LEVEL_DATA>(LEVEL_DATA_DATA_LEVEL));
+				Cutscenes::DialogueManager::INSTANCE->LoadStoredDialogueSequences(Game_nextLevelToLoad.c_str());
+				RenderFront = true;
+			}
+
+			Game_nextLevelToLoad = "";
+			Game_nextLevelIsOnlyObjects = false;
+
+			return;
+		}
+
 #if _DEBUG
 
 		DebugCommands::HandleCommands();
@@ -167,12 +203,12 @@ namespace GAME_NAME
 		Cutscenes::DialogueManager::INSTANCE->LoadStoredDialogueSequences("/green_region");
 		RenderFront = true;
 #else
-		LoadLevel("/introduction", LEVEL_DATA_TEXTURES_BACKGROUND);
+		LoadLevel("/introduction_1", LEVEL_DATA_TEXTURES_BACKGROUND);
 		LoadLevel("/global_assets", LEVEL_DATA_TEXTURES_SPRITES);
-		LoadLevel("/introduction", static_cast<GAME_NAME::Game::Game::LEVEL_DATA>(LEVEL_DATA_ALL xor LEVEL_DATA_TEXTURES_BACKGROUND xor LEVEL_DATA_DATA_LEVEL));
-		Mappings::LoadObjectsWithDefaultMapping("/introduction");
-		LoadLevel("/introduction", static_cast<GAME_NAME::Game::Game::LEVEL_DATA>(LEVEL_DATA_DATA_LEVEL));
-		Cutscenes::DialogueManager::INSTANCE->LoadStoredDialogueSequences("/introduction");
+		LoadLevel("/introduction_1", static_cast<GAME_NAME::Game::Game::LEVEL_DATA>(LEVEL_DATA_ALL xor LEVEL_DATA_TEXTURES_BACKGROUND xor LEVEL_DATA_DATA_LEVEL));
+		Mappings::LoadObjectsWithDefaultMapping("/introduction_1");
+		LoadLevel("/introduction_1", static_cast<GAME_NAME::Game::Game::LEVEL_DATA>(LEVEL_DATA_DATA_LEVEL));
+		Cutscenes::DialogueManager::INSTANCE->LoadStoredDialogueSequences("/introduction_1");
 		RenderFront = true;
 #endif
 #else
@@ -434,6 +470,18 @@ namespace GAME_NAME
 
 			m_pauseMenuObjects.clear();
 		}
+	}
+
+	void TestGame::LoadLevelAndAllData(const char* levelPath)
+	{
+		Game_nextLevelToLoad = std::string(levelPath);
+	}
+
+	void TestGame::LoadLevelOnlyObjects(const char* levelPath, Vec2 newPlayerPos)
+	{
+		LoadLevelAndAllData(levelPath);
+		Game_nextLevelIsOnlyObjects = true;
+		Game_playerNewPos = newPlayerPos;
 	}
 
 }

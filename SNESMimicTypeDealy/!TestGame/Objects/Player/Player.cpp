@@ -1284,7 +1284,7 @@ namespace  GAME_NAME
 
 
 				//Check if player is jumping and not frozen.
-				if (m_diving <= 0 && m_frozen <= 0 && InputManager::GetKey(PLAYER_JUMP) && !animateMoveLeft && !animateMoveRight)
+				if (m_diving <= 0 && m_frozen <= 0 && InputManager::GetKey(PLAYER_JUMP) && !animateMoveLeft && !animateMoveRight && m_controlType != ControlType::ROOM)
 				{
 					unsigned char checks = m_physics->GetUpdatesThisFrame();
 					while (checks > 0)

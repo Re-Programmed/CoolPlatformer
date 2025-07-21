@@ -67,6 +67,13 @@ namespace GAME_NAME
 			return m_currentLevelSystem.get();
 		}
 
+		/// <summary>
+		/// The basic level loading function. Loads everything with global_assets in order.
+		/// </summary>
+		/// <param name="levelPath"></param>
+		void LoadLevelAndAllData(const char* levelPath);
+		void LoadLevelOnlyObjects(const char* levelPath, Vec2 newPlayerPos);
+
 	private:
 		static std::unique_ptr<LevelSystem> m_currentLevelSystem;
 

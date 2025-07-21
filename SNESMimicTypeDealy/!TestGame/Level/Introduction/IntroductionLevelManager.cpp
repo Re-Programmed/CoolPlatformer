@@ -7,9 +7,15 @@
 
 #include "../../Cutscenes/DialogueManager.h"
 
+#include "../../../Objects/Tags/ObjectTagManager.h"
+
+#include "../../Mappings.h"
+
 using namespace GAME_NAME::Cutscenes;
 
 constexpr const char* INTROMNGR_INTRO_DIALOGUE = "OutOfBed";
+
+#define ROOM_COLLIDERS_TAG "RoomCollision"
 
 constexpr unsigned int INTROMNGR_PULLEY_SPRITE = 31;
 constexpr unsigned int INTROMNGR_ROPE_SPRITE = 30;
@@ -28,16 +34,25 @@ namespace GAME_NAME::Level
 		TestGame::INSTANCE->GetCamera()->SetPosition(TestGame::ThePlayer->GetPosition() - Vec2{ TargetResolutionX, TargetResolutionY } / 2.f);
 		
 		//Freeze and hide the player.
-		TestGame::ThePlayer->SetEnableRendering(false);
-		TestGame::ThePlayer->SetFrozen(true);
+		//TestGame::ThePlayer->SetEnableRendering(false);
+		//TestGame::ThePlayer->SetFrozen(true);
 
 		createRube();
 	}
 
-	void IntroductionLevelManager::Update(GLFWwindow* window)
-	{
-		executeRube();
-	}
+
+    void IntroductionLevelManager::Update(GLFWwindow* window)
+    {
+		if (m_rubeTimer < -2)
+		{
+			//Second room.
+			TestGame::INSTANCE->ThePlayer->SetControlType(Objects::Player::Player::ControlType::ROOM);
+
+			return;
+		}
+
+        executeRube();
+    }
 
 	inline Components::ComponentObject* createPulley(Vec2 position, Vec2 scale)
 	{
@@ -57,10 +72,25 @@ namespace GAME_NAME::Level
 		return pulley;
 	}
 
+	inline void  IntroductionLevelManager_toggleRoomColliders(bool enabled)
+	{
+		auto[begin, end] = Tags::ObjectTagManager::GetObjectsWithTag(ROOM_COLLIDERS_TAG);
+
+		for (begin; begin != end; ++begin)
+		{
+			StaticBoxCollisionObject* collider = dynamic_cast<StaticBoxCollisionObject*>(begin->second);
+			collider->SetEnabled(enabled);
+		}
+	}
+
 	void IntroductionLevelManager::createRube()
 	{
+		IntroductionLevelManager_toggleRoomColliders(false);
+		
 		//TESTING
-		m_rubeTimer = 29.1;
+		m_rubeTimer = -9999;
+
+		return;
 
 		AnimData bed_data;
 		for(int i = 56; i <= 62; i++){ bed_data.Sprites.emplace_back(std::shared_ptr<Sprite>(Renderer::GetSprite(i))); }
@@ -357,6 +387,9 @@ namespace GAME_NAME::Level
 			DialogueManager::INSTANCE->PlayDialogueSequence(DialogueManager::INSTANCE->GetDialogueSequence(INTROMNGR_INTRO_DIALOGUE));
 
 			m_rubeBed->SetSprite(Renderer::GetSprite(64)); //Bed Empty Sprite
+			IntroductionLevelManager_toggleRoomColliders(true);
+
+			m_rubeTimer = -9999;
 		}
 	}
 }

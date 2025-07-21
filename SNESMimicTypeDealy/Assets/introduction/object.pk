@@ -50,5 +50,9 @@
 ; 	Ambient Occlusion
 0,898,129,208,4,29,1
 
+; Door
+13,5,912,131,16,28,1,63,/introduction_1,1007,128,1
 
-0,912,131,16,28,63,1
+; Top wall, table, and bed collider
+|RoomCollision|2,898,151,212,16,1,0
+|RoomCollision|2,1026,135,90,18,1,0

@@ -6,7 +6,7 @@
 
 #define CIRCLE_WIPE_TEXTURE SpriteBase(190)
 
-constexpr int CIRCLE_WIPE_DURATION = 4;
+constexpr int CIRCLE_WIPE_DURATION = 1;
 
 namespace GAME_NAME::Level
 {
@@ -27,7 +27,7 @@ namespace GAME_NAME::Level
 
 	void LevelManager::LoadLevelData(const char* levelPath, bool renderFront)
 	{
-		TestGame::INSTANCE->ClearLevel(TestGame::LEVEL_DATA_ALL);
+		/*TestGame::INSTANCE->ClearLevel(TestGame::LEVEL_DATA_ALL);
 		Renderer::ClearGUIObjects(0, 0);
 		Renderer::ClearGUIObjects(0, 1);
 		Renderer::ClearGUIObjects(0, 2);
@@ -38,7 +38,9 @@ namespace GAME_NAME::Level
 		TestGame::INSTANCE->LoadLevel(levelPath, TestGame::LEVEL_DATA_TEXTURES_BACKGROUND);
 		TestGame::INSTANCE->LoadLevel("/global_assets", TestGame::LEVEL_DATA_TEXTURES_SPRITES);
 		TestGame::INSTANCE->LoadLevel(levelPath, (GAME_NAME::Game::Game::LEVEL_DATA)(TestGame::LEVEL_DATA_TEXTURES_BACKGROUND xor TestGame::LEVEL_DATA_ALL));
-		GAME_NAME::Mappings::LoadObjectsWithDefaultMapping(levelPath);
+		GAME_NAME::Mappings::LoadObjectsWithDefaultMapping(levelPath);*/
+
+		TestGame::INSTANCE->LoadLevelAndAllData(levelPath);
 
 		dynamic_cast<GAME_NAME::Camera::GameCamera*>(TestGame::INSTANCE->GetCamera())->UnlockCamera();
 	}
