@@ -67,11 +67,18 @@ namespace GAME_NAME
 				m_lockedObject = nullptr;
 			}
 
+			inline void SetStrictFollowing(bool useStrictFollowing)
+			{
+				m_useStrictFollowing = useStrictFollowing;
+			}
+
 		private:
 			bool m_followPlayerExact;
 			float m_targetZoom;
 			float m_deadzoneRadius;
 			Vec2 m_offset;
+
+			bool m_useStrictFollowing = false;
 
 			Vec2 m_locked; Objects::GameObject* m_lockedObject;
 		};

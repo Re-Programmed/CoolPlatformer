@@ -331,7 +331,14 @@ namespace  GAME_NAME
 					ROOM		//Move up and down as well.
 				};
 
-				inline void SetControlType(ControlType type) { m_controlType = type; if (type == ROOM) { m_storedRoomHeight = this->m_position.Y; m_onGround = true; } }
+				inline void SetControlType(ControlType type)
+				{ 
+					m_controlType = type; 
+					if (type == ROOM) { m_storedRoomHeight = this->m_position.Y; m_onGround = true; dynamic_cast<GAME_NAME::Camera::GameCamera*>(TestGame::INSTANCE->GetCamera())->SetStrictFollowing(true); }
+					else {
+						dynamic_cast<GAME_NAME::Camera::GameCamera*>(TestGame::INSTANCE->GetCamera())->SetStrictFollowing(false);
+					}
+				}
 
 			protected:
 				void onCollision (Vec2 push, GameObject* gameObject) override;	//Called when a collision occurs.

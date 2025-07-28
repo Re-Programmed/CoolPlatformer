@@ -19,6 +19,7 @@ namespace GAME_NAME
 		constexpr float HalfTResX = TargetResolutionX / 2.f;
 		constexpr float HalfTResY = TargetResolutionY / 2.f;
 
+
 		void GameCamera::Update(Vec2 playerPos)
 		{
 			float deadzoneRadius = m_deadzoneRadius;
@@ -72,13 +73,23 @@ namespace GAME_NAME
 			if (deadzoneRadius > 0.f)
 			{
 				//Deadzone
-				if (!(playerPos.X + m_offset.X > m_position.X + resX + deadzoneRadius || playerPos.X + m_offset.X < m_position.X + resX - deadzoneRadius) || std::abs(m_position.Y + resY - playerPos.Y) < 25.f)
+				if (m_useStrictFollowing)
 				{
 
-					return;
-					
+					if (Vec2::Distance(playerPos, m_position + Vec2{ HalfTResX, HalfTResY }) < 25.f)
+					{
+						return;
+					}
 				}
+				else {
+					if (!(playerPos.X + m_offset.X > m_position.X + resX + deadzoneRadius || playerPos.X + m_offset.X < m_position.X + resX - deadzoneRadius) || std::abs(m_position.Y + resY - playerPos.Y) < 25.f)
+					{
 
+						return;
+
+					}
+				}
+				
 			}
 
 			float deadzoneXAdj = (playerPos.X > m_position.X + resX ? -deadzoneRadius : deadzoneRadius);
