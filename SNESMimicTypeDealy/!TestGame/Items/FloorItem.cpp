@@ -53,6 +53,24 @@ namespace GAME_NAME
 			)), m_inventoryItem(item), m_lifetime(0), m_pickupDelay(pickupDelay)
 		{
 			m_physics->SetGravityStrength(m_physics->GetGravityStrength() * 7);
+
+			if (!m_glowSprite)
+			{
+				auto s = Renderer::GetSprite(FLOOR_ITEM_GLOW_SPRITE);
+
+				m_glowSprite = std::make_shared<DynamicSprite>(s->GetSpriteId());
+
+				Vec4 transparentColor[4] = {
+					{ 1.f, 1.f, 1.f, 0.3f },
+					{ 1.f, 1.f, 1.f, 0.3f },
+					{ 1.f, 1.f, 1.f, 0.3f },
+					{ 1.f, 1.f, 1.f, 0.3f }
+				};
+
+				m_glowSprite->UpdateTextureColor(transparentColor);
+
+				delete s;
+			}
 		}
 		
 		void FloorItem::Update(GLFWwindow* window)

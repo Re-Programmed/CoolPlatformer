@@ -72,6 +72,13 @@ namespace GAME_NAME
 				m_useStrictFollowing = useStrictFollowing;
 			}
 
+			inline void ScreenShake(float offset, double length)
+			{
+				m_screenShakeOffset = offset;
+				m_screenShakeMaxTimer = length;
+				m_screenShakeElapsed = 0.0;
+			}
+
 		private:
 			bool m_followPlayerExact;
 			float m_targetZoom;
@@ -79,6 +86,8 @@ namespace GAME_NAME
 			Vec2 m_offset;
 
 			bool m_useStrictFollowing = false;
+
+			float m_screenShakeOffset = 0.f; double m_screenShakeTimer = 0.0; double m_screenShakeMaxTimer = 0.0; double m_screenShakeElapsed = 0.0;
 
 			Vec2 m_locked; Objects::GameObject* m_lockedObject;
 		};

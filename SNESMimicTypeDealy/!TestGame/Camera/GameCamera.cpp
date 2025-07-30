@@ -92,12 +92,30 @@ namespace GAME_NAME
 				
 			}
 
+			if (m_screenShakeMaxTimer > 0.0)
+			{
+				m_screenShakeTimer += sdt;
+				m_screenShakeElapsed += sdt;
+
+				if (m_screenShakeTimer > 0.05)
+				{
+					m_screenShakeOffset = -m_screenShakeOffset;
+					m_screenShakeTimer = 0.0;
+				}
+
+				if (m_screenShakeElapsed >= m_screenShakeMaxTimer)
+				{
+					//Disable screen shaking.
+					ScreenShake(0.f, 0.0);
+				}
+			}
+
 			float deadzoneXAdj = (playerPos.X > m_position.X + resX ? -deadzoneRadius : deadzoneRadius);
 			float deadzoneYAdj = (playerPos.Y > m_position.Y + resY ? -deadzoneRadius : deadzoneRadius);
 
 			Vec2 l = Vec2(std::lerp(m_position.X + resX, playerPos.X + m_offset.X + deadzoneXAdj, (float)(CameraSpeed * sdt)) - resX, std::lerp(m_position.Y + resY, playerPos.Y + m_offset.Y + deadzoneYAdj, (float)(CameraSpeed * sdt)) - resY);
 
-			SetPosition(l);
+			SetPosition(l + Vec2{ m_screenShakeOffset, (m_screenShakeOffset > 0.f ? ((float)std::rand() / (float)RAND_MAX) : 0.f) });
 		}
 
 	}

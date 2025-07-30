@@ -12,7 +12,7 @@ namespace GAME_NAME
 {
 	namespace Items
 	{
-#define ITEM_COUNT 7
+#define ITEM_COUNT 8
 		/// <summary>
 		/// An enum for the types of items in the game.
 		/// </summary>
@@ -24,7 +24,8 @@ namespace GAME_NAME
 			SCRAP_AXE = 3,
 			NULL_ITEM = 4, //NULL ITEM IS 4 (used for saving data about items that are not there)
 			WOODEN_SHOES = 5,
-			SHARP_STICK = 6
+			SHARP_STICK = 6,
+			TOAST = 7
 		};
 
 		/// <summary>
@@ -83,7 +84,8 @@ namespace GAME_NAME
 			{ "(Temp) Axe", 56, SpriteBase(65), WEAPON | CHOP, { { TOOL_ACTION::CHOP , "1" }, { TOOL_ACTION::WEAPON, "10,0,0.9,20" }}, ""},
 			{ "Unknown", 0, NO_HELD_TEXTURE, 0, {}, "" },
 			{ "Wooden Shoes", 18, NO_HELD_TEXTURE, EQUIPMENT, { { TOOL_ACTION::EQUIPMENT, "Health:10" } }, "" },
-			{ "Sharp Stick", SpriteBase(118), SpriteBase(117), WEAPON, {{TOOL_ACTION::WEAPON, "3,0,0.2,26"}}, ""}
+			{ "Sharp Stick", SpriteBase(118), SpriteBase(117), WEAPON, {{TOOL_ACTION::WEAPON, "3,0,0.2,26"}}, ""},
+			{ "Toast", SpriteBase(132), SpriteBase(233), 0, {}, "Probably made in a toaster." }							//7
 		};
 
 

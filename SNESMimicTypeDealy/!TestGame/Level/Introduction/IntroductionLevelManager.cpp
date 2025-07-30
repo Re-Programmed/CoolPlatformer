@@ -8,14 +8,32 @@
 #include "../../Cutscenes/DialogueManager.h"
 
 #include "../../../Objects/Tags/ObjectTagManager.h"
+#include "../../InputDisplay/DisplayIconManager.h"
 
 #include "../../Mappings.h"
+
+#include "../../../Objects/Helpers/Interactable.h"
+
+#include "../../../Rendering/Lighting/SimpleLightingManager.h"
+
+#include "../../../Objects/StateSaver.h"
 
 using namespace GAME_NAME::Cutscenes;
 
 constexpr const char* INTROMNGR_INTRO_DIALOGUE = "OutOfBed";
 
+constexpr const char* INTROMNGR_TOAST_GET_DIALOGUE = "ToastPickup";
+constexpr const char* INTROMNGR_TOASTER_NO_TOAST = "UseToaster_NoToast";
+constexpr const char* INTROMNGR_TOASTER_HAS_TOAST = "UseToaster_Toast";
+
+constexpr const char* INTROMNGR_RETRIEVE_TOAST = "RetrieveToast";
+
+constexpr const char* INTROMNGR_AFTER_SHAKE_DIALOGUE = "MysteriousShaking";
+
+#define TOASTER_TAG "Toaster"
+#define TOAST_TAG "Toast"
 #define ROOM_COLLIDERS_TAG "RoomCollision"
+#define FRONT_DOOR_TAG "FrontDoor"
 
 constexpr unsigned int INTROMNGR_PULLEY_SPRITE = 31;
 constexpr unsigned int INTROMNGR_ROPE_SPRITE = 30;
@@ -27,6 +45,92 @@ constexpr unsigned int INTROMNGR_LEVER_SPRITE = 44, INTROMNGR_LEVER_UP_SPRITE = 
 
 namespace GAME_NAME::Level
 {
+	//Progression tracking variables.
+	bool playerHasToast = false;
+	double toastToastingTimer = 0.0;
+
+	class Toast
+		: public Interactable
+	{
+	public:
+		Toast(GameObject* objRef)
+			: Interactable(keyRef::PLAYER_INTERACT, InputManager::KEY_STATE_NONE, 25.f, objRef->GetPosition(), objRef->GetScale(), objRef->GetSprite())
+		{
+
+		}
+
+	protected:
+		void onInteract(std::shared_ptr<Objects::Player::Player> player, InputManager::KEY_STATE state) override
+		{
+			GAME_NAME::Input::DisplayIconManager::ShowKeyInputDisplay(GAME_NAME::Input::DisplayIconManager::INPUT_DISPLAY_KEY_E, TestGame::ThePlayer->GetPosition() + Vec2(TestGame::ThePlayer->GetScale() + Vec2(3, -5)), state & InputManager::KEY_STATE_HELD ? 9 : 0);
+
+			if (state & InputManager::KEY_STATE_RELEASED)
+			{
+				if (DialogueManager::INSTANCE->PlayDialogueSequence(DialogueManager::INSTANCE->GetDialogueSequence(INTROMNGR_TOAST_GET_DIALOGUE)))
+				{
+					playerHasToast = true;
+
+					Renderer::DestroyObject(this);
+				}
+			}
+		}
+
+	};
+
+	class Toaster
+		: public Interactable
+	{
+	public:
+		Toaster(GameObject* objRef)
+			: Interactable(keyRef::PLAYER_INTERACT, InputManager::KEY_STATE_NONE, 25.f, objRef->GetPosition(), objRef->GetScale(), objRef->GetSprite())
+		{
+
+		}
+
+	protected:
+		void onInteract(std::shared_ptr<Objects::Player::Player> player, InputManager::KEY_STATE state) override
+		{
+			GAME_NAME::Input::DisplayIconManager::ShowKeyInputDisplay(GAME_NAME::Input::DisplayIconManager::INPUT_DISPLAY_KEY_E, TestGame::ThePlayer->GetPosition() + Vec2(TestGame::ThePlayer->GetScale() + Vec2(3, -5)), state & InputManager::KEY_STATE_HELD ? 9 : 0);
+			
+			if (state & InputManager::KEY_STATE_RELEASED)
+			{
+				if (toastToastingTimer > 13.0 && toastToastingTimer < 99999.0)
+				{
+					DialogueManager::INSTANCE->PlayDialogueSequence(DialogueManager::INSTANCE->GetDialogueSequence(INTROMNGR_RETRIEVE_TOAST));
+
+					TestGame::ThePlayer->GetInventory()->AddItem(new InventoryItem(Items::TOAST));
+
+					//Save so you keep your toast through the level.
+					StateSaver::SaveStates();
+					StateSaver::SaveMisc();
+
+					this->SetSprite(Renderer::GetSprite(71));
+
+					//Make front door useable.
+					GameObject* frontDoor = Tags::ObjectTagManager::GetObjectWithTag(FRONT_DOOR_TAG);
+					frontDoor->Translate(Vec2{ -100, 0 });
+
+					toastToastingTimer = 10000000.0;
+				}
+
+				if(playerHasToast)
+				{
+					DialogueManager::INSTANCE->PlayDialogueSequence(DialogueManager::INSTANCE->GetDialogueSequence(INTROMNGR_TOASTER_HAS_TOAST));
+
+					//Toaster active sprite.
+					this->SetSprite(Renderer::GetSprite(73));
+
+					toastToastingTimer += 0.1;
+				}
+				else {
+					DialogueManager::INSTANCE->PlayDialogueSequence(DialogueManager::INSTANCE->GetDialogueSequence(INTROMNGR_TOASTER_NO_TOAST));
+
+				}
+			}
+		}
+
+	};
+
 	IntroductionLevelManager::IntroductionLevelManager()
 	{
 		TestGame::ThePlayer->HideAllUI();
@@ -40,15 +144,95 @@ namespace GAME_NAME::Level
 		createRube();
 	}
 
+	bool createdRubeSecondRoom = false;
+
+	Lighting::LightingSource* IntroManager_playerFlashlight;
+	Particles::ParticleEmitter* IntroManager_debrisParticles;
+	GameObject* IntroManager_toaster; bool IntroManager_toasterShifted;
 
     void IntroductionLevelManager::Update(GLFWwindow* window)
     {
 		if (m_rubeTimer < -2)
 		{
-			//Second room.
+			//In the second room.
+
+#pragma region SecondRoom
+
 			TestGame::INSTANCE->ThePlayer->SetControlType(Objects::Player::Player::ControlType::ROOM);
 
+			if(toastToastingTimer > 0.0)
+			{
+				toastToastingTimer += Utils::Time::GameTime::GetScaledDeltaTime();
+			}
+
+			//Toaster power going crazy.
+			if (toastToastingTimer > 2.0 && toastToastingTimer < 3.0)
+			{
+				toastToastingTimer = 3.0;
+
+				Lighting::SimpleLightingManager::EnableLighting(DEFAULT_LEVEL_SIZE_X / 10, false);
+
+				new Lighting::LightingSource(Vec2{ 802,147 }, 30.f, 0.5f, Lighting::POINT_LIGHT); //Toaster light.
+				dynamic_cast<GAME_NAME::Camera::GameCamera*>(TestGame::INSTANCE->GetCamera())->ScreenShake(2.6f, 6.0);
+
+				IntroManager_debrisParticles = new Particles::ParticleEmitter(TestGame::ThePlayer->GetPosition() + Vec2{ -TargetResolutionX/2.f, 50.f }, 5.f, false);
+				Renderer::LoadActiveObject(IntroManager_debrisParticles);
+				IntroManager_debrisParticles->RegisterParticle(Particles::Particle(Vec2::Zero, Vec2{ 4.f, 4.f }, 0.f, Vec2{ 0.f, -4.f }, 4.f, 1.f, Renderer::GetSprite(18)));
+				IntroManager_debrisParticles->SpawnParticlesLooping(0.5, 24, Vec2::Zero, 0.f, 0.f, Vec2{ TargetResolutionX, 100.f });
+
+				IntroManager_playerFlashlight = new Lighting::LightingSource(TestGame::ThePlayer->GetPosition(), 35.f, 0.25f, Lighting::POINT_LIGHT, true, true);
+			}
+
+			if (toastToastingTimer > 3.0 && toastToastingTimer < 9.0)
+			{
+				if (static_cast<int>(toastToastingTimer * 100) % 5) 
+				{
+					IntroManager_toaster->SetPosition(IntroManager_toaster->GetPosition() + Vec2{ 0, IntroManager_toasterShifted ? 1.5f : -1.5f });
+					IntroManager_toasterShifted = !IntroManager_toasterShifted;
+				}
+			}
+
+			if (IntroManager_playerFlashlight != nullptr) { IntroManager_playerFlashlight->SetPosition(TestGame::ThePlayer->GetPosition()); }
+
+			if (toastToastingTimer > 9.0 && toastToastingTimer < 10.0)
+			{
+				toastToastingTimer = 11.0;
+
+				Renderer::DestroyActiveObject(IntroManager_debrisParticles);
+				Lighting::SimpleLightingManager::DisableLighting();
+			}
+
+			if (toastToastingTimer > 12.0 && toastToastingTimer < 13.0)
+			{
+				IntroManager_toaster->SetSprite(Renderer::GetSprite(74));
+				DialogueManager::INSTANCE->PlayDialogueSequence(DialogueManager::INSTANCE->GetDialogueSequence(INTROMNGR_AFTER_SHAKE_DIALOGUE));
+
+				toastToastingTimer = 13.0;
+			}
+
+			if (createdRubeSecondRoom) { return; }
+
+			createdRubeSecondRoom = true;
+
+			//Replace the toaster GameObject with a Toaster.
+			GameObject* go = Tags::ObjectTagManager::GetObjectWithTag(TOASTER_TAG);
+			Toaster* toaster = new Toaster(go);
+			Renderer::DestroyObject(go);
+			Renderer::InstantiateObject(Renderer::InstantiateGameObject(toaster, false, 2, false));
+			IntroManager_toaster = toaster;
+
+			go = Tags::ObjectTagManager::GetObjectWithTag(TOAST_TAG);
+			Toast* toast = new Toast(go);
+			Renderer::DestroyObject(go);
+			Renderer::InstantiateObject(Renderer::InstantiateGameObject(toast, false, 2, false));
+
+			//Move front door so it is unusable until toast is collected.
+			GameObject* frontDoor = Tags::ObjectTagManager::GetObjectWithTag(FRONT_DOOR_TAG);
+			frontDoor->Translate(Vec2{ 100, 0 });
+
 			return;
+
+#pragma endregion
 		}
 
         executeRube();

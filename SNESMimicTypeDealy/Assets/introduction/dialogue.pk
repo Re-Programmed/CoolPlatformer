@@ -2,3 +2,24 @@
 *1.1f*Ouch that hurt...
 *1.2f*But that happens to me every morning.
 *1.1f*Well, I better go downstairs and make breakfast.
+
+>UseOven
+That is an oven.
+
+>ToastPickup
+I placed the bread in my expansive pockets.
+
+>UseToaster_Toast
+The toast is toasting...
+
+>UseToaster_NoToast
+*1.3f*I put my hand in the toaster.
+*1.3f*Ouch...
+
+>MysteriousShaking
+What was that!
+Was that my toaster?
+This better be the best toast I've ever had...
+
+>RetrieveToast
+This toast is a little more than toasted.

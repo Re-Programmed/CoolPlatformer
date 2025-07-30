@@ -8,6 +8,7 @@
 
 #include "../../Objects/GUI/GUIManager.h"
 
+
 #include <thread>
 
 // The render text function used by text for dialogue events.
@@ -171,6 +172,12 @@ namespace GAME_NAME::Cutscenes
 
 			return sequence;
 		}
+
+#ifdef SHOW_WINDOWS_ERROR_POPUPS
+		std::string message = "Could not find dialogue text for: " + sequenceName;
+		std::wstring stemp = std::wstring(message.begin(), message.end());
+		MessageBox(nullptr, stemp.c_str(), TEXT("Resource Error"), MB_OK);
+#endif
 
 #if _DEBUG
 		DEBUG::DebugLog::LogError("Failed to find a dialogue sequence \"" + sequenceName + ".\" (DialogueManager.h:87)");

@@ -114,6 +114,21 @@ namespace GAME_NAME
 			/// <returns></returns>
 			static unsigned int AddPrerenderExecution(std::function<void(Sprite*, const Vec2&, const Vec2&, const float&, VertexData*)> prerenderExecution);
 
+			static inline void RemoveLastPrerenderExecution()
+			{
+				m_prerenderExecutions.erase(m_prerenderExecutions.end() - 1);
+			}
+
+			static inline void RemovePrerenderExecution(unsigned int id)
+			{
+				m_prerenderExecutions.erase(m_prerenderExecutions.begin() + id, m_prerenderExecutions.begin() + id + 1);
+			}
+
+			static inline void ClearPrerenderExecutions()
+			{
+				m_prerenderExecutions.clear();
+			}
+
 			/*
 				Prerender Executions are used to update certain vertex data using the VertexData pointer.
 				Executions can use the vertexdata booleans to ensure they are never overriding each other, or they can just override the other effects.				

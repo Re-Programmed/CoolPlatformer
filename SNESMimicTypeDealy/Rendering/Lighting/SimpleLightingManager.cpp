@@ -26,7 +26,7 @@ namespace GAME_NAME::Rendering::Lighting
 
 		for (int x = 0; x < lightingGroups; x++)
 		{
-			m_sources.push_back(std::vector<LightingSource*>(10));
+			m_sources.push_back(std::vector<LightingSource*>());
 		}
 
 		m_backgroundLighting = allowBackgroundLighting;
@@ -35,12 +35,17 @@ namespace GAME_NAME::Rendering::Lighting
 	void SimpleLightingManager::DisableLighting()
 	{
 		//Remove prerender execution.
+		Sprite::RemovePrerenderExecution(m_vertexExecutionID);
 
 		for (int i = 0; i < m_sources.size(); i++)
 		{
 			for (LightingSource*& source : m_sources[i])
 			{
-				delete source;
+				if (source != nullptr)
+				{
+					//TODO: The sources are already null when reaching this point in code? Why...
+					delete source;
+				}
 			}
 
 			m_sources[i].clear();
@@ -52,7 +57,8 @@ namespace GAME_NAME::Rendering::Lighting
 			delete source;
 		}
 		m_dynamicSources.clear();
-		
+	
+
 		m_vertexExecutionID = -1;
 	}
 

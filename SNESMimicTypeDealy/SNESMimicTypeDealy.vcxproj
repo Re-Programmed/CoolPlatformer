@@ -182,6 +182,7 @@
     <ClCompile Include="!TestGame\Objects\Environment\Buildings\SaggingObject.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\ClimbableObject.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\CloudGenerator.cpp" />
+    <ClCompile Include="!TestGame\Objects\Environment\DialogueInteractable.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Effects\BloodMark.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Effects\Explosion.cpp" />
     <ClCompile Include="!TestGame\Objects\Environment\Effects\GlitchedRegion.cpp" />
@@ -317,6 +318,7 @@
     <ClInclude Include="!TestGame\Objects\Environment\Buildings\InteriorDoor.h" />
     <ClInclude Include="!TestGame\Objects\Environment\ClimbableObject.h" />
     <ClInclude Include="!TestGame\Objects\Environment\CloudGenerator.h" />
+    <ClInclude Include="!TestGame\Objects\Environment\DialogueInteractable.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Effects\BloodMark.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Effects\Explosion.h" />
     <ClInclude Include="!TestGame\Objects\Environment\Effects\GlitchableObject.h" />

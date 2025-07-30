@@ -455,9 +455,8 @@ namespace  GAME_NAME
 					Held item rendering.
 				*/
 
-				if (m_heldItemDisplay != nullptr && m_heldItemDisplay->GetScale().X > 8)
+				if (m_heldItemDisplay != nullptr && m_heldItemDisplay->GetScale().X > 8 && m_screenInventory->GetHeldItem() != nullptr)
 				{
-					
 					const int&& baseSpriteId = Items::ITEM_DATA[m_screenInventory->GetHeldItem()->GetType()].HeldTexture;
 
 					//If the player is currently attacking, the item will be rendered outward from their body.
@@ -767,6 +766,15 @@ namespace  GAME_NAME
 				Renderer::UnloadGUIElement(m_healthProgressBar, 0);
 
 				GUI::Menus::GUIMenu::RemoveLastMenu();
+			}
+
+			void Player::SetControlType(ControlType type)
+			{
+				m_controlType = type;
+				if (type == ROOM) { m_storedRoomHeight = this->m_position.Y; m_onGround = true; dynamic_cast<GAME_NAME::Camera::GameCamera*>(TestGame::INSTANCE->GetCamera())->SetStrictFollowing(true); }
+				else {
+					dynamic_cast<GAME_NAME::Camera::GameCamera*>(TestGame::INSTANCE->GetCamera())->SetStrictFollowing(false);
+				}
 			}
 
 			void Player::onCollision(Vec2 push, GameObject* collided)

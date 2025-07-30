@@ -4,6 +4,7 @@
 #include "../../Objects/GUI/StaticGUIElement.h"
 #include "../../Objects/GUI/Text/TextRenderer.h"
 #include "../TestGame.h"
+#include "../../Objects/GUI/Menus/GUIMenu.h"
 
 #include "../../Utils/ConstUpdateable.h"
 
@@ -39,6 +40,11 @@ namespace GAME_NAME::Cutscenes
 			if (m_playingDialogueSequence)
 			{
 				return false;
+			}
+
+			if (!GUI::Menus::GUIMenu::MenuIsOpen())
+			{
+				GUI::Menus::GUIMenu::OpenMenu();
 			}
 
 			m_currentDialogueSequence = sequence;
