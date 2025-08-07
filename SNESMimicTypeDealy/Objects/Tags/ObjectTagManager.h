@@ -24,7 +24,10 @@ namespace GAME_NAME::Objects::Tags
 
 		static inline void ClearTaggedObjects()
 		{
-			m_taggedObjects.clear();
+			if (m_taggedObjects.size() > 0)
+			{
+				m_taggedObjects.clear();
+			}
 		}
 
 	private:

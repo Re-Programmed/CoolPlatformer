@@ -45,9 +45,9 @@ namespace GAME_NAME::Objects::Enemies
 
 	private:
 		/// <summary>
-		/// Stores a pointer to the resting sprite of the rabbit.
+		/// Stores the resting sprite of the rabbit.
 		/// </summary>
-		std::shared_ptr<Rendering::Sprite> const m_baseSprite;
+		const int m_baseSprite;
 		/// <summary>
 		/// The index of the jumping and main running sprite.
 		/// </summary>

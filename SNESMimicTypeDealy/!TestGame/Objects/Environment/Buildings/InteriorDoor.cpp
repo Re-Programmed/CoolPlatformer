@@ -7,6 +7,10 @@
 
 #include "../../../../Utils/Time/GameTime.h"
 
+#include "../../../../Objects/StateSaver.h"
+
+#include "../../../../Resources/Save/SaveManager.h"
+
 namespace GAME_NAME::Objects::Environment::Buildings
 {
 	InteriorDoor::InteriorDoor(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, std::string levelDestination, Vec2 exitPosition, bool loadsObjectsOnly)
@@ -23,6 +27,9 @@ namespace GAME_NAME::Objects::Environment::Buildings
 		{
 			if (!m_used)
 			{
+				StateSaver::SaveStates();
+				StateSaver::SaveMisc();
+
 				TestGame::ThePlayer->SetFrozen(true, Player::Player::BEHIND);
 				LevelManager::LevelCircleAnimation(Vec2{ -1 }, false, false);
 				m_used = true;
@@ -47,6 +54,7 @@ namespace GAME_NAME::Objects::Environment::Buildings
 			
 			if (m_loadsObjectsOnly)
 			{
+				Resources::SaveManager::SetCurrentLevelFile(Resources::SaveManager::GetCurrentFile() + m_levelDestination);
 				TestGame::INSTANCE->LoadLevelOnlyObjects(m_levelDestination.c_str(), m_exitPosition);
 			}
 			else {

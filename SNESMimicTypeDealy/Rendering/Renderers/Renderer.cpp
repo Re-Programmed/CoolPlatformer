@@ -30,6 +30,7 @@ namespace GAME_NAME
 
 		bool Renderer::UpdateObjects = true;
 
+		std::mutex Renderer_activeGameObjectsLock;
 		std::vector<GameObject*> Renderer::m_activeGameObjects[MICRO_RENDER_LAYER_COUNT];
 		std::vector<GUI::IGUIElement*> Renderer::m_guiGameObjects[MICRO_GUI_LAYER_COUNT];
 
@@ -444,7 +445,9 @@ namespace GAME_NAME
 
 		void Renderer::LoadActiveObject(GameObject* object, int layer)
 		{
+			Renderer_activeGameObjectsLock.lock();
 			m_activeGameObjects[layer].push_back(object);
+			Renderer_activeGameObjectsLock.unlock();
 			m_lastLoadedObject = object;
 		}
 
@@ -468,6 +471,9 @@ namespace GAME_NAME
 					const size_t size = m_guiGameObjects[currLayer].size();
 					for (size_t i = 0; i < size; i++)
 					{
+						//Weird issue??? concurrent modification?
+						if (i >= m_guiGameObjects[currLayer].size()) { break; }
+
 						if (m_guiGameObjects[currLayer][i] != nullptr && i < m_guiGameObjects[currLayer].size())
 						{
 							try {

@@ -9,8 +9,11 @@
 #include "../../../../Objects/Particles/ParticleEmitter.h"
 #include "../../../../Objects/Instantiate/LevelObjectHandler.h"
 
+#include "../../../Items/Types/Food.h"
+
 namespace GAME_NAME::Objects::Environment::Plants
 {
+
 	Tree::Tree(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, size_t saveID, Rendering::Sprite* choppedSprite)
 		: Interactable(TREE_INTERACT_KEY, InputManager::KEY_STATE_NONE, position, scale, sprite), GameObjectState(saveID),
 		m_isChopped(false), m_choppedSprite(choppedSprite), m_rustles(0)
@@ -61,7 +64,7 @@ namespace GAME_NAME::Objects::Environment::Plants
 
 		setChopped(true);
 
-		//DROP LOG
+		//DROP LOG OR APPLE
 		Items::FloorItem* myItem = new Items::FloorItem(m_position + Vec2::RandVec2(m_scale.X, m_scale.Y), Items::LOG, 0.5f);
 		Renderer::InstantiateObject(Renderer::InstantiateGameObject(myItem, true, 1, false));
 
@@ -121,8 +124,15 @@ using namespace Particles;
 			int c = 1 + (std::rand() * 3 / RAND_MAX);
 			for (int i = 0; i < c; i++)
 			{
-				Items::FloorItem* myItem = new Items::FloorItem(m_position + Vec2::RandVec2(m_scale.X, m_scale.Y), Items::LEAVES, 0.5f);
-				Renderer::InstantiateObject(Renderer::InstantiateGameObject(myItem, true, 1, false));
+				if (std::rand() < RAND_MAX / 2)
+				{
+					Items::FloorItem* myItem = new Items::FloorItem(m_position + Vec2::RandVec2(m_scale.X, m_scale.Y), new Items::InventoryItem(Items::LEAVES), 0.5f);
+					Renderer::InstantiateObject(Renderer::InstantiateGameObject(myItem, true, 1, false));
+				}
+				else {
+					Items::FloorItem* myItem = new Items::FloorItem(m_position + Vec2::RandVec2(m_scale.X, m_scale.Y), new Items::Food(Items::APPLE, 20), 0.5f);
+					Renderer::InstantiateObject(Renderer::InstantiateGameObject(myItem, true, 1, false));
+				}
 			}
 
 			return true;
@@ -142,8 +152,36 @@ using namespace Particles;
 			auto heldItem = TestGame::ThePlayer->GetInventory()->GetHeldItem();
 			if (heldItem != nullptr && Items::ITEMTYPE_GetItemData(heldItem->GetType()).Actions & Items::TOOL_ACTION::CHOP)
 			{
-				Chop();
+				double sdt = Utils::Time::GameTime::GetScaledDeltaTime();
+				m_chopTimer += sdt;
+
+				//Make tree shake back and forth.
+				m_choppingAnimationTimer += sdt;
+				if (m_choppingAnimationTimer >= 0.3)
+				{
+					SetPosition(this->GetPosition() + Vec2{ 1.f, 0 });
+					m_choppingAnimationTimer = 0.0;
+				}
+				else if (m_choppingAnimationTimer > 0.05 && m_choppingAnimationTimer < 0.075)
+				{
+					SetPosition(this->GetPosition() + Vec2{ -2.f, 0 });
+					m_choppingAnimationTimer = 0.075;
+				}
+				else if (m_choppingAnimationTimer > 0.2 && m_choppingAnimationTimer < 0.25)
+				{
+					SetPosition(this->GetPosition() + Vec2{ 1.f, 0 });
+					m_choppingAnimationTimer = 0.25;
+				}
+
+
+
+				if (m_chopTimer > 5.0)
+				{
+					Chop();
+				}
 			}
+
+			return;
 		}
 
 		if (m_rustles > 2) { return; }

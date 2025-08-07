@@ -47,6 +47,8 @@ namespace GAME_NAME::Objects::Environment::Plants
 	protected:
 		void onInteract(std::shared_ptr<Player::Player> player, InputManager::KEY_STATE state) override;
 	private:
+		double m_choppingAnimationTimer = 0.0;
+
 		/// <summary>
 		/// The sprite that displays after the tree has been chopped, or, if the tree is already chopped, the sprite to display when the tree is alive.
 		/// </summary>
@@ -62,6 +64,8 @@ namespace GAME_NAME::Objects::Environment::Plants
 		/// </summary>
 		char m_rustles;
 		float m_rustleCounter;
+
+		double m_chopTimer;
 
 		/// <summary>
 		/// Sets if the tree has been chopped down without dropping items and only updating graphics.

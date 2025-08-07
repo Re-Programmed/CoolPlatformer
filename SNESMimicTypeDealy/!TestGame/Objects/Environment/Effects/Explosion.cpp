@@ -12,11 +12,11 @@
 
 #define EXPLOSION_DAMAGE_CONSTANT 10
 
-#define DEFAULT_EXPLOSION_SPRITES_COUNT 1
+#define DEFAULT_EXPLOSION_SPRITES_COUNT 8
 /// <summary>
 /// Sprites to be used for explosions if none are provided.
 /// </summary>
-constexpr int DEFAULT_EXPLOSION_SPRITES[DEFAULT_EXPLOSION_SPRITES_COUNT] = { SpriteBase(132) };
+constexpr int DEFAULT_EXPLOSION_SPRITES[DEFAULT_EXPLOSION_SPRITES_COUNT] = { SpriteBase(238), SpriteBase(239), SpriteBase(240), SpriteBase(241), SpriteBase(242), SpriteBase(243), SpriteBase(244), SpriteBase(245) };
 
 namespace GAME_NAME::Objects::Environment::Effects
 {
@@ -71,6 +71,7 @@ namespace GAME_NAME::Objects::Environment::Effects
 			if (enemy != nullptr)
 			{
 				enemy->AddVelocity(calculateExplosionVelocity(enemy->GetPosition() + enemy->GetScale()/2.f));
+
 				enemy->AddRotationalVelocity((std::rand() * 2) / RAND_MAX < 1 ? power : -power);
 			}
 		}

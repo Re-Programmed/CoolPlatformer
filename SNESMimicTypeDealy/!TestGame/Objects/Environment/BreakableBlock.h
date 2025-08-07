@@ -34,6 +34,9 @@ namespace GAME_NAME::Objects
 		bool m_isBroken;
 
 	private:
+		Vec2 m_shakeOffset; 
+		double m_shakeTimer = 0.0;
+
 		/// <summary>
 		/// True if the block is currently hovered for mining.
 		/// </summary>

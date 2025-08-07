@@ -75,30 +75,7 @@ using namespace std;
 			//Found an item in saved data, decode it.
 			const char& firstChar = line.at(0);
 
-			InventoryItem* item = new InventoryItem();
-
-			switch (firstChar)
-			{
-			case ITEM_PREFIX_ITEM:
-				//Decode the item.
-				item->Decode(line);
-
-				//Item should be null.
-				if (item->GetType() == NULL_ITEM)
-				{
-					delete item;
-					item = nullptr;
-				}
-
-				break;
-			case ITEM_PREFIX_TOOL:
-				//Change item to point to a new tool.
-				delete item;
-				Tool* t = new Tool();
-				t->Decode(line);
-				item = t;
-				break;
-			}
+			InventoryItem* item = InventoryItem::DecodeItemString(line);
 
 			SetItem(i, item);
 			i++;
@@ -130,10 +107,10 @@ using namespace std;
 	{
 		if (m_isOpen)
 		{
-			if (InputManager::GetKeyUpDown(OPEN_INVENTORY_CONTAINER_KEY) & InputManager::KEY_STATE_PRESSED)
+			/*if (InputManager::GetKeyUpDown(OPEN_INVENTORY_CONTAINER_KEY) & InputManager::KEY_STATE_PRESSED)
 			{
 				CloseGUI();
-			}
+			}*/
 			
 			//If the inventory is open, update it to detect clicking on slots.
 			InventoryContainerRenderer::UpdateCurrentInventoryContainer();
@@ -151,17 +128,19 @@ using namespace std;
 
 	void InventoryContainer::onInteract(std::shared_ptr<GAME_NAME::Objects::Player::Player> player, InputManager::KEY_STATE state)
 	{
-		if (m_isOpen)
-		{
-			return;
-		}
 
 using namespace GAME_NAME;
 		Input::DisplayIconManager::ShowKeyInputDisplay(Input::DisplayIconManager::INPUT_DISPLAY_KEY_E, TestGame::ThePlayer->GetPosition() + Vec2(TestGame::ThePlayer->GetScale() + Vec2(3, -5)));
 
 		if (state & InputManager::KEY_STATE_PRESSED)
 		{
-			OpenGUI();
+			if (!m_isOpen)
+			{
+				OpenGUI();
+			}
+			else {
+				CloseGUI();
+			}
 		}
 	}
 

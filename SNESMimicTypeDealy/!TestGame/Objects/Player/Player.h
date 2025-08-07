@@ -66,7 +66,7 @@ namespace  GAME_NAME
 				: public ActiveBoxCollisionGravityObject, public MiscStateGroup, public GlitchableObject
 			{
 			public:
-				Player(Vec2 position);
+				Player(Vec2 position, bool loadFromSavedPosition = true);
 				~Player();
 
 				void Update(GLFWwindow* window);
@@ -118,7 +118,7 @@ namespace  GAME_NAME
 				/// </summary>
 				/// <param name="damage"></param>
 				/// <param name="cause"></param>
-				void Damage(float damage, GameObject* cause);
+				void Damage(float damage, GameObject* cause, bool causeFainting = true);
 
 				/// <summary>
 				/// Heal the player and ensure that the players health doesn't exceed the maximum with armour effects applied.
@@ -135,7 +135,7 @@ namespace  GAME_NAME
 				/// <summary>
 				/// Spawns random blood particles around the player. (can be used to imitate damage, is also called when Damage() is called)
 				/// </summary>
-				void CreateBloodParticle(GameObject* cause);
+				void CreateBloodParticle(GameObject* cause, bool causeFainting = true);
 
 				enum TEXTURE_OFFSETS
 				{

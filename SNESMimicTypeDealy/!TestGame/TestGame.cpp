@@ -46,6 +46,7 @@
 
 #include "./Level/MainMenu/MainMenuManager.h"
 #include "./Level/Introduction/IntroductionLevelManager.h"
+#include "./Level/Stages/GreenRegionLevelManager.h"
 
 //TESTING:
 #include "./Objects/Environment/Buildings/Door.h"
@@ -55,7 +56,7 @@
 #include "../Rendering/Lighting/SimpleLightingManager.h"
 
 #define SKIP_MAIN_MENU
-//#define SKIP_INTRODUCTION
+#define SKIP_INTRODUCTION
 
 namespace GAME_NAME
 {
@@ -79,6 +80,8 @@ namespace GAME_NAME
 
 	std::string Game_nextLevelToLoad = ""; bool Game_nextLevelIsOnlyObjects = false; Vec2 Game_playerNewPos = Vec2{ -1 };
 	
+	bool TestGame::m_loadLevelWithSavedPlayer = true;
+
 	unsigned int pauseMenu_buttonIdOffset = 0; //UNUSED???????
 	void pauseMenu_guiCallback(int id)
 	{
@@ -116,9 +119,17 @@ namespace GAME_NAME
 				GAME_NAME::Renderer::ClearObjects();
 				Mappings::LoadObjectsWithDefaultMapping(Game_nextLevelToLoad.c_str());
 
-				ThePlayer = std::make_shared<Objects::Player::Player>(Game_playerNewPos);
+				ThePlayer = std::make_shared<Objects::Player::Player>(Game_playerNewPos, false);
 				Rendering::Renderer::LoadActiveObject(ThePlayer.get(), 2); //Spawn in the player on Active Layer 2.
 				LevelManager::LevelCircleAnimation(Vec2{-1}, true);
+
+				//IF the game name ends with interior, the level manager will not reload.
+				//Reload the level mannager and data for the current level.
+				if (!Game_nextLevelToLoad.ends_with("interior"))
+				{
+					m_level.Flags.insert("NO_PLAYER");
+					InitLevel(m_level);
+				}
 			}
 			else {
 				GAME_NAME::Resources::SaveManager::SetCurrentFile("default_s");
@@ -246,6 +257,7 @@ namespace GAME_NAME
 	}
 	
 
+	//If it's the first time a level has been loaded with the player in it, the saved position of the player will be used.
 	void TestGame::InitLevel(GAME_NAME::Game::Level level)
 	{
 #if _DEBUG
@@ -256,7 +268,8 @@ namespace GAME_NAME
 		//If the LEVEL_NO_PLAYER_FLAG is set, the player will not be created.
 		if (!level.Flags.contains(LEVEL_NO_PLAYER_FLAG))
 		{
-			ThePlayer = std::make_shared<Objects::Player::Player>(Vec2(-20, level.PlayerStartPosition.Y));
+			ThePlayer = std::make_shared<Objects::Player::Player>(Vec2(-20, level.PlayerStartPosition.Y), m_loadLevelWithSavedPlayer);
+			m_loadLevelWithSavedPlayer = false;
 
 			//If this is false we must have loaded a save file, so don't run in from the left.
 			if (ThePlayer->GetPosition().X <= level.PlayerStartPosition.X + 2)
@@ -322,6 +335,13 @@ namespace GAME_NAME
 					//Introduction.
 					m_currentLevelSystem = std::unique_ptr<LevelSystem>(new IntroductionLevelManager());
 					break;
+
+
+				case 1:
+					//Green Region
+					m_currentLevelSystem = std::unique_ptr<LevelSystem>(new GreenRegionLevelManager());
+					break;
+
 				}
 				break;
 			}

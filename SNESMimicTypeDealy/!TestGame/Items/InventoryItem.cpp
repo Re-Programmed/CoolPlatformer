@@ -1,6 +1,8 @@
 #include "./InventoryItem.h"
 
 #include "./Types/Tool.h"
+#include "./Types/Weapon.h"
+#include "./Types/Food.h"
 
 namespace GAME_NAME
 {
@@ -34,7 +36,7 @@ namespace GAME_NAME
 		//Expects a string that is purely a number representing the type.
 		void InventoryItem::Decode(const MiscState::SaveParam param)
 		{
-			//Get the item type, ignore the first character that denotes item type.
+			//Get the item type, ignore the first character that denotes item class type.
 			m_itemType = (Items::ITEM_TYPE)std::stoi(param.substr(1));
 		}
 
@@ -62,12 +64,33 @@ namespace GAME_NAME
 
 				break;
 			case ITEM_PREFIX_TOOL:
+			{
 				//Change item to point to a new tool.
 				delete item;
 				Tool* t = new Tool();
 				t->Decode(data);
 				item = t;
 				break;
+			}
+
+			case ITEM_PREFIX_WEAPON:
+			{
+				//Change item to point to a new weapon.
+				delete item;
+				Weapon* w = new Weapon();
+				w->Decode(data);
+				item = w;
+				break;
+			}
+
+			case ITEM_PREFIX_FOOD:
+			{
+				delete item;
+				Food* f = new Food();
+				f->Decode(data);
+				item = f;
+				break;
+			}
 			}
 
 			return item;

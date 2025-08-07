@@ -17,7 +17,7 @@ namespace GAME_NAME::Objects
 	double BreakableBlock::m_currentMiningTime = 0.0;
 
 	BreakableBlock::BreakableBlock(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, size_t saveID, double mineTime, int mineResistance, TOOL_ACTION requiredActionFlag)
-		: StaticBoxCollisionObject(position, scale, sprite), GameObjectState(saveID), m_mineTime(mineTime), m_mineResistance(mineResistance), m_requiredActionFlag(requiredActionFlag), m_isBroken(false)
+		: StaticBoxCollisionObject(position, scale, sprite), GameObjectState(saveID), m_mineTime(mineTime), m_mineResistance(mineResistance), m_requiredActionFlag(requiredActionFlag), m_isBroken(false), m_shakeOffset(Vec2{0.f})
 	{
 		this->LoadState();
 	}
@@ -51,7 +51,9 @@ namespace GAME_NAME::Objects
 			hoveredSprite->Render(cameraPosition, m_position - Vec2(1), m_scale + Vec2(2));
 		}
 		
+		this->SetPosition(this->GetPosition() + m_shakeOffset);
 		GameObject::Render(cameraPosition);
+		this->SetPosition(this->GetPosition() - m_shakeOffset);
 	}
 
 	void BreakableBlock::Update(GLFWwindow* window)
@@ -80,7 +82,22 @@ namespace GAME_NAME::Objects
 						//Does the current held item have enough mining power?
 						if (std::stoi(data.Attributes.at(m_requiredActionFlag)) >= m_mineResistance)
 						{
-							m_currentMiningTime += Utils::Time::GameTime::GetScaledDeltaTime();
+							if (m_shakeTimer > 0.05)
+							{
+								if (m_shakeOffset.X > 0)
+								{
+									m_shakeOffset.X = -0.5f;
+								}
+								else {
+									m_shakeOffset.X = 0.5f;
+								}
+
+								m_shakeTimer = 0.0;
+							}
+
+							float sdt = Utils::Time::GameTime::GetScaledDeltaTime();
+							m_currentMiningTime += sdt;
+							m_shakeTimer += sdt;
 						}
 					}
 				}
@@ -109,6 +126,7 @@ namespace GAME_NAME::Objects
 		else {
 			//Reset mining time.
 			m_currentMiningTime = 0;
+			m_shakeOffset = 0;
 		}
 
 		StaticBoxCollisionObject::Update(window);

@@ -94,6 +94,13 @@ namespace GAME_NAME
 		}
 		else if(item != nullptr)
 		{
+			//Remove the existing item graphic and data.
+			if (!GetItem(slot).ri_IsNull)
+			{
+				Renderer::UnloadGUIElement(m_itemSprites[slot], 1);
+				m_itemSprites[slot] = nullptr;
+			}
+
 			//Add the item display.
 			createItemSpriteDisplay(slot, *item);
 		}

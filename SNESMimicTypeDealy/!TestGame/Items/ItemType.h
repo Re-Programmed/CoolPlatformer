@@ -12,7 +12,7 @@ namespace GAME_NAME
 {
 	namespace Items
 	{
-#define ITEM_COUNT 8
+#define ITEM_COUNT 9
 		/// <summary>
 		/// An enum for the types of items in the game.
 		/// </summary>
@@ -25,7 +25,8 @@ namespace GAME_NAME
 			NULL_ITEM = 4, //NULL ITEM IS 4 (used for saving data about items that are not there)
 			WOODEN_SHOES = 5,
 			SHARP_STICK = 6,
-			TOAST = 7
+			TOAST = 7,
+			APPLE = 8
 		};
 
 		/// <summary>
@@ -36,7 +37,8 @@ namespace GAME_NAME
 			CHOP = 0b00001, //Can cut down trees.
 			EQUIPMENT = 0b00010, //Can be equipped to equipment slots.
 			MINE = 0b00100, //Can break BreakableBlocks. (provide a strength attribute)
-			WEAPON = 0b01000 //Can be used to attack. (provide a damage, power consumption, reload attribute, and area of effect [damage,powerconsume,reloadseconds,AOE(integer)])
+			WEAPON = 0b01000, //Can be used to attack. (provide a damage, power consumption, reload attribute, and area of effect [damage,powerconsume,reloadseconds,AOE(integer)])
+			FOOD = 0b10000	//Can be eaten.
 		};
 
 		/// <summary>
@@ -78,14 +80,15 @@ namespace GAME_NAME
 		/// </summary>
 		const ItemData ITEM_DATA[ITEM_COUNT]
 		{
-			{ "Log", 18, NO_HELD_TEXTURE, 0, {}, "Probably from a tree." },
-			{ "Leaves", 18, NO_HELD_TEXTURE, 0, {}, "" },
+			{ "Log", SpriteBase(248), NO_HELD_TEXTURE, 0, {}, "."},
+			{ "Leaves", SpriteBase(246), NO_HELD_TEXTURE, 0, {}, ""},
 			{ "Stone", 55, NO_HELD_TEXTURE, 0, {}, "" },
 			{ "(Temp) Axe", 56, SpriteBase(65), WEAPON | CHOP, { { TOOL_ACTION::CHOP , "1" }, { TOOL_ACTION::WEAPON, "10,0,0.9,20" }}, ""},
 			{ "Unknown", 0, NO_HELD_TEXTURE, 0, {}, "" },
 			{ "Wooden Shoes", 18, NO_HELD_TEXTURE, EQUIPMENT, { { TOOL_ACTION::EQUIPMENT, "Health:10" } }, "" },
 			{ "Sharp Stick", SpriteBase(118), SpriteBase(117), WEAPON, {{TOOL_ACTION::WEAPON, "3,0,0.2,26"}}, ""},
-			{ "Toast", SpriteBase(132), SpriteBase(233), 0, {}, "Probably made in a toaster." }							//7
+			{ "Toast", SpriteBase(132), SpriteBase(233), 0, {}, "Probably made in a toaster." },							//7
+			{ "Apple", SpriteBase(247), NO_HELD_TEXTURE, FOOD, { { TOOL_ACTION::FOOD, "20" } }, "Apple."},					//8
 		};
 
 

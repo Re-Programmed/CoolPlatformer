@@ -25,6 +25,7 @@ namespace GAME_NAME
 
 		public:
 			bool RenderFront = false;	//If true, this will draw the front layer of sprites. Kind of like sprite priority on the Genesis, sprites can be in the front or the middle, front sprites are invisible if this is false.
+			bool RenderBG = true; //If true, this will draw the background. Otherwise a solid color.
 
 			Game() = default;
 
@@ -95,7 +96,6 @@ namespace GAME_NAME
 
 		protected:
 			Rendering::Camera::Camera* m_camera = nullptr;
-		private:
 			Level m_level; //The current level.
 		};
 	}

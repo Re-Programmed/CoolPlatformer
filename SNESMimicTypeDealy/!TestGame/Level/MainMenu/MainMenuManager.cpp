@@ -58,7 +58,7 @@ namespace GAME_NAME::Level
 
 			if (m_fakePlayer == nullptr)
 			{
-				m_fakePlayer = new Objects::Player::Player({ (cameraPosX - 32.f < 1) ? 15 : (cameraPosX - 32.f), 21.f});
+				m_fakePlayer = new Objects::Player::Player(Vec2{ (cameraPosX - 32.f < 1) ? 15 : (cameraPosX - 32.f), 21.f});
 				//Renderer::InstantiateObject(Renderer::InstantiateGameObject(m_fakePlayer, true, 1, false));
 
 				Renderer::LoadActiveObject(m_fakePlayer, 1);
@@ -100,6 +100,8 @@ namespace GAME_NAME::Level
 			m_reverseCam = false;
 		}
 	}
+
+
 
 	void MainMenuManager::triggeerTransitionEvent(const Vec2& playerPosition)
 	{

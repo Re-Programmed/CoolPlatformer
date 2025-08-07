@@ -22,6 +22,7 @@
 #include "../../../Utils/Math/VMath.h"
 
 #include "../../Items/Types/Weapon.h"
+#include "../../Items/Types/Food.h"
 
 #include "../Environment/Effects/BloodMark.h"
 
@@ -142,7 +143,7 @@ namespace  GAME_NAME
 				))
 			};
 
-			Player::Player(Vec2 position)
+			Player::Player(Vec2 position, bool loadFromSavedPosition)
 				: ActiveBoxCollisionGravityObject(position, Vec2(DefaultPlayerScaleX, DefaultPlayerScaleY), NULL), m_screenInventory(new ScreenInventory()),
 				m_heldItemLastSprite(nullptr),
 				m_playerLight(nullptr),
@@ -186,19 +187,24 @@ namespace  GAME_NAME
 
 				std::shared_ptr<std::vector<std::string>> states = this->getStates();
 
-				if (states->size() > 0)
+				if (loadFromSavedPosition)
 				{
-					decodeSave(states->at(0));
+					if (states->size() > 0)
+					{
+						decodeSave(states->at(0));
+					}
 				}
 
 				assignState(m_saveState);
 				
 				//TEMP TESTING TODO:REMOVE
-				m_skillHolder.UnlockSkill(FLIGHT);
+				//m_skillHolder.UnlockSkill(FLIGHT);
 
 				//Test item.
 				//m_screenInventory->AddItem(new InventoryItem(WOODEN_SHOES));
 
+				//Force held item display to show up.
+				SetHeldItem(this->m_screenInventory->GetHeldItem());
 			}
 
 			Player::~Player()
@@ -244,15 +250,26 @@ namespace  GAME_NAME
 					yOffset += 20;
 				}
 
-				//Check if the player is trying to use a weapon and use it if so.
-				if (m_screenInventory->GetHeldItem() != nullptr && InputManager::GetMouseButton(0))
+				//Check if the player is trying to use an item and use it if so.
+				if (m_screenInventory->GetHeldItem() != nullptr && InputManager::GetMouseButton(0) && !(m_frozen > 01))
 				{
+					//??? What is this doing? Attacking is handled on right click... 
 					if (ITEM_DATA[m_screenInventory->GetHeldItem()->GetType()].Actions & WEAPON)
 					{
 						if (Weapon* w = dynamic_cast<Weapon*>(m_screenInventory->GetHeldItem()))
 						{
 							w->Use();
 							Attack(w->GetDamage(), /*TODO: Give weapons a range attribute*/12.f, 0);
+						}
+					}
+					else if (ITEM_DATA[m_screenInventory->GetHeldItem()->GetType()].Actions & FOOD)
+					{
+						if (Food* f = dynamic_cast<Food*>(m_screenInventory->GetHeldItem()))
+						{
+							if (f->Use())
+							{
+								m_screenInventory->SetItem(m_screenInventory->GetSelectedSlot() - 1, nullptr);
+							}
 						}
 					}
 
@@ -528,42 +545,45 @@ namespace  GAME_NAME
 					}
 					else if (m_physics->GetVelocity().X > 0.3 || m_physics->GetVelocity().X < -0.3)
 					{
-						int&& frame = m_animator->GetCurrentAnimation()->GetFrame();
-
-						//Determine what frame of item animation to show.
-						switch (frame)
+						if (m_animator->GetCurrentAnimation() != nullptr)
 						{
-						case 0:
-							frame = 0;
-							break;
-						case 1:
-							frame = 1;
-							break;
-						case 2:
-							frame = 2;
-							break;
-						case 3:
-							frame = 1;
-							break;
-						case 4:
-							frame = 0;
-							break;
-						case 5:
-							frame = 3;
-							break;
-						case 6:
-							frame = 4;
-							break;
-						case 7:
-							frame = 3;
-							break;
+							int&& frame = m_animator->GetCurrentAnimation()->GetFrame();
+
+							//Determine what frame of item animation to show.
+							switch (frame)
+							{
+							case 0:
+								frame = 0;
+								break;
+							case 1:
+								frame = 1;
+								break;
+							case 2:
+								frame = 2;
+								break;
+							case 3:
+								frame = 1;
+								break;
+							case 4:
+								frame = 0;
+								break;
+							case 5:
+								frame = 3;
+								break;
+							case 6:
+								frame = 4;
+								break;
+							case 7:
+								frame = 3;
+								break;
+							}
+
+							m_heldItemLastSprite = std::shared_ptr<Sprite>(Renderer::GetSprite(baseSpriteId + frame));
+							m_heldItemDisplayFrameOffset = frame;
+							m_heldItemDisplay->SetSprite(m_heldItemLastSprite);
+
+							m_heldItemDisplay->SetPosition(m_position + (m_textureFlipped ? Vec2(6.75f, -0.5f) : Vec2(0, -0.5f)));
 						}
-
-						m_heldItemLastSprite = std::shared_ptr<Sprite>(Renderer::GetSprite(baseSpriteId + frame));
-						m_heldItemDisplayFrameOffset = frame;
-						m_heldItemDisplay->SetSprite(m_heldItemLastSprite);
-
-						m_heldItemDisplay->SetPosition(m_position + (m_textureFlipped ? Vec2(6.75f, -0.5f) : Vec2(0, -0.5f)));
 					}
 					else {
 						if (m_heldItemDisplayFrameOffset != 0)
@@ -638,11 +658,19 @@ namespace  GAME_NAME
 
 #endif
 
-			void Player::Damage(float damage, GameObject* cause)
+#define KNOCKBACK_DAMAGE_MULTIPLIER 60.f
+
+			void Player::Damage(float damage, GameObject* cause, bool causeFainting)
 			{
 				float maxHealth = 100.f + m_skillHolder.GetEquipmentBoostEffect("Health", m_backpack);
 
-				if(damage > 0.f){ CreateBloodParticle(cause); }
+				//Damage knockback.
+				if (cause != nullptr)
+				{
+					m_physics->AddVelocity(Vec2{ (cause->GetPosition().X > m_position.X + m_scale.X / 2.f ? -1.f : 1.f) * KNOCKBACK_DAMAGE_MULTIPLIER, 0.f });
+				}
+
+				if(damage > 0.f){ CreateBloodParticle(cause, causeFainting); }
 
 				m_stats.Health -= damage;
 				m_healthProgressBar->SetPercentage(static_cast<char>(std::clamp(100.f * m_stats.Health / maxHealth, 0.f, maxHealth)));
@@ -705,6 +733,12 @@ namespace  GAME_NAME
 			//Sets the display for the held item/tool.
 			void Player::SetHeldItem(Items::InventoryItem* item)
 			{
+				if (item == nullptr)
+				{
+					RemoveHeldItem();
+					return;
+				}
+
 				//If no display exists yet, create one.
 				if (m_heldItemDisplay == nullptr)
 				{
@@ -811,6 +845,8 @@ namespace  GAME_NAME
 
 					m_airTime = 0;
 				}
+
+				
 
 				if (push.X > COLLISION_VEL_STOP_DAMPING || push.X < -COLLISION_VEL_STOP_DAMPING)
 				{
@@ -929,7 +965,7 @@ namespace  GAME_NAME
 				m_animator = new AnimatorComponent(anims);
 			}
 
-			void Player::CreateBloodParticle(GameObject* cause)
+			void Player::CreateBloodParticle(GameObject* cause, bool allowFainting)
 			{
 				if (m_particleEmitter->GetParticleCount() == 0)
 				{
@@ -971,7 +1007,7 @@ namespace  GAME_NAME
 					return;
 				}
 
-
+				if (!allowFainting) { return; }
 
 				//ONLY CONTINUE TO HERE IF THE CAUSE OF DAMAGE WAS FALLING.
 
@@ -1182,8 +1218,22 @@ namespace  GAME_NAME
 						SetFrozen(true, BAG);
 						return;
 					}
-				}
+				
+				//Allow the backpack to close using the ESCAPE key -- or pause key.
+				}else if (InputManager::GetKeyUpDown(DEFAULT_PAUSE_GAME) & InputManager::KEY_STATE_PRESSED)
+				{
+					if (m_backpack->GetIsOpen())
+					{
+						if (m_backpack->Close())
+						{
+							//Update held item in case the player changed their current selected item.
+							m_screenInventory->SelectSlot(m_screenInventory->GetSelectedSlot());
 
+							SetFrozen(false);
+							return;
+						}
+					}
+				}
 
 				bool playerIsSkidding = false;
 
@@ -1717,7 +1767,7 @@ using namespace Lighting;
 					if (m_frozen) { return; }
 					Vec2 mousePos = InputManager::GetMouseWorldPosition(TestGame::INSTANCE->GetCamera());
 
-					if (mousePos.X < m_position.X)
+					if (mousePos.X < m_position.X + m_scale.X / 2.f)
 					{
 						//Offset position to adjust for offset visual position in attack animation.
 						m_position -= Vec2(13.f, 0) * m_scaleMultiplier;
@@ -1739,10 +1789,11 @@ using namespace Lighting;
 					m_attackCooldown = (8.0 * 0.5) * (double)ANIM_16_SPF; //(frames * 1/speed * seconds_per_frame)
 
 
-					const Vec2 damageOrigin = m_position + Vec2{ (m_textureFlipped ? 12.f : -12.f), 0.f };
+					const Vec2 damageOrigin = m_position + (Vec2{ m_scale.X / 2.f, 0.f }) + Vec2{ (m_textureFlipped ? 12.f : -12.f), 0.f };
 
-					int AOE = 20, damage = 2;
+					int AOE = 22, damage = 2;
 
+					//Retrive Area of Effect and Damage stats of current weapon.
 					if (GetInventory()->GetHeldItem())
 					{
 

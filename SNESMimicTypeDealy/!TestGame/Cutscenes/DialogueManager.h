@@ -89,6 +89,8 @@ namespace GAME_NAME::Cutscenes
 		/// </summary>
 		void LoadStoredDialogueSequences(std::string path);
 
+		inline bool IsSequencePlaying() { return m_playingDialogueSequence; }
+
 	private:
 		//Dialogue loaded from the current level that is stored. Dialogue text is stored by separating each event with an ampersand "&."
 		std::unordered_map<std::string, std::string> m_storedDialogueSequences;

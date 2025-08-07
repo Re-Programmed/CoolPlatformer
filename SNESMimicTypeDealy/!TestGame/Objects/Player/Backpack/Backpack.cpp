@@ -477,6 +477,8 @@ namespace GAME_NAME::Objects::Player
 		const int& index = id - CurrentOpenBackpack->m_size;
 		StaticGUIElement* cursorElement = nullptr;
 
+		ReturnItem playerSlotItem = TestGame::ThePlayer->GetInventory()->GetItem(index);
+
 		if (cursorElement = setCursorItem(TestGame::ThePlayer->GetInventory()->GetItem(index).ri_Item))
 		{
 			TestGame::ThePlayer->GetInventory()->SetItem(index, nullptr);
@@ -490,6 +492,11 @@ namespace GAME_NAME::Objects::Player
 			m_cursorItemDisplay = nullptr;
 
 			m_cursorItem = nullptr;
+
+			if (!playerSlotItem.ri_IsNull)
+			{
+				cursorElement = setCursorItem(playerSlotItem.ri_Item);
+			}
 		}
 
 		UpdateBag();
@@ -507,8 +514,8 @@ namespace GAME_NAME::Objects::Player
 		if (cursorElement = setCursorItem(slotItem))
 		{
 			CurrentOpenBackpack->SetItem(index, nullptr);
-		}
-		else {
+		} else {
+		
 			if (m_cursorItem == nullptr) { return; }
 
 			//Check if the held tool has the required ability to enter this slot.
@@ -527,6 +534,11 @@ namespace GAME_NAME::Objects::Player
 			m_cursorItemDisplay = nullptr;
 
 			m_cursorItem = nullptr;
+
+			if (slotItem != nullptr)
+			{
+				cursorElement = setCursorItem(slotItem);
+			}
 		}
 
 		//Update current backpack.

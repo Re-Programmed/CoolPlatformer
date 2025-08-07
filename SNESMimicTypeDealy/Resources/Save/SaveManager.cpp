@@ -154,10 +154,12 @@ namespace GAME_NAME::Resources
 
 			while (i <= levelID)
 			{
-				finalWrite += "\n";
 				if (i == levelID)
 				{
 					finalWrite += B64::Encode(data) + "\n";
+				}
+				else {
+					finalWrite += "\n";
 				}
 				i++;
 			}

@@ -153,6 +153,7 @@
     <ClCompile Include="!TestGame\Items\Inventories\InventoryTooltip.cpp" />
     <ClCompile Include="!TestGame\Items\Inventory.cpp" />
     <ClCompile Include="!TestGame\Items\InventoryItem.cpp" />
+    <ClCompile Include="!TestGame\Items\Types\Food.cpp" />
     <ClCompile Include="!TestGame\Items\Types\Tool.cpp" />
     <ClCompile Include="!TestGame\Items\Types\Weapon.cpp" />
     <ClCompile Include="!TestGame\Level\GlobalLevelData.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="!TestGame\Level\LevelInfoDisplay.cpp" />
     <ClCompile Include="!TestGame\Level\LevelManager.cpp" />
     <ClCompile Include="!TestGame\Level\MainMenu\MainMenuManager.cpp" />
+    <ClCompile Include="!TestGame\Level\Stages\GreenRegionLevelManager.cpp" />
     <ClCompile Include="!TestGame\Mappings.cpp" />
     <ClCompile Include="!TestGame\Camera\GameCamera.cpp" />
     <ClCompile Include="!TestGame\Objects\Collectables\BasicCollectable.cpp" />
@@ -289,6 +291,7 @@
     <ClInclude Include="!TestGame\Items\ItemType.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="!TestGame\Items\Types\Food.h" />
     <ClInclude Include="!TestGame\Items\Types\Tool.h" />
     <ClInclude Include="!TestGame\Items\Types\Weapon.h" />
     <ClInclude Include="!TestGame\Level\GlobalLevelData.h" />
@@ -297,6 +300,7 @@
     <ClInclude Include="!TestGame\Level\LevelManager.h" />
     <ClInclude Include="!TestGame\Level\LevelSystem.h" />
     <ClInclude Include="!TestGame\Level\MainMenu\MainMenuManager.h" />
+    <ClInclude Include="!TestGame\Level\Stages\GreenRegionLevelManager.h" />
     <ClInclude Include="!TestGame\Mappings.h" />
     <ClInclude Include="!TestGame\Camera\GameCamera.h" />
     <ClInclude Include="!TestGame\Objects\Collectables\BasicCollectable.h" />

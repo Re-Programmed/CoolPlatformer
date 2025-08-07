@@ -31,6 +31,9 @@ namespace GAME_NAME::Objects::Environment::Buildings
 					m_room = m_enteredState.DoorCode;
 					TestGame::ThePlayer->SetPosition(m_enteredState.PlayerPosition);
 					TestGame::INSTANCE->GetCamera()->SetPosition(m_enteredState.PlayerPosition);
+
+					TestGame::INSTANCE->RenderBG = true;
+					TestGame::INSTANCE->RenderFront = true;
 					return;
 				}
 
@@ -43,7 +46,7 @@ namespace GAME_NAME::Objects::Environment::Buildings
 
 				m_enteredState = { TestGame::ThePlayer->GetPosition(), m_position, m_room };
 
-				Vec2 pos{ 175, 175 };
+				Vec2 pos{ 175, 250 };
 				TestGame::ThePlayer->SetPosition(pos);
 				TestGame::INSTANCE->GetCamera()->SetPosition(pos);
 
@@ -51,6 +54,10 @@ namespace GAME_NAME::Objects::Environment::Buildings
 
 				m_room = "exit";
 				m_position = Vec2{ pos.X - m_scale.X / 2.f, pos.Y };
+
+				//Disable background rendering when in a room.
+				TestGame::INSTANCE->RenderBG = false;
+				TestGame::INSTANCE->RenderFront = false;
 			}
 		}
 	}

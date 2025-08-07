@@ -7,7 +7,7 @@
 namespace GAME_NAME::Objects::Enemies
 {
 	PassiveRabbit::PassiveRabbit(Vec2 position, Vec2 scale, Rendering::Sprite* sprite, int jumpingSprite, PassiveRabbitAttributes* attributes, size_t saveID)
-		: Enemy(position, scale, sprite, attributes, saveID), m_baseSprite(sprite), m_jumpingSprite(jumpingSprite)
+		: Enemy(position, scale, sprite, attributes, saveID), m_baseSprite(sprite->GetSpriteId()), m_jumpingSprite(jumpingSprite)
 	{
 		m_allowPathfinding = false;
 		
@@ -104,20 +104,20 @@ namespace GAME_NAME::Objects::Enemies
 				m_oddFrame = !m_oddFrame;
 
 				//Alternate between the jumping sprite and 1 after the jumping sprite.
-				m_sprite = std::shared_ptr<Sprite>(Renderer::GetSprite(m_jumpingSprite + m_oddFrame));
+				SetSprite(Renderer::GetSprite(m_jumpingSprite + m_oddFrame));
 			}
 			//The rabbit is jumping.
 		}
 		else if (m_physics->GetVelocity().Y > 3.f || m_physics->GetVelocity().Y < -3.f)
 		{
-			if (m_sprite == m_baseSprite)
+			if (m_sprite->GetSpriteId() == m_baseSprite)
 			{
-				m_sprite = std::shared_ptr<Sprite>(Rendering::Renderer::GetSprite(m_jumpingSprite));
+				SetSprite(Rendering::Renderer::GetSprite(m_jumpingSprite));
 			}
 		}
-		else if (m_sprite != m_baseSprite)
+		else if (m_sprite->GetSpriteId() != m_baseSprite)
 		{
-			m_sprite = m_baseSprite;
+			SetSprite(new Sprite(m_baseSprite));
 		}
 #pragma endregion
 	}

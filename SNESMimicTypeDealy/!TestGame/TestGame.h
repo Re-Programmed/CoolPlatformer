@@ -74,7 +74,11 @@ namespace GAME_NAME
 		void LoadLevelAndAllData(const char* levelPath);
 		void LoadLevelOnlyObjects(const char* levelPath, Vec2 newPlayerPos);
 
+		static inline void SetLoadLevelWithSavedPlayer(bool value) { m_loadLevelWithSavedPlayer = value; }
+
 	private:
+		static bool m_loadLevelWithSavedPlayer;
+
 		static std::unique_ptr<LevelSystem> m_currentLevelSystem;
 
 		GAME_NAME::Camera::GameCamera* m_gameCamera = nullptr;		//Pointer to the camera.

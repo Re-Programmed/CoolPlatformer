@@ -8,12 +8,12 @@
 */
 #define FERAL_RABBIT_AGRESSION_DISTANCE 200
 #define FERAL_RABBIT_AWAKEN_DISTANCE 50
-#define FERAL_RABBIT_ATTACK_DISTANCE 20
+#define FERAL_RABBIT_ATTACK_DISTANCE 5
 
 #define FERAL_RABBIT_BASE_ATTACK_DAMAGE 5
-#define FERAL_RABBIT_BASE_ATTACK_DELAY 2.0f
+#define FERAL_RABBIT_BASE_ATTACK_DELAY 1.25f
 
-#define FERAL_RABBIT_AGRESSION_SPEED 20.f
+#define FERAL_RABBIT_AGRESSION_SPEED 35.f
 #define FERAL_RABBIT_DEFAULT_SPEED 5.f
 
 namespace GAME_NAME::Objects::Enemies
@@ -37,7 +37,7 @@ namespace GAME_NAME::Objects::Enemies
 			m_actionTimer -= Utils::Time::GameTime::GetScaledDeltaTime();
 		}
 
-		float distanceToPlayer = Vec2::Distance(m_position, TestGame::ThePlayer->GetPosition());
+		float distanceToPlayer = Vec2::Distance(m_position, TestGame::ThePlayer->GetPosition() + Vec2{ TestGame::ThePlayer->GetScale().X / 2.f, 0.f });
 
 		if (m_isAsleep)
 		{
@@ -63,9 +63,15 @@ namespace GAME_NAME::Objects::Enemies
 
 			if (distanceToPlayer < FERAL_RABBIT_ATTACK_DISTANCE)
 			{
+				if (distanceToPlayer < FERAL_RABBIT_ATTACK_DISTANCE / 2.f)
+				{
+					//Stop moving.
+					this->setPathfinding(this->m_position);
+				}
+
 				//Damage player since rabbit is in range.
 				//TODO: Add slashing animation.
-				TestGame::ThePlayer->Damage(FERAL_RABBIT_BASE_ATTACK_DAMAGE, nullptr);
+				TestGame::ThePlayer->Damage(FERAL_RABBIT_BASE_ATTACK_DAMAGE, this, false);
 				m_actionTimer = FERAL_RABBIT_BASE_ATTACK_DELAY;
 			}
 

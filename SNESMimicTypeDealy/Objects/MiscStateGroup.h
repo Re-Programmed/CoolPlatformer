@@ -35,6 +35,11 @@ namespace GAME_NAME
 			return m_destination;
 		}
 
+		inline bool HasStates()
+		{
+			return m_states.size() > 0;
+		}
+
 		std::string GetSaveString() const;
 	protected:
 		void assignState(MiscState* state);
