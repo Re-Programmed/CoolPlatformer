@@ -251,7 +251,7 @@ namespace  GAME_NAME
 				}
 
 				//Check if the player is trying to use an item and use it if so.
-				if (m_screenInventory->GetHeldItem() != nullptr && InputManager::GetMouseButton(0) && !(m_frozen > 01))
+				if (m_screenInventory->GetHeldItem() != nullptr && InputManager::GetMouseButton(0) && !(m_frozen > 0) && !this->GetBackpack()->GetIsOpen())
 				{
 					//??? What is this doing? Attacking is handled on right click... 
 					if (ITEM_DATA[m_screenInventory->GetHeldItem()->GetType()].Actions & WEAPON)
